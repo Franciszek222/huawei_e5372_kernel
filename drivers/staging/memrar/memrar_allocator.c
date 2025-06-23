@@ -41,11 +41,11 @@
 #include <linux/kernel.h>
 
 
-struct memrar_allocator *memrar_create_allocator(unsigned long base,
-						 size_t capacity,
-						 size_t block_size)
+struct memrar_allocator *memrar_create_allocator(unsigned long	base,
+						 size_t		capacity,
+						 size_t		block_size)
 {
-	struct memrar_allocator *allocator  = NULL;
+	struct memrar_allocator *allocator = NULL;
 	struct memrar_address_ranges *first_node = NULL;
 
 	/*
@@ -96,13 +96,13 @@ struct memrar_allocator *memrar_create_allocator(unsigned long base,
 	INIT_LIST_HEAD(&allocator->free_list.list);
 
 	first_node = kmalloc(sizeof(*first_node), GFP_KERNEL);
-	if (first_node == NULL)	{
+	if (first_node == NULL) {
 		kfree(allocator);
 		allocator = NULL;
 	} else {
 		/* Full range of blocks is available. */
 		first_node->range.begin = base;
-		first_node->range.end   = base + allocator->capacity;
+		first_node->range.end = base + allocator->capacity;
 		list_add(&first_node->list,
 			 &allocator->free_list.list);
 	}
@@ -118,7 +118,7 @@ void memrar_destroy_allocator(struct memrar_allocator *allocator)
 	 */
 
 	struct memrar_address_ranges *pos = NULL;
-	struct memrar_address_ranges *n   = NULL;
+	struct memrar_address_ranges *n = NULL;
 
 	if (allocator == NULL)
 		return;
@@ -139,8 +139,8 @@ void memrar_destroy_allocator(struct memrar_allocator *allocator)
 	kfree(allocator);
 }
 
-unsigned long memrar_allocator_alloc(struct memrar_allocator *allocator,
-				     size_t size)
+unsigned long memrar_allocator_alloc(struct memrar_allocator *	allocator,
+				     size_t			size)
 {
 	struct memrar_address_ranges *pos = NULL;
 
@@ -176,12 +176,12 @@ unsigned long memrar_allocator_alloc(struct memrar_allocator *allocator,
 	 * largest free area size statistic.
 	 */
 	list_for_each_entry(pos, &allocator->free_list.list, list) {
-		struct memrar_address_range * const fr = &pos->range;
+		struct memrar_address_range *const fr = &pos->range;
 		size_t const curr_size = fr->end - fr->begin;
 
 		if (curr_size >= reserved_bytes && addr == 0) {
 			struct memrar_address_range *range = NULL;
-			struct memrar_address_ranges * const new_node =
+			struct memrar_address_ranges *const new_node =
 				kmalloc(sizeof(*new_node), GFP_KERNEL);
 
 			if (new_node == NULL)
@@ -194,11 +194,11 @@ unsigned long memrar_allocator_alloc(struct memrar_allocator *allocator,
 			 * Carve out area of memory from end of free
 			 * range.
 			 */
-			range        = &new_node->range;
-			range->end   = fr->end;
-			fr->end     -= reserved_bytes;
+			range = &new_node->range;
+			range->end = fr->end;
+			fr->end -= reserved_bytes;
 			range->begin = fr->end;
-			addr         = range->begin;
+			addr = range->begin;
 
 			/*
 			 * Check if largest area has decreased in
@@ -228,17 +228,17 @@ unsigned long memrar_allocator_alloc(struct memrar_allocator *allocator,
 	return addr;
 }
 
-long memrar_allocator_free(struct memrar_allocator *allocator,
-			   unsigned long addr)
+long memrar_allocator_free(struct memrar_allocator *	allocator,
+			   unsigned long		addr)
 {
 	struct list_head *pos = NULL;
 	struct list_head *tmp = NULL;
 	struct list_head *dst = NULL;
 
-	struct memrar_address_ranges      *allocated = NULL;
-	struct memrar_address_range const *handle    = NULL;
+	struct memrar_address_ranges *allocated = NULL;
+	struct memrar_address_range const *handle = NULL;
 
-	unsigned long old_end        = 0;
+	unsigned long old_end = 0;
 	unsigned long new_chunk_size = 0;
 
 	if (allocator == NULL)
@@ -274,7 +274,7 @@ long memrar_allocator_free(struct memrar_allocator *allocator,
 	list_for_each_safe(pos, tmp, &allocator->free_list.list) {
 		/* @todo O(n) performance.  Optimize. */
 
-		struct memrar_address_range * const chunk =
+		struct memrar_address_range *const chunk =
 			&list_entry(pos,
 				    struct memrar_address_ranges,
 				    list)->range;
@@ -298,7 +298,7 @@ long memrar_allocator_free(struct memrar_allocator *allocator,
 			 *   +------------+
 			 */
 
-			struct memrar_address_ranges const * const next =
+			struct memrar_address_ranges const *const next =
 				list_entry(pos->next,
 					   struct memrar_address_ranges,
 					   list);
@@ -333,7 +333,6 @@ long memrar_allocator_free(struct memrar_allocator *allocator,
 			new_chunk_size = chunk->end - chunk->begin;
 
 			goto exit_memrar_free;
-
 		} else if (handle->end == chunk->begin) {
 			/*
 			 * Chunk "greater than" than the one we're
@@ -350,7 +349,7 @@ long memrar_allocator_free(struct memrar_allocator *allocator,
 			 *   +------------+
 			 */
 
-			struct memrar_address_ranges const * const prev =
+			struct memrar_address_ranges const *const prev =
 				list_entry(pos->prev,
 					   struct memrar_address_ranges,
 					   list);
@@ -387,7 +386,6 @@ long memrar_allocator_free(struct memrar_allocator *allocator,
 			new_chunk_size = chunk->end - chunk->begin;
 
 			goto exit_memrar_free;
-
 		} else if (chunk->end < handle->begin
 			   && chunk->end > old_end) {
 			/* Keep track of where the entry could be
@@ -426,7 +424,7 @@ exit_memrar_free:
 
 
 /*
-  Local Variables:
-    c-file-style: "linux"
-  End:
-*/
+ * Local Variables:
+ *  c-file-style: "linux"
+ * End:
+ */

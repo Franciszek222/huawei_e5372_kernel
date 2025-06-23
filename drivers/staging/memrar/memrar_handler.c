@@ -82,10 +82,10 @@
  * reference count on the corresponding RAR buffer.
  */
 struct memrar_buffer_info {
-	struct list_head list;
-	struct RAR_buffer buffer;
-	struct kref refcount;
-	struct file *owner;
+	struct list_head	list;
+	struct RAR_buffer	buffer;
+	struct kref		refcount;
+	struct file *		owner;
 };
 
 /**
@@ -108,13 +108,13 @@ struct memrar_buffer_info {
  * multiple RARs are performed in parallel.
  */
 struct memrar_rar_info {
-	dma_addr_t base;
-	unsigned long length;
-	void __iomem *iobase;
-	struct memrar_allocator *allocator;
-	struct memrar_buffer_info buffers;
-	struct mutex lock;
-	int allocated;	/* True if we own this RAR */
+	dma_addr_t			base;
+	unsigned long			length;
+	void __iomem *			iobase;
+	struct memrar_allocator *	allocator;
+	struct memrar_buffer_info	buffers;
+	struct mutex			lock;
+	int				allocated; /* True if we own this RAR */
 };
 
 /*
@@ -131,19 +131,21 @@ static inline int memrar_is_valid_rar_type(u32 type)
 }
 
 /* Check if an address/handle falls with the given RAR memory range. */
-static inline int memrar_handle_in_range(struct memrar_rar_info *rar,
-					 u32 vaddr)
+static inline int memrar_handle_in_range(struct memrar_rar_info *	rar,
+					 u32				vaddr)
 {
-	unsigned long const iobase = (unsigned long) (rar->iobase);
-	return (vaddr >= iobase && vaddr < iobase + rar->length);
+	unsigned long const iobase = (unsigned long)(rar->iobase);
+
+	return vaddr >= iobase && vaddr < iobase + rar->length;
 }
 
 /* Retrieve RAR information associated with the given handle. */
 static struct memrar_rar_info *memrar_get_rar_info(u32 vaddr)
 {
 	int i;
+
 	for (i = 0; i < MRST_NUM_RAR; ++i) {
-		struct memrar_rar_info * const rar = &memrars[i];
+		struct memrar_rar_info *const rar = &memrars[i];
 		if (memrar_handle_in_range(rar, vaddr))
 			return rar;
 	}
@@ -161,9 +163,9 @@ static struct memrar_rar_info *memrar_get_rar_info(u32 vaddr)
  */
 static dma_addr_t memrar_get_bus_address(
 	struct memrar_rar_info *rar,
-	u32 vaddr)
+	u32			vaddr)
 {
-	unsigned long const iobase = (unsigned long) (rar->iobase);
+	unsigned long const iobase = (unsigned long)(rar->iobase);
 
 	if (!memrar_handle_in_range(rar, vaddr))
 		return 0;
@@ -189,7 +191,7 @@ static dma_addr_t memrar_get_bus_address(
  */
 static dma_addr_t memrar_get_physical_address(
 	struct memrar_rar_info *rar,
-	u32 vaddr)
+	u32			vaddr)
 {
 	/*
 	 * @todo This assumes that the bus address and physical
@@ -217,13 +219,13 @@ static void memrar_release_block_i(struct kref *ref)
 	 * and reclaim resources.
 	 */
 
-	struct memrar_buffer_info * const node =
+	struct memrar_buffer_info *const node =
 		container_of(ref, struct memrar_buffer_info, refcount);
 
-	struct RAR_block_info * const user_info =
+	struct RAR_block_info *const user_info =
 		&node->buffer.info;
 
-	struct memrar_allocator * const allocator =
+	struct memrar_allocator *const allocator =
 		memrars[user_info->type].allocator;
 
 	list_del(&node->list);
@@ -273,7 +275,7 @@ static int memrar_init_rar_resources(int rarnum, char const *devname)
 	static size_t const RAR_BLOCK_SIZE = PAGE_SIZE;
 
 	dma_addr_t low, high;
-	struct memrar_rar_info * const rar = &memrars[rarnum];
+	struct memrar_rar_info *const rar = &memrars[rarnum];
 
 	BUG_ON(MRST_NUM_RAR != ARRAY_SIZE(memrars));
 	BUG_ON(!memrar_is_valid_rar_type(rarnum));
@@ -291,11 +293,11 @@ static int memrar_init_rar_resources(int rarnum, char const *devname)
 	if (rar_get_address(rarnum, &low, &high) != 0)
 		/* No RAR is available. */
 		return -ENODEV;
-	
+
 	if (low == 0 || high == 0) {
-		rar->base      = 0;
-		rar->length    = 0;
-		rar->iobase    = NULL;
+		rar->base = 0;
+		rar->length = 0;
+		rar->iobase = NULL;
 		rar->allocator = NULL;
 		return -ENOSPC;
 	}
@@ -338,8 +340,8 @@ static int memrar_init_rar_resources(int rarnum, char const *devname)
 	}
 
 	/* Initialize corresponding memory allocator. */
-	rar->allocator = memrar_create_allocator((unsigned long) rar->iobase,
-						rar->length, RAR_BLOCK_SIZE);
+	rar->allocator = memrar_create_allocator((unsigned long)rar->iobase,
+						 rar->length, RAR_BLOCK_SIZE);
 	if (rar->allocator == NULL) {
 		iounmap(rar->iobase);
 		release_mem_region(low, rar->length);
@@ -347,10 +349,10 @@ static int memrar_init_rar_resources(int rarnum, char const *devname)
 	}
 
 	pr_info("%s: BRAR[%d] bus address range = [0x%lx, 0x%lx]\n",
-			devname, rarnum, (unsigned long) low, (unsigned long) high);
+		devname, rarnum, (unsigned long)low, (unsigned long)high);
 
 	pr_info("%s: BRAR[%d] size = %zu KiB\n",
-			devname, rarnum, rar->allocator->capacity / 1024);
+		devname, rarnum, rar->allocator->capacity / 1024);
 
 	rar->allocated = 1;
 	return 0;
@@ -373,8 +375,8 @@ static void memrar_fini_rar_resources(void)
 	 *       (module initialization failure or exit?)
 	 */
 
-	for (z = MRST_NUM_RAR; z-- != 0; ) {
-		struct memrar_rar_info * const rar = &memrars[z];
+	for (z = MRST_NUM_RAR; z-- != 0;) {
+		struct memrar_rar_info *const rar = &memrars[z];
 
 		if (!rar->allocated)
 			continue;
@@ -410,11 +412,10 @@ static void memrar_fini_rar_resources(void)
  *	Allocate a block of the requested RAR. If successful return the
  *	request object filled in and zero, if not report an error code
  */
-
-static long memrar_reserve_block(struct RAR_buffer *request,
-				 struct file *filp)
+static long memrar_reserve_block(struct RAR_buffer *	request,
+				 struct file *		filp)
 {
-	struct RAR_block_info * const rinfo = &request->info;
+	struct RAR_block_info *const rinfo = &request->info;
 	struct RAR_buffer *buffer;
 	struct memrar_buffer_info *buffer_info;
 	u32 handle;
@@ -473,12 +474,11 @@ static long memrar_reserve_block(struct RAR_buffer *request,
  *	Release a previously allocated block. Releases act on complete
  *	blocks, partially freeing a block is not supported
  */
-
 static long memrar_release_block(u32 addr)
 {
 	struct memrar_buffer_info *pos;
 	struct memrar_buffer_info *tmp;
-	struct memrar_rar_info * const rar = memrar_get_rar_info(addr);
+	struct memrar_rar_info *const rar = memrar_get_rar_info(addr);
 	long result = -EINVAL;
 
 	if (rar == NULL)
@@ -494,7 +494,7 @@ static long memrar_release_block(u32 addr)
 				 tmp,
 				 &rar->buffers.list,
 				 list) {
-		struct RAR_block_info * const info =
+		struct RAR_block_info *const info =
 			&pos->buffer.info;
 
 		/*
@@ -531,7 +531,7 @@ static long memrar_get_stat(struct RAR_stat *r)
 {
 	struct memrar_allocator *allocator;
 
- 	if (!memrar_is_valid_rar_type(r->type))
+	if (!memrar_is_valid_rar_type(r->type))
 		return -EINVAL;
 
 	if (!memrars[r->type].allocated)
@@ -561,16 +561,15 @@ static long memrar_get_stat(struct RAR_stat *r)
  *
  *	Perform one of the ioctls supported by the memrar device
  */
-
-static long memrar_ioctl(struct file *filp,
-			 unsigned int cmd,
-			 unsigned long arg)
+static long memrar_ioctl(struct file *	filp,
+			 unsigned int	cmd,
+			 unsigned long	arg)
 {
 	void __user *argp = (void __user *)arg;
 	long result = 0;
 
 	struct RAR_buffer buffer;
-	struct RAR_block_info * const request = &buffer.info;
+	struct RAR_block_info *const request = &buffer.info;
 	struct RAR_stat rar_info;
 	u32 rar_handle;
 
@@ -632,7 +631,6 @@ static long memrar_ioctl(struct file *filp,
  *	Support the mmap operation on the RAR space for debugging systems
  *	when the memory is not locked down.
  */
-
 static int memrar_mmap(struct file *filp, struct vm_area_struct *vma)
 {
 	/*
@@ -652,7 +650,7 @@ static int memrar_mmap(struct file *filp, struct vm_area_struct *vma)
 	/* Users pass the RAR handle as the mmap() offset parameter. */
 	unsigned long const handle = vma->vm_pgoff << PAGE_SHIFT;
 
-	struct memrar_rar_info * const rar = memrar_get_rar_info(handle);
+	struct memrar_rar_info *const rar = memrar_get_rar_info(handle);
 	unsigned long pfn;
 
 	/* Only allow priviledged apps to go poking around this way */
@@ -662,7 +660,7 @@ static int memrar_mmap(struct file *filp, struct vm_area_struct *vma)
 	/* Invalid RAR handle or size passed to mmap(). */
 	if (rar == NULL
 	    || handle == 0
-	    || size > (handle - (unsigned long) rar->iobase))
+	    || size > (handle - (unsigned long)rar->iobase))
 		return -EINVAL;
 
 	/*
@@ -702,7 +700,6 @@ static int memrar_mmap(struct file *filp, struct vm_area_struct *vma)
  *	As we support multiple arbitary opens there is no work to be done
  *	really.
  */
-
 static int memrar_open(struct inode *inode, struct file *filp)
 {
 	nonseekable_open(inode, filp);
@@ -719,7 +716,6 @@ static int memrar_open(struct inode *inode, struct file *filp)
  *	ensure resources are not leaked when their owner explodes in an
  *	unplanned fashion.
  */
-
 static int memrar_release(struct inode *inode, struct file *filp)
 {
 	/* Free all regions associated with the given file handle. */
@@ -729,7 +725,7 @@ static int memrar_release(struct inode *inode, struct file *filp)
 	int z;
 
 	for (z = 0; z != MRST_NUM_RAR; ++z) {
-		struct memrar_rar_info * const rar = &memrars[z];
+		struct memrar_rar_info *const rar = &memrars[z];
 
 		mutex_lock(&rar->lock);
 
@@ -756,10 +752,9 @@ static int memrar_release(struct inode *inode, struct file *filp)
  *	Reserve a series of buffers in the RAR space. Returns the number of
  *	buffers successfully allocated
  */
-
 size_t rar_reserve(struct RAR_buffer *buffers, size_t count)
 {
-	struct RAR_buffer * const end =
+	struct RAR_buffer *const end =
 		(buffers == NULL ? buffers : buffers + count);
 	struct RAR_buffer *i;
 
@@ -783,17 +778,16 @@ EXPORT_SYMBOL(rar_reserve);
  *
  *	Return a set of buffers to the RAR pool
  */
-
 size_t rar_release(struct RAR_buffer *buffers, size_t count)
 {
-	struct RAR_buffer * const end =
+	struct RAR_buffer *const end =
 		(buffers == NULL ? buffers : buffers + count);
 	struct RAR_buffer *i;
 
 	size_t release_count = 0;
 
 	for (i = buffers; i != end; ++i) {
-		u32 * const handle = &i->info.handle;
+		u32 *const handle = &i->info.handle;
 		if (memrar_release_block(*handle) == 0) {
 			/*
 			 * @todo We assume we should do this each time
@@ -821,10 +815,9 @@ EXPORT_SYMBOL(rar_release);
  *	that when the device is locked down the bus addresses in question
  *	are not CPU accessible.
  */
-
 size_t rar_handle_to_bus(struct RAR_buffer *buffers, size_t count)
 {
-	struct RAR_buffer * const end =
+	struct RAR_buffer *const end =
 		(buffers == NULL ? buffers : buffers + count);
 	struct RAR_buffer *i;
 	struct memrar_buffer_info *pos;
@@ -837,7 +830,7 @@ size_t rar_handle_to_bus(struct RAR_buffer *buffers, size_t count)
 	 * @todo Not liking this nested loop.  Optimize.
 	 */
 	for (i = buffers; i != end; ++i) {
-		struct memrar_rar_info * const rar =
+		struct memrar_rar_info *const rar =
 			memrar_get_rar_info(i->info.handle);
 
 		/*
@@ -852,7 +845,7 @@ size_t rar_handle_to_bus(struct RAR_buffer *buffers, size_t count)
 		mutex_lock(&rar->lock);
 
 		list_for_each_entry(pos, &rar->buffers.list, list) {
-			struct RAR_block_info * const user_info =
+			struct RAR_block_info *const user_info =
 				&pos->buffer.info;
 
 			/*
@@ -894,17 +887,17 @@ size_t rar_handle_to_bus(struct RAR_buffer *buffers, size_t count)
 EXPORT_SYMBOL(rar_handle_to_bus);
 
 static const struct file_operations memrar_fops = {
-	.owner = THIS_MODULE,
+	.owner		= THIS_MODULE,
 	.unlocked_ioctl = memrar_ioctl,
-	.mmap           = memrar_mmap,
-	.open           = memrar_open,
-	.release        = memrar_release,
+	.mmap		= memrar_mmap,
+	.open		= memrar_open,
+	.release	= memrar_release,
 };
 
 static struct miscdevice memrar_miscdev = {
-	.minor = MISC_DYNAMIC_MINOR,    /* dynamic allocation */
-	.name = "memrar",               /* /dev/memrar */
-	.fops = &memrar_fops
+	.minor	= MISC_DYNAMIC_MINOR,   /* dynamic allocation */
+	.name	= "memrar",             /* /dev/memrar */
+	.fops	= &memrar_fops
 };
 
 static char const banner[] __initdata =
@@ -918,7 +911,6 @@ static char const banner[] __initdata =
  *	We have been granted ownership of the RAR. Add it to our memory
  *	management tables
  */
-
 static int memrar_registration_callback(unsigned long rar)
 {
 	/*
@@ -936,7 +928,6 @@ static int memrar_registration_callback(unsigned long rar)
  *	the RAR support is activated, but the callbacks on the registration
  *	will handle that situation for us anyway.
  */
-
 static int __init memrar_init(void)
 {
 	int err;
@@ -957,7 +948,7 @@ static int __init memrar_init(void)
 		return 0;
 
 	/* It is possible rar 0 registered and allocated resources then rar 1
-	   failed so do a full resource free */
+	 * failed so do a full resource free */
 	memrar_fini_rar_resources();
 fail:
 	misc_deregister(&memrar_miscdev);
@@ -970,7 +961,6 @@ fail:
  *	Unregister the device and then unload any mappings and release
  *	the RAR resources
  */
-
 static void __exit memrar_exit(void)
 {
 	misc_deregister(&memrar_miscdev);
@@ -990,7 +980,7 @@ MODULE_VERSION(MEMRAR_VER);
 
 
 /*
-  Local Variables:
-    c-file-style: "linux"
-  End:
-*/
+ * Local Variables:
+ *  c-file-style: "linux"
+ * End:
+ */

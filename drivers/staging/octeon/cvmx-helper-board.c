@@ -53,8 +53,8 @@
  * this pointer to a function before calling any cvmx-helper
  * operations.
  */
-cvmx_helper_link_info_t(*cvmx_override_board_link_get) (int ipd_port) =
-    NULL;
+cvmx_helper_link_info_t (*cvmx_override_board_link_get) (int ipd_port) =
+	NULL;
 
 /**
  * Return the MII PHY address associated with the given IPD
@@ -165,8 +165,8 @@ int cvmx_helper_board_get_mii_address(int ipd_port)
 
 	/* Some unknown board. Somebody forgot to update this function... */
 	cvmx_dprintf
-	    ("cvmx_helper_board_get_mii_address: Unknown board type %d\n",
-	     cvmx_sysinfo_get()->board_type);
+		("cvmx_helper_board_get_mii_address: Unknown board type %d\n",
+		cvmx_sysinfo_get()->board_type);
 	return -1;
 }
 
@@ -232,8 +232,9 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get(int ipd_port)
 			result.s.full_duplex = 1;
 			result.s.speed = 1000;
 			return result;
-		} else		/* The other port uses a broadcom PHY */
+		} else {        /* The other port uses a broadcom PHY */
 			is_broadcom_phy = 1;
+		}
 		break;
 	case CVMX_BOARD_TYPE_BBGW_REF:
 		/* Port 1 on these boards is always Gigabit */
@@ -260,8 +261,8 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get(int ipd_port)
 			 * parts
 			 */
 			int phy_status =
-			    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-					   0x19);
+				cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+					       0x19);
 			switch ((phy_status >> 8) & 0x7) {
 			case 0:
 				result.u64 = 0;
@@ -312,7 +313,7 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get(int ipd_port)
 			 * specific area.
 			 */
 			int phy_status =
-			    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff, 17);
+				cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff, 17);
 
 			/*
 			 * If the resolve bit 11 isn't set, see if
@@ -322,8 +323,8 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get(int ipd_port)
 			 */
 			if ((phy_status & (1 << 11)) == 0) {
 				int auto_status =
-				    cvmx_mdio_read(phy_addr >> 8,
-						   phy_addr & 0xff, 0);
+					cvmx_mdio_read(phy_addr >> 8,
+						       phy_addr & 0xff, 0);
 				if ((auto_status & (1 << 12)) == 0)
 					phy_status |= 1 << 11;
 			}
@@ -337,16 +338,16 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get(int ipd_port)
 				result.s.link_up = 1;
 				result.s.full_duplex = ((phy_status >> 13) & 1);
 				switch ((phy_status >> 14) & 3) {
-				case 0:	/* 10 Mbps */
+				case 0: /* 10 Mbps */
 					result.s.speed = 10;
 					break;
-				case 1:	/* 100 Mbps */
+				case 1: /* 100 Mbps */
 					result.s.speed = 100;
 					break;
-				case 2:	/* 1 Gbps */
+				case 2: /* 1 Gbps */
 					result.s.speed = 1000;
 					break;
-				case 3:	/* Illegal */
+				case 3: /* Illegal */
 					result.u64 = 0;
 					break;
 				}
@@ -366,21 +367,21 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get(int ipd_port)
 		int interface = cvmx_helper_get_interface_num(ipd_port);
 		int index = cvmx_helper_get_interface_index_num(ipd_port);
 		inband_status.u64 =
-		    cvmx_read_csr(CVMX_GMXX_RXX_RX_INBND(index, interface));
+			cvmx_read_csr(CVMX_GMXX_RXX_RX_INBND(index, interface));
 
 		result.s.link_up = inband_status.s.status;
 		result.s.full_duplex = inband_status.s.duplex;
 		switch (inband_status.s.speed) {
-		case 0:	/* 10 Mbps */
+		case 0: /* 10 Mbps */
 			result.s.speed = 10;
 			break;
-		case 1:	/* 100 Mbps */
+		case 1: /* 100 Mbps */
 			result.s.speed = 100;
 			break;
-		case 2:	/* 1 Gbps */
+		case 2: /* 1 Gbps */
 			result.s.speed = 1000;
 			break;
-		case 3:	/* Illegal */
+		case 3: /* Illegal */
 			result.u64 = 0;
 			break;
 		}
@@ -420,20 +421,19 @@ int cvmx_helper_board_link_set_phy(int phy_addr,
 				   link_flags,
 				   cvmx_helper_link_info_t link_info)
 {
-
 	/* Set the flow control settings based on link_flags */
 	if ((link_flags & set_phy_link_flags_flow_control_mask) !=
 	    set_phy_link_flags_flow_control_dont_touch) {
 		cvmx_mdio_phy_reg_autoneg_adver_t reg_autoneg_adver;
 		reg_autoneg_adver.u16 =
-		    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-				   CVMX_MDIO_PHY_REG_AUTONEG_ADVER);
+			cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+				       CVMX_MDIO_PHY_REG_AUTONEG_ADVER);
 		reg_autoneg_adver.s.asymmetric_pause =
-		    (link_flags & set_phy_link_flags_flow_control_mask) ==
-		    set_phy_link_flags_flow_control_enable;
+			(link_flags & set_phy_link_flags_flow_control_mask) ==
+			set_phy_link_flags_flow_control_enable;
 		reg_autoneg_adver.s.pause =
-		    (link_flags & set_phy_link_flags_flow_control_mask) ==
-		    set_phy_link_flags_flow_control_enable;
+			(link_flags & set_phy_link_flags_flow_control_mask) ==
+			set_phy_link_flags_flow_control_enable;
 		cvmx_mdio_write(phy_addr >> 8, phy_addr & 0xff,
 				CVMX_MDIO_PHY_REG_AUTONEG_ADVER,
 				reg_autoneg_adver.u16);
@@ -449,42 +449,42 @@ int cvmx_helper_board_link_set_phy(int phy_addr,
 		cvmx_mdio_phy_reg_control_1000_t reg_control_1000;
 
 		reg_status.u16 =
-		    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-				   CVMX_MDIO_PHY_REG_STATUS);
+			cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+				       CVMX_MDIO_PHY_REG_STATUS);
 		reg_autoneg_adver.u16 =
-		    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-				   CVMX_MDIO_PHY_REG_AUTONEG_ADVER);
+			cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+				       CVMX_MDIO_PHY_REG_AUTONEG_ADVER);
 		reg_autoneg_adver.s.advert_100base_t4 =
-		    reg_status.s.capable_100base_t4;
+			reg_status.s.capable_100base_t4;
 		reg_autoneg_adver.s.advert_10base_tx_full =
-		    reg_status.s.capable_10_full;
+			reg_status.s.capable_10_full;
 		reg_autoneg_adver.s.advert_10base_tx_half =
-		    reg_status.s.capable_10_half;
+			reg_status.s.capable_10_half;
 		reg_autoneg_adver.s.advert_100base_tx_full =
-		    reg_status.s.capable_100base_x_full;
+			reg_status.s.capable_100base_x_full;
 		reg_autoneg_adver.s.advert_100base_tx_half =
-		    reg_status.s.capable_100base_x_half;
+			reg_status.s.capable_100base_x_half;
 		cvmx_mdio_write(phy_addr >> 8, phy_addr & 0xff,
 				CVMX_MDIO_PHY_REG_AUTONEG_ADVER,
 				reg_autoneg_adver.u16);
 		if (reg_status.s.capable_extended_status) {
 			reg_extended_status.u16 =
-			    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-					   CVMX_MDIO_PHY_REG_EXTENDED_STATUS);
+				cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+					       CVMX_MDIO_PHY_REG_EXTENDED_STATUS);
 			reg_control_1000.u16 =
-			    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-					   CVMX_MDIO_PHY_REG_CONTROL_1000);
+				cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+					       CVMX_MDIO_PHY_REG_CONTROL_1000);
 			reg_control_1000.s.advert_1000base_t_full =
-			    reg_extended_status.s.capable_1000base_t_full;
+				reg_extended_status.s.capable_1000base_t_full;
 			reg_control_1000.s.advert_1000base_t_half =
-			    reg_extended_status.s.capable_1000base_t_half;
+				reg_extended_status.s.capable_1000base_t_half;
 			cvmx_mdio_write(phy_addr >> 8, phy_addr & 0xff,
 					CVMX_MDIO_PHY_REG_CONTROL_1000,
 					reg_control_1000.u16);
 		}
 		reg_control.u16 =
-		    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-				   CVMX_MDIO_PHY_REG_CONTROL);
+			cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+				       CVMX_MDIO_PHY_REG_CONTROL);
 		reg_control.s.autoneg_enable = 1;
 		reg_control.s.restart_autoneg = 1;
 		cvmx_mdio_write(phy_addr >> 8, phy_addr & 0xff,
@@ -497,11 +497,11 @@ int cvmx_helper_board_link_set_phy(int phy_addr,
 		cvmx_mdio_phy_reg_control_1000_t reg_control_1000;
 
 		reg_status.u16 =
-		    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-				   CVMX_MDIO_PHY_REG_STATUS);
+			cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+				       CVMX_MDIO_PHY_REG_STATUS);
 		reg_autoneg_adver.u16 =
-		    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-				   CVMX_MDIO_PHY_REG_AUTONEG_ADVER);
+			cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+				       CVMX_MDIO_PHY_REG_AUTONEG_ADVER);
 		reg_autoneg_adver.s.advert_100base_t4 = 0;
 		reg_autoneg_adver.s.advert_10base_tx_full = 0;
 		reg_autoneg_adver.s.advert_10base_tx_half = 0;
@@ -509,32 +509,32 @@ int cvmx_helper_board_link_set_phy(int phy_addr,
 		reg_autoneg_adver.s.advert_100base_tx_half = 0;
 		if (reg_status.s.capable_extended_status) {
 			reg_extended_status.u16 =
-			    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-					   CVMX_MDIO_PHY_REG_EXTENDED_STATUS);
+				cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+					       CVMX_MDIO_PHY_REG_EXTENDED_STATUS);
 			reg_control_1000.u16 =
-			    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-					   CVMX_MDIO_PHY_REG_CONTROL_1000);
+				cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+					       CVMX_MDIO_PHY_REG_CONTROL_1000);
 			reg_control_1000.s.advert_1000base_t_full = 0;
 			reg_control_1000.s.advert_1000base_t_half = 0;
 		}
 		switch (link_info.s.speed) {
 		case 10:
 			reg_autoneg_adver.s.advert_10base_tx_full =
-			    link_info.s.full_duplex;
+				link_info.s.full_duplex;
 			reg_autoneg_adver.s.advert_10base_tx_half =
-			    !link_info.s.full_duplex;
+				!link_info.s.full_duplex;
 			break;
 		case 100:
 			reg_autoneg_adver.s.advert_100base_tx_full =
-			    link_info.s.full_duplex;
+				link_info.s.full_duplex;
 			reg_autoneg_adver.s.advert_100base_tx_half =
-			    !link_info.s.full_duplex;
+				!link_info.s.full_duplex;
 			break;
 		case 1000:
 			reg_control_1000.s.advert_1000base_t_full =
-			    link_info.s.full_duplex;
+				link_info.s.full_duplex;
 			reg_control_1000.s.advert_1000base_t_half =
-			    !link_info.s.full_duplex;
+				!link_info.s.full_duplex;
 			break;
 		}
 		cvmx_mdio_write(phy_addr >> 8, phy_addr & 0xff,
@@ -545,8 +545,8 @@ int cvmx_helper_board_link_set_phy(int phy_addr,
 					CVMX_MDIO_PHY_REG_CONTROL_1000,
 					reg_control_1000.u16);
 		reg_control.u16 =
-		    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-				   CVMX_MDIO_PHY_REG_CONTROL);
+			cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+				       CVMX_MDIO_PHY_REG_CONTROL);
 		reg_control.s.autoneg_enable = 1;
 		reg_control.s.restart_autoneg = 1;
 		cvmx_mdio_write(phy_addr >> 8, phy_addr & 0xff,
@@ -554,8 +554,8 @@ int cvmx_helper_board_link_set_phy(int phy_addr,
 	} else {
 		cvmx_mdio_phy_reg_control_t reg_control;
 		reg_control.u16 =
-		    cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
-				   CVMX_MDIO_PHY_REG_CONTROL);
+			cvmx_mdio_read(phy_addr >> 8, phy_addr & 0xff,
+				       CVMX_MDIO_PHY_REG_CONTROL);
 		reg_control.s.autoneg_enable = 0;
 		reg_control.s.restart_autoneg = 1;
 		reg_control.s.duplex = link_info.s.full_duplex;
@@ -611,8 +611,8 @@ int __cvmx_helper_board_interface_probe(int interface, int supported_ports)
 		if (interface == 0)
 			return 0;
 		break;
-		/* The 2nd interface on the EBH5600 is connected to the Marvel switch,
-		   which we don't support. Disable ports connected to it */
+	/* The 2nd interface on the EBH5600 is connected to the Marvel switch,
+	 * which we don't support. Disable ports connected to it */
 	case CVMX_BOARD_TYPE_EBH5600:
 		if (interface == 1)
 			return 0;
@@ -668,25 +668,25 @@ int __cvmx_helper_board_hardware_enable(int interface)
 			int phy_addr = cvmx_helper_board_get_mii_address(0);
 			if (phy_addr != -1) {
 				int phy_identifier =
-				    cvmx_mdio_read(phy_addr >> 8,
-						   phy_addr & 0xff, 0x2);
+					cvmx_mdio_read(phy_addr >> 8,
+						       phy_addr & 0xff, 0x2);
 				/* Is it a Broadcom PHY? */
 				if (phy_identifier == 0x0143) {
 					cvmx_dprintf("\n");
 					cvmx_dprintf("ERROR:\n");
 					cvmx_dprintf
-					    ("ERROR: Board type is CVMX_BOARD_TYPE_CN3010_EVB_HS5, but Broadcom PHY found.\n");
+						("ERROR: Board type is CVMX_BOARD_TYPE_CN3010_EVB_HS5, but Broadcom PHY found.\n");
 					cvmx_dprintf
-					    ("ERROR: The board type is mis-configured, and software malfunctions are likely.\n");
+						("ERROR: The board type is mis-configured, and software malfunctions are likely.\n");
 					cvmx_dprintf
-					    ("ERROR: All boards require a unique board type to identify them.\n");
+						("ERROR: All boards require a unique board type to identify them.\n");
 					cvmx_dprintf("ERROR:\n");
 					cvmx_dprintf("\n");
 					cvmx_wait(1000000000);
 					cvmx_write_csr(CVMX_ASXX_RX_CLK_SETX
-						       (0, interface), 5);
+							       (0, interface), 5);
 					cvmx_write_csr(CVMX_ASXX_TX_CLK_SETX
-						       (0, interface), 5);
+							       (0, interface), 5);
 				}
 			}
 		}

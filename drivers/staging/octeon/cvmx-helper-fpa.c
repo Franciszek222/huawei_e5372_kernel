@@ -68,7 +68,7 @@ static int __cvmx_helper_initialize_fpa_pool(int pool, uint64_t buffer_size,
 	if (current_num) {
 		cvmx_dprintf("Fpa pool %d(%s) already has %llu buffers. "
 			     "Skipping setup.\n",
-		     pool, name, (unsigned long long)current_num);
+			     pool, name, (unsigned long long)current_num);
 		return 0;
 	}
 
@@ -130,50 +130,50 @@ static int __cvmx_helper_initialize_fpa(int pip_pool, int pip_size,
 
 	if ((pip_buffers > 0) && (pip_buffers <= 64))
 		cvmx_dprintf
-		    ("Warning: %d packet buffers may not be enough for hardware"
-		     " prefetch. 65 or more is recommended.\n", pip_buffers);
+			("Warning: %d packet buffers may not be enough for hardware"
+			" prefetch. 65 or more is recommended.\n", pip_buffers);
 
 	if (pip_pool >= 0) {
 		status =
-		    __cvmx_helper_initialize_fpa_pool(pip_pool, pip_size,
-						      pip_buffers,
-						      "Packet Buffers");
+			__cvmx_helper_initialize_fpa_pool(pip_pool, pip_size,
+							  pip_buffers,
+							  "Packet Buffers");
 		if (status)
 			return status;
 	}
 
 	if (wqe_pool >= 0) {
 		status =
-		    __cvmx_helper_initialize_fpa_pool(wqe_pool, wqe_size,
-						      wqe_entries,
-						      "Work Queue Entries");
+			__cvmx_helper_initialize_fpa_pool(wqe_pool, wqe_size,
+							  wqe_entries,
+							  "Work Queue Entries");
 		if (status)
 			return status;
 	}
 
 	if (pko_pool >= 0) {
 		status =
-		    __cvmx_helper_initialize_fpa_pool(pko_pool, pko_size,
-						      pko_buffers,
-						      "PKO Command Buffers");
+			__cvmx_helper_initialize_fpa_pool(pko_pool, pko_size,
+							  pko_buffers,
+							  "PKO Command Buffers");
 		if (status)
 			return status;
 	}
 
 	if (tim_pool >= 0) {
 		status =
-		    __cvmx_helper_initialize_fpa_pool(tim_pool, tim_size,
-						      tim_buffers,
-						      "TIM Command Buffers");
+			__cvmx_helper_initialize_fpa_pool(tim_pool, tim_size,
+							  tim_buffers,
+							  "TIM Command Buffers");
 		if (status)
 			return status;
 	}
 
 	if (dfa_pool >= 0) {
 		status =
-		    __cvmx_helper_initialize_fpa_pool(dfa_pool, dfa_size,
-						      dfa_buffers,
-						      "DFA Command Buffers");
+			__cvmx_helper_initialize_fpa_pool(dfa_pool, dfa_size,
+							  dfa_buffers,
+							  "DFA Command Buffers");
 		if (status)
 			return status;
 	}

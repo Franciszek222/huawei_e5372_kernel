@@ -1,28 +1,28 @@
 /**********************************************************************
- * Author: Cavium Networks
- *
- * Contact: support@caviumnetworks.com
- * This file is part of the OCTEON SDK
- *
- * Copyright (c) 2003-2010 Cavium Networks
- *
- * This file is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License, Version 2, as
- * published by the Free Software Foundation.
- *
- * This file is distributed in the hope that it will be useful, but
- * AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
- * NONINFRINGEMENT.  See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this file; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
- * or visit http://www.gnu.org/licenses/.
- *
- * This file may also be available under a different license from Cavium.
- * Contact Cavium Networks for more information
+* Author: Cavium Networks
+*
+* Contact: support@caviumnetworks.com
+* This file is part of the OCTEON SDK
+*
+* Copyright (c) 2003-2010 Cavium Networks
+*
+* This file is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License, Version 2, as
+* published by the Free Software Foundation.
+*
+* This file is distributed in the hope that it will be useful, but
+* AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+* NONINFRINGEMENT.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this file; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+* or visit http://www.gnu.org/licenses/.
+*
+* This file may also be available under a different license from Cavium.
+* Contact Cavium Networks for more information
 **********************************************************************/
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -67,13 +67,13 @@ struct cvm_napi_wrapper {
 static struct cvm_napi_wrapper cvm_oct_napi[NR_CPUS] __cacheline_aligned_in_smp;
 
 struct cvm_oct_core_state {
-	int baseline_cores;
+	int		baseline_cores;
 	/*
 	 * The number of additional cores that could be processing
 	 * input packtes.
 	 */
-	atomic_t available_cores;
-	cpumask_t cpu_state;
+	atomic_t	available_cores;
+	cpumask_t	cpu_state;
 } ____cacheline_aligned_in_smp;
 
 static struct cvm_oct_core_state core_state __cacheline_aligned_in_smp;
@@ -81,6 +81,7 @@ static struct cvm_oct_core_state core_state __cacheline_aligned_in_smp;
 static void cvm_oct_enable_napi(void *_)
 {
 	int cpu = smp_processor_id();
+
 	napi_schedule(&cvm_oct_napi[cpu].napi);
 }
 
@@ -154,10 +155,9 @@ static inline int cvm_oct_check_rcv_error(cvmx_wqe_t *work)
 		 * counted as frame errors.
 		 */
 	} else
-	    if (USE_10MBPS_PREAMBLE_WORKAROUND
-		&& ((work->word2.snoip.err_code == 5)
-		    || (work->word2.snoip.err_code == 7))) {
-
+	if (USE_10MBPS_PREAMBLE_WORKAROUND
+	    && ((work->word2.snoip.err_code == 5)
+		|| (work->word2.snoip.err_code == 7))) {
 		/*
 		 * We received a packet with either an alignment error
 		 * or a FCS error. This may be signalling that we are
@@ -170,11 +170,10 @@ static inline int cvm_oct_check_rcv_error(cvmx_wqe_t *work)
 		int index = cvmx_helper_get_interface_index_num(work->ipprt);
 		union cvmx_gmxx_rxx_frm_ctl gmxx_rxx_frm_ctl;
 		gmxx_rxx_frm_ctl.u64 =
-		    cvmx_read_csr(CVMX_GMXX_RXX_FRM_CTL(index, interface));
+			cvmx_read_csr(CVMX_GMXX_RXX_FRM_CTL(index, interface));
 		if (gmxx_rxx_frm_ctl.s.pre_chk == 0) {
-
 			uint8_t *ptr =
-			    cvmx_phys_to_ptr(work->packet_ptr.s.addr);
+				cvmx_phys_to_ptr(work->packet_ptr.s.addr);
 			int i = 0;
 
 			while (i < work->len - 1) {
@@ -186,28 +185,28 @@ static inline int cvm_oct_check_rcv_error(cvmx_wqe_t *work)
 
 			if (*ptr == 0xd5) {
 				/*
-				   DEBUGPRINT("Port %d received 0xd5 preamble\n", work->ipprt);
+				 * DEBUGPRINT("Port %d received 0xd5 preamble\n", work->ipprt);
 				 */
 				work->packet_ptr.s.addr += i + 1;
 				work->len -= i + 5;
 			} else if ((*ptr & 0xf) == 0xd) {
 				/*
-				   DEBUGPRINT("Port %d received 0x?d preamble\n", work->ipprt);
+				 * DEBUGPRINT("Port %d received 0x?d preamble\n", work->ipprt);
 				 */
 				work->packet_ptr.s.addr += i;
 				work->len -= i + 4;
 				for (i = 0; i < work->len; i++) {
 					*ptr =
-					    ((*ptr & 0xf0) >> 4) |
-					    ((*(ptr + 1) & 0xf) << 4);
+						((*ptr & 0xf0) >> 4) |
+						((*(ptr + 1) & 0xf) << 4);
 					ptr++;
 				}
 			} else {
 				DEBUGPRINT("Port %d unknown preamble, packet "
 					   "dropped\n",
-				     work->ipprt);
+					   work->ipprt);
 				/*
-				   cvmx_helper_dump_packet(work);
+				 * cvmx_helper_dump_packet(work);
 				 */
 				cvm_oct_free_work(work);
 				return 1;
@@ -232,12 +231,12 @@ static inline int cvm_oct_check_rcv_error(cvmx_wqe_t *work)
  */
 static int cvm_oct_napi_poll(struct napi_struct *napi, int budget)
 {
-	const int	coreid = cvmx_get_core_num();
-	uint64_t	old_group_mask;
-	uint64_t	old_scratch;
-	int		rx_count = 0;
-	int		did_work_request = 0;
-	int		packet_not_copied;
+	const int coreid = cvmx_get_core_num();
+	uint64_t old_group_mask;
+	uint64_t old_scratch;
+	int rx_count = 0;
+	int did_work_request = 0;
+	int packet_not_copied;
 
 	/* Prefetch cvm_oct_device since we know we need it soon */
 	prefetch(cvm_oct_device);
@@ -311,10 +310,9 @@ static int cvm_oct_napi_poll(struct napi_struct *napi, int budget)
 		prefetch(cvm_oct_device[work->ipprt]);
 
 		/* Immediately throw away all packets with receive errors */
-		if (unlikely(work->word2.snoip.rcv_error)) {
+		if (unlikely(work->word2.snoip.rcv_error))
 			if (cvm_oct_check_rcv_error(work))
 				continue;
-		}
 
 		/*
 		 * We can only use the zero copy path if skbuffs are
@@ -366,19 +364,19 @@ static int cvm_oct_napi_poll(struct napi_struct *napi, int budget)
 
 				while (segments--) {
 					union cvmx_buf_ptr next_ptr =
-					    *(union cvmx_buf_ptr *)cvmx_phys_to_ptr(segment_ptr.s.addr - 8);
+						*(union cvmx_buf_ptr *)cvmx_phys_to_ptr(segment_ptr.s.addr - 8);
 
-			/*
-			 * Octeon Errata PKI-100: The segment size is
-			 * wrong. Until it is fixed, calculate the
-			 * segment size based on the packet pool
-			 * buffer size. When it is fixed, the
-			 * following line should be replaced with this
-			 * one: int segment_size =
-			 * segment_ptr.s.size;
-			 */
+					/*
+					 * Octeon Errata PKI-100: The segment size is
+					 * wrong. Until it is fixed, calculate the
+					 * segment size based on the packet pool
+					 * buffer size. When it is fixed, the
+					 * following line should be replaced with this
+					 * one: int segment_size =
+					 * segment_ptr.s.size;
+					 */
 					int segment_size = CVMX_FPA_PACKET_POOL_SIZE -
-						(segment_ptr.s.addr - (((segment_ptr.s.addr >> 7) - segment_ptr.s.back) << 7));
+							   (segment_ptr.s.addr - (((segment_ptr.s.addr >> 7) - segment_ptr.s.back) << 7));
 					/*
 					 * Don't copy more than what
 					 * is left in the packet.
@@ -429,9 +427,9 @@ static int cvm_oct_napi_poll(struct napi_struct *napi, int budget)
 			} else {
 				/* Drop any packet received for a device that isn't up */
 				/*
-				DEBUGPRINT("%s: Device not up, packet dropped\n",
-					   dev->name);
-				*/
+				 * DEBUGPRINT("%s: Device not up, packet dropped\n",
+				 *         dev->name);
+				 */
 #ifdef CONFIG_64BIT
 				atomic64_add(1, (atomic64_t *)&priv->stats.rx_dropped);
 #else
@@ -469,10 +467,9 @@ static int cvm_oct_napi_poll(struct napi_struct *napi, int budget)
 	}
 	/* Restore the original POW group mask */
 	cvmx_write_csr(CVMX_POW_PP_GRP_MSKX(coreid), old_group_mask);
-	if (USE_ASYNC_IOBDMA) {
+	if (USE_ASYNC_IOBDMA)
 		/* Restore the scratch area */
 		cvmx_scratch_write64(CVMX_SCR_SCRATCH, old_scratch);
-	}
 	cvm_oct_rx_refill_pool(0);
 
 	if (rx_count < budget && napi != NULL) {
@@ -513,7 +510,7 @@ void cvm_oct_rx_initialize(void)
 	if (NULL == dev_for_napi)
 		panic("No net_devices were allocated.");
 
-	if (max_rx_cpus > 1  && max_rx_cpus < num_online_cpus())
+	if (max_rx_cpus > 1 && max_rx_cpus < num_online_cpus())
 		atomic_set(&core_state.available_cores, max_rx_cpus);
 	else
 		atomic_set(&core_state.available_cores, num_online_cpus());
@@ -553,7 +550,8 @@ void cvm_oct_rx_initialize(void)
 void cvm_oct_rx_shutdown(void)
 {
 	int i;
+
 	/* Shutdown all of the NAPIs */
 	for_each_possible_cpu(i)
-		netif_napi_del(&cvm_oct_napi[i].napi);
+	netif_napi_del(&cvm_oct_napi[i].napi);
 }

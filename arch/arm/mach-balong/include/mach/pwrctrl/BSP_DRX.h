@@ -32,26 +32,26 @@ extern "C"
 /*****************************************************************************/
 /*macro define*/
 /*****************************************************************************/
-#define PWC_PARA_INVALID				0x1
-#define PWC_SUCCESS						0
-#define PWR_BBP_MTCMOS_MASK 			(0xD << 8)
-#define PWR_BBP_ISO_MASK				(0xD << 8)
-#define PWR_BBP_SRST_MASK				(0xD << 3)
-#define PWR_BBP_CLOCK_MASK				(0xD << 2)
-#define PWR_BBP_PLL_EN					(0x1 << 0)
-#define PWR_BBP_PLL_LOCK				(0x1 << 31)
+#define PWC_PARA_INVALID                                0x1
+#define PWC_SUCCESS                                             0
+#define PWR_BBP_MTCMOS_MASK                     (0xD << 8)
+#define PWR_BBP_ISO_MASK                                (0xD << 8)
+#define PWR_BBP_SRST_MASK                               (0xD << 3)
+#define PWR_BBP_CLOCK_MASK                              (0xD << 2)
+#define PWR_BBP_PLL_EN                                  (0x1 << 0)
+#define PWR_BBP_PLL_LOCK                                (0x1 << 31)
 
 
-#define PWR_DSP_PLL_EN					(0x1 << 0)
-#define PWR_DSP_MTCMOS_MASK				(0x1 << 18)
-#define PWR_DSP_PLL_MASK				(0x1 << 31)
-#define PWR_DSP_SRST_MASK_REGION		(0x1 << 1)
-#define PWR_DSP_SRST_MASK				(0x1 << 0)
-#define PWR_DSP_ISO_MASK				(0x1 << 18)
-#define PWR_DSP_CLOCK_MASK				(0x1 << 0)
+#define PWR_DSP_PLL_EN                                  (0x1 << 0)
+#define PWR_DSP_MTCMOS_MASK                             (0x1 << 18)
+#define PWR_DSP_PLL_MASK                                (0x1 << 31)
+#define PWR_DSP_SRST_MASK_REGION                (0x1 << 1)
+#define PWR_DSP_SRST_MASK                               (0x1 << 0)
+#define PWR_DSP_ISO_MASK                                (0x1 << 18)
+#define PWR_DSP_CLOCK_MASK                              (0x1 << 0)
 #define PWR_DSP_PLL_LOCK                 (0x1 << 31)
 
-#define PWR_PERI_PLL_LOCK				(0x1 << 31)
+#define PWR_PERI_PLL_LOCK                               (0x1 << 31)
 
 
 /*****************************************************************************/

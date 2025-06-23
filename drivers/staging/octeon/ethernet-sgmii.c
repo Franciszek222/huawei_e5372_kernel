@@ -1,28 +1,28 @@
 /**********************************************************************
- * Author: Cavium Networks
- *
- * Contact: support@caviumnetworks.com
- * This file is part of the OCTEON SDK
- *
- * Copyright (c) 2003-2007 Cavium Networks
- *
- * This file is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License, Version 2, as
- * published by the Free Software Foundation.
- *
- * This file is distributed in the hope that it will be useful, but
- * AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
- * NONINFRINGEMENT.  See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this file; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
- * or visit http://www.gnu.org/licenses/.
- *
- * This file may also be available under a different license from Cavium.
- * Contact Cavium Networks for more information
+* Author: Cavium Networks
+*
+* Contact: support@caviumnetworks.com
+* This file is part of the OCTEON SDK
+*
+* Copyright (c) 2003-2007 Cavium Networks
+*
+* This file is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License, Version 2, as
+* published by the Free Software Foundation.
+*
+* This file is distributed in the hope that it will be useful, but
+* AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+* NONINFRINGEMENT.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this file; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+* or visit http://www.gnu.org/licenses/.
+*
+* This file may also be available under a different license from Cavium.
+* Contact Cavium Networks for more information
 **********************************************************************/
 #include <linux/kernel.h>
 #include <linux/netdevice.h>
@@ -86,20 +86,20 @@ static void cvm_oct_sgmii_poll(struct net_device *dev)
 
 	/* Tell Linux */
 	if (link_info.s.link_up) {
-
 		if (!netif_carrier_ok(dev))
 			netif_carrier_on(dev);
-		if (priv->queue != -1)
+		if (priv->queue != -1) {
 			DEBUGPRINT
-			    ("%s: %u Mbps %s duplex, port %2d, queue %2d\n",
-			     dev->name, link_info.s.speed,
-			     (link_info.s.full_duplex) ? "Full" : "Half",
-			     priv->port, priv->queue);
-		else
+				("%s: %u Mbps %s duplex, port %2d, queue %2d\n",
+				dev->name, link_info.s.speed,
+				(link_info.s.full_duplex) ? "Full" : "Half",
+				priv->port, priv->queue);
+		} else {
 			DEBUGPRINT("%s: %u Mbps %s duplex, port %2d, POW\n",
 				   dev->name, link_info.s.speed,
 				   (link_info.s.full_duplex) ? "Full" : "Half",
 				   priv->port);
+		}
 	} else {
 		if (netif_carrier_ok(dev))
 			netif_carrier_off(dev);
@@ -110,6 +110,7 @@ static void cvm_oct_sgmii_poll(struct net_device *dev)
 int cvm_oct_sgmii_init(struct net_device *dev)
 {
 	struct octeon_ethernet *priv = netdev_priv(dev);
+
 	cvm_oct_common_init(dev);
 	dev->netdev_ops->ndo_stop(dev);
 	if (!octeon_is_simulation() && priv->phydev == NULL)

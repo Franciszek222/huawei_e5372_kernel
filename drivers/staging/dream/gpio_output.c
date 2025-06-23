@@ -23,6 +23,7 @@ int gpio_event_output_event(
 {
 	int i;
 	struct gpio_event_output_info *oi;
+
 	oi = container_of(info, struct gpio_event_output_info, info);
 	if (type != oi->type)
 		return 0;
@@ -41,6 +42,7 @@ int gpio_event_output_func(
 	int ret;
 	int i;
 	struct gpio_event_output_info *oi;
+
 	oi = container_of(info, struct gpio_event_output_info, info);
 
 	if (func == GPIO_EVENT_FUNC_SUSPEND || func == GPIO_EVENT_FUNC_RESUME)
@@ -57,15 +59,15 @@ int gpio_event_output_func(
 					   "gpio_event_output");
 			if (ret) {
 				pr_err("gpio_event_output_func: gpio_request "
-					"failed for %d\n", oi->keymap[i].gpio);
+				       "failed for %d\n", oi->keymap[i].gpio);
 				goto err_gpio_request_failed;
 			}
 			ret = gpio_direction_output(oi->keymap[i].gpio,
 						    output_level);
 			if (ret) {
 				pr_err("gpio_event_output_func: "
-					"gpio_direction_output failed for %d\n",
-					oi->keymap[i].gpio);
+				       "gpio_direction_output failed for %d\n",
+				       oi->keymap[i].gpio);
 				goto err_gpio_direction_output_failed;
 			}
 		}
@@ -81,4 +83,3 @@ err_gpio_request_failed:
 	}
 	return ret;
 }
-

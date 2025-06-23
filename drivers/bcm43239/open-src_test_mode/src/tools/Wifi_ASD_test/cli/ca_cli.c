@@ -1,4 +1,3 @@
-
 /****************************************************************************
  *  (c) Copyright 2006 Wi-Fi Alliance.  All Rights Reserved
  *
@@ -40,7 +39,7 @@
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-******************************************************************************
+ ******************************************************************************
  */
 
 
@@ -55,7 +54,7 @@
  *         03/30/2007   -- 01.40 WPA2 and Official WMM Beta Release by qhu
  *         04/20/2007   -- 02.00 WPA2 and Official WMM Release by qhu
  */
- /*
+/*
  *       All the buffer size changed from 512 to MAX_CMD_BUFF(1024)
  *
  */
@@ -104,20 +103,19 @@ main(int argc, char *argv[])
 	int byteSent;
 	int rspCnt = 0;
 	BYTE caCmdBuf[MAX_CMD_BUFF]; /* Modified as per BRCM ASD 1.3 */
+
 	memset(caCmdBuf, 0, 512);
-	if ((argc != 2))
-	{
+	if ((argc != 2)) {
 		DPRINT_ERR(WFA_ERR, "Usage: %s <command string>\n", argv[0]);
 		exit(1);
 	}
 
-	if ((tstr = getenv("WFA_ENV_CA_IPADDR")) == NULL)
-	{
+	if ((tstr = getenv("WFA_ENV_CA_IPADDR")) == NULL) {
 		DPRINT_ERR(WFA_ERR, "Environment variable WFA_ENV_CA_IPADDR not set\n");
 		exit(1);
 	}
 
-	if (isIpV4Addr(tstr) == FALSE){
+	if (isIpV4Addr(tstr) == FALSE) {
 		DPRINT_ERR(WFA_ERR, "incorrect IP number\n");
 		exit(1);
 	}
@@ -125,44 +123,39 @@ main(int argc, char *argv[])
 	servIP = tstr;
 
 
-	if ((tstr = getenv("WFA_ENV_CA_PORT")) == NULL)
-	{
+	if ((tstr = getenv("WFA_ENV_CA_PORT")) == NULL) {
 		DPRINT_ERR(WFA_ERR, "Environment variable WFA_ENV_CA_PORT not set\n");
 		exit(1);
 	}
 
-	if (isNumber(tstr) == FALSE){
+	if (isNumber(tstr) == FALSE) {
 		DPRINT_ERR(WFA_ERR, "incorrect port number\n");
 		exit(1);
 	}
-	
-	if((errno = Start_Socket_Service()) != 0){
+
+	if ((errno = Start_Socket_Service()) != 0) {
 		DPRINT_ERR(WFA_ERR, "Start_Socket_Service failed\n");
 		return 0;
 	}
 
 	servPort = atoi(tstr);
 
-	if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-	{
+	if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
 		DPRINT_ERR(WFA_ERR, "socket() failed");
-		if((errno = Stop_Socket_Service()) != 0){
+		if ((errno = Stop_Socket_Service()) != 0)
 			DPRINT_ERR(WFA_ERR, "Stop_Socket_Service failed\n");
-		}
 		return 0;
 	}
 
 	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family      = AF_INET;
+	servAddr.sin_family = AF_INET;
 	servAddr.sin_addr.s_addr = inet_addr(servIP);
-	servAddr.sin_port        = htons(servPort);
+	servAddr.sin_port = htons(servPort);
 
-	if (connect(sock, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0)
-	{
+	if (connect(sock, (struct sockaddr *)&servAddr, sizeof(servAddr)) < 0) {
 		DPRINT_ERR(WFA_ERR, "connect() failed");
-		if((errno = Stop_Socket_Service()) != 0){
+		if ((errno = Stop_Socket_Service()) != 0)
 			DPRINT_ERR(WFA_ERR, "Stop_Socket_Service failed\n");
-		}
 		return 0;
 	}
 
@@ -181,17 +174,14 @@ main(int argc, char *argv[])
 	rspCnt++;
 	asd_sleep(1);
 	done = 1;
-	while (done)
-	{
+	while (done) {
 		printf("=======Response======\n");
 		printf("%s\n", caCmdBuf);
 		asd_sleep(1);
 		if (strncmp("status,COMPLETE", (char *)caCmdBuf, 15) == 0 ||
-			strncmp("status,INVALID", (char *)caCmdBuf, 14) == 0 ||
-			strncmp("status,ERROR", (char *)caCmdBuf, 12) == 0)
-		{
+		    strncmp("status,INVALID", (char *)caCmdBuf, 14) == 0 ||
+		    strncmp("status,ERROR", (char *)caCmdBuf, 12) == 0)
 			break;
-		}
 
 		if (rspCnt == 3)
 			break;
@@ -204,10 +194,9 @@ main(int argc, char *argv[])
 	}
 	asd_closeSocket(sock);
 
-		/* Tell the user that we could not find a usable */
+	/* Tell the user that we could not find a usable */
 	/* WinSock DLL.                                  */
-	if((errno = Stop_Socket_Service()) != 0){
+	if ((errno = Stop_Socket_Service()) != 0)
 		DPRINT_ERR(WFA_ERR, "Stop_Socket_Service failed\n");
-	}
-		return 0;
+	return 0;
 }

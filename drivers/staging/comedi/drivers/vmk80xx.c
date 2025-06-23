@@ -1,56 +1,56 @@
 /*
-    comedi/drivers/vmk80xx.c
-    Velleman USB Board Low-Level Driver
-
-    Copyright (C) 2009 Manuel Gebele <forensixs@gmx.de>, Germany
-
-    COMEDI - Linux Control and Measurement Device Interface
-    Copyright (C) 2000 David A. Schleef <ds@schleef.org>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
-*/
+ *  comedi/drivers/vmk80xx.c
+ *  Velleman USB Board Low-Level Driver
+ *
+ *  Copyright (C) 2009 Manuel Gebele <forensixs@gmx.de>, Germany
+ *
+ *  COMEDI - Linux Control and Measurement Device Interface
+ *  Copyright (C) 2000 David A. Schleef <ds@schleef.org>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ */
 /*
-Driver: vmk80xx
-Description: Velleman USB Board Low-Level Driver
-Devices: K8055/K8061 aka VM110/VM140
-Author: Manuel Gebele <forensixs@gmx.de>
-Updated: Sun, 10 May 2009 11:14:59 +0200
-Status: works
-
-Supports:
- - analog input
- - analog output
- - digital input
- - digital output
- - counter
- - pwm
-*/
+ * Driver: vmk80xx
+ * Description: Velleman USB Board Low-Level Driver
+ * Devices: K8055/K8061 aka VM110/VM140
+ * Author: Manuel Gebele <forensixs@gmx.de>
+ * Updated: Sun, 10 May 2009 11:14:59 +0200
+ * Status: works
+ *
+ * Supports:
+ * - analog input
+ * - analog output
+ * - digital input
+ * - digital output
+ * - counter
+ * - pwm
+ */
 /*
-Changelog:
-
-0.8.81	-3-  code completely rewritten (adjust driver logic)
-0.8.81  -2-  full support for K8061
-0.8.81  -1-  fix some mistaken among others the number of
-	     supported boards and I/O handling
-
-0.7.76  -4-  renamed to vmk80xx
-0.7.76  -3-  detect K8061 (only theoretically supported)
-0.7.76  -2-  code completely rewritten (adjust driver logic)
-0.7.76  -1-  support for digital and counter subdevice
-*/
+ * Changelog:
+ *
+ * 0.8.81	-3-  code completely rewritten (adjust driver logic)
+ * 0.8.81  -2-  full support for K8061
+ * 0.8.81  -1-  fix some mistaken among others the number of
+ *           supported boards and I/O handling
+ *
+ * 0.7.76  -4-  renamed to vmk80xx
+ * 0.7.76  -3-  detect K8061 (only theoretically supported)
+ * 0.7.76  -2-  code completely rewritten (adjust driver logic)
+ * 0.7.76  -1-  support for digital and counter subdevice
+ */
 
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -76,19 +76,19 @@ enum {
 };
 
 static const struct usb_device_id vmk80xx_id_table[] = {
-	{USB_DEVICE(0x10cf, 0x5500), .driver_info = DEVICE_VMK8055},
-	{USB_DEVICE(0x10cf, 0x5501), .driver_info = DEVICE_VMK8055},
-	{USB_DEVICE(0x10cf, 0x5502), .driver_info = DEVICE_VMK8055},
-	{USB_DEVICE(0x10cf, 0x5503), .driver_info = DEVICE_VMK8055},
-	{USB_DEVICE(0x10cf, 0x8061), .driver_info = DEVICE_VMK8061},
-	{USB_DEVICE(0x10cf, 0x8062), .driver_info = DEVICE_VMK8061},
-	{USB_DEVICE(0x10cf, 0x8063), .driver_info = DEVICE_VMK8061},
-	{USB_DEVICE(0x10cf, 0x8064), .driver_info = DEVICE_VMK8061},
-	{USB_DEVICE(0x10cf, 0x8065), .driver_info = DEVICE_VMK8061},
-	{USB_DEVICE(0x10cf, 0x8066), .driver_info = DEVICE_VMK8061},
-	{USB_DEVICE(0x10cf, 0x8067), .driver_info = DEVICE_VMK8061},
-	{USB_DEVICE(0x10cf, 0x8068), .driver_info = DEVICE_VMK8061},
-	{}			/* terminating entry */
+	{ USB_DEVICE(0x10cf, 0x5500), .driver_info = DEVICE_VMK8055 },
+	{ USB_DEVICE(0x10cf, 0x5501), .driver_info = DEVICE_VMK8055 },
+	{ USB_DEVICE(0x10cf, 0x5502), .driver_info = DEVICE_VMK8055 },
+	{ USB_DEVICE(0x10cf, 0x5503), .driver_info = DEVICE_VMK8055 },
+	{ USB_DEVICE(0x10cf, 0x8061), .driver_info = DEVICE_VMK8061 },
+	{ USB_DEVICE(0x10cf, 0x8062), .driver_info = DEVICE_VMK8061 },
+	{ USB_DEVICE(0x10cf, 0x8063), .driver_info = DEVICE_VMK8061 },
+	{ USB_DEVICE(0x10cf, 0x8064), .driver_info = DEVICE_VMK8061 },
+	{ USB_DEVICE(0x10cf, 0x8065), .driver_info = DEVICE_VMK8061 },
+	{ USB_DEVICE(0x10cf, 0x8066), .driver_info = DEVICE_VMK8061 },
+	{ USB_DEVICE(0x10cf, 0x8067), .driver_info = DEVICE_VMK8061 },
+	{ USB_DEVICE(0x10cf, 0x8068), .driver_info = DEVICE_VMK8061 },
+	{}                      /* terminating entry */
 };
 
 MODULE_DEVICE_TABLE(usb, vmk80xx_id_table);
@@ -120,19 +120,19 @@ MODULE_DEVICE_TABLE(usb, vmk80xx_id_table);
 #define VMK8055_CMD_WRT_AD      0x05
 
 #define VMK8061_CMD_RD_AI       0x00
-#define VMK8061_CMR_RD_ALL_AI   0x01	/* !non-active! */
+#define VMK8061_CMR_RD_ALL_AI   0x01    /* !non-active! */
 #define VMK8061_CMD_SET_AO      0x02
-#define VMK8061_CMD_SET_ALL_AO  0x03	/* !non-active! */
+#define VMK8061_CMD_SET_ALL_AO  0x03    /* !non-active! */
 #define VMK8061_CMD_OUT_PWM     0x04
 #define VMK8061_CMD_RD_DI       0x05
-#define VMK8061_CMD_DO          0x06	/* !non-active! */
+#define VMK8061_CMD_DO          0x06    /* !non-active! */
 #define VMK8061_CMD_CLR_DO      0x07
 #define VMK8061_CMD_SET_DO      0x08
-#define VMK8061_CMD_RD_CNT      0x09	/* TODO: completely pointless? */
-#define VMK8061_CMD_RST_CNT     0x0a	/* TODO: completely pointless? */
-#define VMK8061_CMD_RD_VERSION  0x0b	/* internal usage */
-#define VMK8061_CMD_RD_JMP_STAT 0x0c	/* TODO: not implemented yet */
-#define VMK8061_CMD_RD_PWR_STAT 0x0d	/* internal usage */
+#define VMK8061_CMD_RD_CNT      0x09    /* TODO: completely pointless? */
+#define VMK8061_CMD_RST_CNT     0x0a    /* TODO: completely pointless? */
+#define VMK8061_CMD_RD_VERSION  0x0b    /* internal usage */
+#define VMK8061_CMD_RD_JMP_STAT 0x0c    /* TODO: not implemented yet */
+#define VMK8061_CMD_RD_PWR_STAT 0x0d    /* internal usage */
 #define VMK8061_CMD_RD_DO       0x0e
 #define VMK8061_CMD_RD_AO       0x0f
 #define VMK8061_CMD_RD_PWM      0x10
@@ -164,17 +164,17 @@ static int dbgcm = 1;
 static int dbgcm;
 #endif
 
-#define dbgvm(fmt, arg...)                     \
-do {                                           \
-	if (dbgvm)                             \
-		printk(KERN_DEBUG fmt, ##arg); \
-} while (0)
+#define dbgvm(fmt, arg ...)                     \
+	do {                                           \
+		if (dbgvm)                             \
+		printk(KERN_DEBUG fmt, ## arg); \
+	} while (0)
 
-#define dbgcm(fmt, arg...)                     \
-do {                                           \
-	if (dbgcm)                             \
-		printk(KERN_DEBUG fmt, ##arg); \
-} while (0)
+#define dbgcm(fmt, arg ...)                     \
+	do {                                           \
+		if (dbgcm)                             \
+		printk(KERN_DEBUG fmt, ## arg); \
+	} while (0)
 
 enum vmk80xx_model {
 	VMK8055_MODEL,
@@ -182,34 +182,34 @@ enum vmk80xx_model {
 };
 
 struct firmware_version {
-	unsigned char ic3_vers[32];	/* USB-Controller */
-	unsigned char ic6_vers[32];	/* CPU */
+	unsigned char	ic3_vers[32];   /* USB-Controller */
+	unsigned char	ic6_vers[32];   /* CPU */
 };
 
 static const struct comedi_lrange vmk8055_range = {
-	1, {UNI_RANGE(5)}
+	1, { UNI_RANGE(5) }
 };
 
 static const struct comedi_lrange vmk8061_range = {
-	2, {UNI_RANGE(5), UNI_RANGE(10)}
+	2, { UNI_RANGE(5), UNI_RANGE(10) }
 };
 
 struct vmk80xx_board {
-	const char *name;
+	const char *			name;
 	enum vmk80xx_model model;
-	const struct comedi_lrange *range;
-	__u8 ai_chans;
-	__le16 ai_bits;
-	__u8 ao_chans;
-	__le16 ao_bits;
-	__u8 di_chans;
-	__le16 di_bits;
-	__u8 do_chans;
-	__le16 do_bits;
-	__u8 cnt_chans;
-	__le16 cnt_bits;
-	__u8 pwm_chans;
-	__le16 pwm_bits;
+	const struct comedi_lrange *	range;
+	__u8				ai_chans;
+	__le16				ai_bits;
+	__u8				ao_chans;
+	__le16				ao_bits;
+	__u8				di_chans;
+	__le16				di_bits;
+	__u8				do_chans;
+	__le16				do_bits;
+	__u8				cnt_chans;
+	__le16				cnt_bits;
+	__u8				pwm_chans;
+	__le16				pwm_bits;
 };
 
 enum {
@@ -222,23 +222,23 @@ enum {
 };
 
 struct vmk80xx_usb {
-	struct usb_device *udev;
-	struct usb_interface *intf;
+	struct usb_device *		udev;
+	struct usb_interface *		intf;
 	struct usb_endpoint_descriptor *ep_rx;
 	struct usb_endpoint_descriptor *ep_tx;
-	struct usb_anchor rx_anchor;
-	struct usb_anchor tx_anchor;
-	struct vmk80xx_board board;
-	struct firmware_version fw;
-	struct semaphore limit_sem;
-	wait_queue_head_t read_wait;
-	wait_queue_head_t write_wait;
-	unsigned char *usb_rx_buf;
-	unsigned char *usb_tx_buf;
-	unsigned long flags;
-	int probed;
-	int attached;
-	int count;
+	struct usb_anchor		rx_anchor;
+	struct usb_anchor		tx_anchor;
+	struct vmk80xx_board		board;
+	struct firmware_version		fw;
+	struct semaphore		limit_sem;
+	wait_queue_head_t		read_wait;
+	wait_queue_head_t		write_wait;
+	unsigned char *			usb_rx_buf;
+	unsigned char *			usb_tx_buf;
+	unsigned long			flags;
+	int				probed;
+	int				attached;
+	int				count;
 };
 
 static struct vmk80xx_usb vmb[VMK80XX_MAX_BOARDS];
@@ -346,7 +346,7 @@ static void vmk80xx_read_eeprom(struct vmk80xx_usb *dev, int flag)
 
 	if (flag & IC3_VERSION)
 		strncpy(dev->fw.ic3_vers, rx + 1, 24);
-	else			/* IC6_VERSION */
+	else                    /* IC6_VERSION */
 		strncpy(dev->fw.ic6_vers, rx + 25, 24);
 }
 
@@ -392,6 +392,7 @@ static void vmk80xx_build_int_urb(struct urb *urb, int flag)
 	unsigned int pipe;
 	unsigned char *buf;
 	size_t size;
+
 	void (*callback) (struct urb *);
 	int ival;
 
@@ -404,7 +405,7 @@ static void vmk80xx_build_int_urb(struct urb *urb, int flag)
 		size = le16_to_cpu(dev->ep_rx->wMaxPacketSize);
 		callback = vmk80xx_rx_callback;
 		ival = dev->ep_rx->bInterval;
-	} else {		/* URB_SND_FLAG */
+	} else {                /* URB_SND_FLAG */
 		tx_addr = dev->ep_tx->bEndpointAddress;
 		pipe = usb_sndintpipe(dev->udev, tx_addr);
 		buf = dev->usb_tx_buf;
@@ -455,11 +456,12 @@ static int vmk80xx_read_packet(struct vmk80xx_usb *dev)
 		return -ENODEV;
 
 	/* Only useful for interrupt transfers */
-	if (test_bit(TRANS_IN_BUSY, &dev->flags))
+	if (test_bit(TRANS_IN_BUSY, &dev->flags)) {
 		if (wait_event_interruptible(dev->read_wait,
 					     !test_bit(TRANS_IN_BUSY,
 						       &dev->flags)))
 			return -ERESTART;
+	}
 
 	if (dev->board.model == VMK8061_MODEL) {
 		vmk80xx_do_bulk_msg(dev);
@@ -502,11 +504,12 @@ static int vmk80xx_write_packet(struct vmk80xx_usb *dev, int cmd)
 	if (!dev->intf)
 		return -ENODEV;
 
-	if (test_bit(TRANS_OUT_BUSY, &dev->flags))
+	if (test_bit(TRANS_OUT_BUSY, &dev->flags)) {
 		if (wait_event_interruptible(dev->write_wait,
 					     !test_bit(TRANS_OUT_BUSY,
 						       &dev->flags)))
 			return -ERESTART;
+	}
 
 	if (dev->board.model == VMK8061_MODEL) {
 		dev->usb_tx_buf[0] = cmd;
@@ -545,21 +548,21 @@ exit:
 #define DIR_OUT 2
 
 #define rudimentary_check(dir)                             \
-do {                                                       \
-	if (!dev)                                          \
+	do {                                                       \
+		if (!dev)                                          \
 		return -EFAULT;                            \
-	if (!dev->probed)                                  \
+		if (!dev->probed)                                  \
 		return -ENODEV;                            \
-	if (!dev->attached)                                \
+		if (!dev->attached)                                \
 		return -ENODEV;                            \
-	if ((dir) & DIR_IN) {                              \
-		if (test_bit(TRANS_IN_BUSY, &dev->flags))  \
+		if ((dir) & DIR_IN) {                              \
+			if (test_bit(TRANS_IN_BUSY, &dev->flags))  \
 			return -EBUSY;                     \
-	} else {  /* DIR_OUT */                            \
-		if (test_bit(TRANS_OUT_BUSY, &dev->flags)) \
+		} else { /* DIR_OUT */                            \
+			if (test_bit(TRANS_OUT_BUSY, &dev->flags)) \
 			return -EBUSY;                     \
-	}                                                  \
-} while (0)
+		}                                                  \
+	} while (0)
 
 static int vmk80xx_ai_rinsn(struct comedi_device *cdev,
 			    struct comedi_subdevice *s,
@@ -602,7 +605,7 @@ static int vmk80xx_ai_rinsn(struct comedi_device *cdev,
 
 		/* VMK8061_MODEL */
 		data[n] = dev->usb_rx_buf[reg[0]] + 256 *
-		    dev->usb_rx_buf[reg[1]];
+			  dev->usb_rx_buf[reg[1]];
 	}
 
 	up(&dev->limit_sem);
@@ -633,7 +636,7 @@ static int vmk80xx_ao_winsn(struct comedi_device *cdev,
 		else
 			reg = VMK8055_AO2_REG;
 		break;
-	default:		/* NOTE: avoid compiler warnings */
+	default:                /* NOTE: avoid compiler warnings */
 		cmd = VMK8061_CMD_SET_AO;
 		reg = VMK8061_AO_REG;
 		dev->usb_tx_buf[VMK8061_CH_REG] = chan;
@@ -705,8 +708,9 @@ static int vmk80xx_di_rinsn(struct comedi_device *cdev,
 	if (dev->board.model == VMK8061_MODEL) {
 		reg = VMK8061_DI_REG;
 		dev->usb_tx_buf[0] = VMK8061_CMD_RD_DI;
-	} else
+	} else {
 		reg = VMK8055_DI_REG;
+	}
 
 	for (n = 0; n < insn->n; n++) {
 		if (vmk80xx_read_packet(dev))
@@ -731,7 +735,6 @@ static int vmk80xx_do_winsn(struct comedi_device *cdev,
 			    struct comedi_subdevice *s,
 			    struct comedi_insn *insn, unsigned int *data)
 {
-
 	struct vmk80xx_usb *dev = cdev->private;
 	int chan;
 	unsigned char *tx_buf;
@@ -851,7 +854,7 @@ static int vmk80xx_cnt_rinsn(struct comedi_device *cdev,
 
 		/* VMK8061_MODEL */
 		data[n] = dev->usb_rx_buf[reg[0] * (chan + 1) + 1]
-		    + 256 * dev->usb_rx_buf[reg[1] * 2 + 2];
+			  + 256 * dev->usb_rx_buf[reg[1] * 2 + 2];
 	}
 
 	up(&dev->limit_sem);
@@ -890,8 +893,9 @@ static int vmk80xx_cnt_cinsn(struct comedi_device *cdev,
 		}
 
 		dev->usb_tx_buf[reg] = 0x00;
-	} else
+	} else {
 		cmd = VMK8061_CMD_RST_CNT;
+	}
 
 	for (n = 0; n < insn->n; n++)
 		if (vmk80xx_write_packet(dev, cmd))
@@ -1309,8 +1313,9 @@ vmk80xx_probe(struct usb_interface *intf, const struct usb_device_id *id)
 			vmk80xx_read_eeprom(dev, IC6_VERSION);
 			printk(KERN_INFO "comedi#: vmk80xx: %s\n",
 			       dev->fw.ic6_vers);
-		} else
+		} else {
 			dbgcm("comedi#: vmk80xx: no conn. to CPU\n");
+		}
 	}
 
 	if (dev->board.model == VMK8055_MODEL)
@@ -1361,17 +1366,17 @@ static void vmk80xx_disconnect(struct usb_interface *intf)
 /* TODO: Add support for suspend, resume, pre_reset,
  * post_reset and flush */
 static struct usb_driver vmk80xx_driver = {
-	.name = "vmk80xx",
-	.probe = vmk80xx_probe,
-	.disconnect = vmk80xx_disconnect,
-	.id_table = vmk80xx_id_table
+	.name		= "vmk80xx",
+	.probe		= vmk80xx_probe,
+	.disconnect	= vmk80xx_disconnect,
+	.id_table	= vmk80xx_id_table
 };
 
 static struct comedi_driver driver_vmk80xx = {
-	.module = THIS_MODULE,
-	.driver_name = "vmk80xx",
-	.attach = vmk80xx_attach,
-	.detach = vmk80xx_detach
+	.module		= THIS_MODULE,
+	.driver_name	= "vmk80xx",
+	.attach		= vmk80xx_attach,
+	.detach		= vmk80xx_detach
 };
 
 static int __init vmk80xx_init(void)

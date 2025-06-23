@@ -28,62 +28,62 @@
 #include <linux/android_pmem.h>
 
 struct adsp_pmem_region {
-	struct hlist_node list;
-	void *vaddr;
-	unsigned long paddr;
-	unsigned long kvaddr;
-	unsigned long len;
-	struct file *file;
+	struct hlist_node	list;
+	void *			vaddr;
+	unsigned long		paddr;
+	unsigned long		kvaddr;
+	unsigned long		len;
+	struct file *		file;
 };
 
 struct adsp_device {
 	struct msm_adsp_module *module;
 
-	spinlock_t event_queue_lock;
-	wait_queue_head_t event_wait;
-	struct list_head event_queue;
-	int abort;
+	spinlock_t		event_queue_lock;
+	wait_queue_head_t	event_wait;
+	struct list_head	event_queue;
+	int			abort;
 
-	const char *name;
-	struct device *device;
-	struct cdev cdev;
+	const char *		name;
+	struct device *		device;
+	struct cdev		cdev;
 };
 
 static struct adsp_device *inode_to_device(struct inode *inode);
 
-#define __CONTAINS(r, v, l) ({					\
-	typeof(r) __r = r;					\
-	typeof(v) __v = v;					\
-	typeof(v) __e = __v + l;				\
-	int res = __v >= __r->vaddr && 				\
-		__e <= __r->vaddr + __r->len;			\
-	res;							\
-})
+#define __CONTAINS(r, v, l) ({                                  \
+		typeof(r) __r = r;                                      \
+		typeof(v) __v = v;                                      \
+		typeof(v) __e = __v + l;                                \
+		int res = __v >= __r->vaddr &&                          \
+			  __e <= __r->vaddr + __r->len;                   \
+		res;                                                    \
+	})
 
-#define CONTAINS(r1, r2) ({					\
-	typeof(r2) __r2 = r2;					\
-	__CONTAINS(r1, __r2->vaddr, __r2->len);			\
-})
+#define CONTAINS(r1, r2) ({                                     \
+		typeof(r2) __r2 = r2;                                   \
+		__CONTAINS(r1, __r2->vaddr, __r2->len);                 \
+	})
 
-#define IN_RANGE(r, v) ({					\
-	typeof(r) __r = r;					\
-	typeof(v) __vv = v;					\
-	int res = ((__vv >= __r->vaddr) &&			\
-		(__vv < (__r->vaddr + __r->len)));		\
-	res;							\
-})
+#define IN_RANGE(r, v) ({                                       \
+		typeof(r) __r = r;                                      \
+		typeof(v) __vv = v;                                     \
+		int res = ((__vv >= __r->vaddr) &&                      \
+			   (__vv < (__r->vaddr + __r->len)));              \
+		res;                                                    \
+	})
 
-#define OVERLAPS(r1, r2) ({					\
-	typeof(r1) __r1 = r1;					\
-	typeof(r2) __r2 = r2;					\
-	typeof(__r2->vaddr) __v = __r2->vaddr;			\
-	typeof(__v) __e = __v + __r2->len - 1;			\
-	int res = (IN_RANGE(__r1, __v) || IN_RANGE(__r1, __e));	\
-	res;							\
-})
+#define OVERLAPS(r1, r2) ({                                     \
+		typeof(r1) __r1 = r1;                                   \
+		typeof(r2) __r2 = r2;                                   \
+		typeof(__r2->vaddr) __v = __r2->vaddr;                  \
+		typeof(__v) __e = __v + __r2->len - 1;                  \
+		int res = (IN_RANGE(__r1, __v) || IN_RANGE(__r1, __e)); \
+		res;                                                    \
+	})
 
 static int adsp_pmem_check(struct msm_adsp_module *module,
-		void *vaddr, unsigned long len)
+			   void *vaddr, unsigned long len)
 {
 	struct adsp_pmem_region *region_elt;
 	struct hlist_node *node;
@@ -93,14 +93,14 @@ static int adsp_pmem_check(struct msm_adsp_module *module,
 		if (CONTAINS(region_elt, &t) || CONTAINS(&t, region_elt) ||
 		    OVERLAPS(region_elt, &t)) {
 			printk(KERN_ERR "adsp: module %s:"
-				" region (vaddr %p len %ld)"
-				" clashes with registered region"
-				" (vaddr %p paddr %p len %ld)\n",
-				module->name,
-				vaddr, len,
-				region_elt->vaddr,
-				(void *)region_elt->paddr,
-				region_elt->len);
+			       " region (vaddr %p len %ld)"
+			       " clashes with registered region"
+			       " (vaddr %p paddr %p len %ld)\n",
+			       module->name,
+			       vaddr, len,
+			       region_elt->vaddr,
+			       (void *)region_elt->paddr,
+			       region_elt->len);
 			return -EINVAL;
 		}
 	}
@@ -108,8 +108,8 @@ static int adsp_pmem_check(struct msm_adsp_module *module,
 	return 0;
 }
 
-static int adsp_pmem_add(struct msm_adsp_module *module,
-			 struct adsp_pmem_info *info)
+static int adsp_pmem_add(struct msm_adsp_module *	module,
+			 struct adsp_pmem_info *	info)
 {
 	unsigned long paddr, kvaddr, len;
 	struct file *file;
@@ -148,7 +148,7 @@ end:
 }
 
 static int adsp_pmem_lookup_vaddr(struct msm_adsp_module *module, void **addr,
-		     unsigned long len, struct adsp_pmem_region **region)
+				  unsigned long len, struct adsp_pmem_region **region)
 {
 	struct hlist_node *node;
 	void *vaddr = *addr;
@@ -175,17 +175,18 @@ static int adsp_pmem_lookup_vaddr(struct msm_adsp_module *module, void **addr,
 
 	if (match_count > 1) {
 		printk(KERN_ERR "adsp: module %s: "
-			"multiple hits for vaddr %p, len %ld\n",
-			module->name, vaddr, len);
+		       "multiple hits for vaddr %p, len %ld\n",
+		       module->name, vaddr, len);
 		hlist_for_each_entry(region_elt, node,
-				&module->pmem_regions, list) {
+				     &module->pmem_regions, list) {
 			if (vaddr >= region_elt->vaddr &&
 			    vaddr < region_elt->vaddr + region_elt->len &&
-			    vaddr + len <= region_elt->vaddr + region_elt->len)
+			    vaddr + len <= region_elt->vaddr + region_elt->len) {
 				printk(KERN_ERR "\t%p, %ld --> %p\n",
-					region_elt->vaddr,
-					region_elt->len,
-					(void *)region_elt->paddr);
+				       region_elt->vaddr,
+				       region_elt->len,
+				       (void *)region_elt->paddr);
+			}
 		}
 	}
 
@@ -203,8 +204,8 @@ int adsp_pmem_fixup_kvaddr(struct msm_adsp_module *module, void **addr,
 	ret = adsp_pmem_lookup_vaddr(module, addr, len, &region);
 	if (ret) {
 		printk(KERN_ERR "adsp: not patching %s (paddr & kvaddr),"
-			" lookup (%p, %ld) failed\n",
-			module->name, vaddr, len);
+		       " lookup (%p, %ld) failed\n",
+		       module->name, vaddr, len);
 		return ret;
 	}
 	*paddr = region->paddr + (vaddr - region->vaddr);
@@ -223,7 +224,7 @@ int adsp_pmem_fixup(struct msm_adsp_module *module, void **addr,
 	ret = adsp_pmem_lookup_vaddr(module, addr, len, &region);
 	if (ret) {
 		printk(KERN_ERR "adsp: not patching %s, lookup (%p, %ld) failed\n",
-			module->name, vaddr, len);
+		       module->name, vaddr, len);
 		return ret;
 	}
 
@@ -238,10 +239,10 @@ static int adsp_verify_cmd(struct msm_adsp_module *module,
 	/* call the per module verifier */
 	if (module->verify_cmd)
 		return module->verify_cmd(module, queue_id, cmd_data,
-					     cmd_size);
+					  cmd_size);
 	else
 		printk(KERN_INFO "adsp: no packet verifying function "
-				 "for task %s\n", module->name);
+		       "for task %s\n", module->name);
 	return 0;
 }
 
@@ -271,7 +272,7 @@ static long adsp_write_cmd(struct adsp_device *adev, void __user *arg)
 	mutex_lock(&adev->module->pmem_regions_lock);
 	if (adsp_verify_cmd(adev->module, cmd.queue, cmd_data, cmd.len)) {
 		printk(KERN_ERR "module %s: verify failed.\n",
-			adev->module->name);
+		       adev->module->name);
 		rc = -EINVAL;
 		goto end;
 	}
@@ -289,6 +290,7 @@ static int adsp_events_pending(struct adsp_device *adev)
 {
 	unsigned long flags;
 	int yes;
+
 	spin_lock_irqsave(&adev->event_queue_lock, flags);
 	yes = !list_empty(&adev->event_queue);
 	spin_unlock_irqrestore(&adev->event_queue_lock, flags);
@@ -296,7 +298,7 @@ static int adsp_events_pending(struct adsp_device *adev)
 }
 
 static int adsp_pmem_lookup_paddr(struct msm_adsp_module *module, void **addr,
-		     struct adsp_pmem_region **region)
+				  struct adsp_pmem_region **region)
 {
 	struct hlist_node *node;
 	unsigned long paddr = (unsigned long)(*addr);
@@ -322,7 +324,7 @@ int adsp_pmem_paddr_fixup(struct msm_adsp_module *module, void **addr)
 	ret = adsp_pmem_lookup_paddr(module, addr, &region);
 	if (ret) {
 		printk(KERN_ERR "adsp: not patching %s, paddr %p lookup failed\n",
-			module->name, vaddr);
+		       module->name, vaddr);
 		return ret;
 	}
 
@@ -330,8 +332,8 @@ int adsp_pmem_paddr_fixup(struct msm_adsp_module *module, void **addr)
 	return 0;
 }
 
-static int adsp_patch_event(struct msm_adsp_module *module,
-				struct adsp_event *event)
+static int adsp_patch_event(struct msm_adsp_module *	module,
+			    struct adsp_event *		event)
 {
 	/* call the per-module msg verifier */
 	if (module->patch_event)
@@ -390,13 +392,13 @@ static long adsp_get_event(struct adsp_device *adev, void __user *arg)
 	}
 	if (data->msg_id != EVENT_MSG_ID) {
 		if (copy_to_user((void *)(evt.data), data->data.msg16,
-					data->size)) {
+				 data->size)) {
 			rc = -EFAULT;
 			goto end;
-	}
+		}
 	} else {
 		if (copy_to_user((void *)(evt.data), data->data.msg32,
-					data->size)) {
+				 data->size)) {
 			rc = -EFAULT;
 			goto end;
 		}
@@ -432,15 +434,15 @@ static long adsp_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		break;
 
 	case ADSP_IOCTL_WRITE_COMMAND:
-		return adsp_write_cmd(adev, (void __user *) arg);
+		return adsp_write_cmd(adev, (void __user *)arg);
 
 	case ADSP_IOCTL_GET_EVENT:
-		return adsp_get_event(adev, (void __user *) arg);
+		return adsp_get_event(adev, (void __user *)arg);
 
 	case ADSP_IOCTL_SET_CLKRATE: {
-#if CONFIG_MSM_AMSS_VERSION==6350
+#if CONFIG_MSM_AMSS_VERSION == 6350
 		unsigned long clk_rate;
-		if (copy_from_user(&clk_rate, (void *) arg, sizeof(clk_rate)))
+		if (copy_from_user(&clk_rate, (void *)arg, sizeof(clk_rate)))
 			return -EFAULT;
 		return adsp_set_clkrate(adev->module, clk_rate);
 #endif
@@ -448,7 +450,7 @@ static long adsp_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
 	case ADSP_IOCTL_REGISTER_PMEM: {
 		struct adsp_pmem_info info;
-		if (copy_from_user(&info, (void *) arg, sizeof(info)))
+		if (copy_from_user(&info, (void *)arg, sizeof(info)))
 			return -EFAULT;
 		return adsp_pmem_add(adev->module, &info);
 	}
@@ -530,7 +532,7 @@ static void adsp_event(void *driver_data, unsigned id, size_t len,
 }
 
 static struct msm_adsp_ops adsp_ops = {
-	.event = adsp_event,
+	.event	= adsp_event,
 };
 
 static int adsp_open(struct inode *inode, struct file *filp)
@@ -567,10 +569,10 @@ static struct adsp_device *adsp_devices;
 static struct adsp_device *inode_to_device(struct inode *inode)
 {
 	unsigned n = MINOR(inode->i_rdev);
-	if (n < adsp_device_count) {
+
+	if (n < adsp_device_count)
 		if (adsp_devices[n].device)
 			return adsp_devices + n;
-	}
 	return NULL;
 }
 
@@ -578,10 +580,10 @@ static dev_t adsp_devno;
 static struct class *adsp_class;
 
 static struct file_operations adsp_fops = {
-	.owner = THIS_MODULE,
-	.open = adsp_open,
+	.owner		= THIS_MODULE,
+	.open		= adsp_open,
 	.unlocked_ioctl = adsp_ioctl,
-	.release = adsp_release,
+	.release	= adsp_release,
 };
 
 static void adsp_create(struct adsp_device *adev, const char *name,

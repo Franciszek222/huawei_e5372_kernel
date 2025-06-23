@@ -102,6 +102,7 @@ int __cvmx_helper_spi_enable(int interface)
 	 */
 	int num_ports = cvmx_helper_ports_on_interface(interface);
 	int ipd_port;
+
 	for (ipd_port = interface * 16; ipd_port < interface * 16 + num_ports;
 	     ipd_port++) {
 		union cvmx_pip_prt_cfgx port_config;
@@ -137,6 +138,7 @@ cvmx_helper_link_info_t __cvmx_helper_spi_link_get(int ipd_port)
 	cvmx_helper_link_info_t result;
 	int interface = cvmx_helper_get_interface_num(ipd_port);
 	int index = cvmx_helper_get_interface_index_num(ipd_port);
+
 	result.u64 = 0;
 
 	if (cvmx_sysinfo_get()->board_type == CVMX_BOARD_TYPE_SIM) {
@@ -146,27 +148,27 @@ cvmx_helper_link_info_t __cvmx_helper_spi_link_get(int ipd_port)
 		result.s.speed = 10000;
 	} else if (cvmx_spi4000_is_present(interface)) {
 		union cvmx_gmxx_rxx_rx_inbnd inband =
-		    cvmx_spi4000_check_speed(interface, index);
+			cvmx_spi4000_check_speed(interface, index);
 		result.s.link_up = inband.s.status;
 		result.s.full_duplex = inband.s.duplex;
 		switch (inband.s.speed) {
-		case 0:	/* 10 Mbps */
+		case 0: /* 10 Mbps */
 			result.s.speed = 10;
 			break;
-		case 1:	/* 100 Mbps */
+		case 1: /* 100 Mbps */
 			result.s.speed = 100;
 			break;
-		case 2:	/* 1 Gbps */
+		case 2: /* 1 Gbps */
 			result.s.speed = 1000;
 			break;
-		case 3:	/* Illegal */
+		case 3: /* Illegal */
 			result.s.speed = 0;
 			result.s.link_up = 0;
 			break;
 		}
 	} else {
 		/* For generic SPI we can't determine the link, just return some
-		   sane results */
+		 * sane results */
 		result.s.link_up = 1;
 		result.s.full_duplex = 1;
 		result.s.speed = 10000;
@@ -189,7 +191,7 @@ cvmx_helper_link_info_t __cvmx_helper_spi_link_get(int ipd_port)
 int __cvmx_helper_spi_link_set(int ipd_port, cvmx_helper_link_info_t link_info)
 {
 	/* Nothing to do. If we have a SPI4000 then the setup was already performed
-	   by cvmx_spi4000_check_speed(). If not then there isn't any link
-	   info */
+	 * by cvmx_spi4000_check_speed(). If not then there isn't any link
+	 * info */
 	return 0;
 }

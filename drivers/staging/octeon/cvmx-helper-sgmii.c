@@ -71,17 +71,17 @@ static int __cvmx_helper_sgmii_hardware_init_one_time(int interface, int index)
 	 * interval. SGMII specifies a 1.6ms interval.
 	 */
 	pcs_misc_ctl_reg.u64 =
-	    cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
+		cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
 	pcsx_linkx_timer_count_reg.u64 =
-	    cvmx_read_csr(CVMX_PCSX_LINKX_TIMER_COUNT_REG(index, interface));
+		cvmx_read_csr(CVMX_PCSX_LINKX_TIMER_COUNT_REG(index, interface));
 	if (pcs_misc_ctl_reg.s.mode) {
 		/* 1000BASE-X */
 		pcsx_linkx_timer_count_reg.s.count =
-		    (10000ull * clock_mhz) >> 10;
+			(10000ull * clock_mhz) >> 10;
 	} else {
 		/* SGMII */
 		pcsx_linkx_timer_count_reg.s.count =
-		    (1600ull * clock_mhz) >> 10;
+			(1600ull * clock_mhz) >> 10;
 	}
 	cvmx_write_csr(CVMX_PCSX_LINKX_TIMER_COUNT_REG(index, interface),
 		       pcsx_linkx_timer_count_reg.u64);
@@ -99,7 +99,7 @@ static int __cvmx_helper_sgmii_hardware_init_one_time(int interface, int index)
 		/* 1000BASE-X */
 		union cvmx_pcsx_anx_adv_reg pcsx_anx_adv_reg;
 		pcsx_anx_adv_reg.u64 =
-		    cvmx_read_csr(CVMX_PCSX_ANX_ADV_REG(index, interface));
+			cvmx_read_csr(CVMX_PCSX_ANX_ADV_REG(index, interface));
 		pcsx_anx_adv_reg.s.rem_flt = 0;
 		pcsx_anx_adv_reg.s.pause = 3;
 		pcsx_anx_adv_reg.s.hfd = 1;
@@ -109,18 +109,18 @@ static int __cvmx_helper_sgmii_hardware_init_one_time(int interface, int index)
 	} else {
 		union cvmx_pcsx_miscx_ctl_reg pcsx_miscx_ctl_reg;
 		pcsx_miscx_ctl_reg.u64 =
-		    cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
+			cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
 		if (pcsx_miscx_ctl_reg.s.mac_phy) {
 			/* PHY Mode */
 			union cvmx_pcsx_sgmx_an_adv_reg pcsx_sgmx_an_adv_reg;
 			pcsx_sgmx_an_adv_reg.u64 =
-			    cvmx_read_csr(CVMX_PCSX_SGMX_AN_ADV_REG
-					  (index, interface));
+				cvmx_read_csr(CVMX_PCSX_SGMX_AN_ADV_REG
+						      (index, interface));
 			pcsx_sgmx_an_adv_reg.s.link = 1;
 			pcsx_sgmx_an_adv_reg.s.dup = 1;
 			pcsx_sgmx_an_adv_reg.s.speed = 2;
 			cvmx_write_csr(CVMX_PCSX_SGMX_AN_ADV_REG
-				       (index, interface),
+					       (index, interface),
 				       pcsx_sgmx_an_adv_reg.u64);
 		} else {
 			/* MAC Mode - Nothing to do */
@@ -151,17 +151,17 @@ static int __cvmx_helper_sgmii_hardware_init_link(int interface, int index)
 	 * zero.
 	 */
 	control_reg.u64 =
-	    cvmx_read_csr(CVMX_PCSX_MRX_CONTROL_REG(index, interface));
+		cvmx_read_csr(CVMX_PCSX_MRX_CONTROL_REG(index, interface));
 	if (cvmx_sysinfo_get()->board_type != CVMX_BOARD_TYPE_SIM) {
 		control_reg.s.reset = 1;
 		cvmx_write_csr(CVMX_PCSX_MRX_CONTROL_REG(index, interface),
 			       control_reg.u64);
 		if (CVMX_WAIT_FOR_FIELD64
-		    (CVMX_PCSX_MRX_CONTROL_REG(index, interface),
-		     union cvmx_pcsx_mrx_control_reg, reset, ==, 0, 10000)) {
+			    (CVMX_PCSX_MRX_CONTROL_REG(index, interface),
+			    union cvmx_pcsx_mrx_control_reg, reset, ==, 0, 10000)) {
 			cvmx_dprintf("SGMII%d: Timeout waiting for port %d "
 				     "to finish reset\n",
-			     interface, index);
+				     interface, index);
 			return -1;
 		}
 	}
@@ -185,10 +185,9 @@ static int __cvmx_helper_sgmii_hardware_init_link(int interface, int index)
 	if ((cvmx_sysinfo_get()->board_type != CVMX_BOARD_TYPE_SIM) &&
 	    CVMX_WAIT_FOR_FIELD64(CVMX_PCSX_MRX_STATUS_REG(index, interface),
 				  union cvmx_pcsx_mrx_status_reg, an_cpt, ==, 1,
-				  10000)) {
+				  10000))
 		/* cvmx_dprintf("SGMII%d: Port %d link timeout\n", interface, index); */
 		return -1;
-	}
 	return 0;
 }
 
@@ -202,8 +201,8 @@ static int __cvmx_helper_sgmii_hardware_init_link(int interface, int index)
  *
  * Returns Zero on success, negative on failure
  */
-static int __cvmx_helper_sgmii_hardware_init_link_speed(int interface,
-							int index,
+static int __cvmx_helper_sgmii_hardware_init_link_speed(int	interface,
+							int	index,
 							cvmx_helper_link_info_t
 							link_info)
 {
@@ -219,14 +218,14 @@ static int __cvmx_helper_sgmii_hardware_init_link_speed(int interface,
 
 	/* Wait for GMX to be idle */
 	if (CVMX_WAIT_FOR_FIELD64
-	    (CVMX_GMXX_PRTX_CFG(index, interface), union cvmx_gmxx_prtx_cfg,
-	     rx_idle, ==, 1, 10000)
+		    (CVMX_GMXX_PRTX_CFG(index, interface), union cvmx_gmxx_prtx_cfg,
+		    rx_idle, ==, 1, 10000)
 	    || CVMX_WAIT_FOR_FIELD64(CVMX_GMXX_PRTX_CFG(index, interface),
 				     union cvmx_gmxx_prtx_cfg, tx_idle, ==, 1,
 				     10000)) {
 		cvmx_dprintf
-		    ("SGMII%d: Timeout waiting for port %d to be idle\n",
-		     interface, index);
+			("SGMII%d: Timeout waiting for port %d to be idle\n",
+			interface, index);
 		return -1;
 	}
 
@@ -238,7 +237,7 @@ static int __cvmx_helper_sgmii_hardware_init_link_speed(int interface,
 	 * duplication amount.
 	 */
 	pcsx_miscx_ctl_reg.u64 =
-	    cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
+		cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
 
 	/*
 	 * Use GMXENO to force the link down if the status we get says
@@ -319,8 +318,7 @@ static int __cvmx_helper_sgmii_hardware_init(int interface, int num_ports)
 		__cvmx_helper_sgmii_hardware_init_one_time(interface, index);
 		__cvmx_helper_sgmii_link_set(ipd_port,
 					     __cvmx_helper_sgmii_link_get
-					     (ipd_port));
-
+						     (ipd_port));
 	}
 
 	return 0;
@@ -369,7 +367,7 @@ int __cvmx_helper_sgmii_enable(int interface)
 	for (index = 0; index < num_ports; index++) {
 		union cvmx_gmxx_prtx_cfg gmxx_prtx_cfg;
 		gmxx_prtx_cfg.u64 =
-		    cvmx_read_csr(CVMX_GMXX_PRTX_CFG(index, interface));
+			cvmx_read_csr(CVMX_GMXX_PRTX_CFG(index, interface));
 		gmxx_prtx_cfg.s.en = 1;
 		cvmx_write_csr(CVMX_GMXX_PRTX_CFG(index, interface),
 			       gmxx_prtx_cfg.u64);
@@ -409,7 +407,7 @@ cvmx_helper_link_info_t __cvmx_helper_sgmii_link_get(int ipd_port)
 	}
 
 	pcsx_mrx_control_reg.u64 =
-	    cvmx_read_csr(CVMX_PCSX_MRX_CONTROL_REG(index, interface));
+		cvmx_read_csr(CVMX_PCSX_MRX_CONTROL_REG(index, interface));
 	if (pcsx_mrx_control_reg.s.loopbck1) {
 		/* Force 1Gbps full duplex link for internal loopback */
 		result.s.link_up = 1;
@@ -419,14 +417,14 @@ cvmx_helper_link_info_t __cvmx_helper_sgmii_link_get(int ipd_port)
 	}
 
 	pcs_misc_ctl_reg.u64 =
-	    cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
+		cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
 	if (pcs_misc_ctl_reg.s.mode) {
 		/* 1000BASE-X */
 		/* FIXME */
 	} else {
 		union cvmx_pcsx_miscx_ctl_reg pcsx_miscx_ctl_reg;
 		pcsx_miscx_ctl_reg.u64 =
-		    cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
+			cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
 		if (pcsx_miscx_ctl_reg.s.mac_phy) {
 			/* PHY Mode */
 			union cvmx_pcsx_mrx_status_reg pcsx_mrx_status_reg;
@@ -437,27 +435,27 @@ cvmx_helper_link_info_t __cvmx_helper_sgmii_link_get(int ipd_port)
 			 * level link is down
 			 */
 			pcsx_mrx_status_reg.u64 =
-			    cvmx_read_csr(CVMX_PCSX_MRX_STATUS_REG
-					  (index, interface));
+				cvmx_read_csr(CVMX_PCSX_MRX_STATUS_REG
+						      (index, interface));
 			if (pcsx_mrx_status_reg.s.lnk_st == 0) {
 				if (__cvmx_helper_sgmii_hardware_init_link
-				    (interface, index) != 0)
+					    (interface, index) != 0)
 					return result;
 			}
 
 			/* Read the autoneg results */
 			pcsx_anx_results_reg.u64 =
-			    cvmx_read_csr(CVMX_PCSX_ANX_RESULTS_REG
-					  (index, interface));
+				cvmx_read_csr(CVMX_PCSX_ANX_RESULTS_REG
+						      (index, interface));
 			if (pcsx_anx_results_reg.s.an_cpt) {
 				/*
 				 * Auto negotiation is complete. Set
 				 * status accordingly.
 				 */
 				result.s.full_duplex =
-				    pcsx_anx_results_reg.s.dup;
+					pcsx_anx_results_reg.s.dup;
 				result.s.link_up =
-				    pcsx_anx_results_reg.s.link_ok;
+					pcsx_anx_results_reg.s.link_ok;
 				switch (pcsx_anx_results_reg.s.spd) {
 				case 0:
 					result.s.speed = 10;
@@ -481,8 +479,7 @@ cvmx_helper_link_info_t __cvmx_helper_sgmii_link_get(int ipd_port)
 				result.s.speed = 0;
 				result.s.link_up = 0;
 			}
-		} else {	/* MAC Mode */
-
+		} else {        /* MAC Mode */
 			result = __cvmx_helper_board_link_get(ipd_port);
 		}
 	}
@@ -501,11 +498,12 @@ cvmx_helper_link_info_t __cvmx_helper_sgmii_link_get(int ipd_port)
  *
  * Returns Zero on success, negative on failure
  */
-int __cvmx_helper_sgmii_link_set(int ipd_port,
-				 cvmx_helper_link_info_t link_info)
+int __cvmx_helper_sgmii_link_set(int				ipd_port,
+				 cvmx_helper_link_info_t	link_info)
 {
 	int interface = cvmx_helper_get_interface_num(ipd_port);
 	int index = cvmx_helper_get_interface_index_num(ipd_port);
+
 	__cvmx_helper_sgmii_hardware_init_link(interface, index);
 	return __cvmx_helper_sgmii_hardware_init_link_speed(interface, index,
 							    link_info);
@@ -534,13 +532,13 @@ int __cvmx_helper_sgmii_configure_loopback(int ipd_port, int enable_internal,
 	union cvmx_pcsx_miscx_ctl_reg pcsx_miscx_ctl_reg;
 
 	pcsx_mrx_control_reg.u64 =
-	    cvmx_read_csr(CVMX_PCSX_MRX_CONTROL_REG(index, interface));
+		cvmx_read_csr(CVMX_PCSX_MRX_CONTROL_REG(index, interface));
 	pcsx_mrx_control_reg.s.loopbck1 = enable_internal;
 	cvmx_write_csr(CVMX_PCSX_MRX_CONTROL_REG(index, interface),
 		       pcsx_mrx_control_reg.u64);
 
 	pcsx_miscx_ctl_reg.u64 =
-	    cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
+		cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
 	pcsx_miscx_ctl_reg.s.loopbck2 = enable_external;
 	cvmx_write_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface),
 		       pcsx_miscx_ctl_reg.u64);

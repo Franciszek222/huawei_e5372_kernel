@@ -16,10 +16,10 @@
 #include "mt9t013.h"
 
 /*=============================================================
-	SENSOR REGISTER DEFINES
-==============================================================*/
-#define MT9T013_REG_MODEL_ID 		 0x0000
-#define MT9T013_MODEL_ID     		 0x2600
+ *      SENSOR REGISTER DEFINES
+ * ==============================================================*/
+#define MT9T013_REG_MODEL_ID             0x0000
+#define MT9T013_MODEL_ID                 0x2600
 #define REG_GROUPED_PARAMETER_HOLD   0x0104
 #define GROUPED_PARAMETER_HOLD       0x0100
 #define GROUPED_PARAMETER_UPDATE     0x0000
@@ -63,9 +63,9 @@ enum mt9t013_resolution {
 };
 
 enum mt9t013_reg_update {
-	REG_INIT, /* registers that need to be updated during initialization */
-	UPDATE_PERIODIC, /* registers that needs periodic I2C writes */
-	UPDATE_ALL, /* all registers will be updated */
+	REG_INIT,               /* registers that need to be updated during initialization */
+	UPDATE_PERIODIC,        /* registers that needs periodic I2C writes */
+	UPDATE_ALL,             /* all registers will be updated */
 	UPDATE_INVALID
 };
 
@@ -78,8 +78,8 @@ enum mt9t013_setting {
 #define MT9T013_AF_I2C_ADDR   0x18
 
 /*
-* AF Total steps parameters
-*/
+ * AF Total steps parameters
+ */
 #define MT9T013_TOTAL_STEPS_NEAR_TO_FAR    30
 
 /*
@@ -101,21 +101,21 @@ static struct  mt9t013_work *mt9t013_sensorw;
 static struct  i2c_client *mt9t013_client;
 
 struct mt9t013_ctrl {
-	const struct msm_camera_sensor_info *sensordata;
+	const struct msm_camera_sensor_info *	sensordata;
 
-	int sensormode;
-	uint32_t fps_divider; 		/* init to 1 * 0x00000400 */
-	uint32_t pict_fps_divider; 	/* init to 1 * 0x00000400 */
+	int					sensormode;
+	uint32_t				fps_divider;            /* init to 1 * 0x00000400 */
+	uint32_t				pict_fps_divider;       /* init to 1 * 0x00000400 */
 
-	uint16_t curr_lens_pos;
-	uint16_t init_curr_lens_pos;
-	uint16_t my_reg_gain;
-	uint32_t my_reg_line_count;
+	uint16_t				curr_lens_pos;
+	uint16_t				init_curr_lens_pos;
+	uint16_t				my_reg_gain;
+	uint32_t				my_reg_line_count;
 
 	enum mt9t013_resolution prev_res;
 	enum mt9t013_resolution pict_res;
 	enum mt9t013_resolution curr_res;
-	enum mt9t013_test_mode  set_test;
+	enum mt9t013_test_mode set_test;
 
 	unsigned short imgaddr;
 };
@@ -128,21 +128,21 @@ DECLARE_MUTEX(mt9t013_sem);
 extern struct mt9t013_reg mt9t013_regs; /* from mt9t013_reg.c */
 
 static int mt9t013_i2c_rxdata(unsigned short saddr,
-	unsigned char *rxdata, int length)
+			      unsigned char *rxdata, int length)
 {
 	struct i2c_msg msgs[] = {
-	{
-		.addr   = saddr,
-		.flags = 0,
-		.len   = 2,
-		.buf   = rxdata,
-	},
-	{
-		.addr  = saddr,
-		.flags = I2C_M_RD,
-		.len   = length,
-		.buf   = rxdata,
-	},
+		{
+			.addr = saddr,
+			.flags = 0,
+			.len = 2,
+			.buf = rxdata,
+		},
+		{
+			.addr = saddr,
+			.flags = I2C_M_RD,
+			.len = length,
+			.buf = rxdata,
+		},
 	};
 
 	if (i2c_transfer(mt9t013_client->adapter, msgs, 2) < 0) {
@@ -154,7 +154,7 @@ static int mt9t013_i2c_rxdata(unsigned short saddr,
 }
 
 static int32_t mt9t013_i2c_read_w(unsigned short saddr,
-	unsigned short raddr, unsigned short *rdata)
+				  unsigned short raddr, unsigned short *rdata)
 {
 	int32_t rc = 0;
 	unsigned char buf[4];
@@ -164,7 +164,7 @@ static int32_t mt9t013_i2c_read_w(unsigned short saddr,
 
 	memset(buf, 0, sizeof(buf));
 
-	buf[0] = (raddr & 0xFF00)>>8;
+	buf[0] = (raddr & 0xFF00) >> 8;
 	buf[1] = (raddr & 0x00FF);
 
 	rc = mt9t013_i2c_rxdata(saddr, buf, 2);
@@ -180,15 +180,15 @@ static int32_t mt9t013_i2c_read_w(unsigned short saddr,
 }
 
 static int32_t mt9t013_i2c_txdata(unsigned short saddr,
-	unsigned char *txdata, int length)
+				  unsigned char *txdata, int length)
 {
 	struct i2c_msg msg[] = {
-	{
-		.addr = saddr,
-		.flags = 0,
-		.len = length,
-		.buf = txdata,
-	},
+		{
+			.addr = saddr,
+			.flags = 0,
+			.len = length,
+			.buf = txdata,
+		},
 	};
 
 	if (i2c_transfer(mt9t013_client->adapter, msg, 1) < 0) {
@@ -200,7 +200,7 @@ static int32_t mt9t013_i2c_txdata(unsigned short saddr,
 }
 
 static int32_t mt9t013_i2c_write_b(unsigned short saddr,
-	unsigned short waddr, unsigned short wdata)
+				   unsigned short waddr, unsigned short wdata)
 {
 	int32_t rc = -EIO;
 	unsigned char buf[2];
@@ -212,28 +212,28 @@ static int32_t mt9t013_i2c_write_b(unsigned short saddr,
 
 	if (rc < 0)
 		pr_err("i2c_write failed, addr = 0x%x, val = 0x%x!\n",
-		waddr, wdata);
+		       waddr, wdata);
 
 	return rc;
 }
 
 static int32_t mt9t013_i2c_write_w(unsigned short saddr,
-	unsigned short waddr, unsigned short wdata)
+				   unsigned short waddr, unsigned short wdata)
 {
 	int32_t rc = -EIO;
 	unsigned char buf[4];
 
 	memset(buf, 0, sizeof(buf));
-	buf[0] = (waddr & 0xFF00)>>8;
+	buf[0] = (waddr & 0xFF00) >> 8;
 	buf[1] = (waddr & 0x00FF);
-	buf[2] = (wdata & 0xFF00)>>8;
+	buf[2] = (wdata & 0xFF00) >> 8;
 	buf[3] = (wdata & 0x00FF);
 
 	rc = mt9t013_i2c_txdata(saddr, buf, 4);
 
 	if (rc < 0)
 		pr_err("i2c_write_w failed, addr = 0x%x, val = 0x%x!\n",
-		waddr, wdata);
+		       waddr, wdata);
 
 	return rc;
 }
@@ -246,7 +246,7 @@ static int32_t mt9t013_i2c_write_w_table(
 
 	for (i = 0; i < num_of_items_in_table; i++) {
 		rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-			reg_conf_tbl->waddr, reg_conf_tbl->wdata);
+					 reg_conf_tbl->waddr, reg_conf_tbl->wdata);
 		if (rc < 0)
 			break;
 		reg_conf_tbl++;
@@ -260,27 +260,27 @@ static int32_t mt9t013_test(enum mt9t013_test_mode mo)
 	int32_t rc = 0;
 
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-			REG_GROUPED_PARAMETER_HOLD,
-			GROUPED_PARAMETER_HOLD);
+				 REG_GROUPED_PARAMETER_HOLD,
+				 GROUPED_PARAMETER_HOLD);
 	if (rc < 0)
 		return rc;
 
-	if (mo == TEST_OFF)
+	if (mo == TEST_OFF) {
 		return 0;
-	else {
+	} else {
 		rc = mt9t013_i2c_write_w_table(mt9t013_regs.ttbl,
-				mt9t013_regs.ttbl_size);
+					       mt9t013_regs.ttbl_size);
 		if (rc < 0)
 			return rc;
 		rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_TEST_PATTERN_MODE, (uint16_t)mo);
+					 REG_TEST_PATTERN_MODE, (uint16_t)mo);
 		if (rc < 0)
 			return rc;
 	}
 
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-			REG_GROUPED_PARAMETER_HOLD,
-			GROUPED_PARAMETER_UPDATE);
+				 REG_GROUPED_PARAMETER_HOLD,
+				 GROUPED_PARAMETER_UPDATE);
 	if (rc < 0)
 		return rc;
 
@@ -302,12 +302,13 @@ static int32_t mt9t013_set_default_focus(uint8_t af_step)
 {
 	int32_t rc = 0;
 	uint8_t code_val_msb, code_val_lsb;
+
 	code_val_msb = 0x01;
 	code_val_lsb = af_step;
 
 	/* Write the digital code for current to the actuator */
-	rc = mt9t013_i2c_write_b(MT9T013_AF_I2C_ADDR>>1,
-			code_val_msb, code_val_lsb);
+	rc = mt9t013_i2c_write_b(MT9T013_AF_I2C_ADDR >> 1,
+				 code_val_msb, code_val_lsb);
 
 	mt9t013_ctrl->curr_lens_pos = 0;
 	mt9t013_ctrl->init_curr_lens_pos = 0;
@@ -317,33 +318,32 @@ static int32_t mt9t013_set_default_focus(uint8_t af_step)
 static void mt9t013_get_pict_fps(uint16_t fps, uint16_t *pfps)
 {
 	/* input fps is preview fps in Q8 format */
-	uint32_t divider;   /*Q10 */
-	uint32_t pclk_mult; /*Q10 */
+	uint32_t divider;       /*Q10 */
+	uint32_t pclk_mult;     /*Q10 */
 
 	if (mt9t013_ctrl->prev_res == QTR_SIZE) {
 		divider =
 			(uint32_t)(
-		((mt9t013_regs.reg_pat[RES_PREVIEW].frame_length_lines *
-		mt9t013_regs.reg_pat[RES_PREVIEW].line_length_pck) *
-		0x00000400) /
-		(mt9t013_regs.reg_pat[RES_CAPTURE].frame_length_lines *
-		mt9t013_regs.reg_pat[RES_CAPTURE].line_length_pck));
+				((mt9t013_regs.reg_pat[RES_PREVIEW].frame_length_lines *
+				  mt9t013_regs.reg_pat[RES_PREVIEW].line_length_pck) *
+				 0x00000400) /
+				(mt9t013_regs.reg_pat[RES_CAPTURE].frame_length_lines *
+				 mt9t013_regs.reg_pat[RES_CAPTURE].line_length_pck));
 
 		pclk_mult =
-		(uint32_t) ((mt9t013_regs.reg_pat[RES_CAPTURE].pll_multiplier *
-		0x00000400) /
-		(mt9t013_regs.reg_pat[RES_PREVIEW].pll_multiplier));
-
+			(uint32_t)((mt9t013_regs.reg_pat[RES_CAPTURE].pll_multiplier *
+				    0x00000400) /
+				   (mt9t013_regs.reg_pat[RES_PREVIEW].pll_multiplier));
 	} else {
 		/* full size resolution used for preview. */
-		divider   = 0x00000400;  /*1.0 */
-		pclk_mult = 0x00000400;  /*1.0 */
+		divider = 0x00000400;           /*1.0 */
+		pclk_mult = 0x00000400;         /*1.0 */
 	}
 
 	/* Verify PCLK settings and frame sizes. */
 	*pfps =
-		(uint16_t) (fps * divider * pclk_mult /
-		0x00000400 / 0x00000400);
+		(uint16_t)(fps * divider * pclk_mult /
+			   0x00000400 / 0x00000400);
 }
 
 static uint16_t mt9t013_get_prev_lines_pf(void)
@@ -376,13 +376,12 @@ static uint32_t mt9t013_get_pict_max_exp_lc(void)
 {
 	uint16_t snapshot_lines_per_frame;
 
-	if (mt9t013_ctrl->pict_res == QTR_SIZE) {
+	if (mt9t013_ctrl->pict_res == QTR_SIZE)
 		snapshot_lines_per_frame =
-		mt9t013_regs.reg_pat[RES_PREVIEW].frame_length_lines - 1;
-	} else  {
+			mt9t013_regs.reg_pat[RES_PREVIEW].frame_length_lines - 1;
+	else
 		snapshot_lines_per_frame =
-		mt9t013_regs.reg_pat[RES_CAPTURE].frame_length_lines - 1;
-	}
+			mt9t013_regs.reg_pat[RES_CAPTURE].frame_length_lines - 1;
 
 	return snapshot_lines_per_frame * 24;
 }
@@ -396,34 +395,34 @@ static int32_t mt9t013_set_fps(struct fps_cfg *fps)
 	mt9t013_ctrl->pict_fps_divider = fps->pict_fps_div;
 
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-			REG_GROUPED_PARAMETER_HOLD,
-			GROUPED_PARAMETER_HOLD);
+				 REG_GROUPED_PARAMETER_HOLD,
+				 GROUPED_PARAMETER_HOLD);
 	if (rc < 0)
 		return -EBUSY;
 
 	CDBG("mt9t013_set_fps: fps_div is %d, frame_rate is %d\n",
-			fps->fps_div,
-			(uint16_t) (mt9t013_regs.reg_pat[RES_PREVIEW].
-						frame_length_lines *
-					fps->fps_div/0x00000400));
+	     fps->fps_div,
+	     (uint16_t)(mt9t013_regs.reg_pat[RES_PREVIEW].
+			frame_length_lines *
+			fps->fps_div / 0x00000400));
 
 	CDBG("mt9t013_set_fps: fps_mult is %d, frame_rate is %d\n",
-			fps->f_mult,
-			(uint16_t)(mt9t013_regs.reg_pat[RES_PREVIEW].
-					line_length_pck *
-					fps->f_mult / 0x00000400));
+	     fps->f_mult,
+	     (uint16_t)(mt9t013_regs.reg_pat[RES_PREVIEW].
+			line_length_pck *
+			fps->f_mult / 0x00000400));
 
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-			REG_LINE_LENGTH_PCK,
-			(uint16_t) (
-			mt9t013_regs.reg_pat[RES_PREVIEW].line_length_pck *
-			fps->f_mult / 0x00000400));
+				 REG_LINE_LENGTH_PCK,
+				 (uint16_t)(
+					 mt9t013_regs.reg_pat[RES_PREVIEW].line_length_pck *
+					 fps->f_mult / 0x00000400));
 	if (rc < 0)
 		return rc;
 
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-			REG_GROUPED_PARAMETER_HOLD,
-			GROUPED_PARAMETER_UPDATE);
+				 REG_GROUPED_PARAMETER_HOLD,
+				 GROUPED_PARAMETER_UPDATE);
 	if (rc < 0)
 		return rc;
 
@@ -439,7 +438,7 @@ static int32_t mt9t013_write_exp_gain(uint16_t gain, uint32_t line)
 
 	if (mt9t013_ctrl->sensormode == SENSOR_PREVIEW_MODE) {
 		mt9t013_ctrl->my_reg_gain = gain;
-		mt9t013_ctrl->my_reg_line_count = (uint16_t) line;
+		mt9t013_ctrl->my_reg_line_count = (uint16_t)line;
 	}
 
 	if (gain > max_legal_gain)
@@ -447,14 +446,13 @@ static int32_t mt9t013_write_exp_gain(uint16_t gain, uint32_t line)
 
 	/* Verify no overflow */
 	if (mt9t013_ctrl->sensormode != SENSOR_SNAPSHOT_MODE) {
-		line = (uint32_t) (line * mt9t013_ctrl->fps_divider /
-			0x00000400);
+		line = (uint32_t)(line * mt9t013_ctrl->fps_divider /
+				  0x00000400);
 
 		setting = RES_PREVIEW;
-
 	} else {
-		line = (uint32_t) (line * mt9t013_ctrl->pict_fps_divider /
-			0x00000400);
+		line = (uint32_t)(line * mt9t013_ctrl->pict_fps_divider /
+				  0x00000400);
 
 		setting = RES_CAPTURE;
 	}
@@ -463,12 +461,12 @@ static int32_t mt9t013_write_exp_gain(uint16_t gain, uint32_t line)
 	gain |= 0x0200;
 
 	if ((mt9t013_regs.reg_pat[setting].frame_length_lines - 1) < line) {
-
 		line_length_ratio =
-		(uint32_t) (line * 0x00000400) /
-		(mt9t013_regs.reg_pat[setting].frame_length_lines - 1);
-	} else
+			(uint32_t)(line * 0x00000400) /
+			(mt9t013_regs.reg_pat[setting].frame_length_lines - 1);
+	} else {
 		line_length_ratio = 0x00000400;
+	}
 
 	/* There used to be PARAMETER_HOLD register write before and
 	 * after REG_GLOBAL_GAIN & REG_COARSE_INIT_TIME. This causes
@@ -479,9 +477,9 @@ static int32_t mt9t013_write_exp_gain(uint16_t gain, uint32_t line)
 		return rc;
 
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-			REG_COARSE_INT_TIME,
-			(uint16_t)((uint32_t) line * 0x00000400 /
-			line_length_ratio));
+				 REG_COARSE_INT_TIME,
+				 (uint16_t)((uint32_t)line * 0x00000400 /
+					    line_length_ratio));
 	if (rc < 0)
 		return rc;
 
@@ -497,8 +495,8 @@ static int32_t mt9t013_set_pict_exp_gain(uint16_t gain, uint32_t line)
 		return rc;
 
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-			MT9T013_REG_RESET_REGISTER,
-			0x10CC | 0x0002);
+				 MT9T013_REG_RESET_REGISTER,
+				 0x10CC | 0x0002);
 
 	mdelay(5);
 
@@ -506,435 +504,435 @@ static int32_t mt9t013_set_pict_exp_gain(uint16_t gain, uint32_t line)
 	return rc;
 }
 
-static int32_t mt9t013_setting(enum mt9t013_reg_update rupdate,
-	enum mt9t013_setting rt)
+static int32_t mt9t013_setting(enum mt9t013_reg_update	rupdate,
+			       enum mt9t013_setting	rt)
 {
 	int32_t rc = 0;
 
 	switch (rupdate) {
 	case UPDATE_PERIODIC: {
-
-	if (rt == RES_PREVIEW || rt == RES_CAPTURE) {
+		if (rt == RES_PREVIEW || rt == RES_CAPTURE) {
 #if 0
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				MT9T013_REG_RESET_REGISTER,
-				MT9T013_RESET_REGISTER_PWOFF);
-		if (rc < 0)
-			return rc;
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    MT9T013_REG_RESET_REGISTER,
+						    MT9T013_RESET_REGISTER_PWOFF);
+			if (rc < 0)
+				return rc;
 #endif
 
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_VT_PIX_CLK_DIV,
-				mt9t013_regs.reg_pat[rt].vt_pix_clk_div);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_VT_SYS_CLK_DIV,
-				mt9t013_regs.reg_pat[rt].vt_sys_clk_div);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_PRE_PLL_CLK_DIV,
-				mt9t013_regs.reg_pat[rt].pre_pll_clk_div);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_PLL_MULTIPLIER,
-				mt9t013_regs.reg_pat[rt].pll_multiplier);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_OP_PIX_CLK_DIV,
-				mt9t013_regs.reg_pat[rt].op_pix_clk_div);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_OP_SYS_CLK_DIV,
-				mt9t013_regs.reg_pat[rt].op_sys_clk_div);
-		if (rc < 0)
-			return rc;
-
-		mdelay(5);
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_GROUPED_PARAMETER_HOLD,
-				GROUPED_PARAMETER_HOLD);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_ROW_SPEED,
-				mt9t013_regs.reg_pat[rt].row_speed);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_X_ADDR_START,
-				mt9t013_regs.reg_pat[rt].x_addr_start);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_X_ADDR_END,
-				mt9t013_regs.reg_pat[rt].x_addr_end);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_Y_ADDR_START,
-				mt9t013_regs.reg_pat[rt].y_addr_start);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_Y_ADDR_END,
-				mt9t013_regs.reg_pat[rt].y_addr_end);
-		if (rc < 0)
-			return rc;
-
-		if (machine_is_sapphire()) {
-			if (rt == 0)
-				rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-					REG_READ_MODE,
-					0x046F);
-			else
-				rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-					REG_READ_MODE,
-					0x0027);
-		} else
-			rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-					REG_READ_MODE,
-					mt9t013_regs.reg_pat[rt].read_mode);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_SCALE_M,
-				mt9t013_regs.reg_pat[rt].scale_m);
-		if (rc < 0)
-			return rc;
-
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_X_OUTPUT_SIZE,
-				mt9t013_regs.reg_pat[rt].x_output_size);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_Y_OUTPUT_SIZE,
-				mt9t013_regs.reg_pat[rt].y_output_size);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_LINE_LENGTH_PCK,
-				mt9t013_regs.reg_pat[rt].line_length_pck);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-			REG_FRAME_LENGTH_LINES,
-			(mt9t013_regs.reg_pat[rt].frame_length_lines *
-			mt9t013_ctrl->fps_divider / 0x00000400));
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-			REG_COARSE_INT_TIME,
-			mt9t013_regs.reg_pat[rt].coarse_int_time);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-			REG_FINE_INT_TIME,
-			mt9t013_regs.reg_pat[rt].fine_int_time);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-			REG_GROUPED_PARAMETER_HOLD,
-			GROUPED_PARAMETER_UPDATE);
-		if (rc < 0)
-			return rc;
-
-		rc = mt9t013_test(mt9t013_ctrl->set_test);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-			MT9T013_REG_RESET_REGISTER,
-			MT9T013_RESET_REGISTER_PWON);
-		if (rc < 0)
-			return rc;
-
-		mdelay(5);
-
-		return rc;
-	}
-	}
-		break;
-
-	/*CAMSENSOR_REG_UPDATE_PERIODIC */
-	case REG_INIT: {
-	if (rt == RES_PREVIEW || rt == RES_CAPTURE) {
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				MT9T013_REG_RESET_REGISTER,
-				MT9T013_RESET_REGISTER_PWOFF);
-		if (rc < 0)
-			/* MODE_SELECT, stop streaming */
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_VT_PIX_CLK_DIV,
-				mt9t013_regs.reg_pat[rt].vt_pix_clk_div);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_VT_SYS_CLK_DIV,
-				mt9t013_regs.reg_pat[rt].vt_sys_clk_div);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_PRE_PLL_CLK_DIV,
-				mt9t013_regs.reg_pat[rt].pre_pll_clk_div);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_PLL_MULTIPLIER,
-				mt9t013_regs.reg_pat[rt].pll_multiplier);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_OP_PIX_CLK_DIV,
-				mt9t013_regs.reg_pat[rt].op_pix_clk_div);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_OP_SYS_CLK_DIV,
-				mt9t013_regs.reg_pat[rt].op_sys_clk_div);
-		if (rc < 0)
-			return rc;
-
-		mdelay(5);
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_GROUPED_PARAMETER_HOLD,
-				GROUPED_PARAMETER_HOLD);
-		if (rc < 0)
-			return rc;
-
-		/* additional power saving mode ok around 38.2MHz */
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				0x3084, 0x2409);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				0x3092, 0x0A49);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				0x3094, 0x4949);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				0x3096, 0x4949);
-		if (rc < 0)
-			return rc;
-
-		/* Set preview or snapshot mode */
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_ROW_SPEED,
-				mt9t013_regs.reg_pat[rt].row_speed);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_X_ADDR_START,
-				mt9t013_regs.reg_pat[rt].x_addr_start);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_X_ADDR_END,
-				mt9t013_regs.reg_pat[rt].x_addr_end);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_Y_ADDR_START,
-				mt9t013_regs.reg_pat[rt].y_addr_start);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_Y_ADDR_END,
-				mt9t013_regs.reg_pat[rt].y_addr_end);
-		if (rc < 0)
-			return rc;
-
-		if (machine_is_sapphire()) {
-			if (rt == 0)
-				rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-					REG_READ_MODE,
-					0x046F);
-			else
-				rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-					REG_READ_MODE,
-					0x0027);
-		} else
-			rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-					REG_READ_MODE,
-					mt9t013_regs.reg_pat[rt].read_mode);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_SCALE_M,
-				mt9t013_regs.reg_pat[rt].scale_m);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_X_OUTPUT_SIZE,
-				mt9t013_regs.reg_pat[rt].x_output_size);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_Y_OUTPUT_SIZE,
-				mt9t013_regs.reg_pat[rt].y_output_size);
-		if (rc < 0)
-			return 0;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_LINE_LENGTH_PCK,
-				mt9t013_regs.reg_pat[rt].line_length_pck);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_FRAME_LENGTH_LINES,
-				mt9t013_regs.reg_pat[rt].frame_length_lines);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_COARSE_INT_TIME,
-				mt9t013_regs.reg_pat[rt].coarse_int_time);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_FINE_INT_TIME,
-				mt9t013_regs.reg_pat[rt].fine_int_time);
-		if (rc < 0)
-			return rc;
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_GROUPED_PARAMETER_HOLD,
-				GROUPED_PARAMETER_UPDATE);
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_VT_PIX_CLK_DIV,
+						    mt9t013_regs.reg_pat[rt].vt_pix_clk_div);
 			if (rc < 0)
 				return rc;
 
-		/* load lens shading */
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_GROUPED_PARAMETER_HOLD,
-				GROUPED_PARAMETER_HOLD);
-		if (rc < 0)
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_VT_SYS_CLK_DIV,
+						    mt9t013_regs.reg_pat[rt].vt_sys_clk_div);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_PRE_PLL_CLK_DIV,
+						    mt9t013_regs.reg_pat[rt].pre_pll_clk_div);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_PLL_MULTIPLIER,
+						    mt9t013_regs.reg_pat[rt].pll_multiplier);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_OP_PIX_CLK_DIV,
+						    mt9t013_regs.reg_pat[rt].op_pix_clk_div);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_OP_SYS_CLK_DIV,
+						    mt9t013_regs.reg_pat[rt].op_sys_clk_div);
+			if (rc < 0)
+				return rc;
+
+			mdelay(5);
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_GROUPED_PARAMETER_HOLD,
+						    GROUPED_PARAMETER_HOLD);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_ROW_SPEED,
+						    mt9t013_regs.reg_pat[rt].row_speed);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_X_ADDR_START,
+						    mt9t013_regs.reg_pat[rt].x_addr_start);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_X_ADDR_END,
+						    mt9t013_regs.reg_pat[rt].x_addr_end);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_Y_ADDR_START,
+						    mt9t013_regs.reg_pat[rt].y_addr_start);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_Y_ADDR_END,
+						    mt9t013_regs.reg_pat[rt].y_addr_end);
+			if (rc < 0)
+				return rc;
+
+			if (machine_is_sapphire()) {
+				if (rt == 0)
+					rc = mt9t013_i2c_write_w(mt9t013_client->addr,
+								 REG_READ_MODE,
+								 0x046F);
+				else
+					rc = mt9t013_i2c_write_w(mt9t013_client->addr,
+								 REG_READ_MODE,
+								 0x0027);
+			} else {
+				rc = mt9t013_i2c_write_w(mt9t013_client->addr,
+							 REG_READ_MODE,
+							 mt9t013_regs.reg_pat[rt].read_mode);
+			}
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_SCALE_M,
+						    mt9t013_regs.reg_pat[rt].scale_m);
+			if (rc < 0)
+				return rc;
+
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_X_OUTPUT_SIZE,
+						    mt9t013_regs.reg_pat[rt].x_output_size);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_Y_OUTPUT_SIZE,
+						    mt9t013_regs.reg_pat[rt].y_output_size);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_LINE_LENGTH_PCK,
+						    mt9t013_regs.reg_pat[rt].line_length_pck);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_FRAME_LENGTH_LINES,
+						    (mt9t013_regs.reg_pat[rt].frame_length_lines *
+						     mt9t013_ctrl->fps_divider / 0x00000400));
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_COARSE_INT_TIME,
+						    mt9t013_regs.reg_pat[rt].coarse_int_time);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_FINE_INT_TIME,
+						    mt9t013_regs.reg_pat[rt].fine_int_time);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_GROUPED_PARAMETER_HOLD,
+						    GROUPED_PARAMETER_UPDATE);
+			if (rc < 0)
+				return rc;
+
+			rc = mt9t013_test(mt9t013_ctrl->set_test);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    MT9T013_REG_RESET_REGISTER,
+						    MT9T013_RESET_REGISTER_PWON);
+			if (rc < 0)
+				return rc;
+
+			mdelay(5);
+
 			return rc;
+		}
+	}
+	break;
 
-		/* most likely needs to be written only once. */
-		rc = mt9t013_set_lc();
-		if (rc < 0)
-			return -EBUSY;
+	/*CAMSENSOR_REG_UPDATE_PERIODIC */
+	case REG_INIT: {
+		if (rt == RES_PREVIEW || rt == RES_CAPTURE) {
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    MT9T013_REG_RESET_REGISTER,
+						    MT9T013_RESET_REGISTER_PWOFF);
+			if (rc < 0)
+				/* MODE_SELECT, stop streaming */
+				return rc;
 
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_GROUPED_PARAMETER_HOLD,
-				GROUPED_PARAMETER_UPDATE);
-		if (rc < 0)
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_VT_PIX_CLK_DIV,
+						    mt9t013_regs.reg_pat[rt].vt_pix_clk_div);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_VT_SYS_CLK_DIV,
+						    mt9t013_regs.reg_pat[rt].vt_sys_clk_div);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_PRE_PLL_CLK_DIV,
+						    mt9t013_regs.reg_pat[rt].pre_pll_clk_div);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_PLL_MULTIPLIER,
+						    mt9t013_regs.reg_pat[rt].pll_multiplier);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_OP_PIX_CLK_DIV,
+						    mt9t013_regs.reg_pat[rt].op_pix_clk_div);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_OP_SYS_CLK_DIV,
+						    mt9t013_regs.reg_pat[rt].op_sys_clk_div);
+			if (rc < 0)
+				return rc;
+
+			mdelay(5);
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_GROUPED_PARAMETER_HOLD,
+						    GROUPED_PARAMETER_HOLD);
+			if (rc < 0)
+				return rc;
+
+			/* additional power saving mode ok around 38.2MHz */
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    0x3084, 0x2409);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    0x3092, 0x0A49);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    0x3094, 0x4949);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    0x3096, 0x4949);
+			if (rc < 0)
+				return rc;
+
+			/* Set preview or snapshot mode */
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_ROW_SPEED,
+						    mt9t013_regs.reg_pat[rt].row_speed);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_X_ADDR_START,
+						    mt9t013_regs.reg_pat[rt].x_addr_start);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_X_ADDR_END,
+						    mt9t013_regs.reg_pat[rt].x_addr_end);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_Y_ADDR_START,
+						    mt9t013_regs.reg_pat[rt].y_addr_start);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_Y_ADDR_END,
+						    mt9t013_regs.reg_pat[rt].y_addr_end);
+			if (rc < 0)
+				return rc;
+
+			if (machine_is_sapphire()) {
+				if (rt == 0)
+					rc = mt9t013_i2c_write_w(mt9t013_client->addr,
+								 REG_READ_MODE,
+								 0x046F);
+				else
+					rc = mt9t013_i2c_write_w(mt9t013_client->addr,
+								 REG_READ_MODE,
+								 0x0027);
+			} else {
+				rc = mt9t013_i2c_write_w(mt9t013_client->addr,
+							 REG_READ_MODE,
+							 mt9t013_regs.reg_pat[rt].read_mode);
+			}
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_SCALE_M,
+						    mt9t013_regs.reg_pat[rt].scale_m);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_X_OUTPUT_SIZE,
+						    mt9t013_regs.reg_pat[rt].x_output_size);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_Y_OUTPUT_SIZE,
+						    mt9t013_regs.reg_pat[rt].y_output_size);
+			if (rc < 0)
+				return 0;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_LINE_LENGTH_PCK,
+						    mt9t013_regs.reg_pat[rt].line_length_pck);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_FRAME_LENGTH_LINES,
+						    mt9t013_regs.reg_pat[rt].frame_length_lines);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_COARSE_INT_TIME,
+						    mt9t013_regs.reg_pat[rt].coarse_int_time);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_FINE_INT_TIME,
+						    mt9t013_regs.reg_pat[rt].fine_int_time);
+			if (rc < 0)
+				return rc;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_GROUPED_PARAMETER_HOLD,
+						    GROUPED_PARAMETER_UPDATE);
+			if (rc < 0)
+				return rc;
+
+			/* load lens shading */
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_GROUPED_PARAMETER_HOLD,
+						    GROUPED_PARAMETER_HOLD);
+			if (rc < 0)
+				return rc;
+
+			/* most likely needs to be written only once. */
+			rc = mt9t013_set_lc();
+			if (rc < 0)
+				return -EBUSY;
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    REG_GROUPED_PARAMETER_HOLD,
+						    GROUPED_PARAMETER_UPDATE);
+			if (rc < 0)
+				return rc;
+
+			rc = mt9t013_test(mt9t013_ctrl->set_test);
+			if (rc < 0)
+				return rc;
+
+			mdelay(5);
+
+			rc =
+				mt9t013_i2c_write_w(mt9t013_client->addr,
+						    MT9T013_REG_RESET_REGISTER,
+						    MT9T013_RESET_REGISTER_PWON);
+			if (rc < 0)
+				/* MODE_SELECT, stop streaming */
+				return rc;
+
+			CDBG("!!! mt9t013 !!! PowerOn is done!\n");
+			mdelay(5);
 			return rc;
-
-		rc = mt9t013_test(mt9t013_ctrl->set_test);
-		if (rc < 0)
-			return rc;
-
-		mdelay(5);
-
-		rc =
-			mt9t013_i2c_write_w(mt9t013_client->addr,
-				MT9T013_REG_RESET_REGISTER,
-				MT9T013_RESET_REGISTER_PWON);
-		if (rc < 0)
-			/* MODE_SELECT, stop streaming */
-			return rc;
-
-		CDBG("!!! mt9t013 !!! PowerOn is done!\n");
-		mdelay(5);
-		return rc;
 		}
 	} /* case CAMSENSOR_REG_INIT: */
 	break;
@@ -975,7 +973,7 @@ static int32_t mt9t013_video_config(int mode, int res)
 	mt9t013_ctrl->sensormode = mode;
 
 	return mt9t013_write_exp_gain(mt9t013_ctrl->my_reg_gain,
-			mt9t013_ctrl->my_reg_line_count);
+				      mt9t013_ctrl->my_reg_line_count);
 }
 
 static int32_t mt9t013_snapshot_config(int mode)
@@ -1009,8 +1007,8 @@ static int32_t mt9t013_power_down(void)
 	int32_t rc = 0;
 
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-			MT9T013_REG_RESET_REGISTER,
-			MT9T013_RESET_REGISTER_PWOFF);
+				 MT9T013_REG_RESET_REGISTER,
+				 MT9T013_RESET_REGISTER_PWOFF);
 	if (rc >= 0)
 		mdelay(5);
 	return rc;
@@ -1041,8 +1039,8 @@ static int32_t mt9t013_move_focus(int direction, int32_t num_steps)
 		mt9t013_ctrl->curr_lens_pos = mt9t013_ctrl->init_curr_lens_pos;
 
 	actual_step =
-		(int16_t) (step_direction *
-		(int16_t) num_steps);
+		(int16_t)(step_direction *
+			  (int16_t)num_steps);
 
 	for (i = 0; i < 4; i++)
 		break_steps[i] =
@@ -1050,8 +1048,8 @@ static int32_t mt9t013_move_focus(int direction, int32_t num_steps)
 
 	for (i = 0; i < 4; i++) {
 		next_position =
-		(int16_t)
-		(mt9t013_ctrl->curr_lens_pos + break_steps[i]);
+			(int16_t)
+			(mt9t013_ctrl->curr_lens_pos + break_steps[i]);
 
 		if (next_position > 255)
 			next_position = 255;
@@ -1059,15 +1057,15 @@ static int32_t mt9t013_move_focus(int direction, int32_t num_steps)
 			next_position = 0;
 
 		code_val_msb =
-		((next_position >> 4) << 2) |
-		((next_position << 4) >> 6);
+			((next_position >> 4) << 2) |
+			((next_position << 4) >> 6);
 
 		code_val_lsb =
-		((next_position & 0x03) << 6);
+			((next_position & 0x03) << 6);
 
 		/* Writing the digital code for current to the actuator */
-		if (mt9t013_i2c_write_b(MT9T013_AF_I2C_ADDR>>1,
-				code_val_msb, code_val_lsb) < 0)
+		if (mt9t013_i2c_write_b(MT9T013_AF_I2C_ADDR >> 1,
+					code_val_msb, code_val_lsb) < 0)
 			return -EBUSY;
 
 		/* Storing the current lens Position */
@@ -1102,13 +1100,13 @@ static int mt9t013_probe_init_sensor(const struct msm_camera_sensor_info *data)
 
 	/* RESET the sensor image part via I2C command */
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-		MT9T013_REG_RESET_REGISTER, 0x1009);
+				 MT9T013_REG_RESET_REGISTER, 0x1009);
 	if (rc < 0)
 		goto init_probe_fail;
 
 	/* 3. Read sensor Model ID: */
 	rc = mt9t013_i2c_read_w(mt9t013_client->addr,
-		MT9T013_REG_MODEL_ID, &chipid);
+				MT9T013_REG_MODEL_ID, &chipid);
 
 	if (rc < 0)
 		goto init_probe_fail;
@@ -1122,7 +1120,7 @@ static int mt9t013_probe_init_sensor(const struct msm_camera_sensor_info *data)
 	}
 
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-		0x3064, 0x0805);
+				 0x3064, 0x0805);
 	if (rc < 0)
 		goto init_probe_fail;
 
@@ -1133,8 +1131,8 @@ static int mt9t013_probe_init_sensor(const struct msm_camera_sensor_info *data)
 	/* sensor: output enable */
 #if 0
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-		MT9T013_REG_RESET_REGISTER,
-		MT9T013_RESET_REGISTER_PWON);
+				 MT9T013_REG_RESET_REGISTER,
+				 MT9T013_RESET_REGISTER_PWON);
 
 	/* if this fails, the sensor is not the MT9T013 */
 	rc = mt9t013_set_default_focus(0);
@@ -1153,14 +1151,15 @@ static int32_t mt9t013_poweron_af(void)
 
 	/* enable AF actuator */
 	CDBG("enable AF actuator, gpio = %d\n",
-			mt9t013_ctrl->sensordata->vcm_pwd);
+	     mt9t013_ctrl->sensordata->vcm_pwd);
 	rc = gpio_request(mt9t013_ctrl->sensordata->vcm_pwd, "mt9t013");
 	if (!rc) {
 		gpio_direction_output(mt9t013_ctrl->sensordata->vcm_pwd, 0);
 		mdelay(20);
 		rc = mt9t013_set_default_focus(0);
-	} else
+	} else {
 		pr_err("%s, gpio_request failed (%d)!\n", __func__, rc);
+	}
 	return rc;
 }
 
@@ -1172,7 +1171,7 @@ static void mt9t013_poweroff_af(void)
 
 int mt9t013_sensor_open_init(const struct msm_camera_sensor_info *data)
 {
-	int32_t  rc;
+	int32_t rc;
 
 	mt9t013_ctrl = kzalloc(sizeof(struct mt9t013_ctrl), GFP_KERNEL);
 	if (!mt9t013_ctrl) {
@@ -1231,9 +1230,10 @@ static int mt9t013_init_client(struct i2c_client *client)
 static int32_t mt9t013_set_sensor_mode(int mode, int res)
 {
 	int32_t rc = 0;
+
 	rc = mt9t013_i2c_write_w(mt9t013_client->addr,
-			REG_GROUPED_PARAMETER_HOLD,
-			GROUPED_PARAMETER_HOLD);
+				 REG_GROUPED_PARAMETER_HOLD,
+				 GROUPED_PARAMETER_HOLD);
 	if (rc < 0)
 		return rc;
 
@@ -1257,18 +1257,18 @@ static int32_t mt9t013_set_sensor_mode(int mode, int res)
 	/* FIXME: what should we do if rc < 0? */
 	if (rc >= 0)
 		return mt9t013_i2c_write_w(mt9t013_client->addr,
-				REG_GROUPED_PARAMETER_HOLD,
-				GROUPED_PARAMETER_UPDATE);
+					   REG_GROUPED_PARAMETER_HOLD,
+					   GROUPED_PARAMETER_UPDATE);
 	return rc;
 }
 
 int mt9t013_sensor_config(void __user *argp)
 {
 	struct sensor_cfg_data cdata;
-	long   rc = 0;
+	long rc = 0;
 
 	if (copy_from_user(&cdata, (void *)argp,
-			sizeof(struct sensor_cfg_data)))
+			   sizeof(struct sensor_cfg_data)))
 		return -EFAULT;
 
 	down(&mt9t013_sem);
@@ -1277,34 +1277,34 @@ int mt9t013_sensor_config(void __user *argp)
 	switch (cdata.cfgtype) {
 	case CFG_GET_PICT_FPS:
 		mt9t013_get_pict_fps(cdata.cfg.gfps.prevfps,
-				&(cdata.cfg.gfps.pictfps));
+				     &(cdata.cfg.gfps.pictfps));
 		if (copy_to_user((void *)argp,
-				&cdata,
-				sizeof(struct sensor_cfg_data)))
+				 &cdata,
+				 sizeof(struct sensor_cfg_data)))
 			rc = -EFAULT;
 		break;
 
 	case CFG_GET_PREV_L_PF:
 		cdata.cfg.prevl_pf = mt9t013_get_prev_lines_pf();
 		if (copy_to_user((void *)argp,
-				&cdata,
-				sizeof(struct sensor_cfg_data)))
+				 &cdata,
+				 sizeof(struct sensor_cfg_data)))
 			rc = -EFAULT;
 		break;
 
 	case CFG_GET_PREV_P_PL:
 		cdata.cfg.prevp_pl = mt9t013_get_prev_pixels_pl();
 		if (copy_to_user((void *)argp,
-				&cdata,
-				sizeof(struct sensor_cfg_data)))
+				 &cdata,
+				 sizeof(struct sensor_cfg_data)))
 			rc = -EFAULT;
 		break;
 
 	case CFG_GET_PICT_L_PF:
 		cdata.cfg.pictl_pf = mt9t013_get_pict_lines_pf();
 		if (copy_to_user((void *)argp,
-				&cdata,
-				sizeof(struct sensor_cfg_data)))
+				 &cdata,
+				 sizeof(struct sensor_cfg_data)))
 			rc = -EFAULT;
 		break;
 
@@ -1313,8 +1313,8 @@ int mt9t013_sensor_config(void __user *argp)
 			mt9t013_get_pict_pixels_pl();
 
 		if (copy_to_user((void *)argp,
-				&cdata,
-				sizeof(struct sensor_cfg_data)))
+				 &cdata,
+				 sizeof(struct sensor_cfg_data)))
 			rc = -EFAULT;
 		break;
 
@@ -1323,8 +1323,8 @@ int mt9t013_sensor_config(void __user *argp)
 			mt9t013_get_pict_max_exp_lc();
 
 		if (copy_to_user((void *)argp,
-				&cdata,
-				sizeof(struct sensor_cfg_data)))
+				 &cdata,
+				 sizeof(struct sensor_cfg_data)))
 			rc = -EFAULT;
 		break;
 
@@ -1335,12 +1335,12 @@ int mt9t013_sensor_config(void __user *argp)
 
 	case CFG_SET_EXP_GAIN:
 		rc = mt9t013_write_exp_gain(cdata.cfg.exp_gain.gain,
-				cdata.cfg.exp_gain.line);
+					    cdata.cfg.exp_gain.line);
 		break;
 
 	case CFG_SET_PICT_EXP_GAIN:
 		rc = mt9t013_set_pict_exp_gain(cdata.cfg.exp_gain.gain,
-				cdata.cfg.exp_gain.line);
+					       cdata.cfg.exp_gain.line);
 		break;
 
 	case CFG_SET_MODE:
@@ -1353,7 +1353,7 @@ int mt9t013_sensor_config(void __user *argp)
 
 	case CFG_MOVE_FOCUS:
 		rc = mt9t013_move_focus(cdata.cfg.focus.dir,
-				cdata.cfg.focus.steps);
+					cdata.cfg.focus.steps);
 		break;
 
 	case CFG_SET_DEFAULT_FOCUS:
@@ -1363,8 +1363,8 @@ int mt9t013_sensor_config(void __user *argp)
 	case CFG_GET_AF_MAX_STEPS:
 		cdata.max_steps = MT9T013_TOTAL_STEPS_NEAR_TO_FAR;
 		if (copy_to_user((void *)argp,
-				&cdata,
-				sizeof(struct sensor_cfg_data)))
+				 &cdata,
+				 sizeof(struct sensor_cfg_data)))
 			rc = -EFAULT;
 		break;
 
@@ -1388,7 +1388,7 @@ int mt9t013_sensor_release(void)
 	mt9t013_power_down();
 
 	gpio_direction_output(mt9t013_ctrl->sensordata->sensor_reset,
-			0);
+			      0);
 	gpio_free(mt9t013_ctrl->sensordata->sensor_reset);
 
 	kfree(mt9t013_ctrl);
@@ -1398,10 +1398,11 @@ int mt9t013_sensor_release(void)
 	return rc;
 }
 
-static int mt9t013_i2c_probe(struct i2c_client *client,
-	const struct i2c_device_id *id)
+static int mt9t013_i2c_probe(struct i2c_client *		client,
+			     const struct i2c_device_id *	id)
 {
 	int rc = 0;
+
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
 		rc = -ENOTSUPP;
 		goto probe_failure;
@@ -1432,26 +1433,27 @@ probe_failure:
 }
 
 static const struct i2c_device_id mt9t013_i2c_id[] = {
-	{ "mt9t013", 0},
+	{ "mt9t013", 0 },
 	{ }
 };
 
 static struct i2c_driver mt9t013_i2c_driver = {
-	.id_table = mt9t013_i2c_id,
-	.probe  = mt9t013_i2c_probe,
-	.remove = __exit_p(mt9t013_i2c_remove),
-	.driver = {
-		.name = "mt9t013",
+	.id_table	= mt9t013_i2c_id,
+	.probe		= mt9t013_i2c_probe,
+	.remove		= __exit_p(mt9t013_i2c_remove),
+	.driver		= {
+		.name	= "mt9t013",
 	},
 };
 
 static int mt9t013_sensor_probe(
-		const struct msm_camera_sensor_info *info,
-		struct msm_sensor_ctrl *s)
+	const struct msm_camera_sensor_info *	info,
+	struct msm_sensor_ctrl *		s)
 {
 	/* We expect this driver to match with the i2c device registered
 	 * in the board file immediately. */
 	int rc = i2c_add_driver(&mt9t013_i2c_driver);
+
 	if (rc < 0 || mt9t013_client == NULL) {
 		rc = -ENOTSUPP;
 		goto probe_done;
@@ -1469,7 +1471,7 @@ static int mt9t013_sensor_probe(
 
 	s->s_init = mt9t013_sensor_open_init;
 	s->s_release = mt9t013_sensor_release;
-	s->s_config  = mt9t013_sensor_config;
+	s->s_config = mt9t013_sensor_config;
 	mt9t013_sensor_init_done(info);
 
 probe_done:
@@ -1482,10 +1484,10 @@ static int __mt9t013_probe(struct platform_device *pdev)
 }
 
 static struct platform_driver msm_camera_driver = {
-	.probe = __mt9t013_probe,
-	.driver = {
-		.name = "msm_camera_mt9t013",
-		.owner = THIS_MODULE,
+	.probe		= __mt9t013_probe,
+	.driver		= {
+		.name	= "msm_camera_mt9t013",
+		.owner	= THIS_MODULE,
 	},
 };
 

@@ -36,9 +36,9 @@
  * RAR_get_stat() user space wrapper function.
  */
 struct RAR_stat {
-	__u32 type;
-	__u32 capacity;
-	__u32 largest_block_size;
+	__u32	type;
+	__u32	capacity;
+	__u32	largest_block_size;
 };
 
 
@@ -54,9 +54,9 @@ struct RAR_stat {
  * entirely by "handle".
  */
 struct RAR_block_info {
-	__u32 type;
-	__u32 size;
-	__u32 handle;
+	__u32	type;
+	__u32	size;
+	__u32	handle;
 };
 
 
@@ -91,8 +91,8 @@ struct RAR_block_info {
  *       not intended to be exposed to the user space.
  */
 struct RAR_buffer {
-	struct RAR_block_info info;
-	dma_addr_t bus_address;
+	struct RAR_block_info	info;
+	dma_addr_t		bus_address;
 };
 
 /**
@@ -109,8 +109,7 @@ struct RAR_buffer {
  * buffer reservations will have the corresponding bus_address field
  * set to a non-zero value in the given buffers vector.
  */
-extern size_t rar_reserve(struct RAR_buffer *buffers,
-			  size_t count);
+extern size_t rar_reserve(struct RAR_buffer *buffers, size_t count);
 
 /**
  * rar_release() - release RAR buffers
@@ -127,15 +126,14 @@ extern size_t rar_reserve(struct RAR_buffer *buffers,
  * releases will have their handle field set to zero in the given
  * buffers vector.
  */
-extern size_t rar_release(struct RAR_buffer *buffers,
-			  size_t count);
+extern size_t rar_release(struct RAR_buffer *buffers, size_t count);
 
 /**
  * rar_handle_to_bus() - convert a vector of RAR handles to bus addresses
  * @buffers:	array of RAR_buffers containing handles to be
  *		converted to bus_addresses
  * @count:	number of RAR_buffers in the "buffers" array
-
+ *
  * This function will retrieve the RAR buffer bus addresses, type and
  * size corresponding to the RAR handles provided in the buffers
  * vector.
@@ -146,8 +144,7 @@ extern size_t rar_release(struct RAR_buffer *buffers,
  * The reference count for each corresponding buffer in RAR will be
  * incremented.  Call rar_release() when done with the buffers.
  */
-extern size_t rar_handle_to_bus(struct RAR_buffer *buffers,
-				size_t count);
+extern size_t rar_handle_to_bus(struct RAR_buffer *buffers, size_t count);
 
 
 #endif  /* __KERNEL__ */

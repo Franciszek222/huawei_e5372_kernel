@@ -4,7 +4,7 @@
  *
  * Copyright (C) 2011, Broadcom Corporation
  * All Rights Reserved.
- * 
+ *
  * This is UNPUBLISHED PROPRIETARY SOURCE CODE of Broadcom Corporation;
  * the contents of this file may not be disclosed to third parties, copied
  * or duplicated in any form, in whole or in part, without the prior
@@ -21,25 +21,25 @@ extern "C" {
 #endif
 
 /**
-\mainpage mfgtest_api.h
-
-Overview:
-
-The MFG API DLL allows a user to talk to a DUT by providing functions
-that abstract out the lower level details of the driver.
-
-The goal of this API is to make testing easier by providing enough
-functionality for the user to perform various tasks without
-requiring the user to know anything about the driver internals and,
-in addition, any differences there may be between drivers.
-
-*/
+ * \mainpage mfgtest_api.h
+ *
+ * Overview:
+ *
+ * The MFG API DLL allows a user to talk to a DUT by providing functions
+ * that abstract out the lower level details of the driver.
+ *
+ * The goal of this API is to make testing easier by providing enough
+ * functionality for the user to perform various tasks without
+ * requiring the user to know anything about the driver internals and,
+ * in addition, any differences there may be between drivers.
+ *
+ */
 
 #ifndef TRUE
-#define TRUE 	1
+#define TRUE    1
 #endif
 #ifndef FALSE
-#define FALSE 	0
+#define FALSE   0
 #endif
 
 #ifndef NULL
@@ -59,91 +59,91 @@ in addition, any differences there may be between drivers.
 /* Supported DUT interfaces. */
 /* Values are used to select the interface used to talk to the DUT. */
 enum {
-	WLM_DUT_LOCAL  = 0,  	/* client and DUT on same device */
-	WLM_DUT_SERIAL = 1,		/* client to DUT via serial */
-	WLM_DUT_SOCKET = 2, 	/* client to DUT via Ethernet */
-	WLM_DUT_WIFI   = 3,   	/* client to DUT via WLAN */
-	WLM_DUT_DONGLE = 4		/* client to DUT dongle via serial */
+	WLM_DUT_LOCAL	= 0,    /* client and DUT on same device */
+	WLM_DUT_SERIAL	= 1,    /* client to DUT via serial */
+	WLM_DUT_SOCKET	= 2,    /* client to DUT via Ethernet */
+	WLM_DUT_WIFI	= 3,    /* client to DUT via WLAN */
+	WLM_DUT_DONGLE	= 4     /* client to DUT dongle via serial */
 };
 typedef int WLM_DUT_INTERFACE;
 
 /* Supported server ports. */
 /* Values are used to configure server port (for WLM_DUT_SOCKET only). */
 enum {
-	WLM_DEFAULT_DUT_SERVER_PORT = 8000	/* default */
+	WLM_DEFAULT_DUT_SERVER_PORT = 8000      /* default */
 };
 typedef int WLM_DUT_SERVER_PORT;
 
 /* Supported DUT OS. */
 /* Values are used to select the OS of the DUT. */
 enum {
-	WLM_DUT_OS_LINUX = 1,  	/* Linux DUT */
-	WLM_DUT_OS_WIN32 = 2 	/* Win32 DUT */
+	WLM_DUT_OS_LINUX	= 1,    /* Linux DUT */
+	WLM_DUT_OS_WIN32	= 2     /* Win32 DUT */
 };
 typedef int WLM_DUT_OS;
 
 /* Supported join modes. */
 /* Values are used to select the mode used to join a network. */
 enum {
-	WLM_MODE_IBSS = 0,   /* IBSS Mode. (Adhoc) */
-	WLM_MODE_BSS = 1,    /* BSS Mode. */
-	WLM_MODE_AUTO = 2    /* Auto. */
+	WLM_MODE_IBSS	= 0,    /* IBSS Mode. (Adhoc) */
+	WLM_MODE_BSS	= 1,    /* BSS Mode. */
+	WLM_MODE_AUTO	= 2     /* Auto. */
 };
 typedef int WLM_JOIN_MODE;
 
 /* Supported bands. */
 /* Values are used to select the band used for testing. */
 enum {
-	WLM_BAND_AUTO = 0,	/* auto select */
-	WLM_BAND_5G = 1,        /* 5G Band. */
-	WLM_BAND_2G = 2,        /* 2G Band. */
-	WLM_BAND_DUAL = WLM_BAND_2G | WLM_BAND_5G	/* Dual Band. */
+	WLM_BAND_AUTO	= 0,                            /* auto select */
+	WLM_BAND_5G	= 1,                            /* 5G Band. */
+	WLM_BAND_2G	= 2,                            /* 2G Band. */
+	WLM_BAND_DUAL	= WLM_BAND_2G | WLM_BAND_5G     /* Dual Band. */
 };
 typedef int WLM_BAND;
 
 /* Supported gmode. */
 /* Values are used to select gmode used for testing. */
 enum {
-	WLM_GMODE_LEGACYB = 0,
-	WLM_GMODE_AUTO = 1,
-	WLM_GMODE_GONLY = 2,
-	WLM_GMODE_BDEFERED = 3,
-	WLM_GMODE_PERFORMANCE = 4,
-	WLM_GMODE_LRS = 5
+	WLM_GMODE_LEGACYB	= 0,
+	WLM_GMODE_AUTO		= 1,
+	WLM_GMODE_GONLY		= 2,
+	WLM_GMODE_BDEFERED	= 3,
+	WLM_GMODE_PERFORMANCE	= 4,
+	WLM_GMODE_LRS		= 5
 };
 typedef int WLM_GMODE;
 
 /* Supported legacy rates. */
 /* Values are used to select the rate used for testing. */
 enum {
-	WLM_RATE_AUTO = 0,
-	WLM_RATE_1M = 2,
-	WLM_RATE_2M = 4,
-	WLM_RATE_5M5 = 11,
-	WLM_RATE_6M = 12,
-	WLM_RATE_9M = 18,
-	WLM_RATE_11M = 22,
-	WLM_RATE_12M = 24,
-	WLM_RATE_18M = 36,
-	WLM_RATE_24M = 48,
-	WLM_RATE_36M = 72,
-	WLM_RATE_48M = 96,
-	WLM_RATE_54M = 108
+	WLM_RATE_AUTO	= 0,
+	WLM_RATE_1M	= 2,
+	WLM_RATE_2M	= 4,
+	WLM_RATE_5M5	= 11,
+	WLM_RATE_6M	= 12,
+	WLM_RATE_9M	= 18,
+	WLM_RATE_11M	= 22,
+	WLM_RATE_12M	= 24,
+	WLM_RATE_18M	= 36,
+	WLM_RATE_24M	= 48,
+	WLM_RATE_36M	= 72,
+	WLM_RATE_48M	= 96,
+	WLM_RATE_54M	= 108
 };
 typedef int WLM_RATE;
 
 /* Supported MCS rates */
 enum {
-	WLM_MCS_RATE_0 = 0,
-	WLM_MCS_RATE_1 = 1,
-	WLM_MCS_RATE_2 = 2,
-	WLM_MCS_RATE_3 = 3,
-	WLM_MCS_RATE_4 = 4,
-	WLM_MCS_RATE_5 = 5,
-	WLM_MCS_RATE_6 = 6,
-	WLM_MCS_RATE_7 = 7,
-	WLM_MCS_RATE_8 = 8,
-	WLM_MCS_RATE_9 = 9,
+	WLM_MCS_RATE_0	= 0,
+	WLM_MCS_RATE_1	= 1,
+	WLM_MCS_RATE_2	= 2,
+	WLM_MCS_RATE_3	= 3,
+	WLM_MCS_RATE_4	= 4,
+	WLM_MCS_RATE_5	= 5,
+	WLM_MCS_RATE_6	= 6,
+	WLM_MCS_RATE_7	= 7,
+	WLM_MCS_RATE_8	= 8,
+	WLM_MCS_RATE_9	= 9,
 	WLM_MCS_RATE_10 = 10,
 	WLM_MCS_RATE_11 = 11,
 	WLM_MCS_RATE_12 = 12,
@@ -173,10 +173,10 @@ typedef int WLM_MCS_RATE;
 
 /* Supported STF mode */
 enum {
-	WLM_STF_MODE_SISO = 0, 	/* stf mode SISO */
-	WLM_STF_MODE_CDD = 1,  	/* stf mode CDD  */
-	WLM_STF_MODE_STBC = 2,  /* stf mode STBC */
-	WLM_STF_MODE_SDM  = 3	/* stf mode SDM  */
+	WLM_STF_MODE_SISO	= 0,    /* stf mode SISO */
+	WLM_STF_MODE_CDD	= 1,    /* stf mode CDD  */
+	WLM_STF_MODE_STBC	= 2,    /* stf mode STBC */
+	WLM_STF_MODE_SDM	= 3     /* stf mode SDM  */
 };
 typedef int WLM_STF_MODE;
 
@@ -184,16 +184,16 @@ typedef int WLM_STF_MODE;
 /* Supported PLCP preambles. */
 /* Values are used to select the preamble used for testing. */
 enum {
-	WLM_PREAMBLE_AUTO = -1,
-	WLM_PREAMBLE_SHORT = 0,
-	WLM_PREAMBLE_LONG = 1
+	WLM_PREAMBLE_AUTO	= -1,
+	WLM_PREAMBLE_SHORT	= 0,
+	WLM_PREAMBLE_LONG	= 1
 };
 typedef int WLM_PREAMBLE;
 
 /* Supported MIMO preamble types */
 enum {
-	WLM_MIMO_MIXEDMODE = 0,
-	WLM_MIMO_GREENFIELD = 1
+	WLM_MIMO_MIXEDMODE	= 0,
+	WLM_MIMO_GREENFIELD	= 1
 };
 typedef int WLM_MIMO_PREAMBLE;
 
@@ -208,46 +208,46 @@ typedef int WLM_BANDRANGE;
 /* Supported image formats modes. */
 /* Values are used to select the type of image to read/write. */
 enum {
-	WLM_TYPE_AUTO = 0,  /* Auto mode. */
-	WLM_TYPE_SROM = 1,  /* SROM. */
-	WLM_TYPE_OTP = 2    /* OTP. */
+	WLM_TYPE_AUTO	= 0,    /* Auto mode. */
+	WLM_TYPE_SROM	= 1,    /* SROM. */
+	WLM_TYPE_OTP	= 2     /* OTP. */
 };
 typedef int WLM_IMAGE_TYPE;
 
 /* Supported authentication type. */
 /* Values are used to select the authentication type used to join a network. */
 enum {
-	WLM_TYPE_OPEN = 0,    /* Open */
-    WLM_TYPE_SHARED = 1   /* Shared */
+	WLM_TYPE_OPEN	= 0,    /* Open */
+	WLM_TYPE_SHARED = 1     /* Shared */
 };
 typedef int WLM_AUTH_TYPE;
 
 /* Supported authentication mode. */
 /* Values are used to select the authentication mode used to join a network. */
 enum {
-	WLM_WPA_AUTH_DISABLED = 0x0000,	/* Legacy (i.e., non-WPA) */
-	WLM_WPA_AUTH_NONE = 0x0001,		/* none (IBSS) */
-	WLM_WPA_AUTH_PSK = 0x0004,		/* Pre-shared key */
-	WLM_WPA2_AUTH_PSK = 0x0080		/* Pre-shared key */
+	WLM_WPA_AUTH_DISABLED	= 0x0000,       /* Legacy (i.e., non-WPA) */
+	WLM_WPA_AUTH_NONE	= 0x0001,       /* none (IBSS) */
+	WLM_WPA_AUTH_PSK	= 0x0004,       /* Pre-shared key */
+	WLM_WPA2_AUTH_PSK	= 0x0080        /* Pre-shared key */
 };
 typedef int WLM_AUTH_MODE;
 
 /* WLAN Security Encryption. */
 /* Values are used to select the type of encryption used for testing. */
 enum {
-	WLM_ENCRYPT_NONE = 0,    /* No encryption. */
-	WLM_ENCRYPT_WEP = 1,     /* WEP encryption. */
-	WLM_ENCRYPT_TKIP = 2,    /* TKIP encryption. */
-	WLM_ENCRYPT_AES = 4,     /* AES encryption. */
-	WLM_ENCRYPT_WSEC = 8,    /* Software WSEC encryption. */
-	WLM_ENCRYPT_FIPS = 0x80  /* FIPS encryption. */
+	WLM_ENCRYPT_NONE	= 0,    /* No encryption. */
+	WLM_ENCRYPT_WEP		= 1,    /* WEP encryption. */
+	WLM_ENCRYPT_TKIP	= 2,    /* TKIP encryption. */
+	WLM_ENCRYPT_AES		= 4,    /* AES encryption. */
+	WLM_ENCRYPT_WSEC	= 8,    /* Software WSEC encryption. */
+	WLM_ENCRYPT_FIPS	= 0x80  /* FIPS encryption. */
 };
 typedef int WLM_ENCRYPTION;
 
 /* Country abbreviative code */
-#define WLM_COUNTRY_ALL "ALL"	/* Default country code */
-#define WLM_COUNTRY_JAPAN "JP"     /* Japan country code */
-#define WLM_COUNTRY_KOREA "KR"     /* Korea country code */
+#define WLM_COUNTRY_ALL "ALL"   /* Default country code */
+#define WLM_COUNTRY_JAPAN "JP"  /* Japan country code */
+#define WLM_COUNTRY_KOREA "KR"  /* Korea country code */
 
 /* number of 5G channel offsets */
 #define CGA_5G_OFFSETS_LEN 24
@@ -271,7 +271,7 @@ int wlmWLMVersionGet(const char **buffer);
 WLM_FUNCTION
 int wlmApiInit(void);
 
-/* Performs any cleanup required internally by the DLL. 
+/* Performs any cleanup required internally by the DLL.
  * NOTE: This method needs to be called by the user at the end of the application.
  *
  * return - True for success, false for failure.
@@ -292,8 +292,7 @@ int wlmApiCleanup(void);
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmSelectInterface(WLM_DUT_INTERFACE ifType, char *ifName,
-	WLM_DUT_SERVER_PORT dutServerPort, WLM_DUT_OS dutOs);
+int wlmSelectInterface(WLM_DUT_INTERFACE ifType, char *ifName, WLM_DUT_SERVER_PORT dutServerPort, WLM_DUT_OS dutOs);
 
 /* Gets the WLAN driver version.
  *
@@ -365,7 +364,7 @@ int wlmLegacyRateSet(WLM_RATE rate);
  * param[in] Desired mcs rate [0, 7] for SISO (single-in-single-out) device.
  * param[in] Stf mode, 0=SISO, 1= CDD, 2=STBC, 3=SDM
  * return - True for sucess, false for failure.
-*/
+ */
 WLM_FUNCTION
 int wlmMcsRateSet(WLM_MCS_RATE mcs_rate, WLM_STF_MODE stf_mode);
 
@@ -394,7 +393,7 @@ int wlmBandSet(WLM_BAND band);
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmGetBandList(WLM_BAND * bands);
+int wlmGetBandList(WLM_BAND *bands);
 
 /* Set gmode.
  *
@@ -461,8 +460,7 @@ int wlmTxPowerSet(int powerValue);
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmPaParametersGet(WLM_BANDRANGE bandrange,
-	unsigned int *a1, unsigned int *b0, unsigned int *b1);
+int wlmPaParametersGet(WLM_BANDRANGE bandrange, unsigned int *a1, unsigned int *b0, unsigned int *b1);
 
 /* Sets tx power control parameters for SISO system.
  *
@@ -474,13 +472,12 @@ int wlmPaParametersGet(WLM_BANDRANGE bandrange,
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmPaParametersSet(WLM_BANDRANGE bandrange,
-	unsigned int a1, unsigned int b0, unsigned int b1);
+int wlmPaParametersSet(WLM_BANDRANGE bandrange, unsigned int a1, unsigned int b0, unsigned int b1);
 
 /* Retrieves the tx power control parameters for MIMO system.
  *
  * param[in] bandrange The desired band range for getting PA parameters.
- * param[in] chain. The desired tx chain for getting PA parameters 
+ * param[in] chain. The desired tx chain for getting PA parameters
  * param[out] b0 PA parameter returned.
  * param[out] b1 PA parameter returned.
  * param[out] a1 PA parameter returned.
@@ -488,8 +485,7 @@ int wlmPaParametersSet(WLM_BANDRANGE bandrange,
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmMIMOPaParametersGet(WLM_BANDRANGE bandrange, int chain,
-	unsigned int *a1, unsigned int *b0, unsigned int *b1);
+int wlmMIMOPaParametersGet(WLM_BANDRANGE bandrange, int chain, unsigned int *a1, unsigned int *b0, unsigned int *b1);
 
 /* Sets tx power control parameters for MIMO system.
  *
@@ -502,8 +498,7 @@ int wlmMIMOPaParametersGet(WLM_BANDRANGE bandrange, int chain,
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmMIMOPaParametersSet(WLM_BANDRANGE bandrange, int chain,
-	unsigned int a1, unsigned int b0, unsigned int b1);
+int wlmMIMOPaParametersSet(WLM_BANDRANGE bandrange, int chain, unsigned int a1, unsigned int b0, unsigned int b1);
 
 /* Retrieves the current MAC address of the device.
  *
@@ -522,13 +517,13 @@ int wlmMacAddrGet(char *macAddr, int length);
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmMacAddrSet(const char* macAddr);
+int wlmMacAddrSet(const char *macAddr);
 
 /* Enables or disables output of a carrier tone.
  *
  * param[in] enable Set to true to enable carrier tone, false to disable.
  * param[in] channel Desired channel. Ignored if <i>enable</i> is false.
- * 
+ *
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
@@ -560,9 +555,7 @@ int wlmEnableEVMTest(int enable, WLM_RATE rate, int channel);
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmTxPacketStart(unsigned int interPacketDelay,
-	unsigned int numPackets, unsigned int packetLength,
-	const char* destMac, int withAck, int syncMode);
+int wlmTxPacketStart(unsigned int interPacketDelay, unsigned int numPackets, unsigned int packetLength, const char *destMac, int withAck, int syncMode);
 
 /* Stops sending packets.
  *
@@ -582,8 +575,7 @@ int wlmTxPacketStop(void);
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmRxPacketStart(const char* srcMac, int withAck,
-	int syncMode, unsigned int numPackets, unsigned int timeout);
+int wlmRxPacketStart(const char *srcMac, int withAck, int syncMode, unsigned int numPackets, unsigned int timeout);
 
 /* Stops receiving packets.
  *
@@ -683,7 +675,7 @@ int wlmSequenceErrorIndex(int *index);
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmDeviceImageWrite(const char* byteStream, int length, WLM_IMAGE_TYPE imageType);
+int wlmDeviceImageWrite(const char *byteStream, int length, WLM_IMAGE_TYPE imageType);
 
 /* Dumps the image from the device. Used to read the SROM/OTP.
  *
@@ -694,7 +686,7 @@ int wlmDeviceImageWrite(const char* byteStream, int length, WLM_IMAGE_TYPE image
  * return - Size of image in bytes. -1 if size of image is larger than supplied buffer.
  */
 WLM_FUNCTION
-int wlmDeviceImageRead(char* byteStream, unsigned int length, WLM_IMAGE_TYPE imageType);
+int wlmDeviceImageRead(char *byteStream, unsigned int length, WLM_IMAGE_TYPE imageType);
 
 /* Query the nvram through its name.
  *
@@ -704,7 +696,7 @@ int wlmDeviceImageRead(char* byteStream, unsigned int length, WLM_IMAGE_TYPE ima
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmNvramGet(void* vardata, int len, char* varname);
+int wlmNvramGet(void *vardata, int len, char *varname);
 
 /* Network related functions */
 
@@ -718,8 +710,7 @@ int wlmNvramGet(void* vardata, int len, char* varname);
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmSecuritySet(WLM_AUTH_TYPE authType, WLM_AUTH_MODE authMode,
-	WLM_ENCRYPTION encryption, const char *key);
+int wlmSecuritySet(WLM_AUTH_TYPE authType, WLM_AUTH_MODE authMode, WLM_ENCRYPTION encryption, const char *key);
 
 /* Joins a  network.
  *
@@ -729,7 +720,7 @@ int wlmSecuritySet(WLM_AUTH_TYPE authType, WLM_AUTH_MODE authMode,
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmJoinNetwork(const char* ssid, WLM_JOIN_MODE mode);
+int wlmJoinNetwork(const char *ssid, WLM_JOIN_MODE mode);
 
 /* Disassociates from a currently joined network.
  *
@@ -769,35 +760,35 @@ WLM_FUNCTION
 int wlmMimoPreambleSet(int type);
 
 WLM_FUNCTION
-int wlmMimoPreambleGet(int* type);
+int wlmMimoPreambleGet(int *type);
 
-/* Set/Get the CGA coefficients in the 2.4G/5G band 
+/* Set/Get the CGA coefficients in the 2.4G/5G band
  * requires an array of 24 uint8s to be set
  * and a specified length of 24 to get
- * All of these CGA value query functions only applies to 4329 solution  
+ * All of these CGA value query functions only applies to 4329 solution
  */
 
 WLM_FUNCTION
-int wlmCga5gOffsetsSet(char* values, int len);
+int wlmCga5gOffsetsSet(char *values, int len);
 
 WLM_FUNCTION
-int wlmCga5gOffsetsGet(char* buffer, int len);
+int wlmCga5gOffsetsGet(char *buffer, int len);
 
 WLM_FUNCTION
-int wlmCga2gOffsetsSet(char* values, int len);
+int wlmCga2gOffsetsSet(char *values, int len);
 
 WLM_FUNCTION
-int wlmCga2gOffsetsGet(char* buffer, int len);
+int wlmCga2gOffsetsGet(char *buffer, int len);
 
-/* Set Glacial Timer 
+/* Set Glacial Timer
  * param[in] timer duration in msec
  *
  * return - True for success, false for failure.
-*/
+ */
 WLM_FUNCTION
 int wlmGlacialTimerSet(int val);
 
-/* Set Fast Timer 
+/* Set Fast Timer
  * param[in] timer duration in msec
  *
  * return - True for success, false for failure.
@@ -805,7 +796,7 @@ int wlmGlacialTimerSet(int val);
 WLM_FUNCTION
 int wlmFastTimerSet(int val);
 
-/* Set Slow Timer 
+/* Set Slow Timer
  * param[in] timer duration in msec
  *
  * return - True for success, false for failure.
@@ -813,7 +804,7 @@ int wlmFastTimerSet(int val);
 WLM_FUNCTION
 int wlmSlowTimerSet(int val);
 
-/* Enable/Disable Scansuppress 
+/* Enable/Disable Scansuppress
  * param[in] set to TRUE enables scansuppress, set to false disable scansuppress
  *
  * return - True for success, false for failure.
@@ -821,7 +812,7 @@ int wlmSlowTimerSet(int val);
 WLM_FUNCTION
 int wlmScanSuppress(int val);
 
-/* Set Country Code 
+/* Set Country Code
  * param[in] country code abbrv. Default use WLM_COUNTRY_CODE_ABBRV_ALL
  *
  * return - True for success, false for failure.
@@ -829,37 +820,37 @@ int wlmScanSuppress(int val);
 WLM_FUNCTION
 int wlmCountryCodeSet(const char *country_name);
 
-/* Set fullcal 
+/* Set fullcal
  * Trigger lpphy fullcal
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmFullCal(void);
 
-/* Get Receiver IQ Estimation 
+/* Get Receiver IQ Estimation
  * param[out] estimated rxiq power in dBm at 0.25dBm resolution
  * param[in] sampel count, 0 to 15
- * param[in] antenna, 0 to 3  
- * return - True for success, false for failure. 
-*/
+ * param[in] antenna, 0 to 3
+ * return - True for success, false for failure.
+ */
 WLM_FUNCTION
 int wlmRxIQEstGet(float *val, int sampleCount, int ant);
 
-/* Get PHY txpwrindex  
- * param[out] txpwrindex 
- * param[in] chip id: 4325, 4329, 43291, 4330, 4336 and 43236 
+/* Get PHY txpwrindex
+ * param[out] txpwrindex
+ * param[in] chip id: 4325, 4329, 43291, 4330, 4336 and 43236
  */
 WLM_FUNCTION
 int wlmPHYTxPowerIndexGet(unsigned int *val, const char *chipid);
 
-/* Set PHY txpwrindex  
+/* Set PHY txpwrindex
  * param[in] txpwrindex
- * param[in] chip id: 4325, 4329, 43291, 4330, 4336 and 43236 
+ * param[in] chip id: 4325, 4329, 43291, 4330, 4336 and 43236
  */
 WLM_FUNCTION
 int wlmPHYTxPowerIndexSet(unsigned int val, const char *chipid);
 
-/* Enable/Disable RIFS  
+/* Enable/Disable RIFS
  * param[in] Set RIFS mode. 1 = enable ; 0 = disable
  */
 WLM_FUNCTION
@@ -902,7 +893,7 @@ WLM_FUNCTION int wlmIovarBufferGet(const char *iovar, void *param, int param_len
 WLM_FUNCTION int wlmIovarBufferSet(const char *iovar, void *param, int param_len);
 
 #ifdef SERDOWNLOAD
-WLM_FUNCTION int wlmDhdDownload(const char *firmware, const char* vars);
+WLM_FUNCTION int wlmDhdDownload(const char *firmware, const char *vars);
 WLM_FUNCTION int wlmDhdInit(const char *chip);
 #endif
 
@@ -919,8 +910,8 @@ int wlmRadioOn(void);
 WLM_FUNCTION
 int wlmRadioOff(void);
 
-/* Set Power Saving Mode 
- * param[in] 0 = CAM, 1 =Power Save, 2 = Fast PS Mode 
+/* Set Power Saving Mode
+ * param[in] 0 = CAM, 1 =Power Save, 2 = Fast PS Mode
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
@@ -948,7 +939,7 @@ WLM_FUNCTION
 int wlmRoamTriggerLevelGet(int *val, WLM_BAND band);
 
 /* Set roaming trigger level
- * param[in] roaming trigger level in dBm 
+ * param[in] roaming trigger level in dBm
  * param[in]  frequence band
  * return - True for success, false for failure.
  */
@@ -967,21 +958,21 @@ int wlmFrameBurstOn(void);
 WLM_FUNCTION
 int wlmFrameBurstOff(void);
 
-/* Set beacon interval 
+/* Set beacon interval
  * param[in] beacon interval in ms
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmBeaconIntervalSet(int val);
 
-/* Set AMPDU mode on/off 
+/* Set AMPDU mode on/off
  * param[in] on = 1, off = 0
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmAMPDUModeSet(int val);
 
-/* Set MIMO bandwidth capability 
+/* Set MIMO bandwidth capability
  * param[in] mimo bandwidth capability. 0 = 20Mhz, 1 =40Mhz
  * return - True for success, false for failure.
  */
@@ -989,101 +980,101 @@ WLM_FUNCTION
 int wlmMIMOBandwidthCapabilitySet(int val);
 
 /* Set interference on/off
- * param[in] on = 1, 0ff = 0 
+ * param[in] on = 1, 0ff = 0
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmInterferenceSet(int val);
 
 /* Set interferenceoverride on/off
- * param[in] on = 1, 0ff = 0  
+ * param[in] on = 1, 0ff = 0
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmInterferenceOverrideSet(int val);
 
-/* Set MIMO transmit banddwith 
- * param[in] auto = -1, 2 = 20Mhz, 3 = 20Mhz upper , 4 =40 Mhz, 5 =40dup (mcs32 only)  
+/* Set MIMO transmit banddwith
+ * param[in] auto = -1, 2 = 20Mhz, 3 = 20Mhz upper , 4 =40 Mhz, 5 =40dup (mcs32 only)
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmTransmitBandwidthSet(int val);
 
-/* Set MIMO short guard intervaltransmit banddwith 
- * param[in] auto = -1, 1 = on, 0 = off  
+/* Set MIMO short guard intervaltransmit banddwith
+ * param[in] auto = -1, 1 = on, 0 = off
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmShortGuardIntervalSet(int val);
 
-/* Set MIMO OBSS coex set 
- * param[in] auto = -1, 1 = on, 0 = off  
+/* Set MIMO OBSS coex set
+ * param[in] auto = -1, 1 = on, 0 = off
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmObssCoexSet(int val);
 
-/* Set PHY Periodical call 
+/* Set PHY Periodical call
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmPHYPeriodicalCalSet(void);
 
-/* Set PHY Force call 
+/* Set PHY Force call
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmPHYForceCalSet(void);
 
-/* Disable scrambler update 
+/* Disable scrambler update
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmPHYScramblerUpdateDisable(void);
 
-/* Enable scrambler update 
+/* Enable scrambler update
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmPHYScramblerUpdateEnable(void);
 
 /* Turn PHY watchdog on/off
- * param[in] on = 1, off = 0  
+ * param[in] on = 1, off = 0
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmPHYWatchdogSet(int val);
 
-/* Disable temperature sensore 
+/* Disable temperature sensore
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmTemperatureSensorDisable(void);
 
-/* Enable temperature sensore 
+/* Enable temperature sensore
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmTemperatureSensorEnable(void);
 
 /* Set transmit core
- * param[in] 
+ * param[in]
  * return - True for success, false for failure.
- */ 
+ */
 WLM_FUNCTION
 int wlmTransmitCoreSet(int val);
 
 /* Get temperation sensor read
  * param[out] chip core temperature in F
  * return - True for success, false for failure.
- */ 
+ */
 WLM_FUNCTION
 int wlmPhyTempSenseGet(int *val);
 
 /* Get chip OTP Fab ID
  * param[out] chip fab id
  * return - True for success, false for failure.
- */ 
+ */
 WLM_FUNCTION
 int wlmOtpFabidGet(int *val);
 
@@ -1092,40 +1083,40 @@ int wlmOtpFabidGet(int *val);
  * param[in] bandwidth 20 = 20Mhz, 40 = 40Mhz
  * param[in] sideband 1 = upper, -1 = lower, 0 = none
  * return - True for success, false for failure.
- */ 
+ */
 WLM_FUNCTION
 int wlmChannelSpecSet(int channel, int bandwidth, int sideband);
 
-/* Set rts threshold 
+/* Set rts threshold
  * param[in] rts threshold value
  * return - True for success, false for failure.
- */ 
+ */
 WLM_FUNCTION
 int wlmRtsThresholdOverride(int val);
 
 /* Turn STBC Tx mode on/off
- * param[in] on = 1, off = 0  
+ * param[in] on = 1, off = 0
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmSTBCTxSet(int val);
 
 /* Turn STBC Rx mode on/off
- * param[in] on = 1, off = 0  
+ * param[in] on = 1, off = 0
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmSTBCRxSet(int val);
 
 /* MIMO single stream tx chain selection
- * param[in] chain 1 = 1, chain 2 = 2  
+ * param[in] chain 1 = 1, chain 2 = 2
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
 int wlmTxChainSet(int val);
 
 /* MIMO single stream rx chain selection
- * param[in] chain 1 = 1, chain 2 = 2  
+ * param[in] chain 1 = 1, chain 2 = 2
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
@@ -1133,11 +1124,11 @@ int wlmRxChainSet(int val);
 
 /* Sent out scan and return scan results
  * param[out] pointer to array of scanresults
- * param[in] result buffer length  
+ * param[in] result buffer length
  * return - True for success, false for failure.
  */
 WLM_FUNCTION
-int wlmScanNetworks(char* results_buf, int len);
+int wlmScanNetworks(char *results_buf, int len);
 
 #ifdef __cplusplus
 }

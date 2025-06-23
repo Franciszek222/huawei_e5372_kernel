@@ -1,28 +1,28 @@
 /*
-    comedi/comedi_compat32.c
-    32-bit ioctl compatibility for 64-bit comedi kernel module.
-
-    Author: Ian Abbott, MEV Ltd. <abbotti@mev.co.uk>
-    Copyright (C) 2007 MEV Ltd. <http://www.mev.co.uk/>
-
-    COMEDI - Linux Control and Measurement Device Interface
-    Copyright (C) 1997-2007 David A. Schleef <ds@schleef.org>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
-*/
+ *  comedi/comedi_compat32.c
+ *  32-bit ioctl compatibility for 64-bit comedi kernel module.
+ *
+ *  Author: Ian Abbott, MEV Ltd. <abbotti@mev.co.uk>
+ *  Copyright (C) 2007 MEV Ltd. <http://www.mev.co.uk/>
+ *
+ *  COMEDI - Linux Control and Measurement Device Interface
+ *  Copyright (C) 1997-2007 David A. Schleef <ds@schleef.org>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ */
 
 #define __NO_VERSION__
 #include <linux/uaccess.h>
@@ -43,49 +43,49 @@
 #define COMEDI32_INSN _IOR(CIO, 12, struct comedi32_insn_struct)
 
 struct comedi32_chaninfo_struct {
-	unsigned int subdev;
-	compat_uptr_t maxdata_list;	/* 32-bit 'unsigned int *' */
-	compat_uptr_t flaglist;	/* 32-bit 'unsigned int *' */
-	compat_uptr_t rangelist;	/* 32-bit 'unsigned int *' */
-	unsigned int unused[4];
+	unsigned int	subdev;
+	compat_uptr_t	maxdata_list;   /* 32-bit 'unsigned int *' */
+	compat_uptr_t	flaglist;       /* 32-bit 'unsigned int *' */
+	compat_uptr_t	rangelist;      /* 32-bit 'unsigned int *' */
+	unsigned int	unused[4];
 };
 
 struct comedi32_rangeinfo_struct {
-	unsigned int range_type;
-	compat_uptr_t range_ptr;	/* 32-bit 'void *' */
+	unsigned int	range_type;
+	compat_uptr_t	range_ptr;      /* 32-bit 'void *' */
 };
 
 struct comedi32_cmd_struct {
-	unsigned int subdev;
-	unsigned int flags;
-	unsigned int start_src;
-	unsigned int start_arg;
-	unsigned int scan_begin_src;
-	unsigned int scan_begin_arg;
-	unsigned int convert_src;
-	unsigned int convert_arg;
-	unsigned int scan_end_src;
-	unsigned int scan_end_arg;
-	unsigned int stop_src;
-	unsigned int stop_arg;
-	compat_uptr_t chanlist;	/* 32-bit 'unsigned int *' */
-	unsigned int chanlist_len;
-	compat_uptr_t data;	/* 32-bit 'short *' */
-	unsigned int data_len;
+	unsigned int	subdev;
+	unsigned int	flags;
+	unsigned int	start_src;
+	unsigned int	start_arg;
+	unsigned int	scan_begin_src;
+	unsigned int	scan_begin_arg;
+	unsigned int	convert_src;
+	unsigned int	convert_arg;
+	unsigned int	scan_end_src;
+	unsigned int	scan_end_arg;
+	unsigned int	stop_src;
+	unsigned int	stop_arg;
+	compat_uptr_t	chanlist;       /* 32-bit 'unsigned int *' */
+	unsigned int	chanlist_len;
+	compat_uptr_t	data;           /* 32-bit 'short *' */
+	unsigned int	data_len;
 };
 
 struct comedi32_insn_struct {
-	unsigned int insn;
-	unsigned int n;
-	compat_uptr_t data;	/* 32-bit 'unsigned int *' */
-	unsigned int subdev;
-	unsigned int chanspec;
-	unsigned int unused[3];
+	unsigned int	insn;
+	unsigned int	n;
+	compat_uptr_t	data;   /* 32-bit 'unsigned int *' */
+	unsigned int	subdev;
+	unsigned int	chanspec;
+	unsigned int	unused[3];
 };
 
 struct comedi32_insnlist_struct {
-	unsigned int n_insns;
-	compat_uptr_t insns;	/* 32-bit 'struct comedi_insn *' */
+	unsigned int	n_insns;
+	compat_uptr_t	insns;  /* 32-bit 'struct comedi_insn *' */
 };
 
 /* Handle translated ioctl. */
@@ -107,9 +107,10 @@ static int compat_chaninfo(struct file *file, unsigned long arg)
 	struct comedi_chaninfo __user *chaninfo;
 	struct comedi32_chaninfo_struct __user *chaninfo32;
 	int err;
+
 	union {
-		unsigned int uint;
-		compat_uptr_t uptr;
+		unsigned int	uint;
+		compat_uptr_t	uptr;
 	} temp;
 
 	chaninfo32 = compat_ptr(arg);
@@ -117,9 +118,8 @@ static int compat_chaninfo(struct file *file, unsigned long arg)
 
 	/* Copy chaninfo structure.  Ignore unused members. */
 	if (!access_ok(VERIFY_READ, chaninfo32, sizeof(*chaninfo32))
-	    || !access_ok(VERIFY_WRITE, chaninfo, sizeof(*chaninfo))) {
+	    || !access_ok(VERIFY_WRITE, chaninfo, sizeof(*chaninfo)))
 		return -EFAULT;
-	}
 	err = 0;
 	err |= __get_user(temp.uint, &chaninfo32->subdev);
 	err |= __put_user(temp.uint, &chaninfo->subdev);
@@ -141,9 +141,10 @@ static int compat_rangeinfo(struct file *file, unsigned long arg)
 	struct comedi_rangeinfo __user *rangeinfo;
 	struct comedi32_rangeinfo_struct __user *rangeinfo32;
 	int err;
+
 	union {
-		unsigned int uint;
-		compat_uptr_t uptr;
+		unsigned int	uint;
+		compat_uptr_t	uptr;
 	} temp;
 
 	rangeinfo32 = compat_ptr(arg);
@@ -151,9 +152,8 @@ static int compat_rangeinfo(struct file *file, unsigned long arg)
 
 	/* Copy rangeinfo structure. */
 	if (!access_ok(VERIFY_READ, rangeinfo32, sizeof(*rangeinfo32))
-	    || !access_ok(VERIFY_WRITE, rangeinfo, sizeof(*rangeinfo))) {
+	    || !access_ok(VERIFY_WRITE, rangeinfo, sizeof(*rangeinfo)))
 		return -EFAULT;
-	}
 	err = 0;
 	err |= __get_user(temp.uint, &rangeinfo32->range_type);
 	err |= __put_user(temp.uint, &rangeinfo->range_type);
@@ -167,20 +167,20 @@ static int compat_rangeinfo(struct file *file, unsigned long arg)
 }
 
 /* Copy 32-bit cmd structure to native cmd structure. */
-static int get_compat_cmd(struct comedi_cmd __user *cmd,
-			  struct comedi32_cmd_struct __user *cmd32)
+static int get_compat_cmd(struct comedi_cmd __user *		cmd,
+			  struct comedi32_cmd_struct __user *	cmd32)
 {
 	int err;
+
 	union {
-		unsigned int uint;
-		compat_uptr_t uptr;
+		unsigned int	uint;
+		compat_uptr_t	uptr;
 	} temp;
 
 	/* Copy cmd structure. */
 	if (!access_ok(VERIFY_READ, cmd32, sizeof(*cmd32))
-	    || !access_ok(VERIFY_WRITE, cmd, sizeof(*cmd))) {
+	    || !access_ok(VERIFY_WRITE, cmd, sizeof(*cmd)))
 		return -EFAULT;
-	}
 	err = 0;
 	err |= __get_user(temp.uint, &cmd32->subdev);
 	err |= __put_user(temp.uint, &cmd->subdev);
@@ -218,8 +218,8 @@ static int get_compat_cmd(struct comedi_cmd __user *cmd,
 }
 
 /* Copy native cmd structure to 32-bit cmd structure. */
-static int put_compat_cmd(struct comedi32_cmd_struct __user *cmd32,
-			  struct comedi_cmd __user *cmd)
+static int put_compat_cmd(struct comedi32_cmd_struct __user *	cmd32,
+			  struct comedi_cmd __user *		cmd)
 {
 	int err;
 	unsigned int temp;
@@ -229,9 +229,8 @@ static int put_compat_cmd(struct comedi32_cmd_struct __user *cmd32,
 	/* (Could use ptr_to_compat() to set them, but that wasn't implemented
 	 * until kernel version 2.6.11.) */
 	if (!access_ok(VERIFY_READ, cmd, sizeof(*cmd))
-	    || !access_ok(VERIFY_WRITE, cmd32, sizeof(*cmd32))) {
+	    || !access_ok(VERIFY_WRITE, cmd32, sizeof(*cmd32)))
 		return -EFAULT;
-	}
 	err = 0;
 	err |= __get_user(temp, &cmd->subdev);
 	err |= __put_user(temp, &cmd32->subdev);
@@ -309,13 +308,14 @@ static int compat_cmdtest(struct file *file, unsigned long arg)
 }
 
 /* Copy 32-bit insn structure to native insn structure. */
-static int get_compat_insn(struct comedi_insn __user *insn,
-			   struct comedi32_insn_struct __user *insn32)
+static int get_compat_insn(struct comedi_insn __user *		insn,
+			   struct comedi32_insn_struct __user * insn32)
 {
 	int err;
+
 	union {
-		unsigned int uint;
-		compat_uptr_t uptr;
+		unsigned int	uint;
+		compat_uptr_t	uptr;
 	} temp;
 
 	/* Copy insn structure.  Ignore the unused members. */
@@ -341,8 +341,8 @@ static int get_compat_insn(struct comedi_insn __user *insn,
 static int compat_insnlist(struct file *file, unsigned long arg)
 {
 	struct combined_insnlist {
-		struct comedi_insnlist insnlist;
-		struct comedi_insn insn[1];
+		struct comedi_insnlist	insnlist;
+		struct comedi_insn	insn[1];
 	} __user *s;
 	struct comedi32_insnlist_struct __user *insnlist32;
 	struct comedi32_insn_struct __user *insn32;

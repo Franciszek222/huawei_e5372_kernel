@@ -24,19 +24,19 @@
 
 /* ADSP_IOCTL_WRITE_COMMAND */
 struct adsp_command_t {
-	uint16_t queue;
-	uint32_t len;		/* bytes */
-	uint8_t *data;
+	uint16_t	queue;
+	uint32_t	len;    /* bytes */
+	uint8_t *	data;
 };
 
 /* ADSP_IOCTL_GET_EVENT */
 struct adsp_event_t {
-	uint16_t type;		/* 1 == event (RPC), 0 == message (adsp) */
-	uint32_t timeout_ms;	/* -1 for infinite, 0 for immediate return */
-	uint16_t msg_id;
-	uint16_t flags;		/* 1 == 16--bit event, 0 == 32-bit event */
-	uint32_t len;		/* size in, number of bytes out */
-	uint8_t *data;
+	uint16_t	type;           /* 1 == event (RPC), 0 == message (adsp) */
+	uint32_t	timeout_ms;     /* -1 for infinite, 0 for immediate return */
+	uint16_t	msg_id;
+	uint16_t	flags;          /* 1 == 16--bit event, 0 == 32-bit event */
+	uint32_t	len;            /* size in, number of bytes out */
+	uint8_t *	data;
 };
 
 #define ADSP_IOCTL_ENABLE \
@@ -61,8 +61,8 @@ struct adsp_event_t {
 	_IOR(ADSP_IOCTL_MAGIC, 10, unsigned)
 
 struct adsp_pmem_info {
-        int fd;
-        void *vaddr;
+	int	fd;
+	void *	vaddr;
 };
 
 #define ADSP_IOCTL_REGISTER_PMEM \

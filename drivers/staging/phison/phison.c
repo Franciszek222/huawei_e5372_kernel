@@ -22,11 +22,11 @@
 
 #define PHISON_DEBUG
 
-#define DRV_NAME		"phison_e-box"	/* #0003 */
-#define DRV_VERSION		"0.91"		/* #0003 */
+#define DRV_NAME                "phison_e-box"  /* #0003 */
+#define DRV_VERSION             "0.91"          /* #0003 */
 
-#define PCI_VENDOR_ID_PHISON	0x1987
-#define PCI_DEVICE_ID_PS5000	0x5000
+#define PCI_VENDOR_ID_PHISON    0x1987
+#define PCI_DEVICE_ID_PS5000    0x5000
 
 static int phison_pre_reset(struct ata_link *link, unsigned long deadline)
 {
@@ -44,8 +44,8 @@ static struct scsi_host_template phison_sht = {
 };
 
 static struct ata_port_operations phison_ops = {
-	.inherits		= &ata_bmdma_port_ops,
-	.prereset		= phison_pre_reset,
+	.inherits	= &ata_bmdma_port_ops,
+	.prereset	= phison_pre_reset,
 };
 
 static int phison_init_one(struct pci_dev *pdev, const struct pci_device_id *id)
@@ -72,7 +72,7 @@ static int phison_init_one(struct pci_dev *pdev, const struct pci_device_id *id)
 static const struct pci_device_id phison_pci_tbl[] = {
 	{ PCI_VENDOR_ID_PHISON, PCI_DEVICE_ID_PS5000, PCI_ANY_ID, PCI_ANY_ID,
 	  PCI_CLASS_STORAGE_IDE << 8, 0xffff00, 0 },
-	{ 0, },
+	{ 0,			},
 };
 MODULE_DEVICE_TABLE(pci, phison_pci_tbl);
 
@@ -81,7 +81,7 @@ static struct pci_driver phison_pci_driver = {
 	.id_table	= phison_pci_tbl,
 	.probe		= phison_init_one,
 	.remove		= ata_pci_remove_one,
-#ifdef CONFIG_PM	/* haven't tested it. */
+#ifdef CONFIG_PM        /* haven't tested it. */
 	.suspend	= ata_pci_device_suspend,
 	.resume		= ata_pci_device_resume,
 #endif

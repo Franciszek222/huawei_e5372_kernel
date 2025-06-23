@@ -1,42 +1,42 @@
 /*
-    comedi/drivers/dt2817.c
-    Hardware driver for Data Translation DT2817
-
-    COMEDI - Linux Control and Measurement Device Interface
-    Copyright (C) 1998 David A. Schleef <ds@schleef.org>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
-*/
+ *  comedi/drivers/dt2817.c
+ *  Hardware driver for Data Translation DT2817
+ *
+ *  COMEDI - Linux Control and Measurement Device Interface
+ *  Copyright (C) 1998 David A. Schleef <ds@schleef.org>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ */
 /*
-Driver: dt2817
-Description: Data Translation DT2817
-Author: ds
-Status: complete
-Devices: [Data Translation] DT2817 (dt2817)
-
-A very simple digital I/O card.  Four banks of 8 lines, each bank
-is configurable for input or output.  One wonders why it takes a
-50 page manual to describe this thing.
-
-The driver (which, btw, is much less than 50 pages) has 1 subdevice
-with 32 channels, configurable in groups of 8.
-
-Configuration options:
-  [0] - I/O port base base address
-*/
+ * Driver: dt2817
+ * Description: Data Translation DT2817
+ * Author: ds
+ * Status: complete
+ * Devices: [Data Translation] DT2817 (dt2817)
+ *
+ * A very simple digital I/O card.  Four banks of 8 lines, each bank
+ * is configurable for input or output.  One wonders why it takes a
+ * 50 page manual to describe this thing.
+ *
+ * The driver (which, btw, is much less than 50 pages) has 1 subdevice
+ * with 32 channels, configurable in groups of 8.
+ *
+ * Configuration options:
+ * [0] - I/O port base base address
+ */
 
 #include "../comedidev.h"
 
@@ -47,14 +47,13 @@ Configuration options:
 #define DT2817_CR 0
 #define DT2817_DATA 1
 
-static int dt2817_attach(struct comedi_device *dev,
-			 struct comedi_devconfig *it);
+static int dt2817_attach(struct comedi_device *dev, struct comedi_devconfig *it);
 static int dt2817_detach(struct comedi_device *dev);
 static struct comedi_driver driver_dt2817 = {
-	.driver_name = "dt2817",
-	.module = THIS_MODULE,
-	.attach = dt2817_attach,
-	.detach = dt2817_detach,
+	.driver_name	= "dt2817",
+	.module		= THIS_MODULE,
+	.attach		= dt2817_attach,
+	.detach		= dt2817_detach,
 };
 
 COMEDI_INITCLEANUP(driver_dt2817);
@@ -71,13 +70,13 @@ static int dt2817_dio_insn_config(struct comedi_device *dev,
 		return -EINVAL;
 
 	chan = CR_CHAN(insn->chanspec);
-	if (chan < 8) {
+	if (chan < 8)
 		mask = 0xff;
-	} else if (chan < 16) {
+	else if (chan < 16)
 		mask = 0xff00;
-	} else if (chan < 24) {
+	else if (chan < 24)
 		mask = 0xff0000;
-	} else
+	else
 		mask = 0xff000000;
 	if (data[0])
 		s->io_bits |= mask;

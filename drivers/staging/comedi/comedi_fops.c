@@ -1,25 +1,25 @@
 /*
-    comedi/comedi_fops.c
-    comedi kernel module
-
-    COMEDI - Linux Control and Measurement Device Interface
-    Copyright (C) 1997-2000 David A. Schleef <ds@schleef.org>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
-*/
+ *  comedi/comedi_fops.c
+ *  comedi kernel module
+ *
+ *  COMEDI - Linux Control and Measurement Device Interface
+ *  Copyright (C) 1997-2000 David A. Schleef <ds@schleef.org>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ */
 
 #undef DEBUG
 
@@ -71,46 +71,28 @@ static DEFINE_SPINLOCK(comedi_file_info_table_lock);
 static struct comedi_device_file_info
 *comedi_file_info_table[COMEDI_NUM_MINORS];
 
-static int do_devconfig_ioctl(struct comedi_device *dev,
-			      struct comedi_devconfig __user *arg);
-static int do_bufconfig_ioctl(struct comedi_device *dev,
-			      struct comedi_bufconfig __user *arg);
-static int do_devinfo_ioctl(struct comedi_device *dev,
-			    struct comedi_devinfo __user *arg,
-			    struct file *file);
-static int do_subdinfo_ioctl(struct comedi_device *dev,
-			     struct comedi_subdinfo __user *arg, void *file);
-static int do_chaninfo_ioctl(struct comedi_device *dev,
-			     struct comedi_chaninfo __user *arg);
-static int do_bufinfo_ioctl(struct comedi_device *dev,
-			    struct comedi_bufinfo __user *arg, void *file);
-static int do_cmd_ioctl(struct comedi_device *dev,
-			struct comedi_cmd __user *arg, void *file);
-static int do_lock_ioctl(struct comedi_device *dev, unsigned int arg,
-			 void *file);
-static int do_unlock_ioctl(struct comedi_device *dev, unsigned int arg,
-			   void *file);
-static int do_cancel_ioctl(struct comedi_device *dev, unsigned int arg,
-			   void *file);
-static int do_cmdtest_ioctl(struct comedi_device *dev,
-			    struct comedi_cmd __user *arg, void *file);
-static int do_insnlist_ioctl(struct comedi_device *dev,
-			     struct comedi_insnlist __user *arg, void *file);
-static int do_insn_ioctl(struct comedi_device *dev,
-			 struct comedi_insn __user *arg, void *file);
-static int do_poll_ioctl(struct comedi_device *dev, unsigned int subd,
-			 void *file);
+static int do_devconfig_ioctl(struct comedi_device *dev, struct comedi_devconfig __user *arg);
+static int do_bufconfig_ioctl(struct comedi_device *dev, struct comedi_bufconfig __user *arg);
+static int do_devinfo_ioctl(struct comedi_device *dev, struct comedi_devinfo __user *arg, struct file *file);
+static int do_subdinfo_ioctl(struct comedi_device *dev, struct comedi_subdinfo __user *arg, void *file);
+static int do_chaninfo_ioctl(struct comedi_device *dev, struct comedi_chaninfo __user *arg);
+static int do_bufinfo_ioctl(struct comedi_device *dev, struct comedi_bufinfo __user *arg, void *file);
+static int do_cmd_ioctl(struct comedi_device *dev, struct comedi_cmd __user *arg, void *file);
+static int do_lock_ioctl(struct comedi_device *dev, unsigned int arg, void *file);
+static int do_unlock_ioctl(struct comedi_device *dev, unsigned int arg, void *file);
+static int do_cancel_ioctl(struct comedi_device *dev, unsigned int arg, void *file);
+static int do_cmdtest_ioctl(struct comedi_device *dev, struct comedi_cmd __user *arg, void *file);
+static int do_insnlist_ioctl(struct comedi_device *dev, struct comedi_insnlist __user *arg, void *file);
+static int do_insn_ioctl(struct comedi_device *dev, struct comedi_insn __user *arg, void *file);
+static int do_poll_ioctl(struct comedi_device *dev, unsigned int subd, void *file);
 
-extern void do_become_nonbusy(struct comedi_device *dev,
-			      struct comedi_subdevice *s);
+extern void do_become_nonbusy(struct comedi_device *dev, struct comedi_subdevice *s);
 static int do_cancel(struct comedi_device *dev, struct comedi_subdevice *s);
 
 static int comedi_fasync(int fd, struct file *file, int on);
 
 static int is_device_busy(struct comedi_device *dev);
-static int resize_async_buffer(struct comedi_device *dev,
-			       struct comedi_subdevice *s,
-			       struct comedi_async *async, unsigned new_size);
+static int resize_async_buffer(struct comedi_device *dev, struct comedi_subdevice *s, struct comedi_async *async, unsigned new_size);
 
 /* declarations for sysfs attribute files */
 static struct device_attribute dev_attr_max_read_buffer_kb;
@@ -123,7 +105,7 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
 {
 	const unsigned minor = iminor(file->f_dentry->d_inode);
 	struct comedi_device_file_info *dev_file_info =
-	    comedi_get_device_file_info(minor);
+		comedi_get_device_file_info(minor);
 	struct comedi_device *dev;
 	int rc;
 
@@ -211,20 +193,20 @@ done:
 }
 
 /*
-	COMEDI_DEVCONFIG
-	device config ioctl
-
-	arg:
-		pointer to devconfig structure
-
-	reads:
-		devconfig structure at arg
-
-	writes:
-		none
-*/
-static int do_devconfig_ioctl(struct comedi_device *dev,
-			      struct comedi_devconfig __user *arg)
+ *      COMEDI_DEVCONFIG
+ *      device config ioctl
+ *
+ *      arg:
+ *              pointer to devconfig structure
+ *
+ *      reads:
+ *              devconfig structure at arg
+ *
+ *      writes:
+ *              none
+ */
+static int do_devconfig_ioctl(struct comedi_device *		dev,
+			      struct comedi_devconfig __user *	arg)
 {
 	struct comedi_devconfig it;
 	int ret;
@@ -267,13 +249,14 @@ static int do_devconfig_ioctl(struct comedi_device *dev,
 			return -EFAULT;
 		}
 		it.options[COMEDI_DEVCONF_AUX_DATA_LO] =
-		    (unsigned long)aux_data;
+			(unsigned long)aux_data;
 		if (sizeof(void *) > sizeof(int)) {
 			bit_shift = sizeof(int) * 8;
 			it.options[COMEDI_DEVCONF_AUX_DATA_HI] =
-			    ((unsigned long)aux_data) >> bit_shift;
-		} else
+				((unsigned long)aux_data) >> bit_shift;
+		} else {
 			it.options[COMEDI_DEVCONF_AUX_DATA_HI] = 0;
+		}
 	}
 
 	ret = comedi_device_attach(dev, &it);
@@ -291,21 +274,21 @@ static int do_devconfig_ioctl(struct comedi_device *dev,
 }
 
 /*
-	COMEDI_BUFCONFIG
-	buffer configuration ioctl
-
-	arg:
-		pointer to bufconfig structure
-
-	reads:
-		bufconfig at arg
-
-	writes:
-		modified bufconfig at arg
-
-*/
-static int do_bufconfig_ioctl(struct comedi_device *dev,
-			      struct comedi_bufconfig __user *arg)
+ *      COMEDI_BUFCONFIG
+ *      buffer configuration ioctl
+ *
+ *      arg:
+ *              pointer to bufconfig structure
+ *
+ *      reads:
+ *              bufconfig at arg
+ *
+ *      writes:
+ *              modified bufconfig at arg
+ *
+ */
+static int do_bufconfig_ioctl(struct comedi_device *		dev,
+			      struct comedi_bufconfig __user *	arg)
 {
 	struct comedi_bufconfig bc;
 	struct comedi_async *async;
@@ -352,31 +335,31 @@ copyback:
 }
 
 /*
-	COMEDI_DEVINFO
-	device info ioctl
-
-	arg:
-		pointer to devinfo structure
-
-	reads:
-		none
-
-	writes:
-		devinfo structure
-
-*/
-static int do_devinfo_ioctl(struct comedi_device *dev,
-			    struct comedi_devinfo __user *arg,
-			    struct file *file)
+ *      COMEDI_DEVINFO
+ *      device info ioctl
+ *
+ *      arg:
+ *              pointer to devinfo structure
+ *
+ *      reads:
+ *              none
+ *
+ *      writes:
+ *              devinfo structure
+ *
+ */
+static int do_devinfo_ioctl(struct comedi_device *		dev,
+			    struct comedi_devinfo __user *	arg,
+			    struct file *			file)
 {
 	struct comedi_devinfo devinfo;
 	const unsigned minor = iminor(file->f_dentry->d_inode);
 	struct comedi_device_file_info *dev_file_info =
-	    comedi_get_device_file_info(minor);
+		comedi_get_device_file_info(minor);
 	struct comedi_subdevice *read_subdev =
-	    comedi_get_read_subdevice(dev_file_info);
+		comedi_get_read_subdevice(dev_file_info);
 	struct comedi_subdevice *write_subdev =
-	    comedi_get_write_subdevice(dev_file_info);
+		comedi_get_write_subdevice(dev_file_info);
 
 	memset(&devinfo, 0, sizeof(devinfo));
 
@@ -403,19 +386,19 @@ static int do_devinfo_ioctl(struct comedi_device *dev,
 }
 
 /*
-	COMEDI_SUBDINFO
-	subdevice info ioctl
-
-	arg:
-		pointer to array of subdevice info structures
-
-	reads:
-		none
-
-	writes:
-		array of subdevice info structures at arg
-
-*/
+ *      COMEDI_SUBDINFO
+ *      subdevice info ioctl
+ *
+ *      arg:
+ *              pointer to array of subdevice info structures
+ *
+ *      reads:
+ *              none
+ *
+ *      writes:
+ *              array of subdevice info structures at arg
+ *
+ */
 static int do_subdinfo_ioctl(struct comedi_device *dev,
 			     struct comedi_subdinfo __user *arg, void *file)
 {
@@ -424,8 +407,8 @@ static int do_subdinfo_ioctl(struct comedi_device *dev,
 	struct comedi_subdevice *s;
 
 	tmp =
-	    kcalloc(dev->n_subdevices, sizeof(struct comedi_subdinfo),
-		    GFP_KERNEL);
+		kcalloc(dev->n_subdevices, sizeof(struct comedi_subdinfo),
+			GFP_KERNEL);
 	if (!tmp)
 		return -ENOMEM;
 
@@ -439,16 +422,15 @@ static int do_subdinfo_ioctl(struct comedi_device *dev,
 		us->subd_flags = s->subdev_flags;
 		if (comedi_get_subdevice_runflags(s) & SRF_RUNNING)
 			us->subd_flags |= SDF_RUNNING;
-#define TIMER_nanosec 5		/* backwards compatibility */
+#define TIMER_nanosec 5         /* backwards compatibility */
 		us->timer_type = TIMER_nanosec;
 		us->len_chanlist = s->len_chanlist;
 		us->maxdata = s->maxdata;
-		if (s->range_table) {
+		if (s->range_table)
 			us->range_type =
-			    (i << 24) | (0 << 16) | (s->range_table->length);
-		} else {
-			us->range_type = 0;	/* XXX */
-		}
+				(i << 24) | (0 << 16) | (s->range_table->length);
+		else
+			us->range_type = 0;     /* XXX */
 		us->flags = s->flags;
 
 		if (s->busy)
@@ -485,21 +467,21 @@ static int do_subdinfo_ioctl(struct comedi_device *dev,
 }
 
 /*
-	COMEDI_CHANINFO
-	subdevice info ioctl
-
-	arg:
-		pointer to chaninfo structure
-
-	reads:
-		chaninfo structure at arg
-
-	writes:
-		arrays at elements of chaninfo structure
-
-*/
-static int do_chaninfo_ioctl(struct comedi_device *dev,
-			     struct comedi_chaninfo __user *arg)
+ *      COMEDI_CHANINFO
+ *      subdevice info ioctl
+ *
+ *      arg:
+ *              pointer to chaninfo structure
+ *
+ *      reads:
+ *              chaninfo structure at arg
+ *
+ *      writes:
+ *              arrays at elements of chaninfo structure
+ *
+ */
+static int do_chaninfo_ioctl(struct comedi_device *		dev,
+			     struct comedi_chaninfo __user *	arg)
 {
 	struct comedi_subdevice *s;
 	struct comedi_chaninfo it;
@@ -549,20 +531,20 @@ static int do_chaninfo_ioctl(struct comedi_device *dev,
 	return 0;
 }
 
- /*
-    COMEDI_BUFINFO
-    buffer information ioctl
-
-    arg:
-    pointer to bufinfo structure
-
-    reads:
-    bufinfo at arg
-
-    writes:
-    modified bufinfo at arg
-
-  */
+/*
+ * COMEDI_BUFINFO
+ * buffer information ioctl
+ *
+ * arg:
+ * pointer to bufinfo structure
+ *
+ * reads:
+ * bufinfo at arg
+ *
+ * writes:
+ * modified bufinfo at arg
+ *
+ */
 static int do_bufinfo_ioctl(struct comedi_device *dev,
 			    struct comedi_bufinfo __user *arg, void *file)
 {
@@ -607,14 +589,13 @@ static int do_bufinfo_ioctl(struct comedi_device *dev,
 
 		if (!(comedi_get_subdevice_runflags(s) & (SRF_ERROR |
 							  SRF_RUNNING))
-		    && async->buf_write_count == async->buf_read_count) {
+		    && async->buf_write_count == async->buf_read_count)
 			do_become_nonbusy(dev, s);
-		}
 	}
 
 	if (bi.bytes_written && (s->subdev_flags & SDF_CMD_WRITE)) {
 		bi.bytes_written =
-		    comedi_buf_write_alloc(async, bi.bytes_written);
+			comedi_buf_write_alloc(async, bi.bytes_written);
 		comedi_buf_write_free(async, bi.bytes_written);
 	}
 
@@ -631,8 +612,7 @@ copyback:
 	return 0;
 }
 
-static int parse_insn(struct comedi_device *dev, struct comedi_insn *insn,
-		      unsigned int *data, void *file);
+static int parse_insn(struct comedi_device *dev, struct comedi_insn *insn, unsigned int *data, void *file);
 /*
  *	COMEDI_INSNLIST
  *	synchronous instructions
@@ -670,7 +650,7 @@ static int do_insnlist_ioctl(struct comedi_device *dev,
 	}
 
 	insns =
-	    kmalloc(sizeof(struct comedi_insn) * insnlist.n_insns, GFP_KERNEL);
+		kmalloc(sizeof(struct comedi_insn) * insnlist.n_insns, GFP_KERNEL);
 	if (!insns) {
 		DPRINTK("kmalloc failed\n");
 		ret = -ENOMEM;
@@ -723,7 +703,7 @@ error:
 }
 
 static int check_insn_config_length(struct comedi_insn *insn,
-				    unsigned int *data)
+				    unsigned int *	data)
 {
 	if (insn->n < 1)
 		return -EINVAL;
@@ -770,8 +750,8 @@ static int check_insn_config_length(struct comedi_insn *insn,
 		if (insn->n == 5)
 			return 0;
 		break;
-		/* by default we allow the insn since we don't have checks for
-		 * all possible cases yet */
+	/* by default we allow the insn since we don't have checks for
+	 * all possible cases yet */
 	default:
 		printk(KERN_WARNING
 		       "comedi: no check for data length of config insn id "
@@ -797,21 +777,21 @@ static int parse_insn(struct comedi_device *dev, struct comedi_insn *insn,
 
 		switch (insn->insn) {
 		case INSN_GTOD:
-			{
-				struct timeval tv;
+		{
+			struct timeval tv;
 
-				if (insn->n != 2) {
-					ret = -EINVAL;
-					break;
-				}
-
-				do_gettimeofday(&tv);
-				data[0] = tv.tv_sec;
-				data[1] = tv.tv_usec;
-				ret = 2;
-
+			if (insn->n != 2) {
+				ret = -EINVAL;
 				break;
 			}
+
+			do_gettimeofday(&tv);
+			data[0] = tv.tv_sec;
+			data[1] = tv.tv_usec;
+			ret = 2;
+
+			break;
+		}
 		case INSN_WAIT:
 			if (insn->n != 1 || data[0] >= 100000) {
 				ret = -EINVAL;
@@ -1073,7 +1053,7 @@ static int do_cmd_ioctl(struct comedi_device *dev,
 	async->cmd.data = NULL;
 	/* load channel/gain list */
 	async->cmd.chanlist =
-	    kmalloc(async->cmd.chanlist_len * sizeof(int), GFP_KERNEL);
+		kmalloc(async->cmd.chanlist_len * sizeof(int), GFP_KERNEL);
 	if (!async->cmd.chanlist) {
 		DPRINTK("allocation failed\n");
 		ret = -ENOMEM;
@@ -1122,8 +1102,8 @@ static int do_cmd_ioctl(struct comedi_device *dev,
 	comedi_reset_async_buf(async);
 
 	async->cb_mask =
-	    COMEDI_CB_EOA | COMEDI_CB_BLOCK | COMEDI_CB_ERROR |
-	    COMEDI_CB_OVERFLOW;
+		COMEDI_CB_EOA | COMEDI_CB_BLOCK | COMEDI_CB_ERROR |
+		COMEDI_CB_OVERFLOW;
 	if (async->cmd.flags & TRIG_WAKE_EOS)
 		async->cb_mask |= COMEDI_CB_EOS;
 
@@ -1140,20 +1120,20 @@ cleanup:
 }
 
 /*
-	COMEDI_CMDTEST
-	command testing ioctl
-
-	arg:
-		pointer to cmd structure
-
-	reads:
-		cmd structure at arg
-		channel/range list
-
-	writes:
-		modified cmd structure at arg
-
-*/
+ *      COMEDI_CMDTEST
+ *      command testing ioctl
+ *
+ *      arg:
+ *              pointer to cmd structure
+ *
+ *      reads:
+ *              cmd structure at arg
+ *              channel/range list
+ *
+ *      writes:
+ *              modified cmd structure at arg
+ *
+ */
 static int do_cmdtest_ioctl(struct comedi_device *dev,
 			    struct comedi_cmd __user *arg, void *file)
 {
@@ -1198,7 +1178,7 @@ static int do_cmdtest_ioctl(struct comedi_device *dev,
 	/* load channel/gain list */
 	if (user_cmd.chanlist) {
 		chanlist =
-		    kmalloc(user_cmd.chanlist_len * sizeof(int), GFP_KERNEL);
+			kmalloc(user_cmd.chanlist_len * sizeof(int), GFP_KERNEL);
 		if (!chanlist) {
 			DPRINTK("allocation failed\n");
 			ret = -ENOMEM;
@@ -1239,20 +1219,19 @@ cleanup:
 }
 
 /*
-	COMEDI_LOCK
-	lock subdevice
-
-	arg:
-		subdevice number
-
-	reads:
-		none
-
-	writes:
-		none
-
-*/
-
+ *      COMEDI_LOCK
+ *      lock subdevice
+ *
+ *      arg:
+ *              subdevice number
+ *
+ *      reads:
+ *              none
+ *
+ *      writes:
+ *              none
+ *
+ */
 static int do_lock_ioctl(struct comedi_device *dev, unsigned int arg,
 			 void *file)
 {
@@ -1283,21 +1262,21 @@ static int do_lock_ioctl(struct comedi_device *dev, unsigned int arg,
 }
 
 /*
-	COMEDI_UNLOCK
-	unlock subdevice
-
-	arg:
-		subdevice number
-
-	reads:
-		none
-
-	writes:
-		none
-
-	This function isn't protected by the semaphore, since
-	we already own the lock.
-*/
+ *      COMEDI_UNLOCK
+ *      unlock subdevice
+ *
+ *      arg:
+ *              subdevice number
+ *
+ *      reads:
+ *              none
+ *
+ *      writes:
+ *              none
+ *
+ *      This function isn't protected by the semaphore, since
+ *      we already own the lock.
+ */
 static int do_unlock_ioctl(struct comedi_device *dev, unsigned int arg,
 			   void *file)
 {
@@ -1326,19 +1305,19 @@ static int do_unlock_ioctl(struct comedi_device *dev, unsigned int arg,
 }
 
 /*
-	COMEDI_CANCEL
-	cancel acquisition ioctl
-
-	arg:
-		subdevice number
-
-	reads:
-		nothing
-
-	writes:
-		nothing
-
-*/
+ *      COMEDI_CANCEL
+ *      cancel acquisition ioctl
+ *
+ *      arg:
+ *              subdevice number
+ *
+ *      reads:
+ *              nothing
+ *
+ *      writes:
+ *              nothing
+ *
+ */
 static int do_cancel_ioctl(struct comedi_device *dev, unsigned int arg,
 			   void *file)
 {
@@ -1363,19 +1342,19 @@ static int do_cancel_ioctl(struct comedi_device *dev, unsigned int arg,
 }
 
 /*
-	COMEDI_POLL ioctl
-	instructs driver to synchronize buffers
-
-	arg:
-		subdevice number
-
-	reads:
-		nothing
-
-	writes:
-		nothing
-
-*/
+ *      COMEDI_POLL ioctl
+ *      instructs driver to synchronize buffers
+ *
+ *      arg:
+ *              subdevice number
+ *
+ *      reads:
+ *              nothing
+ *
+ *      writes:
+ *              nothing
+ *
+ */
 static int do_poll_ioctl(struct comedi_device *dev, unsigned int arg,
 			 void *file)
 {
@@ -1426,14 +1405,14 @@ static void comedi_unmap(struct vm_area_struct *area)
 }
 
 static struct vm_operations_struct comedi_vm_ops = {
-	.close = comedi_unmap,
+	.close	= comedi_unmap,
 };
 
 static int comedi_mmap(struct file *file, struct vm_area_struct *vma)
 {
 	const unsigned minor = iminor(file->f_dentry->d_inode);
 	struct comedi_device_file_info *dev_file_info =
-	    comedi_get_device_file_info(minor);
+		comedi_get_device_file_info(minor);
 	struct comedi_device *dev = dev_file_info->device;
 	struct comedi_async *async = NULL;
 	unsigned long start = vma->vm_start;
@@ -1484,8 +1463,8 @@ static int comedi_mmap(struct file *file, struct vm_area_struct *vma)
 	for (i = 0; i < n_pages; ++i) {
 		if (remap_pfn_range(vma, start,
 				    page_to_pfn(virt_to_page
-						(async->buf_page_list
-						 [i].virt_addr)), PAGE_SIZE,
+							(async->buf_page_list
+							[i].virt_addr)), PAGE_SIZE,
 				    PAGE_SHARED)) {
 			retval = -EAGAIN;
 			goto done;
@@ -1504,12 +1483,12 @@ done:
 	return retval;
 }
 
-static unsigned int comedi_poll(struct file *file, poll_table * wait)
+static unsigned int comedi_poll(struct file *file, poll_table *wait)
 {
 	unsigned int mask = 0;
 	const unsigned minor = iminor(file->f_dentry->d_inode);
 	struct comedi_device_file_info *dev_file_info =
-	    comedi_get_device_file_info(minor);
+		comedi_get_device_file_info(minor);
 	struct comedi_device *dev = dev_file_info->device;
 	struct comedi_subdevice *read_subdev;
 	struct comedi_subdevice *write_subdev;
@@ -1528,9 +1507,8 @@ static unsigned int comedi_poll(struct file *file, poll_table * wait)
 		if (!read_subdev->busy
 		    || comedi_buf_read_n_available(read_subdev->async) > 0
 		    || !(comedi_get_subdevice_runflags(read_subdev) &
-			 SRF_RUNNING)) {
+			 SRF_RUNNING))
 			mask |= POLLIN | POLLRDNORM;
-		}
 	}
 	write_subdev = comedi_get_write_subdevice(dev_file_info);
 	if (write_subdev) {
@@ -1541,9 +1519,8 @@ static unsigned int comedi_poll(struct file *file, poll_table * wait)
 		    || !(comedi_get_subdevice_runflags(write_subdev) &
 			 SRF_RUNNING)
 		    || comedi_buf_write_n_allocated(write_subdev->async) >=
-		    bytes_per_sample(write_subdev->async->subdevice)) {
+		    bytes_per_sample(write_subdev->async->subdevice))
 			mask |= POLLOUT | POLLWRNORM;
-		}
 	}
 
 	mutex_unlock(&dev->mutex);
@@ -1556,10 +1533,11 @@ static ssize_t comedi_write(struct file *file, const char __user *buf,
 	struct comedi_subdevice *s;
 	struct comedi_async *async;
 	int n, m, count = 0, retval = 0;
+
 	DECLARE_WAITQUEUE(wait, current);
 	const unsigned minor = iminor(file->f_dentry->d_inode);
 	struct comedi_device_file_info *dev_file_info =
-	    comedi_get_device_file_info(minor);
+		comedi_get_device_file_info(minor);
 	struct comedi_device *dev = dev_file_info->device;
 
 	if (!dev->attached) {
@@ -1594,11 +1572,10 @@ static ssize_t comedi_write(struct file *file, const char __user *buf,
 		if (!(comedi_get_subdevice_runflags(s) & SRF_RUNNING)) {
 			if (count == 0) {
 				if (comedi_get_subdevice_runflags(s) &
-					SRF_ERROR) {
+				    SRF_ERROR)
 					retval = -EPIPE;
-				} else {
+				else
 					retval = 0;
-				}
 				do_become_nonbusy(dev, s);
 			}
 			break;
@@ -1646,7 +1623,7 @@ static ssize_t comedi_write(struct file *file, const char __user *buf,
 		nbytes -= n;
 
 		buf += n;
-		break;		/* makes device work like a pipe */
+		break;          /* makes device work like a pipe */
 	}
 	set_current_state(TASK_RUNNING);
 	remove_wait_queue(&async->wait_head, &wait);
@@ -1656,15 +1633,16 @@ done:
 }
 
 static ssize_t comedi_read(struct file *file, char __user *buf, size_t nbytes,
-				loff_t *offset)
+			   loff_t *offset)
 {
 	struct comedi_subdevice *s;
 	struct comedi_async *async;
 	int n, m, count = 0, retval = 0;
+
 	DECLARE_WAITQUEUE(wait, current);
 	const unsigned minor = iminor(file->f_dentry->d_inode);
 	struct comedi_device_file_info *dev_file_info =
-	    comedi_get_device_file_info(minor);
+		comedi_get_device_file_info(minor);
 	struct comedi_device *dev = dev_file_info->device;
 
 	if (!dev->attached) {
@@ -1710,11 +1688,10 @@ static ssize_t comedi_read(struct file *file, char __user *buf, size_t nbytes,
 			if (!(comedi_get_subdevice_runflags(s) & SRF_RUNNING)) {
 				do_become_nonbusy(dev, s);
 				if (comedi_get_subdevice_runflags(s) &
-				    SRF_ERROR) {
+				    SRF_ERROR)
 					retval = -EPIPE;
-				} else {
+				else
 					retval = 0;
-				}
 				break;
 			}
 			if (file->f_flags & O_NONBLOCK) {
@@ -1750,12 +1727,11 @@ static ssize_t comedi_read(struct file *file, char __user *buf, size_t nbytes,
 		nbytes -= n;
 
 		buf += n;
-		break;		/* makes device work like a pipe */
+		break;          /* makes device work like a pipe */
 	}
 	if (!(comedi_get_subdevice_runflags(s) & (SRF_ERROR | SRF_RUNNING)) &&
-	    async->buf_read_count - async->buf_write_count == 0) {
+	    async->buf_read_count - async->buf_write_count == 0)
 		do_become_nonbusy(dev, s);
-	}
 	set_current_state(TASK_RUNNING);
 	remove_wait_queue(&async->wait_head, &wait);
 
@@ -1764,7 +1740,7 @@ done:
 }
 
 /*
-   This function restores a subdevice to an idle state.
+ * This function restores a subdevice to an idle state.
  */
 void do_become_nonbusy(struct comedi_device *dev, struct comedi_subdevice *s)
 {
@@ -1786,9 +1762,9 @@ static int comedi_open(struct inode *inode, struct file *file)
 {
 	const unsigned minor = iminor(inode);
 	struct comedi_device_file_info *dev_file_info =
-	    comedi_get_device_file_info(minor);
+		comedi_get_device_file_info(minor);
 	struct comedi_device *dev =
-	    dev_file_info ? dev_file_info->device : NULL;
+		dev_file_info ? dev_file_info->device : NULL;
 
 	if (dev == NULL) {
 		DPRINTK("invalid minor number\n");
@@ -1859,7 +1835,7 @@ static int comedi_close(struct inode *inode, struct file *file)
 {
 	const unsigned minor = iminor(inode);
 	struct comedi_device_file_info *dev_file_info =
-	    comedi_get_device_file_info(minor);
+		comedi_get_device_file_info(minor);
 	struct comedi_device *dev = dev_file_info->device;
 	struct comedi_subdevice *s = NULL;
 	int i;
@@ -1897,7 +1873,7 @@ static int comedi_fasync(int fd, struct file *file, int on)
 {
 	const unsigned minor = iminor(file->f_dentry->d_inode);
 	struct comedi_device_file_info *dev_file_info =
-	    comedi_get_device_file_info(minor);
+		comedi_get_device_file_info(minor);
 
 	struct comedi_device *dev = dev_file_info->device;
 
@@ -1905,16 +1881,16 @@ static int comedi_fasync(int fd, struct file *file, int on)
 }
 
 const struct file_operations comedi_fops = {
-	.owner = THIS_MODULE,
+	.owner		= THIS_MODULE,
 	.unlocked_ioctl = comedi_unlocked_ioctl,
-	.compat_ioctl = comedi_compat_ioctl,
-	.open = comedi_open,
-	.release = comedi_close,
-	.read = comedi_read,
-	.write = comedi_write,
-	.mmap = comedi_mmap,
-	.poll = comedi_poll,
-	.fasync = comedi_fasync,
+	.compat_ioctl	= comedi_compat_ioctl,
+	.open		= comedi_open,
+	.release	= comedi_close,
+	.read		= comedi_read,
+	.write		= comedi_write,
+	.mmap		= comedi_mmap,
+	.poll		= comedi_poll,
+	.fasync		= comedi_fasync,
 };
 
 struct class *comedi_class;
@@ -2033,19 +2009,17 @@ void comedi_event(struct comedi_device *dev, struct comedi_subdevice *s)
 
 	if (s->
 	    async->events & (COMEDI_CB_EOA | COMEDI_CB_ERROR |
-			     COMEDI_CB_OVERFLOW)) {
+			     COMEDI_CB_OVERFLOW))
 		runflags_mask |= SRF_RUNNING;
-	}
 	/* remember if an error event has occured, so an error
 	 * can be returned the next time the user does a read() */
 	if (s->async->events & (COMEDI_CB_ERROR | COMEDI_CB_OVERFLOW)) {
 		runflags_mask |= SRF_ERROR;
 		runflags |= SRF_ERROR;
 	}
-	if (runflags_mask) {
+	if (runflags_mask)
 		/*sets SRF_ERROR and SRF_RUNNING together atomically */
 		comedi_set_subdevice_runflags(s, runflags_mask, runflags);
-	}
 
 	if (async->cb_mask & s->async->events) {
 		if (comedi_get_subdevice_runflags(s) & SRF_USER) {
@@ -2206,10 +2180,9 @@ void comedi_free_board_minor(unsigned minor)
 	if (info) {
 		struct comedi_device *dev = info->device;
 		if (dev) {
-			if (dev->class_dev) {
+			if (dev->class_dev)
 				device_destroy(comedi_class,
 					       MKDEV(COMEDI_MAJOR, dev->minor));
-			}
 			comedi_device_cleanup(dev);
 			kfree(dev);
 		}
@@ -2217,8 +2190,8 @@ void comedi_free_board_minor(unsigned minor)
 	}
 }
 
-int comedi_alloc_subdevice_minor(struct comedi_device *dev,
-				 struct comedi_subdevice *s)
+int comedi_alloc_subdevice_minor(struct comedi_device *		dev,
+				 struct comedi_subdevice *	s)
 {
 	unsigned long flags;
 	struct comedi_device_file_info *info;
@@ -2383,15 +2356,14 @@ static ssize_t show_max_read_buffer_kb(struct device *dev,
 	struct comedi_device_file_info *info = dev_get_drvdata(dev);
 	unsigned max_buffer_size_kb = 0;
 	struct comedi_subdevice *const read_subdevice =
-	    comedi_get_read_subdevice(info);
+		comedi_get_read_subdevice(info);
 
 	mutex_lock(&info->device->mutex);
 	if (read_subdevice &&
 	    (read_subdevice->subdev_flags & SDF_CMD_READ) &&
-	    read_subdevice->async) {
+	    read_subdevice->async)
 		max_buffer_size_kb = read_subdevice->async->max_bufsize /
-		    bytes_per_kibi;
-	}
+				     bytes_per_kibi;
 	retval = snprintf(buf, PAGE_SIZE, "%i\n", max_buffer_size_kb);
 	mutex_unlock(&info->device->mutex);
 
@@ -2406,14 +2378,14 @@ static ssize_t store_max_read_buffer_kb(struct device *dev,
 	unsigned long new_max_size_kb;
 	uint64_t new_max_size;
 	struct comedi_subdevice *const read_subdevice =
-	    comedi_get_read_subdevice(info);
+		comedi_get_read_subdevice(info);
 
 	if (strict_strtoul(buf, 10, &new_max_size_kb))
 		return -EINVAL;
-	if (new_max_size_kb != (uint32_t) new_max_size_kb)
+	if (new_max_size_kb != (uint32_t)new_max_size_kb)
 		return -EINVAL;
-	new_max_size = ((uint64_t) new_max_size_kb) * bytes_per_kibi;
-	if (new_max_size != (uint32_t) new_max_size)
+	new_max_size = ((uint64_t)new_max_size_kb) * bytes_per_kibi;
+	if (new_max_size != (uint32_t)new_max_size)
 		return -EINVAL;
 
 	mutex_lock(&info->device->mutex);
@@ -2430,11 +2402,12 @@ static ssize_t store_max_read_buffer_kb(struct device *dev,
 }
 
 static struct device_attribute dev_attr_max_read_buffer_kb = {
-	.attr = {
-		 .name = "max_read_buffer_kb",
-		 .mode = S_IRUGO | S_IWUSR},
-	.show = &show_max_read_buffer_kb,
-	.store = &store_max_read_buffer_kb
+	.attr		={
+		.name	= "max_read_buffer_kb",
+		.mode	= S_IRUGO | S_IWUSR
+	},
+	.show		= &show_max_read_buffer_kb,
+	.store		= &store_max_read_buffer_kb
 };
 
 static ssize_t show_read_buffer_kb(struct device *dev,
@@ -2444,15 +2417,14 @@ static ssize_t show_read_buffer_kb(struct device *dev,
 	struct comedi_device_file_info *info = dev_get_drvdata(dev);
 	unsigned buffer_size_kb = 0;
 	struct comedi_subdevice *const read_subdevice =
-	    comedi_get_read_subdevice(info);
+		comedi_get_read_subdevice(info);
 
 	mutex_lock(&info->device->mutex);
 	if (read_subdevice &&
 	    (read_subdevice->subdev_flags & SDF_CMD_READ) &&
-	    read_subdevice->async) {
+	    read_subdevice->async)
 		buffer_size_kb = read_subdevice->async->prealloc_bufsz /
-		    bytes_per_kibi;
-	}
+				 bytes_per_kibi;
 	retval = snprintf(buf, PAGE_SIZE, "%i\n", buffer_size_kb);
 	mutex_unlock(&info->device->mutex);
 
@@ -2468,14 +2440,14 @@ static ssize_t store_read_buffer_kb(struct device *dev,
 	uint64_t new_size;
 	int retval;
 	struct comedi_subdevice *const read_subdevice =
-	    comedi_get_read_subdevice(info);
+		comedi_get_read_subdevice(info);
 
 	if (strict_strtoul(buf, 10, &new_size_kb))
 		return -EINVAL;
-	if (new_size_kb != (uint32_t) new_size_kb)
+	if (new_size_kb != (uint32_t)new_size_kb)
 		return -EINVAL;
-	new_size = ((uint64_t) new_size_kb) * bytes_per_kibi;
-	if (new_size != (uint32_t) new_size)
+	new_size = ((uint64_t)new_size_kb) * bytes_per_kibi;
+	if (new_size != (uint32_t)new_size)
 		return -EINVAL;
 
 	mutex_lock(&info->device->mutex);
@@ -2495,30 +2467,30 @@ static ssize_t store_read_buffer_kb(struct device *dev,
 }
 
 static struct device_attribute dev_attr_read_buffer_kb = {
-	.attr = {
-		 .name = "read_buffer_kb",
-		 .mode = S_IRUGO | S_IWUSR | S_IWGRP},
-	.show = &show_read_buffer_kb,
-	.store = &store_read_buffer_kb
+	.attr		={
+		.name	= "read_buffer_kb",
+		.mode	= S_IRUGO | S_IWUSR | S_IWGRP
+	},
+	.show		= &show_read_buffer_kb,
+	.store		= &store_read_buffer_kb
 };
 
-static ssize_t show_max_write_buffer_kb(struct device *dev,
-					struct device_attribute *attr,
-					char *buf)
+static ssize_t show_max_write_buffer_kb(struct device *			dev,
+					struct device_attribute *	attr,
+					char *				buf)
 {
 	ssize_t retval;
 	struct comedi_device_file_info *info = dev_get_drvdata(dev);
 	unsigned max_buffer_size_kb = 0;
 	struct comedi_subdevice *const write_subdevice =
-	    comedi_get_write_subdevice(info);
+		comedi_get_write_subdevice(info);
 
 	mutex_lock(&info->device->mutex);
 	if (write_subdevice &&
 	    (write_subdevice->subdev_flags & SDF_CMD_WRITE) &&
-	    write_subdevice->async) {
+	    write_subdevice->async)
 		max_buffer_size_kb = write_subdevice->async->max_bufsize /
-		    bytes_per_kibi;
-	}
+				     bytes_per_kibi;
 	retval = snprintf(buf, PAGE_SIZE, "%i\n", max_buffer_size_kb);
 	mutex_unlock(&info->device->mutex);
 
@@ -2533,14 +2505,14 @@ static ssize_t store_max_write_buffer_kb(struct device *dev,
 	unsigned long new_max_size_kb;
 	uint64_t new_max_size;
 	struct comedi_subdevice *const write_subdevice =
-	    comedi_get_write_subdevice(info);
+		comedi_get_write_subdevice(info);
 
 	if (strict_strtoul(buf, 10, &new_max_size_kb))
 		return -EINVAL;
-	if (new_max_size_kb != (uint32_t) new_max_size_kb)
+	if (new_max_size_kb != (uint32_t)new_max_size_kb)
 		return -EINVAL;
-	new_max_size = ((uint64_t) new_max_size_kb) * bytes_per_kibi;
-	if (new_max_size != (uint32_t) new_max_size)
+	new_max_size = ((uint64_t)new_max_size_kb) * bytes_per_kibi;
+	if (new_max_size != (uint32_t)new_max_size)
 		return -EINVAL;
 
 	mutex_lock(&info->device->mutex);
@@ -2557,11 +2529,12 @@ static ssize_t store_max_write_buffer_kb(struct device *dev,
 }
 
 static struct device_attribute dev_attr_max_write_buffer_kb = {
-	.attr = {
-		 .name = "max_write_buffer_kb",
-		 .mode = S_IRUGO | S_IWUSR},
-	.show = &show_max_write_buffer_kb,
-	.store = &store_max_write_buffer_kb
+	.attr		={
+		.name	= "max_write_buffer_kb",
+		.mode	= S_IRUGO | S_IWUSR
+	},
+	.show		= &show_max_write_buffer_kb,
+	.store		= &store_max_write_buffer_kb
 };
 
 static ssize_t show_write_buffer_kb(struct device *dev,
@@ -2571,15 +2544,14 @@ static ssize_t show_write_buffer_kb(struct device *dev,
 	struct comedi_device_file_info *info = dev_get_drvdata(dev);
 	unsigned buffer_size_kb = 0;
 	struct comedi_subdevice *const write_subdevice =
-	    comedi_get_write_subdevice(info);
+		comedi_get_write_subdevice(info);
 
 	mutex_lock(&info->device->mutex);
 	if (write_subdevice &&
 	    (write_subdevice->subdev_flags & SDF_CMD_WRITE) &&
-	    write_subdevice->async) {
+	    write_subdevice->async)
 		buffer_size_kb = write_subdevice->async->prealloc_bufsz /
-		    bytes_per_kibi;
-	}
+				 bytes_per_kibi;
 	retval = snprintf(buf, PAGE_SIZE, "%i\n", buffer_size_kb);
 	mutex_unlock(&info->device->mutex);
 
@@ -2595,14 +2567,14 @@ static ssize_t store_write_buffer_kb(struct device *dev,
 	uint64_t new_size;
 	int retval;
 	struct comedi_subdevice *const write_subdevice =
-	    comedi_get_write_subdevice(info);
+		comedi_get_write_subdevice(info);
 
 	if (strict_strtoul(buf, 10, &new_size_kb))
 		return -EINVAL;
-	if (new_size_kb != (uint32_t) new_size_kb)
+	if (new_size_kb != (uint32_t)new_size_kb)
 		return -EINVAL;
-	new_size = ((uint64_t) new_size_kb) * bytes_per_kibi;
-	if (new_size != (uint32_t) new_size)
+	new_size = ((uint64_t)new_size_kb) * bytes_per_kibi;
+	if (new_size != (uint32_t)new_size)
 		return -EINVAL;
 
 	mutex_lock(&info->device->mutex);
@@ -2622,9 +2594,10 @@ static ssize_t store_write_buffer_kb(struct device *dev,
 }
 
 static struct device_attribute dev_attr_write_buffer_kb = {
-	.attr = {
-		 .name = "write_buffer_kb",
-		 .mode = S_IRUGO | S_IWUSR | S_IWGRP},
-	.show = &show_write_buffer_kb,
-	.store = &store_write_buffer_kb
+	.attr		={
+		.name	= "write_buffer_kb",
+		.mode	= S_IRUGO | S_IWUSR | S_IWGRP
+	},
+	.show		= &show_write_buffer_kb,
+	.store		= &store_write_buffer_kb
 };

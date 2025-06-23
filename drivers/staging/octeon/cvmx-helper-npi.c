@@ -98,9 +98,9 @@ int __cvmx_helper_npi_enable(int interface)
 		for (port = 0; port < num_ports; port++) {
 			union cvmx_pip_prt_cfgx port_cfg;
 			int ipd_port =
-			    cvmx_helper_get_ipd_port(interface, port);
+				cvmx_helper_get_ipd_port(interface, port);
 			port_cfg.u64 =
-			    cvmx_read_csr(CVMX_PIP_PRT_CFGX(ipd_port));
+				cvmx_read_csr(CVMX_PIP_PRT_CFGX(ipd_port));
 			port_cfg.s.maxerr_en = 0;
 			port_cfg.s.minerr_en = 0;
 			cvmx_write_csr(CVMX_PIP_PRT_CFGX(ipd_port),

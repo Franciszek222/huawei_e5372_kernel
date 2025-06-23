@@ -96,15 +96,15 @@ typedef enum {
 	CVMX_CMD_QUEUE_PKO_BASE = 0x00000,
 
 #define CVMX_CMD_QUEUE_PKO(queue) \
-	((cvmx_cmd_queue_id_t)(CVMX_CMD_QUEUE_PKO_BASE + (0xffff&(queue))))
+	((cvmx_cmd_queue_id_t)(CVMX_CMD_QUEUE_PKO_BASE + (0xffff & (queue))))
 
-	CVMX_CMD_QUEUE_ZIP = 0x10000,
-	CVMX_CMD_QUEUE_DFA = 0x20000,
-	CVMX_CMD_QUEUE_RAID = 0x30000,
+	CVMX_CMD_QUEUE_ZIP	= 0x10000,
+	CVMX_CMD_QUEUE_DFA	= 0x20000,
+	CVMX_CMD_QUEUE_RAID	= 0x30000,
 	CVMX_CMD_QUEUE_DMA_BASE = 0x40000,
 
 #define CVMX_CMD_QUEUE_DMA(queue) \
-	((cvmx_cmd_queue_id_t)(CVMX_CMD_QUEUE_DMA_BASE + (0xffff&(queue))))
+	((cvmx_cmd_queue_id_t)(CVMX_CMD_QUEUE_DMA_BASE + (0xffff & (queue))))
 
 	CVMX_CMD_QUEUE_END = 0x50000,
 } cvmx_cmd_queue_id_t;
@@ -116,28 +116,28 @@ typedef enum {
  * set at initialization.
  */
 typedef enum {
-	CVMX_CMD_QUEUE_SUCCESS = 0,
-	CVMX_CMD_QUEUE_NO_MEMORY = -1,
-	CVMX_CMD_QUEUE_FULL = -2,
-	CVMX_CMD_QUEUE_INVALID_PARAM = -3,
-	CVMX_CMD_QUEUE_ALREADY_SETUP = -4,
+	CVMX_CMD_QUEUE_SUCCESS		= 0,
+	CVMX_CMD_QUEUE_NO_MEMORY	= -1,
+	CVMX_CMD_QUEUE_FULL		= -2,
+	CVMX_CMD_QUEUE_INVALID_PARAM	= -3,
+	CVMX_CMD_QUEUE_ALREADY_SETUP	= -4,
 } cvmx_cmd_queue_result_t;
 
 typedef struct {
 	/* You have lock when this is your ticket */
-	uint8_t now_serving;
-	uint64_t unused1:24;
+	uint8_t		now_serving;
+	uint64_t	unused1:24;
 	/* Maximum outstanding command words */
-	uint32_t max_depth;
+	uint32_t	max_depth;
 	/* FPA pool buffers come from */
-	uint64_t fpa_pool:3;
+	uint64_t	fpa_pool:3;
 	/* Top of command buffer pointer shifted 7 */
-	uint64_t base_ptr_div128:29;
-	uint64_t unused2:6;
+	uint64_t	base_ptr_div128:29;
+	uint64_t	unused2:6;
 	/* FPA buffer size in 64bit words minus 1 */
-	uint64_t pool_size_m1:13;
+	uint64_t	pool_size_m1:13;
 	/* Number of comamnds already used in buffer */
-	uint64_t index:13;
+	uint64_t	index:13;
 } __cvmx_cmd_queue_state_t;
 
 /**
@@ -149,8 +149,8 @@ typedef struct {
  * of queue state causes the ll/sc to fail quite often.
  */
 typedef struct {
-	uint64_t ticket[(CVMX_CMD_QUEUE_END >> 16) * 256];
-	__cvmx_cmd_queue_state_t state[(CVMX_CMD_QUEUE_END >> 16) * 256];
+	uint64_t			ticket[(CVMX_CMD_QUEUE_END >> 16) * 256];
+	__cvmx_cmd_queue_state_t	state[(CVMX_CMD_QUEUE_END >> 16) * 256];
 } __cvmx_cmd_queue_all_state_t;
 
 /**
@@ -165,9 +165,7 @@ typedef struct {
  *
  * Returns CVMX_CMD_QUEUE_SUCCESS or a failure code
  */
-cvmx_cmd_queue_result_t cvmx_cmd_queue_initialize(cvmx_cmd_queue_id_t queue_id,
-						  int max_depth, int fpa_pool,
-						  int pool_size);
+cvmx_cmd_queue_result_t cvmx_cmd_queue_initialize(cvmx_cmd_queue_id_t queue_id, int max_depth, int fpa_pool, int pool_size);
 
 /**
  * Shutdown a queue a free it's command buffers to the FPA. The
@@ -221,6 +219,7 @@ static inline int __cvmx_cmd_queue_get_index(cvmx_cmd_queue_id_t queue_id)
 	int unit = queue_id >> 16;
 	int q = (queue_id >> 4) & 0xf;
 	int core = queue_id & 0xf;
+
 	return unit * 256 + core * 16 + q;
 }
 
@@ -231,13 +230,14 @@ static inline int __cvmx_cmd_queue_get_index(cvmx_cmd_queue_id_t queue_id)
  * @queue_id: Queue ID to lock
  * @qptr:     Pointer to the queue's global state
  */
-static inline void __cvmx_cmd_queue_lock(cvmx_cmd_queue_id_t queue_id,
-					 __cvmx_cmd_queue_state_t *qptr)
+static inline void __cvmx_cmd_queue_lock(cvmx_cmd_queue_id_t		queue_id,
+					 __cvmx_cmd_queue_state_t *	qptr)
 {
 	extern __cvmx_cmd_queue_all_state_t
-	    *__cvmx_cmd_queue_state_ptr;
+	*__cvmx_cmd_queue_state_ptr;
 	int tmp;
 	int my_ticket;
+
 	prefetch(qptr);
 	asm volatile (
 		".set push\n"
@@ -273,10 +273,10 @@ static inline void __cvmx_cmd_queue_lock(cvmx_cmd_queue_id_t queue_id,
 		" lbu   %[ticket], %[now_serving]\n"
 		"4:\n"
 		".set pop\n" :
-		[ticket_ptr] "=m"(__cvmx_cmd_queue_state_ptr->ticket[__cvmx_cmd_queue_get_index(queue_id)]),
-		[now_serving] "=m"(qptr->now_serving), [ticket] "=r"(tmp),
-		[my_ticket] "=r"(my_ticket)
-	    );
+		[ticket_ptr] "=m" (__cvmx_cmd_queue_state_ptr->ticket[__cvmx_cmd_queue_get_index(queue_id)]),
+		[now_serving] "=m" (qptr->now_serving), [ticket] "=r" (tmp),
+		[my_ticket] "=r" (my_ticket)
+		);
 }
 
 /**
@@ -298,12 +298,13 @@ static inline void __cvmx_cmd_queue_unlock(__cvmx_cmd_queue_state_t *qptr)
  * Returns Queue structure or NULL on failure
  */
 static inline __cvmx_cmd_queue_state_t
-    *__cvmx_cmd_queue_get_state(cvmx_cmd_queue_id_t queue_id)
+*__cvmx_cmd_queue_get_state(cvmx_cmd_queue_id_t queue_id)
 {
 	extern __cvmx_cmd_queue_all_state_t
-	    *__cvmx_cmd_queue_state_ptr;
+	*__cvmx_cmd_queue_state_ptr;
+
 	return &__cvmx_cmd_queue_state_ptr->
-	    state[__cvmx_cmd_queue_get_index(queue_id)];
+	       state[__cvmx_cmd_queue_get_index(queue_id)];
 }
 
 /**
@@ -323,9 +324,9 @@ static inline __cvmx_cmd_queue_state_t
  */
 static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write(cvmx_cmd_queue_id_t
 							   queue_id,
-							   int use_locking,
-							   int cmd_count,
-							   uint64_t *cmds)
+							   int		use_locking,
+							   int		cmd_count,
+							   uint64_t *	cmds)
 {
 	__cvmx_cmd_queue_state_t *qptr = __cvmx_cmd_queue_get_state(queue_id);
 
@@ -340,7 +341,7 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write(cvmx_cmd_queue_id_t
 	 */
 	if (CVMX_CMD_QUEUE_ENABLE_MAX_DEPTH && unlikely(qptr->max_depth)) {
 		if (unlikely
-		    (cvmx_cmd_queue_length(queue_id) > (int)qptr->max_depth)) {
+			    (cvmx_cmd_queue_length(queue_id) > (int)qptr->max_depth)) {
 			if (likely(use_locking))
 				__cvmx_cmd_queue_unlock(qptr);
 			return CVMX_CMD_QUEUE_FULL;
@@ -353,8 +354,8 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write(cvmx_cmd_queue_id_t
 	 */
 	if (likely(qptr->index + cmd_count < qptr->pool_size_m1)) {
 		uint64_t *ptr =
-		    (uint64_t *) cvmx_phys_to_ptr((uint64_t) qptr->
-						  base_ptr_div128 << 7);
+			(uint64_t *)cvmx_phys_to_ptr((uint64_t)qptr->
+						     base_ptr_div128 << 7);
 		ptr += qptr->index;
 		qptr->index += cmd_count;
 		while (cmd_count--)
@@ -367,15 +368,15 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write(cvmx_cmd_queue_id_t
 		 * one available.
 		 */
 		uint64_t *new_buffer =
-		    (uint64_t *) cvmx_fpa_alloc(qptr->fpa_pool);
+			(uint64_t *)cvmx_fpa_alloc(qptr->fpa_pool);
 		if (unlikely(new_buffer == NULL)) {
 			if (likely(use_locking))
 				__cvmx_cmd_queue_unlock(qptr);
 			return CVMX_CMD_QUEUE_NO_MEMORY;
 		}
 		ptr =
-		    (uint64_t *) cvmx_phys_to_ptr((uint64_t) qptr->
-						  base_ptr_div128 << 7);
+			(uint64_t *)cvmx_phys_to_ptr((uint64_t)qptr->
+						     base_ptr_div128 << 7);
 		/*
 		 * Figure out how many command words will fit in this
 		 * buffer. One location will be needed for the next
@@ -421,9 +422,9 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write(cvmx_cmd_queue_id_t
  */
 static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write2(cvmx_cmd_queue_id_t
 							    queue_id,
-							    int use_locking,
-							    uint64_t cmd1,
-							    uint64_t cmd2)
+							    int		use_locking,
+							    uint64_t	cmd1,
+							    uint64_t	cmd2)
 {
 	__cvmx_cmd_queue_state_t *qptr = __cvmx_cmd_queue_get_state(queue_id);
 
@@ -438,7 +439,7 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write2(cvmx_cmd_queue_id_t
 	 */
 	if (CVMX_CMD_QUEUE_ENABLE_MAX_DEPTH && unlikely(qptr->max_depth)) {
 		if (unlikely
-		    (cvmx_cmd_queue_length(queue_id) > (int)qptr->max_depth)) {
+			    (cvmx_cmd_queue_length(queue_id) > (int)qptr->max_depth)) {
 			if (likely(use_locking))
 				__cvmx_cmd_queue_unlock(qptr);
 			return CVMX_CMD_QUEUE_FULL;
@@ -451,8 +452,8 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write2(cvmx_cmd_queue_id_t
 	 */
 	if (likely(qptr->index + 2 < qptr->pool_size_m1)) {
 		uint64_t *ptr =
-		    (uint64_t *) cvmx_phys_to_ptr((uint64_t) qptr->
-						  base_ptr_div128 << 7);
+			(uint64_t *)cvmx_phys_to_ptr((uint64_t)qptr->
+						     base_ptr_div128 << 7);
 		ptr += qptr->index;
 		qptr->index += 2;
 		ptr[0] = cmd1;
@@ -470,7 +471,7 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write2(cvmx_cmd_queue_id_t
 		 * one available.
 		 */
 		uint64_t *new_buffer =
-		    (uint64_t *) cvmx_fpa_alloc(qptr->fpa_pool);
+			(uint64_t *)cvmx_fpa_alloc(qptr->fpa_pool);
 		if (unlikely(new_buffer == NULL)) {
 			if (likely(use_locking))
 				__cvmx_cmd_queue_unlock(qptr);
@@ -478,8 +479,8 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write2(cvmx_cmd_queue_id_t
 		}
 		count--;
 		ptr =
-		    (uint64_t *) cvmx_phys_to_ptr((uint64_t) qptr->
-						  base_ptr_div128 << 7);
+			(uint64_t *)cvmx_phys_to_ptr((uint64_t)qptr->
+						     base_ptr_div128 << 7);
 		ptr += qptr->index;
 		*ptr++ = cmd1;
 		if (likely(count))
@@ -521,10 +522,10 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write2(cvmx_cmd_queue_id_t
  */
 static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write3(cvmx_cmd_queue_id_t
 							    queue_id,
-							    int use_locking,
-							    uint64_t cmd1,
-							    uint64_t cmd2,
-							    uint64_t cmd3)
+							    int		use_locking,
+							    uint64_t	cmd1,
+							    uint64_t	cmd2,
+							    uint64_t	cmd3)
 {
 	__cvmx_cmd_queue_state_t *qptr = __cvmx_cmd_queue_get_state(queue_id);
 
@@ -539,7 +540,7 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write3(cvmx_cmd_queue_id_t
 	 */
 	if (CVMX_CMD_QUEUE_ENABLE_MAX_DEPTH && unlikely(qptr->max_depth)) {
 		if (unlikely
-		    (cvmx_cmd_queue_length(queue_id) > (int)qptr->max_depth)) {
+			    (cvmx_cmd_queue_length(queue_id) > (int)qptr->max_depth)) {
 			if (likely(use_locking))
 				__cvmx_cmd_queue_unlock(qptr);
 			return CVMX_CMD_QUEUE_FULL;
@@ -552,8 +553,8 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write3(cvmx_cmd_queue_id_t
 	 */
 	if (likely(qptr->index + 3 < qptr->pool_size_m1)) {
 		uint64_t *ptr =
-		    (uint64_t *) cvmx_phys_to_ptr((uint64_t) qptr->
-						  base_ptr_div128 << 7);
+			(uint64_t *)cvmx_phys_to_ptr((uint64_t)qptr->
+						     base_ptr_div128 << 7);
 		ptr += qptr->index;
 		qptr->index += 3;
 		ptr[0] = cmd1;
@@ -572,7 +573,7 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write3(cvmx_cmd_queue_id_t
 		 * one available
 		 */
 		uint64_t *new_buffer =
-		    (uint64_t *) cvmx_fpa_alloc(qptr->fpa_pool);
+			(uint64_t *)cvmx_fpa_alloc(qptr->fpa_pool);
 		if (unlikely(new_buffer == NULL)) {
 			if (likely(use_locking))
 				__cvmx_cmd_queue_unlock(qptr);
@@ -580,8 +581,8 @@ static inline cvmx_cmd_queue_result_t cvmx_cmd_queue_write3(cvmx_cmd_queue_id_t
 		}
 		count--;
 		ptr =
-		    (uint64_t *) cvmx_phys_to_ptr((uint64_t) qptr->
-						  base_ptr_div128 << 7);
+			(uint64_t *)cvmx_phys_to_ptr((uint64_t)qptr->
+						     base_ptr_div128 << 7);
 		ptr += qptr->index;
 		*ptr++ = cmd1;
 		if (count) {

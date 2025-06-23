@@ -35,8 +35,8 @@
  */
 struct memrar_address_range {
 /* private: internal use only */
-	unsigned long begin;
-	unsigned long end;
+	unsigned long	begin;
+	unsigned long	end;
 };
 
 /**
@@ -46,8 +46,8 @@ struct memrar_address_range {
  */
 struct memrar_address_ranges {
 /* private: internal use only */
-	struct list_head list;
-	struct memrar_address_range range;
+	struct list_head		list;
+	struct memrar_address_range	range;
 };
 
 /**
@@ -70,13 +70,13 @@ struct memrar_address_ranges {
  */
 struct memrar_allocator {
 /* private: internal use only */
-	struct mutex lock;
-	unsigned long base;
-	size_t capacity;
-	size_t block_size;
-	size_t largest_free_area;
-	struct memrar_address_ranges allocated_list;
-	struct memrar_address_ranges free_list;
+	struct mutex			lock;
+	unsigned long			base;
+	size_t				capacity;
+	size_t				block_size;
+	size_t				largest_free_area;
+	struct memrar_address_ranges	allocated_list;
+	struct memrar_address_ranges	free_list;
 };
 
 /**
@@ -100,9 +100,7 @@ struct memrar_allocator {
  * itself, or if the capacity and block_size arguments are not
  * compatible or make sense.
  */
-struct memrar_allocator *memrar_create_allocator(unsigned long base,
-						 size_t capacity,
-						 size_t block_size);
+struct memrar_allocator *memrar_create_allocator(unsigned long base, size_t capacity, size_t block_size);
 
 /**
  * memrar_destroy_allocator() - destroy allocator
@@ -123,8 +121,7 @@ void memrar_destroy_allocator(struct memrar_allocator *allocator);
  * allocator.  It returns zero if allocation was not possible.
  * Failure may occur if the allocator no longer has space available.
  */
-unsigned long memrar_allocator_alloc(struct memrar_allocator *allocator,
-				     size_t size);
+unsigned long memrar_allocator_alloc(struct memrar_allocator *allocator, size_t size);
 
 /**
  * memrar_allocator_free() - release buffer starting at given address
@@ -136,14 +133,13 @@ unsigned long memrar_allocator_alloc(struct memrar_allocator *allocator,
  * managed by the allocator.  Returns zero on success or an errno
  * (negative value) on failure.
  */
-long memrar_allocator_free(struct memrar_allocator *allocator,
-			   unsigned long address);
+long memrar_allocator_free(struct memrar_allocator *allocator, unsigned long address);
 
 #endif  /* MEMRAR_ALLOCATOR_H */
 
 
 /*
-  Local Variables:
-    c-file-style: "linux"
-  End:
-*/
+ * Local Variables:
+ *  c-file-style: "linux"
+ * End:
+ */

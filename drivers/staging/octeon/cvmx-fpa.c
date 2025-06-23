@@ -64,9 +64,10 @@ int cvmx_fpa_setup_pool(uint64_t pool, const char *name, void *buffer,
 			uint64_t block_size, uint64_t num_blocks)
 {
 	char *ptr;
+
 	if (!buffer) {
 		cvmx_dprintf
-		    ("ERROR: cvmx_fpa_setup_pool: NULL buffer pointer!\n");
+			("ERROR: cvmx_fpa_setup_pool: NULL buffer pointer!\n");
 		return -1;
 	}
 	if (pool >= CVMX_FPA_NUM_POOLS) {
@@ -76,13 +77,13 @@ int cvmx_fpa_setup_pool(uint64_t pool, const char *name, void *buffer,
 
 	if (block_size < CVMX_FPA_MIN_BLOCK_SIZE) {
 		cvmx_dprintf
-		    ("ERROR: cvmx_fpa_setup_pool: Block size too small.\n");
+			("ERROR: cvmx_fpa_setup_pool: Block size too small.\n");
 		return -1;
 	}
 
 	if (((unsigned long)buffer & (CVMX_FPA_ALIGNMENT - 1)) != 0) {
 		cvmx_dprintf
-		    ("ERROR: cvmx_fpa_setup_pool: Buffer not aligned properly.\n");
+			("ERROR: cvmx_fpa_setup_pool: Buffer not aligned properly.\n");
 		return -1;
 	}
 
@@ -114,9 +115,9 @@ uint64_t cvmx_fpa_shutdown_pool(uint64_t pool)
 	uint64_t count = 0;
 	uint64_t base = cvmx_ptr_to_phys(cvmx_fpa_pool_info[pool].base);
 	uint64_t finish =
-	    base +
-	    cvmx_fpa_pool_info[pool].size *
-	    cvmx_fpa_pool_info[pool].starting_element_count;
+		base +
+		cvmx_fpa_pool_info[pool].size *
+		cvmx_fpa_pool_info[pool].starting_element_count;
 	void *ptr;
 	uint64_t address;
 
@@ -134,9 +135,9 @@ uint64_t cvmx_fpa_shutdown_pool(uint64_t pool)
 				count++;
 			} else {
 				cvmx_dprintf
-				    ("ERROR: cvmx_fpa_shutdown_pool: Illegal address 0x%llx in pool %s(%d)\n",
-				     (unsigned long long)address,
-				     cvmx_fpa_pool_info[pool].name, (int)pool);
+					("ERROR: cvmx_fpa_shutdown_pool: Illegal address 0x%llx in pool %s(%d)\n",
+					(unsigned long long)address,
+					cvmx_fpa_pool_info[pool].name, (int)pool);
 				errors++;
 			}
 		}
@@ -149,13 +150,14 @@ uint64_t cvmx_fpa_shutdown_pool(uint64_t pool)
 
 	if (errors) {
 		cvmx_dprintf
-		    ("ERROR: cvmx_fpa_shutdown_pool: Pool %s(%d) started at 0x%llx, ended at 0x%llx, with a step of 0x%llx\n",
-		     cvmx_fpa_pool_info[pool].name, (int)pool,
-		     (unsigned long long)base, (unsigned long long)finish,
-		     (unsigned long long)cvmx_fpa_pool_info[pool].size);
+			("ERROR: cvmx_fpa_shutdown_pool: Pool %s(%d) started at 0x%llx, ended at 0x%llx, with a step of 0x%llx\n",
+			cvmx_fpa_pool_info[pool].name, (int)pool,
+			(unsigned long long)base, (unsigned long long)finish,
+			(unsigned long long)cvmx_fpa_pool_info[pool].size);
 		return -errors;
-	} else
+	} else {
 		return 0;
+	}
 }
 
 uint64_t cvmx_fpa_get_block_size(uint64_t pool)

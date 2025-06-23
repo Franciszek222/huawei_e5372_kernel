@@ -27,42 +27,42 @@
 #define _FIR_H_
 
 /*
-   Blackfin NOTES & IDEAS:
-
-   A simple dot product function is used to implement the filter.  This performs
-   just one MAC/cycle which is inefficient but was easy to implement as a first
-   pass.  The current Blackfin code also uses an unrolled form of the filter
-   history to avoid 0 length hardware loop issues.  This is wasteful of
-   memory.
-
-   Ideas for improvement:
-
-   1/ Rewrite filter for dual MAC inner loop.  The issue here is handling
-   history sample offsets that are 16 bit aligned - the dual MAC needs
-   32 bit aligmnent.  There are some good examples in libbfdsp.
-
-   2/ Use the hardware circular buffer facility tohalve memory usage.
-
-   3/ Consider using internal memory.
-
-   Using less memory might also improve speed as cache misses will be
-   reduced. A drop in MIPs and memory approaching 50% should be
-   possible.
-
-   The foreground and background filters currenlty use a total of
-   about 10 MIPs/ch as measured with speedtest.c on a 256 TAP echo
-   can.
-*/
+ * Blackfin NOTES & IDEAS:
+ *
+ * A simple dot product function is used to implement the filter.  This performs
+ * just one MAC/cycle which is inefficient but was easy to implement as a first
+ * pass.  The current Blackfin code also uses an unrolled form of the filter
+ * history to avoid 0 length hardware loop issues.  This is wasteful of
+ * memory.
+ *
+ * Ideas for improvement:
+ *
+ * 1/ Rewrite filter for dual MAC inner loop.  The issue here is handling
+ * history sample offsets that are 16 bit aligned - the dual MAC needs
+ * 32 bit aligmnent.  There are some good examples in libbfdsp.
+ *
+ * 2/ Use the hardware circular buffer facility tohalve memory usage.
+ *
+ * 3/ Consider using internal memory.
+ *
+ * Using less memory might also improve speed as cache misses will be
+ * reduced. A drop in MIPs and memory approaching 50% should be
+ * possible.
+ *
+ * The foreground and background filters currenlty use a total of
+ * about 10 MIPs/ch as measured with speedtest.c on a 256 TAP echo
+ * can.
+ */
 
 /*
  * 16 bit integer FIR descriptor. This defines the working state for a single
  * instance of an FIR filter using 16 bit integer coefficients.
  */
 struct fir16_state_t {
-	int taps;
-	int curr_pos;
-	const int16_t *coeffs;
-	int16_t *history;
+	int		taps;
+	int		curr_pos;
+	const int16_t * coeffs;
+	int16_t *	history;
 };
 
 /*
@@ -71,10 +71,10 @@ struct fir16_state_t {
  * 16 bit integer data.
  */
 struct fir32_state_t {
-	int taps;
-	int curr_pos;
-	const int32_t *coeffs;
-	int16_t *history;
+	int		taps;
+	int		curr_pos;
+	const int32_t * coeffs;
+	int16_t *	history;
 };
 
 /*
@@ -82,14 +82,14 @@ struct fir32_state_t {
  * instance of an FIR filter using floating point coefficients and data.
  */
 struct fir_float_state_t {
-	int taps;
-	int curr_pos;
-	const float *coeffs;
-	float *history;
+	int		taps;
+	int		curr_pos;
+	const float *	coeffs;
+	float *		history;
 };
 
 static inline const int16_t *fir16_create(struct fir16_state_t *fir,
-					      const int16_t *coeffs, int taps)
+					  const int16_t *coeffs, int taps)
 {
 	fir->taps = taps;
 	fir->curr_pos = taps - 1;
@@ -123,21 +123,21 @@ static inline int32_t dot_asm(short *x, short *y, int len)
 
 	len--;
 
-	__asm__("I0 = %1;\n\t"
-		"I1 = %2;\n\t"
-		"A0 = 0;\n\t"
-		"R0.L = W[I0++] || R1.L = W[I1++];\n\t"
-		"LOOP dot%= LC0 = %3;\n\t"
-		"LOOP_BEGIN dot%=;\n\t"
-		"A0 += R0.L * R1.L (IS) || R0.L = W[I0++] || R1.L = W[I1++];\n\t"
-		"LOOP_END dot%=;\n\t"
-		"A0 += R0.L*R1.L (IS);\n\t"
-		"R0 = A0;\n\t"
-		"%0 = R0;\n\t"
-		: "=&d"(dot)
-		: "a"(x), "a"(y), "a"(len)
-		: "I0", "I1", "A1", "A0", "R0", "R1"
-	);
+	__asm__ ("I0 = %1;\n\t"
+		 "I1 = %2;\n\t"
+		 "A0 = 0;\n\t"
+		 "R0.L = W[I0++] || R1.L = W[I1++];\n\t"
+		 "LOOP dot%= LC0 = %3;\n\t"
+		 "LOOP_BEGIN dot%=;\n\t"
+		 "A0 += R0.L * R1.L (IS) || R0.L = W[I0++] || R1.L = W[I1++];\n\t"
+		 "LOOP_END dot%=;\n\t"
+		 "A0 += R0.L*R1.L (IS);\n\t"
+		 "R0 = A0;\n\t"
+		 "%0 = R0;\n\t"
+		 : "=&d" (dot)
+		 : "a" (x), "a" (y), "a" (len)
+		 : "I0", "I1", "A1", "A0", "R0", "R1"
+		 );
 
 	return dot;
 }
@@ -146,10 +146,11 @@ static inline int32_t dot_asm(short *x, short *y, int len)
 static inline int16_t fir16(struct fir16_state_t *fir, int16_t sample)
 {
 	int32_t y;
+
 #if defined(__bfin__)
 	fir->history[fir->curr_pos] = sample;
 	fir->history[fir->curr_pos + fir->taps] = sample;
-	y = dot_asm((int16_t *) fir->coeffs, &fir->history[fir->curr_pos],
+	y = dot_asm((int16_t *)fir->coeffs, &fir->history[fir->curr_pos],
 		    fir->taps);
 #else
 	int i;
@@ -169,11 +170,11 @@ static inline int16_t fir16(struct fir16_state_t *fir, int16_t sample)
 	if (fir->curr_pos <= 0)
 		fir->curr_pos = fir->taps;
 	fir->curr_pos--;
-	return (int16_t) (y >> 15);
+	return (int16_t)(y >> 15);
 }
 
 static inline const int16_t *fir32_create(struct fir32_state_t *fir,
-					      const int32_t *coeffs, int taps)
+					  const int32_t *coeffs, int taps)
 {
 	fir->taps = taps;
 	fir->curr_pos = taps - 1;
@@ -210,7 +211,7 @@ static inline int16_t fir32(struct fir32_state_t *fir, int16_t sample)
 	if (fir->curr_pos <= 0)
 		fir->curr_pos = fir->taps;
 	fir->curr_pos--;
-	return (int16_t) (y >> 15);
+	return (int16_t)(y >> 15);
 }
 
 #endif

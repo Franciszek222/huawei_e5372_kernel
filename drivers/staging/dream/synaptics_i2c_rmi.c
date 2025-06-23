@@ -33,30 +33,31 @@
 static struct workqueue_struct *synaptics_wq;
 
 struct synaptics_ts_data {
-	u16 addr;
-	struct i2c_client *client;
-	struct input_dev *input_dev;
-	int use_irq;
-	struct hrtimer timer;
-	struct work_struct  work;
-	u16 max[2];
-	int snap_state[2][2];
-	int snap_down_on[2];
-	int snap_down_off[2];
-	int snap_up_on[2];
-	int snap_up_off[2];
-	int snap_down[2];
-	int snap_up[2];
-	u32 flags;
-	int (*power)(int on);
+	u16			addr;
+	struct i2c_client *	client;
+	struct input_dev *	input_dev;
+	int			use_irq;
+	struct hrtimer		timer;
+	struct work_struct	work;
+	u16			max[2];
+	int			snap_state[2][2];
+	int			snap_down_on[2];
+	int			snap_down_off[2];
+	int			snap_up_on[2];
+	int			snap_up_off[2];
+	int			snap_down[2];
+	int			snap_up[2];
+	u32			flags;
+	int			(*power)(int on);
 #ifdef CONFIG_HAS_EARLYSUSPEND
-	struct early_suspend early_suspend;
+	struct early_suspend	early_suspend;
 #endif
 };
 
 static int i2c_set(struct synaptics_ts_data *ts, u8 reg, u8 val, char *msg)
 {
 	int ret = i2c_smbus_write_byte_data(ts->client, reg, val);
+
 	if (ret < 0)
 		pr_err("i2c_smbus_write_byte_data failed (%s)\n", msg);
 	return ret;
@@ -65,6 +66,7 @@ static int i2c_set(struct synaptics_ts_data *ts, u8 reg, u8 val, char *msg)
 static int i2c_read(struct synaptics_ts_data *ts, u8 reg, char *msg)
 {
 	int ret = i2c_smbus_read_byte_data(ts->client, reg);
+
 	if (ret < 0)
 		pr_err("i2c_smbus_read_byte_data failed (%s)\n", msg);
 	return ret;
@@ -182,12 +184,12 @@ static void synaptics_ts_work_func(struct work_struct *work)
 		}
 		if ((buf[14] & 0xc0) != 0x40) {
 			pr_warning("synaptics_ts_work_func:"
-			       " bad read %x %x %x %x %x %x %x %x %x"
-			       " %x %x %x %x %x %x, ret %d\n",
-			       buf[0], buf[1], buf[2], buf[3],
-			       buf[4], buf[5], buf[6], buf[7],
-			       buf[8], buf[9], buf[10], buf[11],
-			       buf[12], buf[13], buf[14], ret);
+				   " bad read %x %x %x %x %x %x %x %x %x"
+				   " %x %x %x %x %x %x, ret %d\n",
+				   buf[0], buf[1], buf[2], buf[3],
+				   buf[4], buf[5], buf[6], buf[7],
+				   buf[8], buf[9], buf[10], buf[11],
+				   buf[12], buf[13], buf[14], ret);
 			if (bad_data)
 				synaptics_init_panel(ts);
 			bad_data = 1;
@@ -322,11 +324,11 @@ static void compute_areas(struct synaptics_ts_data *ts,
 	ts->snap_up_off[!swapped] = max_y - snap_bottom_off;
 	pr_info("synaptics_ts_probe: max_x %d, max_y %d\n", max_x, max_y);
 	pr_info("synaptics_ts_probe: inactive_x %d %d, inactive_y %d %d\n",
-	       inactive_area_left, inactive_area_right,
-	       inactive_area_top, inactive_area_bottom);
+		inactive_area_left, inactive_area_right,
+		inactive_area_top, inactive_area_bottom);
 	pr_info("synaptics_ts_probe: snap_x %d-%d %d-%d, snap_y %d-%d %d-%d\n",
-	       snap_left_on, snap_left_off, snap_right_on, snap_right_off,
-	       snap_top_on, snap_top_off, snap_bottom_on, snap_bottom_off);
+		snap_left_on, snap_left_off, snap_right_on, snap_right_off,
+		snap_top_on, snap_top_off, snap_bottom_on, snap_bottom_off);
 
 	input_set_abs_params(ts->input_dev, ABS_X,
 			     -inactive_area_left, max_x + inactive_area_right,
@@ -428,8 +430,8 @@ static int __devinit synaptics_ts_probe(
 		goto err_detect_failed;
 	}
 	pr_info("synaptics_ts_probe: 0xe0: %x %x %x %x %x %x %x %x\n",
-	       buf1[0], buf1[1], buf1[2], buf1[3],
-	       buf1[4], buf1[5], buf1[6], buf1[7]);
+		buf1[0], buf1[1], buf1[2], buf1[3],
+		buf1[4], buf1[5], buf1[6], buf1[7]);
 
 	ret = i2c_set(ts, 0xff, 0x10, "page select = 0x10");
 	if (ret < 0)
@@ -483,9 +485,9 @@ static int __devinit synaptics_ts_probe(
 	}
 	if (client->irq) {
 		ret = request_threaded_irq(client->irq, NULL,
-					synaptics_ts_irq_handler,
-					IRQF_TRIGGER_LOW|IRQF_ONESHOT,
-					client->name, ts);
+					   synaptics_ts_irq_handler,
+					   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+					   client->name, ts);
 		if (ret == 0) {
 			ret = i2c_set(ts, 0xf1, 0x01, "enable abs int");
 			if (ret)
@@ -528,6 +530,7 @@ err_check_functionality_failed:
 static int synaptics_ts_remove(struct i2c_client *client)
 {
 	struct synaptics_ts_data *ts = i2c_get_clientdata(client);
+
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	unregister_early_suspend(&ts->early_suspend);
 #endif
@@ -580,8 +583,9 @@ static int synaptics_ts_resume(struct i2c_client *client)
 	if (ts->use_irq) {
 		enable_irq(client->irq);
 		i2c_set(ts, 0xf1, 0x01, "enable abs int");
-	} else
+	} else {
 		hrtimer_start(&ts->timer, ktime_set(1, 0), HRTIMER_MODE_REL);
+	}
 
 	return 0;
 }
@@ -590,6 +594,7 @@ static int synaptics_ts_resume(struct i2c_client *client)
 static void synaptics_ts_early_suspend(struct early_suspend *h)
 {
 	struct synaptics_ts_data *ts;
+
 	ts = container_of(h, struct synaptics_ts_data, early_suspend);
 	synaptics_ts_suspend(ts->client, PMSG_SUSPEND);
 }
@@ -597,6 +602,7 @@ static void synaptics_ts_early_suspend(struct early_suspend *h)
 static void synaptics_ts_late_resume(struct early_suspend *h)
 {
 	struct synaptics_ts_data *ts;
+
 	ts = container_of(h, struct synaptics_ts_data, early_suspend);
 	synaptics_ts_resume(ts->client);
 }
@@ -621,7 +627,7 @@ static struct i2c_driver synaptics_ts_driver = {
 	.resume		= synaptics_ts_resume,
 #endif
 	.id_table	= synaptics_ts_id,
-	.driver = {
+	.driver		= {
 		.name	= SYNAPTICS_I2C_RMI_NAME,
 	},
 };

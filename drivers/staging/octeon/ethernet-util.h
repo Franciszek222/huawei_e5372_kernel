@@ -23,11 +23,11 @@
  *
  * This file may also be available under a different license from Cavium.
  * Contact Cavium Networks for more information
-*********************************************************************/
+ *********************************************************************/
 
-#define DEBUGPRINT(format, ...) do { if (printk_ratelimit()) 		\
-					printk(format, ##__VA_ARGS__);	\
-				} while (0)
+#define DEBUGPRINT(format, ...) do { if (printk_ratelimit())            \
+				     printk(format, ## __VA_ARGS__);  \
+} while (0)
 
 /**
  * cvm_oct_get_buffer_ptr - convert packet data address to pointer
@@ -49,13 +49,13 @@ static inline void *cvm_oct_get_buffer_ptr(union cvmx_buf_ptr packet_ptr)
  */
 static inline int INTERFACE(int ipd_port)
 {
-	if (ipd_port < 32)	/* Interface 0 or 1 for RGMII,GMII,SPI, etc */
+	if (ipd_port < 32)              /* Interface 0 or 1 for RGMII,GMII,SPI, etc */
 		return ipd_port >> 4;
-	else if (ipd_port < 36)	/* Interface 2 for NPI */
+	else if (ipd_port < 36)         /* Interface 2 for NPI */
 		return 2;
-	else if (ipd_port < 40)	/* Interface 3 for loopback */
+	else if (ipd_port < 40)         /* Interface 3 for loopback */
 		return 3;
-	else if (ipd_port == 40)	/* Non existant interface for POW0 */
+	else if (ipd_port == 40)        /* Non existant interface for POW0 */
 		return 4;
 	else
 		panic("Illegal ipd_port %d passed to INTERFACE\n", ipd_port);

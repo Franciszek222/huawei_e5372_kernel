@@ -2,44 +2,44 @@
 #define QDSP5VIDJPEGCMDI_H
 
 /*====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*
-
-    J P E G  I N T E R N A L  C O M M A N D S
-
-GENERAL DESCRIPTION
-  This file contains defintions of format blocks of commands
-  that are accepted by JPEG Task
-
-REFERENCES
-  None
-
-EXTERNALIZED FUNCTIONS
-  None
-
-Copyright(c) 1992 - 2008 by QUALCOMM, Incorporated.
-
-This software is licensed under the terms of the GNU General Public
-License version 2, as published by the Free Software Foundation, and
-may be copied, distributed, and modified under those terms.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
+*
+*   J P E G  I N T E R N A L  C O M M A N D S
+*
+*  GENERAL DESCRIPTION
+*  This file contains defintions of format blocks of commands
+*  that are accepted by JPEG Task
+*
+*  REFERENCES
+*  None
+*
+*  EXTERNALIZED FUNCTIONS
+*  None
+*
+*  Copyright(c) 1992 - 2008 by QUALCOMM, Incorporated.
+*
+*  This software is licensed under the terms of the GNU General Public
+*  License version 2, as published by the Free Software Foundation, and
+*  may be copied, distributed, and modified under those terms.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
 *====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*/
 /*===========================================================================
-
-                      EDIT HISTORY FOR FILE
-
-This section contains comments describing changes made to this file.
-Notice that changes are listed in reverse chronological order.
-
-$Header: //source/qcom/qct/multimedia2/AdspSvc/7XXX/qdsp5cmd/video/qdsp5jpegcmdi.h#2 $ $DateTime: 2008/07/30 10:50:23 $ $Author: pavanr $
-Revision History:
-when       who     what, where, why
---------   ---     ----------------------------------------------------------
-06/09/08   sv      initial version
-===========================================================================*/
+*
+*                     EDIT HISTORY FOR FILE
+*
+*  This section contains comments describing changes made to this file.
+*  Notice that changes are listed in reverse chronological order.
+*
+*  $Header: //source/qcom/qct/multimedia2/AdspSvc/7XXX/qdsp5cmd/video/qdsp5jpegcmdi.h#2 $ $DateTime: 2008/07/30 10:50:23 $ $Author: pavanr $
+*  Revision History:
+*  when       who     what, where, why
+*  --------   ---     ----------------------------------------------------------
+*  06/09/08   sv      initial version
+*  ===========================================================================*/
 
 /*
  * ARM to JPEG configuration commands are passed through the
@@ -50,24 +50,24 @@ when       who     what, where, why
  * Command to configure JPEG Encoder
  */
 
-#define	JPEG_CMD_ENC_CFG		0x0000
-#define	JPEG_CMD_ENC_CFG_LEN	sizeof(jpeg_cmd_enc_cfg)
+#define JPEG_CMD_ENC_CFG                0x0000
+#define JPEG_CMD_ENC_CFG_LEN    sizeof(jpeg_cmd_enc_cfg)
 
-#define	JPEG_CMD_ENC_PROCESS_CFG_OP_ROTATION_0		0x0000
-#define	JPEG_CMD_ENC_PROCESS_CFG_OP_ROTATION_90		0x0100
-#define	JPEG_CMD_ENC_PROCESS_CFG_OP_ROTATION_180	0x0200
-#define	JPEG_CMD_ENC_PROCESS_CFG_OP_ROTATION_270	0x0300
-#define	JPEG_CMD_ENC_PROCESS_CFG_IP_DATA_FORMAT_M	0x0003
-#define	JPEG_CMD_ENC_PROCESS_CFG_IP_DATA_FORMAT_H2V2	0x0000
-#define	JPEG_CMD_ENC_PROCESS_CFG_IP_DATA_FORMAT_H2V1	0x0001
-#define	JPEG_CMD_ENC_PROCESS_CFG_IP_DATA_FORMAT_H1V2	0x0002
+#define JPEG_CMD_ENC_PROCESS_CFG_OP_ROTATION_0          0x0000
+#define JPEG_CMD_ENC_PROCESS_CFG_OP_ROTATION_90         0x0100
+#define JPEG_CMD_ENC_PROCESS_CFG_OP_ROTATION_180        0x0200
+#define JPEG_CMD_ENC_PROCESS_CFG_OP_ROTATION_270        0x0300
+#define JPEG_CMD_ENC_PROCESS_CFG_IP_DATA_FORMAT_M       0x0003
+#define JPEG_CMD_ENC_PROCESS_CFG_IP_DATA_FORMAT_H2V2    0x0000
+#define JPEG_CMD_ENC_PROCESS_CFG_IP_DATA_FORMAT_H2V1    0x0001
+#define JPEG_CMD_ENC_PROCESS_CFG_IP_DATA_FORMAT_H1V2    0x0002
 
-#define	JPEG_CMD_IP_SIZE_CFG_LUMA_HEIGHT_M		0x0000FFFF
-#define	JPEG_CMD_IP_SIZE_CFG_LUMA_WIDTH_M		0xFFFF0000
-#define	JPEG_CMD_ENC_UPSAMP_IP_SIZE_CFG_ENA		0x0001
-#define	JPEG_CMD_ENC_UPSAMP_IP_SIZE_CFG_DIS		0x0000
+#define JPEG_CMD_IP_SIZE_CFG_LUMA_HEIGHT_M              0x0000FFFF
+#define JPEG_CMD_IP_SIZE_CFG_LUMA_WIDTH_M               0xFFFF0000
+#define JPEG_CMD_ENC_UPSAMP_IP_SIZE_CFG_ENA             0x0001
+#define JPEG_CMD_ENC_UPSAMP_IP_SIZE_CFG_DIS             0x0000
 
-#define	JPEG_CMD_FRAG_SIZE_LUMA_HEIGHT_M		0xFFFF
+#define JPEG_CMD_FRAG_SIZE_LUMA_HEIGHT_M                0xFFFF
 
 typedef struct {
 	unsigned int	cmd_id;
@@ -77,7 +77,7 @@ typedef struct {
 	unsigned int	frag_cfg;
 	unsigned int	frag_cfg_part[16];
 
-	unsigned int    part_num;
+	unsigned int	part_num;
 
 	unsigned int	op_buf_0_cfg_part1;
 	unsigned int	op_buf_0_cfg_part2;
@@ -96,20 +96,20 @@ typedef struct {
  * Command to configure JPEG Decoder
  */
 
-#define	JPEG_CMD_DEC_CFG		0x0001
-#define	JPEG_CMD_DEC_CFG_LEN		sizeof(jpeg_cmd_dec_cfg)
+#define JPEG_CMD_DEC_CFG                0x0001
+#define JPEG_CMD_DEC_CFG_LEN            sizeof(jpeg_cmd_dec_cfg)
 
-#define	JPEG_CMD_DEC_OP_DATA_FORMAT_M		0x0001
-#define JPEG_CMD_DEC_OP_DATA_FORMAT_H2V2	0x0000
-#define JPEG_CMD_DEC_OP_DATA_FORMAT_H2V1	0x0001
+#define JPEG_CMD_DEC_OP_DATA_FORMAT_M           0x0001
+#define JPEG_CMD_DEC_OP_DATA_FORMAT_H2V2        0x0000
+#define JPEG_CMD_DEC_OP_DATA_FORMAT_H2V1        0x0001
 
-#define JPEG_CMD_DEC_OP_DATA_FORMAT_SCALE_FACTOR_8	0x000000
-#define JPEG_CMD_DEC_OP_DATA_FORMAT_SCALE_FACTOR_4	0x010000
-#define JPEG_CMD_DEC_OP_DATA_FORMAT_SCALE_FACTOR_2	0x020000
-#define JPEG_CMD_DEC_OP_DATA_FORMAT_SCALE_FACTOR_1	0x030000
+#define JPEG_CMD_DEC_OP_DATA_FORMAT_SCALE_FACTOR_8      0x000000
+#define JPEG_CMD_DEC_OP_DATA_FORMAT_SCALE_FACTOR_4      0x010000
+#define JPEG_CMD_DEC_OP_DATA_FORMAT_SCALE_FACTOR_2      0x020000
+#define JPEG_CMD_DEC_OP_DATA_FORMAT_SCALE_FACTOR_1      0x030000
 
-#define	JPEG_CMD_DEC_IP_STREAM_BUF_CFG_PART3_NOT_FINAL	0x0000
-#define	JPEG_CMD_DEC_IP_STREAM_BUF_CFG_PART3_FINAL	0x0001
+#define JPEG_CMD_DEC_IP_STREAM_BUF_CFG_PART3_NOT_FINAL  0x0000
+#define JPEG_CMD_DEC_IP_STREAM_BUF_CFG_PART3_FINAL      0x0001
 
 
 typedef struct {
@@ -275,12 +275,12 @@ typedef struct {
  * Command to start the encode process
  */
 
-#define	JPEG_CMD_ENC_ENCODE		0x0000
-#define	JPEG_CMD_ENC_ENCODE_LEN		sizeof(jpeg_cmd_enc_encode)
+#define JPEG_CMD_ENC_ENCODE             0x0000
+#define JPEG_CMD_ENC_ENCODE_LEN         sizeof(jpeg_cmd_enc_encode)
 
 
 typedef struct {
-	unsigned short	cmd_id;
+	unsigned short cmd_id;
 } __attribute__((packed)) jpeg_cmd_enc_encode;
 
 
@@ -288,12 +288,12 @@ typedef struct {
  * Command to transition from current state of encoder to IDLE state
  */
 
-#define	JPEG_CMD_ENC_IDLE		0x0001
-#define	JPEG_CMD_ENC_IDLE_LEN		sizeof(jpeg_cmd_enc_idle)
+#define JPEG_CMD_ENC_IDLE               0x0001
+#define JPEG_CMD_ENC_IDLE_LEN           sizeof(jpeg_cmd_enc_idle)
 
 
 typedef struct {
-	unsigned short	cmd_id;
+	unsigned short cmd_id;
 } __attribute__((packed)) jpeg_cmd_enc_idle;
 
 
@@ -301,8 +301,8 @@ typedef struct {
  * Command to inform the encoder that another buffer is ready
  */
 
-#define	JPEG_CMD_ENC_OP_CONSUMED	0x0002
-#define	JPEG_CMD_ENC_OP_CONSUMED_LEN	sizeof(jpeg_cmd_enc_op_consumed)
+#define JPEG_CMD_ENC_OP_CONSUMED        0x0002
+#define JPEG_CMD_ENC_OP_CONSUMED_LEN    sizeof(jpeg_cmd_enc_op_consumed)
 
 
 typedef struct {
@@ -316,12 +316,12 @@ typedef struct {
  * Command to start the decoding process
  */
 
-#define	JPEG_CMD_DEC_DECODE		0x0003
-#define	JPEG_CMD_DEC_DECODE_LEN	sizeof(jpeg_cmd_dec_decode)
+#define JPEG_CMD_DEC_DECODE             0x0003
+#define JPEG_CMD_DEC_DECODE_LEN sizeof(jpeg_cmd_dec_decode)
 
 
 typedef struct {
-	unsigned short	cmd_id;
+	unsigned short cmd_id;
 } __attribute__((packed)) jpeg_cmd_dec_decode;
 
 
@@ -329,12 +329,12 @@ typedef struct {
  * Command to transition from the current state of decoder to IDLE
  */
 
-#define	JPEG_CMD_DEC_IDLE	0x0004
-#define	JPEG_CMD_DEC_IDLE_LEN	sizeof(jpeg_cmd_dec_idle)
+#define JPEG_CMD_DEC_IDLE       0x0004
+#define JPEG_CMD_DEC_IDLE_LEN   sizeof(jpeg_cmd_dec_idle)
 
 
 typedef struct {
-	unsigned short	cmd_id;
+	unsigned short cmd_id;
 } __attribute__((packed)) jpeg_cmd_dec_idle;
 
 
@@ -342,8 +342,8 @@ typedef struct {
  * Command to inform that an op buffer is ready for use
  */
 
-#define	JPEG_CMD_DEC_OP_CONSUMED	0x0005
-#define	JPEG_CMD_DEC_OP_CONSUMED_LEN	sizeof(jpeg_cmd_dec_op_consumed)
+#define JPEG_CMD_DEC_OP_CONSUMED        0x0005
+#define JPEG_CMD_DEC_OP_CONSUMED_LEN    sizeof(jpeg_cmd_dec_op_consumed)
 
 
 typedef struct {
@@ -358,11 +358,11 @@ typedef struct {
  * Command to pass a new ip buffer to the jpeg decoder
  */
 
-#define	JPEG_CMD_DEC_IP	0x0006
-#define	JPEG_CMD_DEC_IP_LEN	sizeof(jpeg_cmd_dec_ip_len)
+#define JPEG_CMD_DEC_IP 0x0006
+#define JPEG_CMD_DEC_IP_LEN     sizeof(jpeg_cmd_dec_ip_len)
 
-#define	JPEG_CMD_EOI_INDICATOR_NOT_END	0x0000
-#define	JPEG_CMD_EOI_INDICATOR_END	0x0001
+#define JPEG_CMD_EOI_INDICATOR_NOT_END  0x0000
+#define JPEG_CMD_EOI_INDICATOR_END      0x0001
 
 typedef struct {
 	unsigned int	cmd_id;

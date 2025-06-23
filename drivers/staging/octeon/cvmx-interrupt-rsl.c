@@ -51,15 +51,16 @@ void __cvmx_interrupt_asxx_enable(int block)
 {
 	int mask;
 	union cvmx_asxx_int_en csr;
+
 	/*
 	 * CN38XX and CN58XX have two interfaces with 4 ports per
 	 * interface. All other chips have a max of 3 ports on
 	 * interface 0
 	 */
 	if (OCTEON_IS_MODEL(OCTEON_CN38XX) || OCTEON_IS_MODEL(OCTEON_CN58XX))
-		mask = 0xf;	/* Set enables for 4 ports */
+		mask = 0xf;     /* Set enables for 4 ports */
 	else
-		mask = 0x7;	/* Set enables for 3 ports */
+		mask = 0x7;     /* Set enables for 3 ports */
 
 	/* Enable interface interrupts */
 	csr.u64 = cvmx_read_csr(CVMX_ASXX_INT_EN(block));
@@ -85,19 +86,20 @@ void __cvmx_interrupt_gmxx_enable(int interface)
 	if (OCTEON_IS_MODEL(OCTEON_CN56XX) || OCTEON_IS_MODEL(OCTEON_CN52XX)) {
 		if (mode.s.en) {
 			switch (mode.cn56xx.mode) {
-			case 1:	/* XAUI */
+			case 1: /* XAUI */
 				num_ports = 1;
 				break;
-			case 2:	/* SGMII */
-			case 3:	/* PICMG */
+			case 2: /* SGMII */
+			case 3: /* PICMG */
 				num_ports = 4;
 				break;
-			default:	/* Disabled */
+			default:        /* Disabled */
 				num_ports = 0;
 				break;
 			}
-		} else
+		} else {
 			num_ports = 0;
+		}
 	} else {
 		if (mode.s.en) {
 			if (OCTEON_IS_MODEL(OCTEON_CN38XX)
@@ -122,8 +124,9 @@ void __cvmx_interrupt_gmxx_enable(int interface)
 				else
 					num_ports = 3;
 			}
-		} else
+		} else {
 			num_ports = 0;
+		}
 	}
 
 	gmx_tx_int_en.u64 = 0;

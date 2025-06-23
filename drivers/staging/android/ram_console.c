@@ -27,10 +27,10 @@
 #endif
 
 struct ram_console_buffer {
-	uint32_t    sig;
-	uint32_t    start;
-	uint32_t    size;
-	uint8_t     data[0];
+	uint32_t	sig;
+	uint32_t	start;
+	uint32_t	size;
+	uint8_t		data[0];
 };
 
 #define RAM_CONSOLE_SIG (0x43474244) /* DBGC */
@@ -60,6 +60,7 @@ static void ram_console_encode_rs8(uint8_t *data, size_t len, uint8_t *ecc)
 {
 	int i;
 	uint16_t par[ECC_SIZE];
+
 	/* Initialize the parity buffer */
 	memset(par, 0, sizeof(par));
 	encode_rs8(ram_console_rs_decoder, data, len, par, 0);
@@ -71,16 +72,18 @@ static int ram_console_decode_rs8(void *data, size_t len, uint8_t *ecc)
 {
 	int i;
 	uint16_t par[ECC_SIZE];
+
 	for (i = 0; i < ECC_SIZE; i++)
 		par[i] = ecc[i];
 	return decode_rs8(ram_console_rs_decoder, data, par, len,
-				NULL, 0, NULL, 0, NULL);
+			  NULL, 0, NULL, 0, NULL);
 }
 #endif
 
 static void ram_console_update(const char *s, unsigned int count)
 {
 	struct ram_console_buffer *buffer = ram_console_buffer;
+
 #ifdef CONFIG_ANDROID_RAM_CONSOLE_ERROR_CORRECTION
 	uint8_t *buffer_end = buffer->data + ram_console_buffer_size;
 	uint8_t *block;
@@ -158,6 +161,7 @@ static void __init
 ram_console_save_old(struct ram_console_buffer *buffer, char *dest)
 {
 	size_t old_log_size = buffer->size;
+
 #ifdef CONFIG_ANDROID_RAM_CONSOLE_ERROR_CORRECTION
 	uint8_t *block;
 	uint8_t *par;
@@ -190,8 +194,8 @@ ram_console_save_old(struct ram_console_buffer *buffer, char *dest)
 	}
 	if (ram_console_corrected_bytes || ram_console_bad_blocks)
 		strbuf_len = snprintf(strbuf, sizeof(strbuf),
-			"\n%d Corrected bytes, %d unrecoverable blocks\n",
-			ram_console_corrected_bytes, ram_console_bad_blocks);
+				      "\n%d Corrected bytes, %d unrecoverable blocks\n",
+				      ram_console_corrected_bytes, ram_console_bad_blocks);
 	else
 		strbuf_len = snprintf(strbuf, sizeof(strbuf),
 				      "\nNo errors detected\n");
@@ -241,7 +245,7 @@ static int __init ram_console_init(struct ram_console_buffer *buffer,
 
 #ifdef CONFIG_ANDROID_RAM_CONSOLE_ERROR_CORRECTION
 	ram_console_buffer_size -= (DIV_ROUND_UP(ram_console_buffer_size,
-						ECC_BLOCK_SIZE) + 1) * ECC_SIZE;
+						 ECC_BLOCK_SIZE) + 1) * ECC_SIZE;
 
 	if (ram_console_buffer_size > buffer_size) {
 		pr_err("ram_console: buffer %p, invalid size %zu, "
@@ -281,11 +285,11 @@ static int __init ram_console_init(struct ram_console_buffer *buffer,
 
 	if (buffer->sig == RAM_CONSOLE_SIG) {
 		if (buffer->size > ram_console_buffer_size
-		    || buffer->start > buffer->size)
+		    || buffer->start > buffer->size) {
 			printk(KERN_INFO "ram_console: found existing invalid "
 			       "buffer, size %d, start %d\n",
 			       buffer->size, buffer->start);
-		else {
+		} else {
 			printk(KERN_INFO "ram_console: found existing buffer, "
 			       "size %d, start %d\n",
 			       buffer->size, buffer->start);
@@ -311,9 +315,9 @@ static int __init ram_console_init(struct ram_console_buffer *buffer,
 static int __init ram_console_early_init(void)
 {
 	return ram_console_init((struct ram_console_buffer *)
-		CONFIG_ANDROID_RAM_CONSOLE_EARLY_ADDR,
-		CONFIG_ANDROID_RAM_CONSOLE_EARLY_SIZE,
-		ram_console_old_log_init_buffer);
+				CONFIG_ANDROID_RAM_CONSOLE_EARLY_ADDR,
+				CONFIG_ANDROID_RAM_CONSOLE_EARLY_SIZE,
+				ram_console_old_log_init_buffer);
 }
 #else
 static int ram_console_driver_probe(struct platform_device *pdev)
@@ -339,11 +343,11 @@ static int ram_console_driver_probe(struct platform_device *pdev)
 		return -ENOMEM;
 	}
 
-	return ram_console_init(buffer, buffer_size, NULL/* allocate */);
+	return ram_console_init(buffer, buffer_size, NULL /* allocate */);
 }
 
 static struct platform_driver ram_console_driver = {
-	.probe = ram_console_driver_probe,
+	.probe		= ram_console_driver_probe,
 	.driver		= {
 		.name	= "ram_console",
 	},
@@ -352,6 +356,7 @@ static struct platform_driver ram_console_driver = {
 static int __init ram_console_module_init(void)
 {
 	int err;
+
 	err = platform_driver_register(&ram_console_driver);
 	return err;
 }
@@ -375,8 +380,8 @@ static ssize_t ram_console_read_old(struct file *file, char __user *buf,
 }
 
 static const struct file_operations ram_console_file_ops = {
-	.owner = THIS_MODULE,
-	.read = ram_console_read_old,
+	.owner	= THIS_MODULE,
+	.read	= ram_console_read_old,
 };
 
 static int __init ram_console_late_init(void)
@@ -415,4 +420,3 @@ console_initcall(ram_console_early_init);
 postcore_initcall(ram_console_module_init);
 #endif
 late_initcall(ram_console_late_init);
-

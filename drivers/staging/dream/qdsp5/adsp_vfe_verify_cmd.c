@@ -107,6 +107,7 @@ static int verify_vfe_command(struct msm_adsp_module *module,
 			      void *cmd_data, size_t cmd_size)
 {
 	uint32_t cmd_id = ((uint32_t *)cmd_data)[0];
+
 	switch (cmd_id) {
 	case VFE_CMD_OP1_ACK:
 		return verify_cmd_op_ack(module, cmd_data, cmd_size);
@@ -134,6 +135,7 @@ static int verify_vfe_command_scale(struct msm_adsp_module *module,
 				    void *cmd_data, size_t cmd_size)
 {
 	uint32_t cmd_id = ((uint32_t *)cmd_data)[0];
+
 	// FIXME: check the size
 	if (cmd_id > 1) {
 		printk(KERN_ERR "adsp: module %s: invalid VFE SCALE command id %d\n", module->name, cmd_id);
@@ -150,7 +152,7 @@ static uint32_t get_size(uint32_t hw)
 	uint32_t width_mask = 0x3ffc000;
 
 	height = (hw & height_mask) >> 2;
-	width = (hw & width_mask) >> 14 ;
+	width = (hw & width_mask) >> 14;
 	return height * width;
 }
 
@@ -167,14 +169,14 @@ static int verify_vfe_command_table(struct msm_adsp_module *module,
 		uint32_t size;
 		if (cmd_size != sizeof(vfe_cmd_axi_ip_cfg)) {
 			printk(KERN_ERR "adsp: module %s: invalid VFE TABLE (VFE_CMD_AXI_IP_CFG) command size %d\n",
-				module->name, cmd_size);
+			       module->name, cmd_size);
 			return -1;
 		}
 		size = get_size(cmd->ip_cfg_part2);
 
 		for (i = 0; i < 8; i++) {
 			void **addr = (void **)
-				&cmd->ip_buf_addr[i];
+				      &cmd->ip_buf_addr[i];
 			if (*addr && adsp_pmem_fixup(module, addr, size))
 				return -1;
 		}
@@ -186,7 +188,7 @@ static int verify_vfe_command_table(struct msm_adsp_module *module,
 
 		if (cmd_size != sizeof(vfe_cmd_axi_op_cfg)) {
 			printk(KERN_ERR "adsp: module %s: invalid VFE TABLE (VFE_CMD_AXI_OP_CFG) command size %d\n",
-				module->name, cmd_size);
+			       module->name, cmd_size);
 			return -1;
 		}
 		size1_y = get_size(cmd->op1_y_cfg_part2);
@@ -194,15 +196,15 @@ static int verify_vfe_command_table(struct msm_adsp_module *module,
 		size2_y = get_size(cmd->op2_y_cfg_part2);
 		size2_cbcr = get_size(cmd->op2_cbcr_cfg_part2);
 		for (i = 0; i < 8; i++) {
-			addr1_y = (void **)(&cmd->op1_buf1_addr[2*i]);
-			addr1_cbcr = (void **)(&cmd->op1_buf1_addr[2*i+1]);
-			addr2_y = (void **)(&cmd->op2_buf1_addr[2*i]);
-			addr2_cbcr = (void **)(&cmd->op2_buf1_addr[2*i+1]);
+			addr1_y = (void **)(&cmd->op1_buf1_addr[2 * i]);
+			addr1_cbcr = (void **)(&cmd->op1_buf1_addr[2 * i + 1]);
+			addr2_y = (void **)(&cmd->op2_buf1_addr[2 * i]);
+			addr2_cbcr = (void **)(&cmd->op2_buf1_addr[2 * i + 1]);
 /*
-			printk("module %s: [%d] %p %p %p %p\n",
-				module->name, i,
-				*addr1_y, *addr1_cbcr, *addr2_y, *addr2_cbcr);
-*/
+ *                      printk("module %s: [%d] %p %p %p %p\n",
+ *                              module->name, i,
+ * addr1_y, *addr1_cbcr, *addr2_y, *addr2_cbcr);
+ */
 			if ((*addr1_y && adsp_pmem_fixup(module, addr1_y, size1_y)) ||
 			    (*addr1_cbcr && adsp_pmem_fixup(module, addr1_cbcr, size1_cbcr)) ||
 			    (*addr2_y && adsp_pmem_fixup(module, addr2_y, size2_y)) ||
@@ -213,7 +215,7 @@ static int verify_vfe_command_table(struct msm_adsp_module *module,
 	default:
 		if (cmd_id > 4) {
 			printk(KERN_ERR "adsp: module %s: invalid VFE TABLE command id %d\n",
-				module->name, cmd_id);
+			       module->name, cmd_id);
 			return -1;
 		}
 	}
@@ -233,7 +235,7 @@ int adsp_vfe_verify_cmd(struct msm_adsp_module *module,
 		return verify_vfe_command_table(module, cmd_data, cmd_size);
 	default:
 		printk(KERN_ERR "adsp: module %s: unknown queue id %d\n",
-			module->name, queue_id);
+		       module->name, queue_id);
 		return -1;
 	}
 }

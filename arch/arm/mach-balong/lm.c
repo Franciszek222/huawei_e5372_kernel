@@ -14,8 +14,8 @@
 
 #include <mach/lm.h>
 
-#define to_lm_device(d)	container_of(d, struct lm_device, dev)
-#define to_lm_driver(d)	container_of(d, struct lm_driver, drv)
+#define to_lm_device(d) container_of(d, struct lm_device, dev)
+#define to_lm_driver(d) container_of(d, struct lm_driver, drv)
 
 static int lm_match(struct device *dev, struct device_driver *drv)
 {
@@ -41,10 +41,10 @@ static int lm_bus_remove(struct device *dev)
 }
 
 static struct bus_type lm_bustype = {
-	.name		= "logicmodule",
-	.match		= lm_match,
-	.probe		= lm_bus_probe,
-	.remove		= lm_bus_remove,
+	.name	= "logicmodule",
+	.match	= lm_match,
+	.probe	= lm_bus_probe,
+	.remove = lm_bus_remove,
 //	.suspend	= lm_bus_suspend,
 //	.resume		= lm_bus_resume,
 };

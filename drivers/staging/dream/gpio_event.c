@@ -22,9 +22,9 @@
 #include <linux/platform_device.h>
 
 struct gpio_event {
-	struct input_dev *input_dev;
-	const struct gpio_event_platform_data *info;
-	void *state[0];
+	struct input_dev *			input_dev;
+	const struct gpio_event_platform_data * info;
+	void *					state[0];
 };
 
 static int gpio_input_event(
@@ -39,7 +39,7 @@ static int gpio_input_event(
 	for (i = 0, ii = ip->info->info; i < ip->info->info_count; i++, ii++) {
 		if ((*ii)->event) {
 			tmp_ret = (*ii)->event(ip->input_dev, *ii,
-					&ip->state[i], type, code, value);
+					       &ip->state[i], type, code, value);
 			if (tmp_ret)
 				ret = tmp_ret;
 		}
@@ -59,7 +59,7 @@ static int gpio_event_call_all_func(struct gpio_event *ip, int func)
 			if ((*ii)->func == NULL) {
 				ret = -ENODEV;
 				pr_err("gpio_event_probe: Incomplete pdata, "
-					"no function\n");
+				       "no function\n");
 				goto err_no_func;
 			}
 			ret = (*ii)->func(ip->input_dev, *ii, &ip->state[i],
@@ -90,6 +90,7 @@ err_no_func:
 void gpio_event_suspend(struct early_suspend *h)
 {
 	struct gpio_event *ip;
+
 	ip = container_of(h, struct gpio_event, early_suspend);
 	gpio_event_call_all_func(ip, GPIO_EVENT_FUNC_SUSPEND);
 	ip->info->power(ip->info, 0);
@@ -98,6 +99,7 @@ void gpio_event_suspend(struct early_suspend *h)
 void gpio_event_resume(struct early_suspend *h)
 {
 	struct gpio_event *ip;
+
 	ip = container_of(h, struct gpio_event, early_suspend);
 	ip->info->power(ip->info, 1);
 	gpio_event_call_all_func(ip, GPIO_EVENT_FUNC_RESUME);
@@ -117,8 +119,8 @@ static int __init gpio_event_probe(struct platform_device *pdev)
 		return -ENODEV;
 	}
 	if (event_info->name == NULL ||
-	   event_info->info == NULL ||
-	   event_info->info_count == 0) {
+	    event_info->info == NULL ||
+	    event_info->info_count == 0) {
 		pr_err("gpio_event_probe: Incomplete pdata\n");
 		return -ENODEV;
 	}
@@ -160,7 +162,7 @@ static int __init gpio_event_probe(struct platform_device *pdev)
 	err = input_register_device(input_dev);
 	if (err) {
 		pr_err("gpio_event_probe: Unable to register %s input device\n",
-			input_dev->name);
+		       input_dev->name);
 		goto err_input_register_device_failed;
 	}
 
@@ -221,4 +223,3 @@ module_exit(gpio_event_exit);
 
 MODULE_DESCRIPTION("GPIO Event Driver");
 MODULE_LICENSE("GPL");
-

@@ -58,37 +58,36 @@ int __cvmx_helper_rgmii_probe(int interface)
 {
 	int num_ports = 0;
 	union cvmx_gmxx_inf_mode mode;
+
 	mode.u64 = cvmx_read_csr(CVMX_GMXX_INF_MODE(interface));
 
 	if (mode.s.type) {
 		if (OCTEON_IS_MODEL(OCTEON_CN38XX)
-		    || OCTEON_IS_MODEL(OCTEON_CN58XX)) {
+		    || OCTEON_IS_MODEL(OCTEON_CN58XX))
 			cvmx_dprintf("ERROR: RGMII initialize called in "
 				     "SPI interface\n");
-		} else if (OCTEON_IS_MODEL(OCTEON_CN31XX)
-			   || OCTEON_IS_MODEL(OCTEON_CN30XX)
-			   || OCTEON_IS_MODEL(OCTEON_CN50XX)) {
+		else if (OCTEON_IS_MODEL(OCTEON_CN31XX)
+			 || OCTEON_IS_MODEL(OCTEON_CN30XX)
+			 || OCTEON_IS_MODEL(OCTEON_CN50XX))
 			/*
 			 * On these chips "type" says we're in
 			 * GMII/MII mode. This limits us to 2 ports
 			 */
 			num_ports = 2;
-		} else {
+		else
 			cvmx_dprintf("ERROR: Unsupported Octeon model in %s\n",
 				     __func__);
-		}
 	} else {
 		if (OCTEON_IS_MODEL(OCTEON_CN38XX)
-		    || OCTEON_IS_MODEL(OCTEON_CN58XX)) {
+		    || OCTEON_IS_MODEL(OCTEON_CN58XX))
 			num_ports = 4;
-		} else if (OCTEON_IS_MODEL(OCTEON_CN31XX)
-			   || OCTEON_IS_MODEL(OCTEON_CN30XX)
-			   || OCTEON_IS_MODEL(OCTEON_CN50XX)) {
+		else if (OCTEON_IS_MODEL(OCTEON_CN31XX)
+			 || OCTEON_IS_MODEL(OCTEON_CN30XX)
+			 || OCTEON_IS_MODEL(OCTEON_CN50XX))
 			num_ports = 3;
-		} else {
+		else
 			cvmx_dprintf("ERROR: Unsupported Octeon model in %s\n",
 				     __func__);
-		}
 	}
 	return num_ports;
 }
@@ -107,6 +106,7 @@ void cvmx_helper_rgmii_internal_loopback(int port)
 	uint64_t tmp;
 
 	union cvmx_gmxx_prtx_cfg gmx_cfg;
+
 	gmx_cfg.u64 = 0;
 	gmx_cfg.s.duplex = 1;
 	gmx_cfg.s.slottime = 1;
@@ -149,7 +149,7 @@ static int __cvmx_helper_errata_asx_pass1(int interface, int port,
 		cvmx_write_csr(CVMX_ASXX_TX_HI_WATERX(port, interface), 9);
 	else
 		cvmx_dprintf("Illegal clock frequency (%d). "
-			"CVMX_ASXX_TX_HI_WATERX not set\n", cpu_clock_hz);
+			     "CVMX_ASXX_TX_HI_WATERX not set\n", cpu_clock_hz);
 	return 0;
 }
 
@@ -191,13 +191,13 @@ int __cvmx_helper_rgmii_enable(int interface)
 	/* Configure the GMX registers needed to use the RGMII ports */
 	for (port = 0; port < num_ports; port++) {
 		/* Setting of CVMX_GMXX_TXX_THRESH has been moved to
-		   __cvmx_helper_setup_gmx() */
+		 * __cvmx_helper_setup_gmx() */
 
-		if (cvmx_octeon_is_pass1())
+		if (cvmx_octeon_is_pass1()) {
 			__cvmx_helper_errata_asx_pass1(interface, port,
 						       sys_info_ptr->
 						       cpu_clock_hz);
-		else {
+		} else {
 			/*
 			 * Configure more flexible RGMII preamble
 			 * checking. Pass 1 doesn't support this
@@ -205,8 +205,8 @@ int __cvmx_helper_rgmii_enable(int interface)
 			 */
 			union cvmx_gmxx_rxx_frm_ctl frm_ctl;
 			frm_ctl.u64 =
-			    cvmx_read_csr(CVMX_GMXX_RXX_FRM_CTL
-					  (port, interface));
+				cvmx_read_csr(CVMX_GMXX_RXX_FRM_CTL
+						      (port, interface));
 			/* New field, so must be compile time */
 			frm_ctl.s.pre_free = 1;
 			cvmx_write_csr(CVMX_GMXX_RXX_FRM_CTL(port, interface),
@@ -223,7 +223,7 @@ int __cvmx_helper_rgmii_enable(int interface)
 		cvmx_write_csr(CVMX_GMXX_TXX_PAUSE_PKT_TIME(port, interface),
 			       20000);
 		cvmx_write_csr(CVMX_GMXX_TXX_PAUSE_PKT_INTERVAL
-			       (port, interface), 19000);
+				       (port, interface), 19000);
 
 		if (OCTEON_IS_MODEL(OCTEON_CN50XX)) {
 			cvmx_write_csr(CVMX_ASXX_TX_CLK_SETX(port, interface),
@@ -244,9 +244,9 @@ int __cvmx_helper_rgmii_enable(int interface)
 	for (port = 0; port < num_ports; port++) {
 		union cvmx_gmxx_prtx_cfg gmx_cfg;
 		cvmx_helper_link_autoconf(cvmx_helper_get_ipd_port
-					  (interface, port));
+						  (interface, port));
 		gmx_cfg.u64 =
-		    cvmx_read_csr(CVMX_GMXX_PRTX_CFG(port, interface));
+			cvmx_read_csr(CVMX_GMXX_PRTX_CFG(port, interface));
 		gmx_cfg.s.en = 1;
 		cvmx_write_csr(CVMX_GMXX_PRTX_CFG(port, interface),
 			       gmx_cfg.u64);
@@ -282,8 +282,9 @@ cvmx_helper_link_info_t __cvmx_helper_rgmii_link_get(int ipd_port)
 		result.s.link_up = 1;
 		result.s.speed = 1000;
 		return result;
-	} else
+	} else {
 		return __cvmx_helper_board_link_get(ipd_port);
+	}
 }
 
 /**
@@ -298,8 +299,8 @@ cvmx_helper_link_info_t __cvmx_helper_rgmii_link_get(int ipd_port)
  *
  * Returns Zero on success, negative on failure
  */
-int __cvmx_helper_rgmii_link_set(int ipd_port,
-				 cvmx_helper_link_info_t link_info)
+int __cvmx_helper_rgmii_link_set(int				ipd_port,
+				 cvmx_helper_link_info_t	link_info)
 {
 	int result = 0;
 	int interface = cvmx_helper_get_interface_num(ipd_port);
@@ -318,13 +319,13 @@ int __cvmx_helper_rgmii_link_set(int ipd_port,
 
 	/* Read the current settings so we know the current enable state */
 	original_gmx_cfg.u64 =
-	    cvmx_read_csr(CVMX_GMXX_PRTX_CFG(index, interface));
+		cvmx_read_csr(CVMX_GMXX_PRTX_CFG(index, interface));
 	new_gmx_cfg = original_gmx_cfg;
 
 	/* Disable the lowest level RX */
 	cvmx_write_csr(CVMX_ASXX_RX_PRT_EN(interface),
 		       cvmx_read_csr(CVMX_ASXX_RX_PRT_EN(interface)) &
-				     ~(1 << index));
+		       ~(1 << index));
 
 	/* Disable all queues so that TX should become idle */
 	for (i = 0; i < cvmx_pko_get_num_queues(ipd_port); i++) {
@@ -356,9 +357,9 @@ int __cvmx_helper_rgmii_link_set(int ipd_port,
 	cvmx_write_csr(CVMX_NPI_DBG_SELECT,
 		       interface * 0x800 + index * 0x100 + 0x880);
 	CVMX_WAIT_FOR_FIELD64(CVMX_DBG_DATA, union cvmx_dbg_data, data & 7,
-			==, 0, 10000);
+			      ==, 0, 10000);
 	CVMX_WAIT_FOR_FIELD64(CVMX_DBG_DATA, union cvmx_dbg_data, data & 0xf,
-			==, 0, 10000);
+			      ==, 0, 10000);
 
 	/* Disable the port before we make any changes */
 	new_gmx_cfg.s.en = 0;
@@ -407,23 +408,22 @@ int __cvmx_helper_rgmii_link_set(int ipd_port,
 			union cvmx_gmxx_inf_mode mode;
 			mode.u64 = cvmx_read_csr(CVMX_GMXX_INF_MODE(interface));
 
-	/*
-	 * Port  .en  .type  .p0mii  Configuration
-	 * ----  ---  -----  ------  -----------------------------------------
-	 *  X      0     X      X    All links are disabled.
-	 *  0      1     X      0    Port 0 is RGMII
-	 *  0      1     X      1    Port 0 is MII
-	 *  1      1     0      X    Ports 1 and 2 are configured as RGMII ports.
-	 *  1      1     1      X    Port 1: GMII/MII; Port 2: disabled. GMII or
-	 *                           MII port is selected by GMX_PRT1_CFG[SPEED].
-	 */
+			/*
+			 * Port  .en  .type  .p0mii  Configuration
+			 * ----  ---  -----  ------  -----------------------------------------
+			 *  X      0     X      X    All links are disabled.
+			 *  0      1     X      0    Port 0 is RGMII
+			 *  0      1     X      1    Port 0 is MII
+			 *  1      1     0      X    Ports 1 and 2 are configured as RGMII ports.
+			 *  1      1     1      X    Port 1: GMII/MII; Port 2: disabled. GMII or
+			 *                           MII port is selected by GMX_PRT1_CFG[SPEED].
+			 */
 
 			/* In MII mode, CLK_CNT = 1. */
 			if (((index == 0) && (mode.s.p0mii == 1))
-			    || ((index != 0) && (mode.s.type == 1))) {
+			    || ((index != 0) && (mode.s.type == 1)))
 				cvmx_write_csr(CVMX_GMXX_TXX_CLK
-					       (index, interface), 1);
-			}
+						       (index, interface), 1);
 		}
 	}
 

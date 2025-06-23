@@ -19,32 +19,32 @@
 #include <linux/hrtimer.h>
 #include <linux/debugfs.h>
 
-#define EV_LOG_ENTRY_NAME(n) n##_entry
+#define EV_LOG_ENTRY_NAME(n) n ## _entry
 
 #define DECLARE_LOG(_name, _size, _str) \
-static struct ev_entry EV_LOG_ENTRY_NAME(_name)[_size]; \
-static struct ev_log _name = { \
-	.name = #_name, \
-	.strings = _str, \
-	.num_strings = ARRAY_SIZE(_str), \
-	.entry = EV_LOG_ENTRY_NAME(_name), \
-	.max = ARRAY_SIZE(EV_LOG_ENTRY_NAME(_name)), \
-}
+	static struct ev_entry EV_LOG_ENTRY_NAME(_name)[_size]; \
+	static struct ev_log _name = { \
+		.name		= #_name, \
+		.strings	= _str, \
+		.num_strings	= ARRAY_SIZE(_str), \
+		.entry		= EV_LOG_ENTRY_NAME(_name), \
+		.max		= ARRAY_SIZE(EV_LOG_ENTRY_NAME(_name)), \
+	}
 
 struct ev_entry {
-	ktime_t when;
-	uint32_t id;
-	uint32_t arg;
+	ktime_t		when;
+	uint32_t	id;
+	uint32_t	arg;
 };
 
 struct ev_log {
-	struct ev_entry *entry;
-	unsigned max;
-	unsigned next;
-	unsigned fault;
-	const char **strings;
-	unsigned num_strings;
-	const char *name;
+	struct ev_entry *	entry;
+	unsigned		max;
+	unsigned		next;
+	unsigned		fault;
+	const char **		strings;
+	unsigned		num_strings;
+	const char *		name;
 };
 
 static char ev_buf[4096];
@@ -121,8 +121,8 @@ static int ev_log_open(struct inode *inode, struct file *file)
 }
 
 static const struct file_operations ev_log_ops = {
-	.read = ev_log_read,
-	.open = ev_log_open,
+	.read	= ev_log_read,
+	.open	= ev_log_open,
 };
 
 static int ev_log_init(struct ev_log *log)
@@ -130,4 +130,3 @@ static int ev_log_init(struct ev_log *log)
 	debugfs_create_file(log->name, 0444, 0, log, &ev_log_ops);
 	return 0;
 }
-

@@ -39,28 +39,28 @@
 #define AUDIO_SET_AGC        _IOW(AUDIO_IOCTL_MAGIC, 12, unsigned)
 #define AUDIO_SET_NS         _IOW(AUDIO_IOCTL_MAGIC, 13, unsigned)
 #define AUDIO_SET_TX_IIR     _IOW(AUDIO_IOCTL_MAGIC, 14, unsigned)
-#define AUDIO_PAUSE	     _IOW(AUDIO_IOCTL_MAGIC, 15, unsigned)
+#define AUDIO_PAUSE          _IOW(AUDIO_IOCTL_MAGIC, 15, unsigned)
 #define AUDIO_GET_PCM_CONFIG _IOR(AUDIO_IOCTL_MAGIC, 30, unsigned)
 #define AUDIO_SET_PCM_CONFIG _IOW(AUDIO_IOCTL_MAGIC, 31, unsigned)
 #define AUDIO_SWITCH_DEVICE  _IOW(AUDIO_IOCTL_MAGIC, 32, unsigned)
 
-#define	AUDIO_MAX_COMMON_IOCTL_NUM	100
+#define AUDIO_MAX_COMMON_IOCTL_NUM      100
 
-#define	AUDIO_MAX_COMMON_IOCTL_NUM	100
+#define AUDIO_MAX_COMMON_IOCTL_NUM      100
 
 struct msm_audio_config {
-	uint32_t buffer_size;
-	uint32_t buffer_count;
-	uint32_t channel_count;
-	uint32_t sample_rate;
-	uint32_t type;
-	uint32_t unused[3];
+	uint32_t	buffer_size;
+	uint32_t	buffer_count;
+	uint32_t	channel_count;
+	uint32_t	sample_rate;
+	uint32_t	type;
+	uint32_t	unused[3];
 };
 
 struct msm_audio_stats {
-	uint32_t byte_count;
-	uint32_t sample_count;
-	uint32_t unused[2];
+	uint32_t	byte_count;
+	uint32_t	sample_count;
+	uint32_t	unused[2];
 };
 
 /* Audio routing */
@@ -71,9 +71,9 @@ struct msm_audio_stats {
 #define SND_MUTE_MUTED   1
 
 struct msm_snd_device_config {
-	uint32_t device;
-	uint32_t ear_mute;
-	uint32_t mic_mute;
+	uint32_t	device;
+	uint32_t	ear_mute;
+	uint32_t	mic_mute;
 };
 
 #define SND_SET_DEVICE _IOW(SND_IOCTL_MAGIC, 2, struct msm_device_config *)
@@ -81,9 +81,9 @@ struct msm_snd_device_config {
 #define SND_METHOD_VOICE 0
 
 struct msm_snd_volume_config {
-	uint32_t device;
-	uint32_t method;
-	uint32_t volume;
+	uint32_t	device;
+	uint32_t	method;
+	uint32_t	volume;
 };
 
 #define SND_SET_VOLUME _IOW(SND_IOCTL_MAGIC, 3, struct msm_snd_volume_config *)
@@ -93,8 +93,8 @@ struct msm_snd_volume_config {
 #define SND_GET_NUM_ENDPOINTS _IOR(SND_IOCTL_MAGIC, 4, unsigned *)
 
 struct msm_snd_endpoint {
-	int id; /* input and output */
-	char name[64]; /* output only */
+	int	id;             /* input and output */
+	char	name[64];       /* output only */
 };
 
 /* Takes an index between 0 and one less than the number returned by
@@ -107,9 +107,9 @@ struct msm_snd_endpoint {
 #define SND_GET_ENDPOINT _IOWR(SND_IOCTL_MAGIC, 5, struct msm_snd_endpoint *)
 
 struct msm_audio_pcm_config {
-	uint32_t pcm_feedback;	/* 0 - disable > 0 - enable */
-	uint32_t buffer_count;	/* Number of buffers to allocate */
-	uint32_t buffer_size;	/* Size of buffer for capturing of
-				   PCM samples */
+	uint32_t	pcm_feedback;   /* 0 - disable > 0 - enable */
+	uint32_t	buffer_count;   /* Number of buffers to allocate */
+	uint32_t	buffer_size;    /* Size of buffer for capturing of
+	                                 * PCM samples */
 };
 #endif

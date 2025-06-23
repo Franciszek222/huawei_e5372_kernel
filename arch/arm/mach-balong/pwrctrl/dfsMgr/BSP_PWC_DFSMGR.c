@@ -29,8 +29,6 @@
 
 void    PWRCTRL_DfsMgr(void)
 {
-
-    return ;
-
+	return;
 }
 #endif

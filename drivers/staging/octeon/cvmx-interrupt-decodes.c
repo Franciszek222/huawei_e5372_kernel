@@ -51,6 +51,7 @@
 void __cvmx_interrupt_gmxx_rxx_int_en_enable(int index, int block)
 {
 	union cvmx_gmxx_rxx_int_en gmx_rx_int_en;
+
 	cvmx_write_csr(CVMX_GMXX_RXX_INT_REG(index, block),
 		       cvmx_read_csr(CVMX_GMXX_RXX_INT_REG(index, block)));
 	gmx_rx_int_en.u64 = 0;
@@ -232,6 +233,7 @@ void __cvmx_interrupt_gmxx_rxx_int_en_enable(int index, int block)
 void __cvmx_interrupt_pcsx_intx_en_reg_enable(int index, int block)
 {
 	union cvmx_pcsx_intx_en_reg pcs_int_en_reg;
+
 	cvmx_write_csr(CVMX_PCSX_INTX_REG(index, block),
 		       cvmx_read_csr(CVMX_PCSX_INTX_REG(index, block)));
 	pcs_int_en_reg.u64 = 0;
@@ -273,6 +275,7 @@ void __cvmx_interrupt_pcsx_intx_en_reg_enable(int index, int block)
 void __cvmx_interrupt_pcsxx_int_en_reg_enable(int index)
 {
 	union cvmx_pcsxx_int_en_reg pcsx_int_en_reg;
+
 	cvmx_write_csr(CVMX_PCSXX_INT_REG(index),
 		       cvmx_read_csr(CVMX_PCSXX_INT_REG(index)));
 	pcsx_int_en_reg.u64 = 0;
@@ -289,7 +292,7 @@ void __cvmx_interrupt_pcsxx_int_en_reg_enable(int index)
 		/* Skipping pcsx_int_en_reg.s.reserved_6_63 */
 		pcsx_int_en_reg.s.algnlos_en = 1;
 		pcsx_int_en_reg.s.synlos_en = 1;
-		pcsx_int_en_reg.s.bitlckls_en = 0;	/* Happens if XAUI module is not installed */
+		pcsx_int_en_reg.s.bitlckls_en = 0;      /* Happens if XAUI module is not installed */
 		pcsx_int_en_reg.s.rxsynbad_en = 1;
 		pcsx_int_en_reg.s.rxbad_en = 1;
 		pcsx_int_en_reg.s.txflt_en = 1;
@@ -303,6 +306,7 @@ void __cvmx_interrupt_pcsxx_int_en_reg_enable(int index)
 void __cvmx_interrupt_spxx_int_msk_enable(int index)
 {
 	union cvmx_spxx_int_msk spx_int_msk;
+
 	cvmx_write_csr(CVMX_SPXX_INT_REG(index),
 		       cvmx_read_csr(CVMX_SPXX_INT_REG(index)));
 	spx_int_msk.u64 = 0;
@@ -342,6 +346,7 @@ void __cvmx_interrupt_spxx_int_msk_enable(int index)
 void __cvmx_interrupt_stxx_int_msk_enable(int index)
 {
 	union cvmx_stxx_int_msk stx_int_msk;
+
 	cvmx_write_csr(CVMX_STXX_INT_REG(index),
 		       cvmx_read_csr(CVMX_STXX_INT_REG(index)));
 	stx_int_msk.u64 = 0;

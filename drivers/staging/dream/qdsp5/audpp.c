@@ -1,4 +1,3 @@
-
 /* arch/arm/mach-msm/qdsp5/audpp.c
  *
  * common code to deal with the AUDPP dsp task (audio postproc)
@@ -59,7 +58,7 @@ static int __init _dsp_log_init(void)
 	return ev_log_init(&dsp_log);
 }
 module_init(_dsp_log_init);
-#define LOG(id,arg) ev_log_write(&dsp_log, id, arg)
+#define LOG(id, arg) ev_log_write(&dsp_log, id, arg)
 
 static DEFINE_MUTEX(audpp_lock);
 
@@ -69,21 +68,21 @@ static DEFINE_MUTEX(audpp_lock);
 
 struct audpp_state {
 	struct msm_adsp_module *mod;
-	audpp_event_func func[AUDPP_CLNT_MAX_COUNT];
-	void *private[AUDPP_CLNT_MAX_COUNT];
-	struct mutex *lock;
-	unsigned open_count;
-	unsigned enabled;
+	audpp_event_func	func[AUDPP_CLNT_MAX_COUNT];
+	void *			private[AUDPP_CLNT_MAX_COUNT];
+	struct mutex *		lock;
+	unsigned		open_count;
+	unsigned		enabled;
 
 	/* which channels are actually enabled */
-	unsigned avsync_mask;
+	unsigned		avsync_mask;
 
 	/* flags, 48 bits sample/bytes counter per channel */
-	uint16_t avsync[CH_COUNT * AUDPP_CLNT_MAX_COUNT + 1];
+	uint16_t		avsync[CH_COUNT * AUDPP_CLNT_MAX_COUNT + 1];
 };
 
 struct audpp_state the_audpp_state = {
-	.lock = &audpp_lock,
+	.lock	= &audpp_lock,
 };
 
 int audpp_send_queue1(void *cmd, unsigned len)
@@ -121,10 +120,10 @@ static void audpp_broadcast(struct audpp_state *audpp, unsigned id,
 			    uint16_t *msg)
 {
 	unsigned n;
-	for (n = 0; n < AUDPP_CLNT_MAX_COUNT; n++) {
+
+	for (n = 0; n < AUDPP_CLNT_MAX_COUNT; n++)
 		if (audpp->func[n])
 			audpp->func[n] (audpp->private[n], id, msg);
-	}
 }
 
 static void audpp_notify_clnt(struct audpp_state *audpp, unsigned clnt_id,
@@ -158,14 +157,14 @@ static void audpp_dsp_event(void *data, unsigned id, size_t len,
 	LOG(EV_DATA, (msg[1] << 16) | msg[2]);
 
 	switch (id) {
-	case AUDPP_MSG_STATUS_MSG:{
-			unsigned cid = msg[0];
-			pr_info("audpp: status %d %d %d\n", cid, msg[1],
-				msg[2]);
-			if ((cid < 5) && audpp->func[cid])
-				audpp->func[cid] (audpp->private[cid], id, msg);
-			break;
-		}
+	case AUDPP_MSG_STATUS_MSG: {
+		unsigned cid = msg[0];
+		pr_info("audpp: status %d %d %d\n", cid, msg[1],
+			msg[2]);
+		if ((cid < 5) && audpp->func[cid])
+			audpp->func[cid] (audpp->private[cid], id, msg);
+		break;
+	}
 	case AUDPP_MSG_HOST_PCM_INTF_MSG:
 		if (audpp->func[5])
 			audpp->func[5] (audpp->private[5], id, msg);
@@ -193,18 +192,19 @@ static void audpp_dsp_event(void *data, unsigned id, size_t len,
 		audpp_notify_clnt(audpp, msg[0], id, msg);
 		break;
 	default:
-	  pr_info("audpp: unhandled msg id %x\n", id);
+		pr_info("audpp: unhandled msg id %x\n", id);
 	}
 }
 
 static struct msm_adsp_ops adsp_ops = {
-	.event = audpp_dsp_event,
+	.event	= audpp_dsp_event,
 };
 
 static void audpp_fake_event(struct audpp_state *audpp, int id,
 			     unsigned event, unsigned arg)
 {
 	uint16_t msg[1];
+
 	msg[0] = arg;
 	audpp->func[id] (audpp->private[id], event, msg);
 }

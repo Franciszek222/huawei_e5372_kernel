@@ -26,48 +26,48 @@
 /*****************************************************************************/
 /*macro define*/
 /*****************************************************************************/
-#ifndef NULL 
-#define NULL    ( void *)(0)
+#ifndef NULL
+#define NULL    (void *)(0)
 #endif
-#ifndef OK 
+#ifndef OK
 #define OK      (0)
 #endif
-#ifndef ERROR 
+#ifndef ERROR
 #define ERROR   (-1)
 #endif
-#ifndef TRUE 
+#ifndef TRUE
 #define TRUE    (1)
 #endif
-#ifndef FALSE 
+#ifndef FALSE
 #define FALSE   (0)
 #endif
-#ifndef NO_WAIT 
+#ifndef NO_WAIT
 #define  NO_WAIT        (0)
 #define  WAIT_FOREVER   (-1)
 #endif
-#ifndef WAIT_FOREVER 
+#ifndef WAIT_FOREVER
 #define  WAIT_FOREVER   (-1)
 #endif
-#ifndef SEM_Q_PRIORITY 
+#ifndef SEM_Q_PRIORITY
 #define SEM_Q_PRIORITY  (0)
 #endif
 
 /*****************************************************************************/
 /*type define*/
 /*****************************************************************************/
-typedef void* OSAL_SEM_ID;     // wangwei 09-10
-typedef signed int  BOOL;
+typedef void *OSAL_SEM_ID;     // wangwei 09-10
+typedef signed int BOOL;
 
 #ifndef __INCvxWindh
-typedef int*        SEM_ID;   
-typedef void* MSG_Q_ID;
+typedef int *SEM_ID;
+typedef void *MSG_Q_ID;
 
 #endif
 
 typedef enum                /* CACHE_TYPE */
 {
-    OSAL_INSTRUCTION_CACHE,
-    OSAL_DATA_CACHE
+	OSAL_INSTRUCTION_CACHE,
+	OSAL_DATA_CACHE
 } OSAL_CACHE_TYPE;
 
 
@@ -89,4 +89,3 @@ typedef enum                /* CACHE_TYPE */
 //extern OSAL_SEM_ID semBCreate(int options,SEM_B_STATE initialState);   // wangwei 09-10
 
 #endif
-

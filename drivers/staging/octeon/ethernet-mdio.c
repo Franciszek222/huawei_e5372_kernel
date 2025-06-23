@@ -1,28 +1,28 @@
 /**********************************************************************
- * Author: Cavium Networks
- *
- * Contact: support@caviumnetworks.com
- * This file is part of the OCTEON SDK
- *
- * Copyright (c) 2003-2007 Cavium Networks
- *
- * This file is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License, Version 2, as
- * published by the Free Software Foundation.
- *
- * This file is distributed in the hope that it will be useful, but
- * AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
- * NONINFRINGEMENT.  See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this file; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
- * or visit http://www.gnu.org/licenses/.
- *
- * This file may also be available under a different license from Cavium.
- * Contact Cavium Networks for more information
+* Author: Cavium Networks
+*
+* Contact: support@caviumnetworks.com
+* This file is part of the OCTEON SDK
+*
+* Copyright (c) 2003-2007 Cavium Networks
+*
+* This file is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License, Version 2, as
+* published by the Free Software Foundation.
+*
+* This file is distributed in the hope that it will be useful, but
+* AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+* NONINFRINGEMENT.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this file; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+* or visit http://www.gnu.org/licenses/.
+*
+* This file may also be available under a different license from Cavium.
+* Contact Cavium Networks for more information
 **********************************************************************/
 #include <linux/kernel.h>
 #include <linux/ethtool.h>
@@ -41,7 +41,7 @@
 
 #include "cvmx-smix-defs.h"
 
-static void cvm_oct_get_drvinfo(struct net_device *dev,
+static void cvm_oct_get_drvinfo(struct net_device *	dev,
 				struct ethtool_drvinfo *info)
 {
 	strcpy(info->driver, "cavium-ethernet");
@@ -86,13 +86,13 @@ static int cvm_oct_nway_reset(struct net_device *dev)
 }
 
 const struct ethtool_ops cvm_oct_ethtool_ops = {
-	.get_drvinfo = cvm_oct_get_drvinfo,
-	.get_settings = cvm_oct_get_settings,
-	.set_settings = cvm_oct_set_settings,
-	.nway_reset = cvm_oct_nway_reset,
-	.get_link = ethtool_op_get_link,
-	.get_sg = ethtool_op_get_sg,
-	.get_tx_csum = ethtool_op_get_tx_csum,
+	.get_drvinfo	= cvm_oct_get_drvinfo,
+	.get_settings	= cvm_oct_get_settings,
+	.set_settings	= cvm_oct_set_settings,
+	.nway_reset	= cvm_oct_nway_reset,
+	.get_link	= ethtool_op_get_link,
+	.get_sg		= ethtool_op_get_sg,
+	.get_tx_csum	= ethtool_op_get_tx_csum,
 };
 
 /**
@@ -127,23 +127,24 @@ static void cvm_oct_adjust_link(struct net_device *dev)
 		link_info.s.link_up = priv->last_link ? 1 : 0;
 		link_info.s.full_duplex = priv->phydev->duplex ? 1 : 0;
 		link_info.s.speed = priv->phydev->speed;
-		cvmx_helper_link_set( priv->port, link_info);
+		cvmx_helper_link_set(priv->port, link_info);
 		if (priv->last_link) {
 			netif_carrier_on(dev);
-			if (priv->queue != -1)
+			if (priv->queue != -1) {
 				DEBUGPRINT("%s: %u Mbps %s duplex, "
 					   "port %2d, queue %2d\n",
 					   dev->name, priv->phydev->speed,
 					   priv->phydev->duplex ?
-						"Full" : "Half",
+					   "Full" : "Half",
 					   priv->port, priv->queue);
-			else
+			} else {
 				DEBUGPRINT("%s: %u Mbps %s duplex, "
 					   "port %2d, POW\n",
 					   dev->name, priv->phydev->speed,
 					   priv->phydev->duplex ?
-						"Full" : "Half",
+					   "Full" : "Half",
 					   priv->port);
+			}
 		} else {
 			netif_carrier_off(dev);
 			DEBUGPRINT("%s: Link down\n", dev->name);
@@ -164,13 +165,14 @@ int cvm_oct_phy_setup_device(struct net_device *dev)
 	struct octeon_ethernet *priv = netdev_priv(dev);
 
 	int phy_addr = cvmx_helper_board_get_mii_address(priv->port);
+
 	if (phy_addr != -1) {
 		char phy_id[20];
 
 		snprintf(phy_id, sizeof(phy_id), PHY_ID_FMT, "0", phy_addr);
 
 		priv->phydev = phy_connect(dev, phy_id, cvm_oct_adjust_link, 0,
-					PHY_INTERFACE_MODE_GMII);
+					   PHY_INTERFACE_MODE_GMII);
 
 		if (IS_ERR(priv->phydev)) {
 			priv->phydev = NULL;

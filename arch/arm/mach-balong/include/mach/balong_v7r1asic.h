@@ -18,10 +18,10 @@
 #define BC_CTRL_SIZE    SZ_4K
 
 /*串口*/
-#define UART0_BASE      0x90007000  /* UART 0 */
-#define UART1_BASE      0x90016000  /* UART 1 */
-#define UART2_BASE      0x90017000  /* UART 2 */
-#define UART3_BASE      0x90018000  /* UART 3 */
+#define UART0_BASE      0x90007000      /* UART 0 */
+#define UART1_BASE      0x90016000      /* UART 1 */
+#define UART2_BASE      0x90017000      /* UART 2 */
+#define UART3_BASE      0x90018000      /* UART 3 */
 #define UART_REGS_SIZE  SZ_4K
 
 #if defined(FEATURE_HSIC_ON) && ((defined(CHIP_BB_6920ES) || defined(CHIP_BB_6920CS)))
@@ -49,7 +49,7 @@
 
 /*系统控制器*/
 #define V3R2_SC_BASE            0x90000000
-#define V3R2_SC_SIZE			SZ_4K
+#define V3R2_SC_SIZE                    SZ_4K
 #define V3R2_SC_VA_BASE      IO_ADDRESS(V3R2_SC_BASE)
 #define V7R1_SC_VA_BASE      IO_ADDRESS(V3R2_SC_BASE)
 
@@ -59,11 +59,11 @@
 
 
 /*SRAM1*/
-#define V3R2_SRAM1_BASE			0x2FFE0000
-#define V3R2_SRAM1_SIZE			SZ_128K
-#define ISRAM1_VA_BASE 		IO_ADDRESS(V3R2_SRAM1_BASE)
+#define V3R2_SRAM1_BASE                 0x2FFE0000
+#define V3R2_SRAM1_SIZE                 SZ_128K
+#define ISRAM1_VA_BASE          IO_ADDRESS(V3R2_SRAM1_BASE)
 
-#define PBXA9_GIC_DIST_CONTROL_VA	IO_ADDRESS(PBXA9_GIC_DIST_CONTROL)
+#define PBXA9_GIC_DIST_CONTROL_VA       IO_ADDRESS(PBXA9_GIC_DIST_CONTROL)
 
 
 /*NAND FLASH*/
@@ -77,7 +77,7 @@
 /*timer 8~15*/
 #define TIMER_REGBASE_8TO15             0x90003000
 #define TIMER_8                         8
-#define TIMER_OFFSET(x)                 0x14*((x)-TIMER_8)
+#define TIMER_OFFSET(x)                 0x14 * ((x) - TIMER_8)
 #define TIMER8TO15_REGS_SIZE            SZ_4K
 
 #define TIMER14_BASE                    (TIMER_REGBASE_8TO15 + TIMER_OFFSET(14))
@@ -134,7 +134,7 @@
 #define WBBP_BASE_ADDR                  (BBP_BASE_ADDR)
 #define WBBP_DRX_ADDR                   (BBP_DRX_ADDR)
 #define GBBP_BASE_ADDR                  (BBP_BASE_ADDR + 0x10000)
-#define GBBP_DRX_ADDR                   (BBP_DRX_ADDR  + 0x10000)
+#define GBBP_DRX_ADDR                   (BBP_DRX_ADDR + 0x10000)
 
 /* ZSP DMAC */
 #define ZSP_DMAC_BASE                   (0x20380000)
@@ -145,13 +145,13 @@
 #define AHB_REG_SIZE                    0x8000
 
 /* ZSP TCM */
-#define ZSP_ITCM_ADDR         0x20000000     /*zeng*/   
-#define ZSP_ITCM_SIZE         0x00080000       /*zeng*/ 
-#define ZSP_DTCM_ADDR         0x20100000     /*zeng*/ 
-#define ZSP_DTCM_SIZE         0x00044000      /*zeng,272KB*/ 
-#define ZSP_VER_OFFSET        0x3010            /*zeng  this  is uncertain*/
+#define ZSP_ITCM_ADDR         0x20000000                                /*zeng*/
+#define ZSP_ITCM_SIZE         0x00080000                                /*zeng*/
+#define ZSP_DTCM_ADDR         0x20100000                                /*zeng*/
+#define ZSP_DTCM_SIZE         0x00044000                                /*zeng,272KB*/
+#define ZSP_VER_OFFSET        0x3010                                    /*zeng  this  is uncertain*/
 
-#define RTC_TIMER_REGBASE_ADDR          (CLK_REGBASE_0TO7+0x14*4)      /*TIMER4*/
+#define RTC_TIMER_REGBASE_ADDR          (CLK_REGBASE_0TO7 + 0x14 * 4)   /*TIMER4*/
 
 /*
  * Generic Interrupt Controller
@@ -168,7 +168,7 @@
 
 /*AXI*/
 #define AXI_MEM_BASE_ADDR                    0x2ffc0000
-#define AXI_MEM_ADDR                    		IO_ADDRESS(AXI_MEM_BASE_ADDR)
+#define AXI_MEM_ADDR                                    IO_ADDRESS(AXI_MEM_BASE_ADDR)
 
 #define AXI_MEM_SIZE                    0x40000
 
@@ -177,7 +177,7 @@
 
 
 /* 96 is the maximum interrupt number. It covers SGI, PPI and SPI */
-#define SYS_INT_LEVELS_MAX          (96+32)
+#define SYS_INT_LEVELS_MAX          (96 + 32)
 
 /* interrupt distributor */
 #define PBXA9_GIC_DIST_CONTROL      (PBXA9_PERIPHBASE + 0x1000)
@@ -187,14 +187,14 @@
 #define A9_GLOBAL_INTS              32
 #define INT_LVL_MAX                 128
 
-#define INT_LVL_WDT                 (A9_GLOBAL_INTS+0)
+#define INT_LVL_WDT                 (A9_GLOBAL_INTS + 0)
 /* 1保留 */
 /* 2-3为ARM11中断,BSP暂不定义 */
-#define INT_LVL_TIMER_0             (A9_GLOBAL_INTS+4)
-#define INT_LVL_TIMER_1             (A9_GLOBAL_INTS+5)
+#define INT_LVL_TIMER_0             (A9_GLOBAL_INTS + 4)
+#define INT_LVL_TIMER_1             (A9_GLOBAL_INTS + 5)
 
-#define INT_LVL_TIMER_23            (A9_GLOBAL_INTS+6)
-#define INT_LVL_TIMER_4567          (A9_GLOBAL_INTS+7)
+#define INT_LVL_TIMER_23            (A9_GLOBAL_INTS + 6)
+#define INT_LVL_TIMER_4567          (A9_GLOBAL_INTS + 7)
 #define INT_LVL_TIMER_3             80
 #define INT_LVL_TIMER_4             81
 #define INT_LVL_TIMER_5             82
@@ -204,38 +204,38 @@
 //TODO:#define INT_LVL_TIMER_2_3     (37) /* 2 or 3 Timers */
 //TODO:#define INT_LVL_TIMER_0_1     (36) /* 0 or 1 Timers */
 /* 8保留 */
-#define INT_LVL_SCI                 (A9_GLOBAL_INTS+9)
+#define INT_LVL_SCI                 (A9_GLOBAL_INTS + 9)
 #define INT_LVL_DMA0                42
 #define INT_LVL_DMA1                128
 #define INT_LVL_DMA2                129
 #define INT_LVL_DMA3                130
 
-#define INT_LVL_CIPHER              (A9_GLOBAL_INTS+11)
-#define INT_LVL_USB                 (A9_GLOBAL_INTS+12)
+#define INT_LVL_CIPHER              (A9_GLOBAL_INTS + 11)
+#define INT_LVL_USB                 (A9_GLOBAL_INTS + 12)
 #define INT_LVL_UART_0              102 /* UART0 */
 #define INT_LVL_UART_1              103 /* UART1 */
 #define INT_LVL_UART_2              104 /* UART2 */
 #define INT_LVL_UART_3              105 /* UART3 */
-#define INT_LVL_RTC                 (A9_GLOBAL_INTS+29)
-#define INT_LVL_NANDC               (A9_GLOBAL_INTS+30)
-#define INT_LVL_SD_MMC              (A9_GLOBAL_INTS+31)
-#define INT_LVL_I2C                 (A9_GLOBAL_INTS+32)
-#define INT_LVL_GMAC                (A9_GLOBAL_INTS+33)
-#define INT_LVL_GPIO_0              (A9_GLOBAL_INTS+34)
-#define INT_LVL_DESRSASHA           (A9_GLOBAL_INTS+35)
-#define INT_LVL_IPCM2ARM            (A9_GLOBAL_INTS+36)
+#define INT_LVL_RTC                 (A9_GLOBAL_INTS + 29)
+#define INT_LVL_NANDC               (A9_GLOBAL_INTS + 30)
+#define INT_LVL_SD_MMC              (A9_GLOBAL_INTS + 31)
+#define INT_LVL_I2C                 (A9_GLOBAL_INTS + 32)
+#define INT_LVL_GMAC                (A9_GLOBAL_INTS + 33)
+#define INT_LVL_GPIO_0              (A9_GLOBAL_INTS + 34)
+#define INT_LVL_DESRSASHA           (A9_GLOBAL_INTS + 35)
+#define INT_LVL_IPCM2ARM            (A9_GLOBAL_INTS + 36)
 /* 37-40为CEVA中断,BSP不定义 */
-#define INT_LVL_PMU                 (A9_GLOBAL_INTS+41) /* PMU组合中断*/
-#define INT_LVL_AXIMONITOR          (A9_GLOBAL_INTS+42) /* PMU组合中断*/
+#define INT_LVL_PMU                 (A9_GLOBAL_INTS + 41)       /* PMU组合中断*/
+#define INT_LVL_AXIMONITOR          (A9_GLOBAL_INTS + 42)       /* PMU组合中断*/
 /* 43-44为CEVA中断,BSP不定义 */
-#define INT_LVL_GPIO_1              (A9_GLOBAL_INTS+45)
+#define INT_LVL_GPIO_1              (A9_GLOBAL_INTS + 45)
 /* 46-47保留 */
 /* 48-63为PAD_INTX,BSP暂不定义 */
 /* 64-85保留 */
 #ifdef PRODUCT_CFG_CORE_TYPE_MODEM
-#define INT_LVL_SUBVIC              (A9_GLOBAL_INTS+54)
+#define INT_LVL_SUBVIC              (A9_GLOBAL_INTS + 54)
 #else
-#define INT_LVL_SUBVIC              (A9_GLOBAL_INTS+55)
+#define INT_LVL_SUBVIC              (A9_GLOBAL_INTS + 55)
 #endif
 #define INT_LVL_FPGA                INT_LVL_SUBVIC      /* FPGA_AXI中断*/
 /* 88-95保留 */
@@ -278,11 +278,11 @@
 
 
 /*****************************************************
- * 时钟区 
- *****************************************************/
- /* signals generated from various clock generators */
-#define PBXA9_TIMERS_CLK        (19200000)           /* Real time clock */
-#define PBXA9_UART_CLK          (48000000)           /* UART clock */
+* 时钟区
+*****************************************************/
+/* signals generated from various clock generators */
+#define PBXA9_TIMERS_CLK        (19200000)              /* Real time clock */
+#define PBXA9_UART_CLK          (48000000)              /* UART clock */
 /* frequency of counter/timers */
 #define SYS_TIMER_CLK           (PBXA9_TIMERS_CLK)
 //#define SYS_CLK_RATE_MIN        (10)
@@ -295,15 +295,15 @@
 
 /*timer0~2*/
 #define PBXA9_TIMER0_BASE            (0x90002000)
-#define PBXA9_TIMER0_SIZE			SZ_4K
-#define PBXA9_TIMER0_VA_BASE      IO_ADDRESS(PBXA9_TIMER0_BASE+0x28)
+#define PBXA9_TIMER0_SIZE                       SZ_4K
+#define PBXA9_TIMER0_VA_BASE      IO_ADDRESS(PBXA9_TIMER0_BASE + 0x28)
 
 #define PBXA9_TIMER1_BASE            (0x90003000)
-#define PBXA9_TIMER1_SIZE			SZ_4K
+#define PBXA9_TIMER1_SIZE                       SZ_4K
 #define PBXA9_TIMER1_VA_BASE      IO_ADDRESS(PBXA9_TIMER1_BASE)
 
 #define PBXA9_TIMER2_BASE            (0x90004000)
-#define PBXA9_TIMER2_SIZE			SZ_4K
+#define PBXA9_TIMER2_SIZE                       SZ_4K
 #define PBXA9_TIMER2_VA_BASE      IO_ADDRESS(PBXA9_TIMER2_BASE)
 
 /*WDT*/
@@ -315,18 +315,18 @@
 
 /*address transfer */
 #define IO_TYPE(var) ((ICC_SUB_CHAN_S *)IO_ADDRESS((unsigned int)(var)))
-#define PHY_TO_VIRT(var)  ((BSP_U8*)IO_ADDRESS((unsigned int)(var)))
+#define PHY_TO_VIRT(var)  ((BSP_U8 *)IO_ADDRESS((unsigned int)(var)))
 #define VIRT_TO_PHY(var)  (((var) - AXI_MEM_ADDR) + AXI_MEM_BASE_ADDR)
 
 /* gpio3 */
-#define PV500V1_GPIO3_BASE	0x90014000
-#define PV500V1_GPIO_REGS_SIZE	SZ_4K
+#define PV500V1_GPIO3_BASE      0x90014000
+#define PV500V1_GPIO_REGS_SIZE  SZ_4K
 
 /* emi */
-#define EMI_REG_BASE_ADDR	0x900A2000
-#define EMI_REG_SIZE		0x1000
-#define EMI_MEM_BASE_ADDR	0x900A3000
-#define EMI_MEM_SIZE		0x1000
+#define EMI_REG_BASE_ADDR       0x900A2000
+#define EMI_REG_SIZE            0x1000
+#define EMI_MEM_BASE_ADDR       0x900A3000
+#define EMI_MEM_SIZE            0x1000
 
 #if 0
 /* MEM Rserved For GU */
@@ -345,7 +345,7 @@
 #define PBXA9_VX_RAM_HIGH_ADRS              GLOBAL_MEM_MCORE_USER_RESERVED_ADDR    /* 和C核保持一致 */
 #define PBXA9_VX_RAM_BOOTLOAD_VER_LEN       MEMORY_RAM_BOOTLOAD_VER_LEN
 #define PBXA9_VX_RAM_TRACE_SIZE             MEMORY_RAM_TRACE_SIZE
-#define PBXA9_VX_RAM_EXC_ALIGN_SIZE         (4*1024-PBXA9_VX_RAM_BOOTLOAD_VER_LEN-PBXA9_VX_RAM_TRACE_SIZE)
+#define PBXA9_VX_RAM_EXC_ALIGN_SIZE         (4 * 1024 - PBXA9_VX_RAM_BOOTLOAD_VER_LEN - PBXA9_VX_RAM_TRACE_SIZE)
 
 
 /*EXC，同时地址需要和C核一致*/

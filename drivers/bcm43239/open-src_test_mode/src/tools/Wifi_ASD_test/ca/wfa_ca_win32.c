@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h> 
+#include <string.h>
 
 #include "wfa_debug.h"
 #include "wfa_sock.h"
@@ -33,8 +33,9 @@ void
 get_rwl_exe_path(char *rwl_exe_path, int exe_path_len)
 {
 	char *trafficPath;
+
 	trafficPath = malloc(WFA_BUFF_1K);
-	if(GetCurrentDirectory(WFA_BUFF_128,trafficPath) == 0) {
+	if (GetCurrentDirectory(WFA_BUFF_128, trafficPath) == 0) {
 		DPRINT_ERR(WFA_ERR, "Failed to get the Current path\n");
 		free(trafficPath);
 		exit(1);
@@ -53,11 +54,12 @@ error_check(int unused_err)
 		return FALSE;
 }
 
-FILE*
+FILE *
 asd_cmd_exec(char *trafficPath)
 {
 	FILE *fp;
-	if((fp = asd_Config(trafficPath,TEMP_FILE_PATH)) == NULL){
+
+	if ((fp = asd_Config(trafficPath, TEMP_FILE_PATH)) == NULL) {
 		DPRINT_ERR(WFA_ERR, "Command Execution Failed\n");
 		free(trafficPath);
 	}

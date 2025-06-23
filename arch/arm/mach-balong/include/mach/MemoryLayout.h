@@ -35,21 +35,21 @@ extern "C" {
 #define GLOBAL_MEM_BASE_ADDR_VIRT              (0xF3000000)           /* 通过IO_ADDRESS计算获得 */
 
 /*                      DDR 分配图
-
-               +---------------------+---------+ --> 0x30000000
-               | A核内存             | 22M     |
-               +---------------------+---------+ --> 0x31600000
-               | C核内存             | 23M     |               
-               +---------------------+---------+ --> 0x32D00000        虚地址统一从0xF3000000开始
-               | GUPS预留内存        | 17M+96KB|  
-               +---------------------+---------+ --> 0x33E18000
-               | 共享内存            | 512K    |
-               +---------------------+---------+ --> 0x33E98000
-               | 异常记录            | 640K    |
-               +---------------------+---------+ --> 0x33F38000
-               | HIFI内存            | 800KB   |
-               +---------------------+---------+ --> 0x34000000
-*/
+ *
+ +---------------------+---------+ --> 0x30000000
+ | A核内存             | 22M     |
+ +---------------------+---------+ --> 0x31600000
+ | C核内存             | 23M     |
+ +---------------------+---------+ --> 0x32D00000        虚地址统一从0xF3000000开始
+ | GUPS预留内存        | 17M+96KB|
+ +---------------------+---------+ --> 0x33E18000
+ | 共享内存            | 512K    |
+ +---------------------+---------+ --> 0x33E98000
+ | 异常记录            | 640K    |
+ +---------------------+---------+ --> 0x33F38000
+ | HIFI内存            | 800KB   |
+ +---------------------+---------+ --> 0x34000000
+ */
 /* ACORE使用内存 */
 #define GLOBAL_MEM_ACORE_BASE_ADDR             (GLOBAL_MEM_BASE_ADDR)       /*0x30000000*/
 #define GLOBAL_MEM_ACORE_SIZE                  (0x01600000)
@@ -81,7 +81,7 @@ extern "C" {
 
 
 /*vxworks高低地址配置*/
-#define VXWORKS_HIGH_ADDR                      (GLOBAL_MEM_MCORE_BASE_ADDR + GLOBAL_MEM_MCORE_SIZE - 6*4096)  /*预留24K给DMR*/           
+#define VXWORKS_HIGH_ADDR                      (GLOBAL_MEM_MCORE_BASE_ADDR + GLOBAL_MEM_MCORE_SIZE - 6 * 4096)  /*预留24K给DMR*/
 #define VXWORKS_LOW_ADDR                       (GLOBAL_MEM_MCORE_BASE_ADDR + 0x4000)
 
 
@@ -97,21 +97,21 @@ extern "C" {
 #define GLOBAL_MEM_BASE_ADDR_VIRT              (0xF3000000)           /* 通过IO_ADDRESS计算获得 */
 
 /*                      DDR 分配图
-
-               +---------------------+---------+ --> 0x30000000
-               | A核内存             | 26M     |
-               +---------------------+---------+ --> 0x31A00000
-               | C核内存             | 23M     |               
-               +---------------------+---------+ --> 0x33100000        虚地址统一从0xF3000000开始
-               | GUPS预留内存        | 13M+96KB|  
-               +---------------------+---------+ --> 0x33E18000
-               | 共享内存            | 512K    |
-               +---------------------+---------+ --> 0x33E98000
-               | 异常记录            | 640K    |
-               +---------------------+---------+ --> 0x33F38000
-               | HIFI内存            | 800KB   |
-               +---------------------+---------+ --> 0x34000000
-*/
+ *
+ +---------------------+---------+ --> 0x30000000
+ | A核内存             | 26M     |
+ +---------------------+---------+ --> 0x31A00000
+ | C核内存             | 23M     |
+ +---------------------+---------+ --> 0x33100000        虚地址统一从0xF3000000开始
+ | GUPS预留内存        | 13M+96KB|
+ +---------------------+---------+ --> 0x33E18000
+ | 共享内存            | 512K    |
+ +---------------------+---------+ --> 0x33E98000
+ | 异常记录            | 640K    |
+ +---------------------+---------+ --> 0x33F38000
+ | HIFI内存            | 800KB   |
+ +---------------------+---------+ --> 0x34000000
+ */
 /* ACORE使用内存 */
 #define GLOBAL_MEM_ACORE_BASE_ADDR             (GLOBAL_MEM_BASE_ADDR)       /*0x30000000*/
 #define GLOBAL_MEM_ACORE_SIZE                  (0x01A00000)
@@ -143,7 +143,7 @@ extern "C" {
 
 
 /*vxworks高低地址配置*/
-#define VXWORKS_HIGH_ADDR                      (GLOBAL_MEM_MCORE_BASE_ADDR + GLOBAL_MEM_MCORE_SIZE - 6*4096)  /*预留24K给DMR*/           
+#define VXWORKS_HIGH_ADDR                      (GLOBAL_MEM_MCORE_BASE_ADDR + GLOBAL_MEM_MCORE_SIZE - 6 * 4096)  /*预留24K给DMR*/
 #define VXWORKS_LOW_ADDR                       (GLOBAL_MEM_MCORE_BASE_ADDR + 0x4000)
 
 
@@ -159,21 +159,21 @@ extern "C" {
 #define GLOBAL_MEM_BASE_ADDR_VIRT              (0xF3000000)           /* 通过IO_ADDRESS计算获得 */
 
 /*                      DDR 分配图
-
-               +---------------------+---------+ --> 0x30000000
-               | A核内存             | 27M     |
-               +---------------------+---------+ --> 0x31B00000
-               | C核内存             | 23M     |               
-               +---------------------+---------+ --> 0x33200000        虚地址统一从0xF3000000开始
-               | GUPS预留内存        |12M+864KB|  
-               +---------------------+---------+ --> 0x33ED8000
-               | 异常记录            | 640K    |
-               +---------------------+---------+ --> 0x33F78000
-               | 共享内存            | 512K    | 
-               +---------------------+---------+ --> 0x33FF8000
-               | HIFI内存            | 32KB    |
-               +---------------------+---------+ --> 0x34000000
-*/
+ *
+ +---------------------+---------+ --> 0x30000000
+ | A核内存             | 27M     |
+ +---------------------+---------+ --> 0x31B00000
+ | C核内存             | 23M     |
+ +---------------------+---------+ --> 0x33200000        虚地址统一从0xF3000000开始
+ | GUPS预留内存        |12M+864KB|
+ +---------------------+---------+ --> 0x33ED8000
+ | 异常记录            | 640K    |
+ +---------------------+---------+ --> 0x33F78000
+ | 共享内存            | 512K    |
+ +---------------------+---------+ --> 0x33FF8000
+ | HIFI内存            | 32KB    |
+ +---------------------+---------+ --> 0x34000000
+ */
 /* ACORE使用内存 */
 #define GLOBAL_MEM_ACORE_BASE_ADDR             (GLOBAL_MEM_BASE_ADDR)       /*0x30000000*/
 #define GLOBAL_MEM_ACORE_SIZE                  (0x01B00000)
@@ -205,7 +205,7 @@ extern "C" {
 
 
 /*vxworks高低地址配置*/
-#define VXWORKS_HIGH_ADDR                      (GLOBAL_MEM_MCORE_BASE_ADDR + GLOBAL_MEM_MCORE_SIZE - 6*4096)  /*预留24K给DMR*/           
+#define VXWORKS_HIGH_ADDR                      (GLOBAL_MEM_MCORE_BASE_ADDR + GLOBAL_MEM_MCORE_SIZE - 6 * 4096)  /*预留24K给DMR*/
 #define VXWORKS_LOW_ADDR                       (GLOBAL_MEM_MCORE_BASE_ADDR + 0x4000)
 
 
@@ -222,21 +222,21 @@ extern "C" {
 #define GLOBAL_MEM_BASE_ADDR_VIRT              (0xF3000000)           /* 通过IO_ADDRESS计算获得 */
 
 /*                      DDR 分配图
-
-               +---------------------+---------+ --> 0x30000000
-               | A核内存             | 26M     |
-               +---------------------+---------+ --> 0x31A00000
-               | C核内存             | 23M     |               
-               +---------------------+---------+ --> 0x33100000        虚地址统一从0xF3000000开始
-               | GUPS预留内存        | 13M+96KB|  
-               +---------------------+---------+ --> 0x33E18000
-               | 共享内存            | 512K    |
-               +---------------------+---------+ --> 0x33E98000
-               | 异常记录            | 640K    |
-               +---------------------+---------+ --> 0x33F38000
-               | HIFI内存            | 800KB   |
-               +---------------------+---------+ --> 0x34000000
-*/
+ *
+ +---------------------+---------+ --> 0x30000000
+ | A核内存             | 26M     |
+ +---------------------+---------+ --> 0x31A00000
+ | C核内存             | 23M     |
+ +---------------------+---------+ --> 0x33100000        虚地址统一从0xF3000000开始
+ | GUPS预留内存        | 13M+96KB|
+ +---------------------+---------+ --> 0x33E18000
+ | 共享内存            | 512K    |
+ +---------------------+---------+ --> 0x33E98000
+ | 异常记录            | 640K    |
+ +---------------------+---------+ --> 0x33F38000
+ | HIFI内存            | 800KB   |
+ +---------------------+---------+ --> 0x34000000
+ */
 /* ACORE使用内存 */
 #define GLOBAL_MEM_ACORE_BASE_ADDR             (GLOBAL_MEM_BASE_ADDR)       /*0x30000000*/
 #define GLOBAL_MEM_ACORE_SIZE                  (0x01A00000)
@@ -268,7 +268,7 @@ extern "C" {
 
 
 /*vxworks高低地址配置*/
-#define VXWORKS_HIGH_ADDR                      (GLOBAL_MEM_MCORE_BASE_ADDR + GLOBAL_MEM_MCORE_SIZE - 6*4096)  /*预留24K给DMR*/           
+#define VXWORKS_HIGH_ADDR                      (GLOBAL_MEM_MCORE_BASE_ADDR + GLOBAL_MEM_MCORE_SIZE - 6 * 4096)  /*预留24K给DMR*/
 #define VXWORKS_LOW_ADDR                       (GLOBAL_MEM_MCORE_BASE_ADDR + 0x4000)
 
 
@@ -294,24 +294,24 @@ extern "C" {
 #define GLOBAL_MEM_SIZE                        (0x04000000)
 
 /*                      DDR 分配图
-
-               +---------------------+---------+ --> 0x30000000
-               | ACP内存             | 0       | 
-               +---------------------+---------+ --> 0x30000000
-               | C核内存             | 24M     |               
-               +---------------------+---------+ --> 0x31800000
-               | A核内存             | 25M     |
-               +---------------------+---------+ --> 0x33100000
-               | Reserved mem        | 448K    |
-               +---------------------+---------+ --> 0x33170000
-	           | 共享内存            | 512K    |
-               +---------------------+---------+ --> 0x331F0000
-               | 异常记录            | 640K    |
-               +---------------------+---------+ --> 0x33290000
-               |                     |         |
-               | GUPS预留内存        | 13M+448K|              
-               +---------------------+---------+ --> 0x34000000
-*/
+ *
+ +---------------------+---------+ --> 0x30000000
+ | ACP内存             | 0       |
+ +---------------------+---------+ --> 0x30000000
+ | C核内存             | 24M     |
+ +---------------------+---------+ --> 0x31800000
+ | A核内存             | 25M     |
+ +---------------------+---------+ --> 0x33100000
+ | Reserved mem        | 448K    |
+ +---------------------+---------+ --> 0x33170000
+ | 共享内存            | 512K    |
+ +---------------------+---------+ --> 0x331F0000
+ | 异常记录            | 640K    |
+ +---------------------+---------+ --> 0x33290000
+ |                     |         |
+ | GUPS预留内存        | 13M+448K|
+ +---------------------+---------+ --> 0x34000000
+ */
 /* MCORE ACP使用 */
 #define GLOBAL_MEM_MCORE_ACP_ADDR              (GLOBAL_MEM_BASE_ADDR)
 #define GLOBAL_MEM_MCORE_ACP_SIZE              (0x00000000)
@@ -349,25 +349,25 @@ extern "C" {
 #define GLOBAL_MEM_SIZE                        (0x08000000)
 
 /*                      DDR 分配图
-
-               +---------------------+---------+ --> 0x30000000
-               | ACP内存             | 2M      | 
-               +---------------------+---------+ --> 0x30200000
-               | C核内存             | 61M-24K | 
-               +---------------------+---------+ --> 0x33EFA000
-               | Debug信息区域       | 4K      | 
-               +---------------------+---------+ --> 0x33EFB000
-               | 异常记录            | 1M      |
-               +---------------------+---------+ --> 0x33FFB000
-               | UNUSED内存0         | 20K     |
-               +---------------------+---------+ --> 0x34000000
-	           | 共享内存            | 4M      |
-               +---------------------+---------+ --> 0x34400000
-               | A核内存             | 32M     |
-               +---------------------+---------+ --> 0x36400000
-               | GUPS预留内存        | 28M     |              
-               +---------------------+---------+ --> 0x38000000
-*/
+ *
+ +---------------------+---------+ --> 0x30000000
+ | ACP内存             | 2M      |
+ +---------------------+---------+ --> 0x30200000
+ | C核内存             | 61M-24K |
+ +---------------------+---------+ --> 0x33EFA000
+ | Debug信息区域       | 4K      |
+ +---------------------+---------+ --> 0x33EFB000
+ | 异常记录            | 1M      |
+ +---------------------+---------+ --> 0x33FFB000
+ | UNUSED内存0         | 20K     |
+ +---------------------+---------+ --> 0x34000000
+ | 共享内存            | 4M      |
+ +---------------------+---------+ --> 0x34400000
+ | A核内存             | 32M     |
+ +---------------------+---------+ --> 0x36400000
+ | GUPS预留内存        | 28M     |
+ +---------------------+---------+ --> 0x38000000
+ */
 /* MCORE ACP */
 #define GLOBAL_MEM_MCORE_ACP_ADDR              (GLOBAL_MEM_BASE_ADDR)
 #define GLOBAL_MEM_MCORE_ACP_SIZE              (0x00200000)
@@ -408,29 +408,29 @@ extern "C" {
 #define GLOBAL_MEM_SIZE                        (0x10000000)
 
 /*                      DDR 分配图
-
-               +---------------------+---------+ --> 0x30000000
-               | ACP内存             | 2M      | 
-               +---------------------+---------+ --> 0x30200000
-               | C核内存             | 61M-24K | 
-               +---------------------+---------+ --> 0x33EFA000
-               | Debug信息区域       | 4K      | 
-               +---------------------+---------+ --> 0x33EFB000
-               | 异常记录            | 1M      |
-               +---------------------+---------+ --> 0x33FFB000
-               | UNUSED内存0         | 20K     |
-               +---------------------+---------+ --> 0x34000000
-	           | 共享内存            | 4M      |
-               +---------------------+---------+ --> 0x34400000
-               | A核内存             | 32M     |
-               +---------------------+---------+ --> 0x36400000
-               | UNUSED内存          | 12M     |
-               +---------------------+---------+ --> 0x37000000
-               | GUPS预留内存        | 28M     |              
-               +---------------------+---------+ --> 0x38C00000
-               | UNUSED内存          | 116M    |
-               +---------------------+---------+ --> 0x40000000               
-*/
+ *
+ +---------------------+---------+ --> 0x30000000
+ | ACP内存             | 2M      |
+ +---------------------+---------+ --> 0x30200000
+ | C核内存             | 61M-24K |
+ +---------------------+---------+ --> 0x33EFA000
+ | Debug信息区域       | 4K      |
+ +---------------------+---------+ --> 0x33EFB000
+ | 异常记录            | 1M      |
+ +---------------------+---------+ --> 0x33FFB000
+ | UNUSED内存0         | 20K     |
+ +---------------------+---------+ --> 0x34000000
+ | 共享内存            | 4M      |
+ +---------------------+---------+ --> 0x34400000
+ | A核内存             | 32M     |
+ +---------------------+---------+ --> 0x36400000
+ | UNUSED内存          | 12M     |
+ +---------------------+---------+ --> 0x37000000
+ | GUPS预留内存        | 28M     |
+ +---------------------+---------+ --> 0x38C00000
+ | UNUSED内存          | 116M    |
+ +---------------------+---------+ --> 0x40000000
+ */
 /* MCORE ACP */
 #define GLOBAL_MEM_MCORE_ACP_ADDR              (GLOBAL_MEM_BASE_ADDR)
 #define GLOBAL_MEM_MCORE_ACP_SIZE              (0x00200000)
@@ -497,35 +497,35 @@ extern "C" {
 
 #if defined(CHIP_BB_6756CS)
 /*                      AXI Memory 分配图
-
-               +---------------------+---------+ --> 0x2FFE0000
-               | A核低功耗           | 16KB    |               
-               +---------------------+---------+ --> 0x2FFE4000
-               | FLASH资源锁         | 32B     |
-               +---------------------+---------+ --> 0x2FFE4020
-               | IFC标识             | 32B     |
-               +---------------------+---------+ --> 0x2FFE4040
-	           | ICC标识             | 1K      |
-	           +---------------------+---------+ --> 0x2FFE4440
-	           | 内存管理            | 1K      |
-               +---------------------+---------+ --> 0x2FFE4840
-               | 动态内存区          |73K-256B|
-               +---------------------+---------+ --> 0x2FFF6B40
-               | IPF数据区           | 30K     |
-               +---------------------+---------+ --> 0x2FFFE340
-               | 温保区              | 128B    |
-               +---------------------+---------+ --> 0x2FFFE3C0
-               | 开关机              | 32B     |
-               +---------------------+---------+ --> 0x2FFFE3E0
-               | DICC标识            | 32B     |
-               +---------------------+---------+ --> 0x2FFFE400
-               | HIFI数据区          | 6K      |              
-               +---------------------+---------+ --> 0x2FFFFC00
-               | 保留区              | 1K-256B |
-               +---------------------+---------+ --> 0x2FFFFF00
-               | 升级标识            | 256B    |              
-               +---------------------+---------+ --> 0x30000000
-*/ 
+ *
+ +---------------------+---------+ --> 0x2FFE0000
+ | A核低功耗           | 16KB    |
+ +---------------------+---------+ --> 0x2FFE4000
+ | FLASH资源锁         | 32B     |
+ +---------------------+---------+ --> 0x2FFE4020
+ | IFC标识             | 32B     |
+ +---------------------+---------+ --> 0x2FFE4040
+ | ICC标识             | 1K      |
+ +---------------------+---------+ --> 0x2FFE4440
+ | 内存管理            | 1K      |
+ +---------------------+---------+ --> 0x2FFE4840
+ | 动态内存区          |73K-256B|
+ +---------------------+---------+ --> 0x2FFF6B40
+ | IPF数据区           | 30K     |
+ +---------------------+---------+ --> 0x2FFFE340
+ | 温保区              | 128B    |
+ +---------------------+---------+ --> 0x2FFFE3C0
+ | 开关机              | 32B     |
+ +---------------------+---------+ --> 0x2FFFE3E0
+ | DICC标识            | 32B     |
+ +---------------------+---------+ --> 0x2FFFE400
+ | HIFI数据区          | 6K      |
+ +---------------------+---------+ --> 0x2FFFFC00
+ | 保留区              | 1K-256B |
+ +---------------------+---------+ --> 0x2FFFFF00
+ | 升级标识            | 256B    |
+ +---------------------+---------+ --> 0x30000000
+ */
 /*FastBoot*/
 #define MEMORY_AXI_FASTBOOT_START_ADDR        (GLOBAL_AXI_MEM_BASE_ADDR)
 #define MEMORY_AXI_FASTBOOT_START_SIZE        (0x08)
@@ -535,7 +535,7 @@ extern "C" {
 #define MEMORY_AXI_ONOFF_SIZE               (32)
 
 #define MEMORY_AXI_DLOAD_ADDR               (MEMORY_AXI_ONOFF_ADDR + MEMORY_AXI_ONOFF_SIZE)
-#define MEMORY_AXI_DLOAD_SIZE               (256-48)
+#define MEMORY_AXI_DLOAD_SIZE               (256 - 48)
 
 /* 升级标识 */
 #define MEMORY_AXI_DLOAD_AUTOINSTALL_ADDR   (MEMORY_AXI_DLOAD_ADDR + MEMORY_AXI_DLOAD_SIZE)
@@ -579,7 +579,7 @@ extern "C" {
 
 /* 动态内存区 */
 #define MEMORY_AXI_DYNAMIC_SEC_ADDR         (MEMORY_AXI_MEMMGR_FLAG_ADDR + MEMORY_AXI_MEMMGR_FLAG_SIZE)
-#define MEMORY_AXI_DYNAMIC_SEC_SIZE         (48*1024 - (MEMORY_AXI_DYNAMIC_SEC_ADDR - GLOBAL_AXI_MEM_BASE_ADDR))
+#define MEMORY_AXI_DYNAMIC_SEC_SIZE         (48 * 1024 - (MEMORY_AXI_DYNAMIC_SEC_ADDR - GLOBAL_AXI_MEM_BASE_ADDR))
 
 /* FLASH资源锁 */
 #define MEMORY_AXI_FLASH_SEM_ADDR           (MEMORY_AXI_DYNAMIC_SEC_ADDR + MEMORY_AXI_DYNAMIC_SEC_SIZE)
@@ -591,7 +591,7 @@ extern "C" {
 
 /* HIFI数据区 */
 #define MEMORY_AXI_HIFI_ADDR                (MEMORY_AXI_IFC_ADDR + MEMORY_AXI_IFC_SIZE)
-#define MEMORY_AXI_HIFI_SIZE                (6*1024)
+#define MEMORY_AXI_HIFI_SIZE                (6 * 1024)
 
 /* 保留 */
 #define MEMORY_AXI_RESERVE_ADDR             (MEMORY_AXI_HIFI_ADDR + MEMORY_AXI_HIFI_SIZE)
@@ -603,7 +603,7 @@ extern "C" {
 
 /* Flash分区表 */
 #define MEMORY_AXI_PTABLE_ADDR              (MEMORY_AXI_FLAG_BAK_ADDR + MEMORY_AXI_FLAG_BAK_SIZE)
-#define MEMORY_AXI_PTABLE_SIZE              (2*1024)
+#define MEMORY_AXI_PTABLE_SIZE              (2 * 1024)
 
 #define MEMORY_AXI_END_ADDR               (MEMORY_AXI_PTABLE_ADDR + MEMORY_AXI_PTABLE_SIZE)
 
@@ -617,40 +617,40 @@ extern "C" {
 #if 0
 /* IPF数据区 */
 #define MEMORY_AXI_IPF_ADDR                 (MEMORY_AXI_SOFT_FLAG_ADDR + MEMORY_AXI_SOFT_FLAG_SIZE)
-#define MEMORY_AXI_IPF_SIZE                 (30*1024)
+#define MEMORY_AXI_IPF_SIZE                 (30 * 1024)
 #endif
 
 #else
 /*                      AXI Memory 分配图
-
-               +---------------------+---------+ --> 0x2FFC0000
-               | 异常向量            | 512B    |               
-               +---------------------+---------+ --> 0x2FFC0200
-               | FLASH资源锁         | 32B     |
-               +---------------------+---------+ --> 0x2FFC0220
-               | IFC标识             | 32B     |
-               +---------------------+---------+ --> 0x2FFC0240
-	           | ICC标识             | 1K      |
-	           +---------------------+---------+ --> 0x2FFC0640
-	           | 内存管理            | 1K      |
-               +---------------------+---------+ --> 0x2FFC0A40
-               | 动态内存区          |216K+256B|
-               +---------------------+---------+ --> 0x2FFF6B40
-               | IPF数据区           | 30K     |
-               +---------------------+---------+ --> 0x2FFFE340
-               | 温保区              | 128B    |
-               +---------------------+---------+ --> 0x2FFFE3C0
-               | 开关机              | 32B     |
-               +---------------------+---------+ --> 0x2FFFE3E0
-               | DICC标识            | 32B     |
-               +---------------------+---------+ --> 0x2FFFE400
-               | HIFI数据区          | 6K      |              
-               +---------------------+---------+ --> 0x2FFFFC00
-               | 保留区              | 1K-256B |
-               +---------------------+---------+ --> 0x2FFFFF00
-               | 升级标识            | 256B    |              
-               +---------------------+---------+ --> 0x30000000
-*/ 
+ *
+ +---------------------+---------+ --> 0x2FFC0000
+ | 异常向量            | 512B    |
+ +---------------------+---------+ --> 0x2FFC0200
+ | FLASH资源锁         | 32B     |
+ +---------------------+---------+ --> 0x2FFC0220
+ | IFC标识             | 32B     |
+ +---------------------+---------+ --> 0x2FFC0240
+ | ICC标识             | 1K      |
+ +---------------------+---------+ --> 0x2FFC0640
+ | 内存管理            | 1K      |
+ +---------------------+---------+ --> 0x2FFC0A40
+ | 动态内存区          |216K+256B|
+ +---------------------+---------+ --> 0x2FFF6B40
+ | IPF数据区           | 30K     |
+ +---------------------+---------+ --> 0x2FFFE340
+ | 温保区              | 128B    |
+ +---------------------+---------+ --> 0x2FFFE3C0
+ | 开关机              | 32B     |
+ +---------------------+---------+ --> 0x2FFFE3E0
+ | DICC标识            | 32B     |
+ +---------------------+---------+ --> 0x2FFFE400
+ | HIFI数据区          | 6K      |
+ +---------------------+---------+ --> 0x2FFFFC00
+ | 保留区              | 1K-256B |
+ +---------------------+---------+ --> 0x2FFFFF00
+ | 升级标识            | 256B    |
+ +---------------------+---------+ --> 0x30000000
+ */
 
 /* 异常向量 */
 #define MEMORY_AXI_EXEC_VEC_ADDR            (GLOBAL_AXI_MEM_BASE_ADDR)
@@ -674,7 +674,7 @@ extern "C" {
 
 /* 动态内存区 */
 #define MEMORY_AXI_DYNAMIC_SEC_ADDR         (MEMORY_AXI_MEMMGR_FLAG_ADDR + MEMORY_AXI_MEMMGR_FLAG_SIZE)
-#define MEMORY_AXI_DYNAMIC_SEC_SIZE         (214*1024 + 256 -4-4)
+#define MEMORY_AXI_DYNAMIC_SEC_SIZE         (214 * 1024 + 256 - 4 - 4)
 
 /*CSHELL*/
 #define MEMORY_AXI_USB_CSHELL_ADDR         (MEMORY_AXI_DYNAMIC_SEC_ADDR + MEMORY_AXI_DYNAMIC_SEC_SIZE)
@@ -685,12 +685,12 @@ extern "C" {
 #define MEMORY_AXI_USB_INOUT_SIZE          (4)
 
 /* 软标志区 */
-#define MEMORY_AXI_SOFT_FLAG_ADDR           (MEMORY_AXI_USB_INOUT_ADDR + MEMORY_AXI_USB_INOUT_SIZE) 
+#define MEMORY_AXI_SOFT_FLAG_ADDR           (MEMORY_AXI_USB_INOUT_ADDR + MEMORY_AXI_USB_INOUT_SIZE)
 #define MEMORY_AXI_SOFT_FLAG_SIZE           (1024)
 
 /* IPF数据区 */
 #define MEMORY_AXI_IPF_ADDR                 (MEMORY_AXI_SOFT_FLAG_ADDR + MEMORY_AXI_SOFT_FLAG_SIZE)
-#define MEMORY_AXI_IPF_SIZE                 (30*1024)
+#define MEMORY_AXI_IPF_SIZE                 (30 * 1024)
 
 /* 温保区 */
 #define MEMORY_AXI_TEMP_PROTECT_ADDR        (MEMORY_AXI_IPF_ADDR + MEMORY_AXI_IPF_SIZE)
@@ -706,7 +706,7 @@ extern "C" {
 
 /* HIFI数据区 */
 #define MEMORY_AXI_HIFI_ADDR                (MEMORY_AXI_DICC_ADDR + MEMORY_AXI_DICC_SIZE)
-#define MEMORY_AXI_HIFI_SIZE                (6*1024)
+#define MEMORY_AXI_HIFI_SIZE                (6 * 1024)
 
 /* Flash分区表 */
 #define MEMORY_AXI_PTABLE_ADDR              (MEMORY_AXI_HIFI_ADDR + MEMORY_AXI_HIFI_SIZE)
@@ -714,14 +714,14 @@ extern "C" {
 
 /* 保留 */
 #define MEMORY_AXI_RESERVE_ADDR             (MEMORY_AXI_PTABLE_ADDR + MEMORY_AXI_PTABLE_SIZE)
-#define MEMORY_AXI_RESERVE_SIZE             (1024 -256)
+#define MEMORY_AXI_RESERVE_SIZE             (1024 - 256)
 
 /* 升级标识 */
 #define MEMORY_AXI_DLOAD_AUTOINSTALL_ADDR   (MEMORY_AXI_RESERVE_ADDR + MEMORY_AXI_RESERVE_SIZE)
 #define MEMORY_AXI_DLOAD_AUTOINSTALL_SIZE   (48)
 
 #define MEMORY_AXI_DLOAD_ADDR               (MEMORY_AXI_DLOAD_AUTOINSTALL_ADDR + MEMORY_AXI_DLOAD_AUTOINSTALL_SIZE)
-#define MEMORY_AXI_DLOAD_SIZE               (256-48)
+#define MEMORY_AXI_DLOAD_SIZE               (256 - 48)
 
 #define MEMORY_AXI_END_ADDR               (MEMORY_AXI_DLOAD_ADDR + MEMORY_AXI_DLOAD_SIZE)
 #endif /*#if defined(CHIP_BB_6756CS)*/
@@ -734,29 +734,29 @@ extern "C" {
 #define GLOBAL_MEM_SIZE                        (0x10000000)
 
 /*                      DDR 分配图
-
-               +---------------------+---------+ --> 0xC0000000
-               | ACP内存             | 0M      | 
-               +---------------------+---------+ --> 0xC0000000
-               | C核内存             | 63M-128K| 
-               +---------------------+---------+ --> 0xC3EE0000
-               | Debug信息区域       | 4K      | 
-               +---------------------+---------+ --> 0xC3EE1000
-               | 异常记录            | 1M      |
-               +---------------------+---------+ --> 0xC3FE1000
-               | UNUSED内存0         | 124K    |
-               +---------------------+---------+ --> 0xC4000000
-	           | 共享内存            | 4M      |
-               +---------------------+---------+ --> 0xC4400000
-               | A核内存             | 32M     |
-               +---------------------+---------+ --> 0xC6400000
-               | UNUSED内存1         | 116M     |
-               +---------------------+---------+ --> 0xCD800000
-               | GUPS预留内存        | 28M     |              
-               +---------------------+---------+ --> 0xCF400000
-               | UNUSED内存          | 12M     |
-               +---------------------+---------+ --> 0xD0000000               
-*/
+ *
+ +---------------------+---------+ --> 0xC0000000
+ | ACP内存             | 0M      |
+ +---------------------+---------+ --> 0xC0000000
+ | C核内存             | 63M-128K|
+ +---------------------+---------+ --> 0xC3EE0000
+ | Debug信息区域       | 4K      |
+ +---------------------+---------+ --> 0xC3EE1000
+ | 异常记录            | 1M      |
+ +---------------------+---------+ --> 0xC3FE1000
+ | UNUSED内存0         | 124K    |
+ +---------------------+---------+ --> 0xC4000000
+ | 共享内存            | 4M      |
+ +---------------------+---------+ --> 0xC4400000
+ | A核内存             | 32M     |
+ +---------------------+---------+ --> 0xC6400000
+ | UNUSED内存1         | 116M     |
+ +---------------------+---------+ --> 0xCD800000
+ | GUPS预留内存        | 28M     |
+ +---------------------+---------+ --> 0xCF400000
+ | UNUSED内存          | 12M     |
+ +---------------------+---------+ --> 0xD0000000
+ */
 /* MCORE ACP使用*/
 #define GLOBAL_MEM_MCORE_ACP_ADDR              (GLOBAL_MEM_BASE_ADDR)
 #define GLOBAL_MEM_MCORE_ACP_SIZE              (0x00000000)
@@ -811,37 +811,37 @@ extern "C" {
 #endif
 
 /*                      AXI Memory 分配图
-
-               +---------------------+---------+ --> 0x30000000
-               | 异常向量            | 512B    |               
-               +---------------------+---------+ --> 0x30000200
-               | FLASH资源锁         | 32B     |
-               +---------------------+---------+ --> 0x30000220
-               | IFC标识             | 32B     |
-               +---------------------+---------+ --> 0x30000240
-	           | ICC标识             | 1K      |
-	           +---------------------+---------+ --> 0x30000640
-	           | 内存管理            | 1K      |
-               +---------------------+---------+ --> 0x30000A40
-               | 动态内存区          | 30K+256B|
-               +---------------------+---------+ --> 0x30008340
-               | IPF数据区           | 30K     |
-               +---------------------+---------+ --> 0x3000FB40
-               | 温保区              | 128B    |
-               +---------------------+---------+ --> 0x3000FBC0
-               | 开关机              | 32B     |
-               +---------------------+---------+ --> 0x3000FBE0
-               | BBPMaster           | 64K     |
-               +---------------------+---------+ --> 0x3001FBE0
-               | DICC标识            | 32B     |
-               +---------------------+---------+ --> 0x3001FC00
-               | HIFI数据区          | 0       |              
-               +---------------------+---------+ --> 0x3001FC00
-               | 保留区              | 1K-256B |
-               +---------------------+---------+ --> 0x3001FF00
-               | 升级标识            | 256B    |              
-               +---------------------+---------+ --> 0x30020000
-*/ 
+ *
+ +---------------------+---------+ --> 0x30000000
+ | 异常向量            | 512B    |
+ +---------------------+---------+ --> 0x30000200
+ | FLASH资源锁         | 32B     |
+ +---------------------+---------+ --> 0x30000220
+ | IFC标识             | 32B     |
+ +---------------------+---------+ --> 0x30000240
+ | ICC标识             | 1K      |
+ +---------------------+---------+ --> 0x30000640
+ | 内存管理            | 1K      |
+ +---------------------+---------+ --> 0x30000A40
+ | 动态内存区          | 30K+256B|
+ +---------------------+---------+ --> 0x30008340
+ | IPF数据区           | 30K     |
+ +---------------------+---------+ --> 0x3000FB40
+ | 温保区              | 128B    |
+ +---------------------+---------+ --> 0x3000FBC0
+ | 开关机              | 32B     |
+ +---------------------+---------+ --> 0x3000FBE0
+ | BBPMaster           | 64K     |
+ +---------------------+---------+ --> 0x3001FBE0
+ | DICC标识            | 32B     |
+ +---------------------+---------+ --> 0x3001FC00
+ | HIFI数据区          | 0       |
+ +---------------------+---------+ --> 0x3001FC00
+ | 保留区              | 1K-256B |
+ +---------------------+---------+ --> 0x3001FF00
+ | 升级标识            | 256B    |
+ +---------------------+---------+ --> 0x30020000
+ */
 
 /* 异常向量 */
 #define MEMORY_AXI_EXEC_VEC_ADDR            (GLOBAL_AXI_MEM_BASE_ADDR)
@@ -865,15 +865,15 @@ extern "C" {
 
 /* 动态内存区 */
 #define MEMORY_AXI_DYNAMIC_SEC_ADDR         (MEMORY_AXI_MEMMGR_FLAG_ADDR + MEMORY_AXI_MEMMGR_FLAG_SIZE)
-#define MEMORY_AXI_DYNAMIC_SEC_SIZE         (92*1024 + 256)
+#define MEMORY_AXI_DYNAMIC_SEC_SIZE         (92 * 1024 + 256)
 
 /* 软标志区 */
-#define MEMORY_AXI_SOFT_FLAG_ADDR           (MEMORY_AXI_DYNAMIC_SEC_ADDR + MEMORY_AXI_DYNAMIC_SEC_SIZE) 
+#define MEMORY_AXI_SOFT_FLAG_ADDR           (MEMORY_AXI_DYNAMIC_SEC_ADDR + MEMORY_AXI_DYNAMIC_SEC_SIZE)
 #define MEMORY_AXI_SOFT_FLAG_SIZE           (1024)
 
 /* IPF数据区 */
 #define MEMORY_AXI_IPF_ADDR                 (MEMORY_AXI_SOFT_FLAG_ADDR + MEMORY_AXI_SOFT_FLAG_SIZE)
-#define MEMORY_AXI_IPF_SIZE                 (30*1024)
+#define MEMORY_AXI_IPF_SIZE                 (30 * 1024)
 
 /* 温保区 */
 #define MEMORY_AXI_TEMP_PROTECT_ADDR        (MEMORY_AXI_IPF_ADDR + MEMORY_AXI_IPF_SIZE)
@@ -897,14 +897,14 @@ extern "C" {
 
 /* 保留 */
 #define MEMORY_AXI_RESERVE_ADDR             (MEMORY_AXI_PTABLE_ADDR + MEMORY_AXI_PTABLE_SIZE)
-#define MEMORY_AXI_RESERVE_SIZE             (1024 -256)
+#define MEMORY_AXI_RESERVE_SIZE             (1024 - 256)
 
 /* 升级标识 */
 #define MEMORY_AXI_DLOAD_AUTOINSTALL_ADDR   (MEMORY_AXI_RESERVE_ADDR + MEMORY_AXI_RESERVE_SIZE)
 #define MEMORY_AXI_DLOAD_AUTOINSTALL_SIZE   (48)
 
 #define MEMORY_AXI_DLOAD_ADDR               (MEMORY_AXI_DLOAD_AUTOINSTALL_ADDR + MEMORY_AXI_DLOAD_AUTOINSTALL_SIZE)
-#define MEMORY_AXI_DLOAD_SIZE               (256-48)
+#define MEMORY_AXI_DLOAD_SIZE               (256 - 48)
 
 #define MEMORY_AXI_END_ADDR               (MEMORY_AXI_DLOAD_ADDR + MEMORY_AXI_DLOAD_SIZE)
 
@@ -916,28 +916,28 @@ extern "C" {
 #define GLOBAL_MEM_SIZE                        (0x08000000)
 
 /*                      DDR 分配图
-
-               +---------------------+---------+ --> 0x30000000
-               | ACP内存             | 1M      | 
-               +---------------------+---------+ --> 0x30100000
-               | C核内存             | 62M-24K | 
-               +---------------------+---------+ --> 0x33EFA000
-               | Debug信息区域        | 4K      | 
-               +---------------------+---------+ --> 0x33EFB000
-               | 异常记录            | 1M      |
-               +---------------------+---------+ --> 0x33FFB000
-               | UNUSED内存0         | 20K     |
-               +---------------------+---------+ --> 0x34000000
-	           | 共享内存            | 4M      |
-               +---------------------+---------+ --> 0x34400000
-               | A核内存             | 32M     |
-               +---------------------+---------+ --> 0x36400000
-               | UNUSED内存1         | 12M     |
-               +---------------------+---------+ --> 0x37000000
-               | GUPS预留内存        | 16M     |              
-               +---------------------+---------+ --> 0x38000000
-          
-*/
+ *
+ +---------------------+---------+ --> 0x30000000
+ | ACP内存             | 1M      |
+ +---------------------+---------+ --> 0x30100000
+ | C核内存             | 62M-24K |
+ +---------------------+---------+ --> 0x33EFA000
+ | Debug信息区域        | 4K      |
+ +---------------------+---------+ --> 0x33EFB000
+ | 异常记录            | 1M      |
+ +---------------------+---------+ --> 0x33FFB000
+ | UNUSED内存0         | 20K     |
+ +---------------------+---------+ --> 0x34000000
+ | 共享内存            | 4M      |
+ +---------------------+---------+ --> 0x34400000
+ | A核内存             | 32M     |
+ +---------------------+---------+ --> 0x36400000
+ | UNUSED内存1         | 12M     |
+ +---------------------+---------+ --> 0x37000000
+ | GUPS预留内存        | 16M     |
+ +---------------------+---------+ --> 0x38000000
+ |
+ */
 /* MCORE ACP */
 #define GLOBAL_MEM_MCORE_ACP_ADDR              (GLOBAL_MEM_BASE_ADDR)
 #define GLOBAL_MEM_MCORE_ACP_SIZE              (0x00100000)
@@ -993,35 +993,35 @@ extern "C" {
 
 
 /*                      AXI Memory 分配图
-
-               +---------------------+---------+ --> 0x2FFE0000
-               | A核低功耗           | 16KB    |               
-               +---------------------+---------+ --> 0x2FFE4000
-               | FLASH资源锁         | 32B     |
-               +---------------------+---------+ --> 0x2FFE4020
-               | IFC标识             | 32B     |
-               +---------------------+---------+ --> 0x2FFE4040
-	           | ICC标识             | 1K      |
-	           +---------------------+---------+ --> 0x2FFE4440
-	           | 内存管理            | 1K      |
-               +---------------------+---------+ --> 0x2FFE4840
-               | 动态内存区          |73K-256B|
-               +---------------------+---------+ --> 0x2FFF6B40
-               | IPF数据区           | 30K     |
-               +---------------------+---------+ --> 0x2FFFE340
-               | 温保区              | 128B    |
-               +---------------------+---------+ --> 0x2FFFE3C0
-               | 开关机              | 32B     |
-               +---------------------+---------+ --> 0x2FFFE3E0
-               | DICC标识            | 32B     |
-               +---------------------+---------+ --> 0x2FFFE400
-               | HIFI数据区          | 6K      |              
-               +---------------------+---------+ --> 0x2FFFFC00
-               | 保留区              | 1K-256B |
-               +---------------------+---------+ --> 0x2FFFFF00
-               | 升级标识            | 256B    |              
-               +---------------------+---------+ --> 0x30000000
-*/ 
+ *
+ +---------------------+---------+ --> 0x2FFE0000
+ | A核低功耗           | 16KB    |
+ +---------------------+---------+ --> 0x2FFE4000
+ | FLASH资源锁         | 32B     |
+ +---------------------+---------+ --> 0x2FFE4020
+ | IFC标识             | 32B     |
+ +---------------------+---------+ --> 0x2FFE4040
+ | ICC标识             | 1K      |
+ +---------------------+---------+ --> 0x2FFE4440
+ | 内存管理            | 1K      |
+ +---------------------+---------+ --> 0x2FFE4840
+ | 动态内存区          |73K-256B|
+ +---------------------+---------+ --> 0x2FFF6B40
+ | IPF数据区           | 30K     |
+ +---------------------+---------+ --> 0x2FFFE340
+ | 温保区              | 128B    |
+ +---------------------+---------+ --> 0x2FFFE3C0
+ | 开关机              | 32B     |
+ +---------------------+---------+ --> 0x2FFFE3E0
+ | DICC标识            | 32B     |
+ +---------------------+---------+ --> 0x2FFFE400
+ | HIFI数据区          | 6K      |
+ +---------------------+---------+ --> 0x2FFFFC00
+ | 保留区              | 1K-256B |
+ +---------------------+---------+ --> 0x2FFFFF00
+ | 升级标识            | 256B    |
+ +---------------------+---------+ --> 0x30000000
+ */
 
 /* A核低功耗 */
 #define MEMORY_AXI_ACPU_DEEPSLEEP_ADDR      (GLOBAL_AXI_MEM_BASE_ADDR)
@@ -1045,15 +1045,15 @@ extern "C" {
 
 /* 动态内存区 */
 #define MEMORY_AXI_DYNAMIC_SEC_ADDR         (MEMORY_AXI_MEMMGR_FLAG_ADDR + MEMORY_AXI_MEMMGR_FLAG_SIZE)
-#define MEMORY_AXI_DYNAMIC_SEC_SIZE         (71*1024 - 256)
+#define MEMORY_AXI_DYNAMIC_SEC_SIZE         (71 * 1024 - 256)
 
 /* 软标志区 */
-#define MEMORY_AXI_SOFT_FLAG_ADDR           (MEMORY_AXI_DYNAMIC_SEC_ADDR + MEMORY_AXI_DYNAMIC_SEC_SIZE) 
+#define MEMORY_AXI_SOFT_FLAG_ADDR           (MEMORY_AXI_DYNAMIC_SEC_ADDR + MEMORY_AXI_DYNAMIC_SEC_SIZE)
 #define MEMORY_AXI_SOFT_FLAG_SIZE           (1024)
 
 /* IPF数据区 */
 #define MEMORY_AXI_IPF_ADDR                 (MEMORY_AXI_SOFT_FLAG_ADDR + MEMORY_AXI_SOFT_FLAG_SIZE)
-#define MEMORY_AXI_IPF_SIZE                 (30*1024)
+#define MEMORY_AXI_IPF_SIZE                 (30 * 1024)
 
 /* 温保区 */
 #define MEMORY_AXI_TEMP_PROTECT_ADDR        (MEMORY_AXI_IPF_ADDR + MEMORY_AXI_IPF_SIZE)
@@ -1069,7 +1069,7 @@ extern "C" {
 
 /* HIFI数据区 */
 #define MEMORY_AXI_HIFI_ADDR                (MEMORY_AXI_DICC_ADDR + MEMORY_AXI_DICC_SIZE)
-#define MEMORY_AXI_HIFI_SIZE                (6*1024)
+#define MEMORY_AXI_HIFI_SIZE                (6 * 1024)
 
 /* Flash分区表 */
 #define MEMORY_AXI_PTABLE_ADDR              (MEMORY_AXI_HIFI_ADDR + MEMORY_AXI_HIFI_SIZE)
@@ -1077,14 +1077,14 @@ extern "C" {
 
 /* 保留 */
 #define MEMORY_AXI_RESERVE_ADDR             (MEMORY_AXI_PTABLE_ADDR + MEMORY_AXI_PTABLE_SIZE)
-#define MEMORY_AXI_RESERVE_SIZE             (1024 -256)
+#define MEMORY_AXI_RESERVE_SIZE             (1024 - 256)
 
 /* 升级标识 */
 #define MEMORY_AXI_DLOAD_AUTOINSTALL_ADDR   (MEMORY_AXI_RESERVE_ADDR + MEMORY_AXI_RESERVE_SIZE)
 #define MEMORY_AXI_DLOAD_AUTOINSTALL_SIZE   (48)
 
 #define MEMORY_AXI_DLOAD_ADDR               (MEMORY_AXI_DLOAD_AUTOINSTALL_ADDR + MEMORY_AXI_DLOAD_AUTOINSTALL_SIZE)
-#define MEMORY_AXI_DLOAD_SIZE               (256-48)
+#define MEMORY_AXI_DLOAD_SIZE               (256 - 48)
 
 #define MEMORY_AXI_END_ADDR               (MEMORY_AXI_DLOAD_ADDR + MEMORY_AXI_DLOAD_SIZE)
 
@@ -1092,26 +1092,26 @@ extern "C" {
 
 /*Memory size check*/
 /*#if (MEMORY_AXI_END_ADDR != (AXI_MEM_ADDR + AXI_MEM_SIZE))
-#error AXI(MEMORY_AXI_END_ADDR) USED beyond the mark (AXI_MEM_ADDR+AXI_MEM_SIZE)
-#endif*/
+ #error AXI(MEMORY_AXI_END_ADDR) USED beyond the mark (AXI_MEM_ADDR+AXI_MEM_SIZE)
+ #endif*/
 
 /*-------------------------------------------------------------------------------
-                            双核共享内存
-  -------------------------------------------------------------------------------
-                         ----------------------- 
-                         |  SYNC(0x60)                  |
-                         ----------------------- 
-                         |  MEM spinlock(0x20)       |
-                         ----------------------- 
-                         |  ICC(0x80)                    |
-                         ----------------------- 
-                         | TENCILICA_TEXT(0)       |
-                         ----------------------- 
-                         |  WAN0x8000)                 |
-                         ----------------------- 
-                         |  MEM MGR M                  |
-                         ----------------------- 
--------------------------------------------------------------------------------*/
+*                           双核共享内存
+*  -------------------------------------------------------------------------------
+*                        -----------------------
+|  SYNC(0x60)                  |
+|                        -----------------------
+|  MEM spinlock(0x20)       |
+|                        -----------------------
+|  ICC(0x80)                    |
+|                        -----------------------
+| TENCILICA_TEXT(0)       |
+|                        -----------------------
+|  WAN0x8000)                 |
+|                        -----------------------
+|  MEM MGR M                  |
+|                        -----------------------
+|  -------------------------------------------------------------------------------*/
 /* 从顶往下分配，以下地址和大小不可改变 */
 #define MEMORY_RAM_CORESHARE_SIZE                   (GLOBAL_MEM_CORE_SHARE_SIZE)
 
@@ -1121,21 +1121,21 @@ extern "C" {
 #define MEMORY_RAM_CORESHARE_TENCILICA_TEXT_RESV    (0)
 #define MEMORY_RAM_CORESHARE_MEM_WAN_SIZE           (0x8000)
 #if (defined(BOARD_ASIC) && defined(VERSION_V3R2) && (defined(CHIP_BB_6756CS)))
-#define MEMORY_RAM_CORESHARE_MEM_IPF_SIZE            (30*1024)
+#define MEMORY_RAM_CORESHARE_MEM_IPF_SIZE            (30 * 1024)
 #define MEMORY_RAM_CORESHARE_MEMMGR_SIZE            (MEMORY_RAM_CORESHARE_SIZE \
-                                                    - MEMORY_RAM_CORESHARE_ICC_RESV \
-                                                    - MEMORY_RAM_CORESHARE_MEM_RESV \
-                                                    - MEMORY_RAM_CORESHARE_SYNC_RESV \
-                                                    - MEMORY_RAM_CORESHARE_TENCILICA_TEXT_RESV\
-                                                    - MEMORY_RAM_CORESHARE_MEM_WAN_SIZE\
-                                                    - MEMORY_RAM_CORESHARE_MEM_IPF_SIZE)
+						     - MEMORY_RAM_CORESHARE_ICC_RESV \
+						     - MEMORY_RAM_CORESHARE_MEM_RESV \
+						     - MEMORY_RAM_CORESHARE_SYNC_RESV \
+						     - MEMORY_RAM_CORESHARE_TENCILICA_TEXT_RESV \
+						     - MEMORY_RAM_CORESHARE_MEM_WAN_SIZE \
+						     - MEMORY_RAM_CORESHARE_MEM_IPF_SIZE)
 #else
 #define MEMORY_RAM_CORESHARE_MEMMGR_SIZE            (MEMORY_RAM_CORESHARE_SIZE \
-                                                    - MEMORY_RAM_CORESHARE_ICC_RESV \
-                                                    - MEMORY_RAM_CORESHARE_MEM_RESV \
-                                                    - MEMORY_RAM_CORESHARE_SYNC_RESV \
-                                                    - MEMORY_RAM_CORESHARE_TENCILICA_TEXT_RESV\
-                                                    - MEMORY_RAM_CORESHARE_MEM_WAN_SIZE)
+						     - MEMORY_RAM_CORESHARE_ICC_RESV \
+						     - MEMORY_RAM_CORESHARE_MEM_RESV \
+						     - MEMORY_RAM_CORESHARE_SYNC_RESV \
+						     - MEMORY_RAM_CORESHARE_TENCILICA_TEXT_RESV \
+						     - MEMORY_RAM_CORESHARE_MEM_WAN_SIZE)
 #endif
 
 #ifdef BSP_CORE_MODEM
@@ -1148,11 +1148,11 @@ extern "C" {
 #define MEMORY_RAM_CORESHARE_IPF_ADDR               (MEMORY_RAM_CORESHARE_MEMMGR_ADDR + MEMORY_RAM_CORESHARE_MEMMGR_SIZE)
 #define MEMORY_RAM_CORESHARE_MEM_WAN_ADDR           (MEMORY_RAM_CORESHARE_IPF_ADDR + MEMORY_RAM_CORESHARE_MEM_IPF_SIZE)
 #else
-#define MEMORY_RAM_CORESHARE_MEM_WAN_ADDR           (MEMORY_RAM_CORESHARE_MEMMGR_ADDR+MEMORY_RAM_CORESHARE_MEMMGR_SIZE)
+#define MEMORY_RAM_CORESHARE_MEM_WAN_ADDR           (MEMORY_RAM_CORESHARE_MEMMGR_ADDR + MEMORY_RAM_CORESHARE_MEMMGR_SIZE)
 #endif
-#define MEMORY_RAM_CORESHARE_TENCILICA_TEXT_ADDR    (MEMORY_RAM_CORESHARE_MEM_WAN_ADDR+MEMORY_RAM_CORESHARE_MEM_WAN_SIZE)
-#define MEMORY_RAM_CORESHARE_ICC_ADDR               (MEMORY_RAM_CORESHARE_TENCILICA_TEXT_ADDR+MEMORY_RAM_CORESHARE_TENCILICA_TEXT_RESV)           
-#define MEMORY_RAM_CORESHARE_MEM_ADDR               (MEMORY_RAM_CORESHARE_ICC_ADDR + MEMORY_RAM_CORESHARE_ICC_RESV) 
+#define MEMORY_RAM_CORESHARE_TENCILICA_TEXT_ADDR    (MEMORY_RAM_CORESHARE_MEM_WAN_ADDR + MEMORY_RAM_CORESHARE_MEM_WAN_SIZE)
+#define MEMORY_RAM_CORESHARE_ICC_ADDR               (MEMORY_RAM_CORESHARE_TENCILICA_TEXT_ADDR + MEMORY_RAM_CORESHARE_TENCILICA_TEXT_RESV)
+#define MEMORY_RAM_CORESHARE_MEM_ADDR               (MEMORY_RAM_CORESHARE_ICC_ADDR + MEMORY_RAM_CORESHARE_ICC_RESV)
 #define MEMORY_RAM_CORESHARE_SYNC_ADDR              (MEMORY_RAM_CORESHARE_MEM_ADDR + MEMORY_RAM_CORESHARE_MEM_RESV)
 
 #if (defined(BOARD_ASIC) && defined(VERSION_V3R2) && (defined(CHIP_BB_6756CS)))
@@ -1166,10 +1166,9 @@ extern "C" {
 
 
 #ifdef __cplusplus
-    #if __cplusplus
-        }
-    #endif
+#if __cplusplus
+}
+#endif
 #endif
 
 #endif /* end of __MEMMORY_LAYOUT_H__ */
-

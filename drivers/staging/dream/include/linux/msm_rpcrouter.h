@@ -23,8 +23,8 @@
 #define RPC_ROUTER_VERSION_V1 0x00010000
 
 struct rpcrouter_ioctl_server_args {
-	uint32_t prog;
-	uint32_t vers;
+	uint32_t	prog;
+	uint32_t	vers;
 };
 
 #define RPC_ROUTER_IOCTL_MAGIC (0xC1)

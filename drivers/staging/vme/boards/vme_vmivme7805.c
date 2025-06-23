@@ -35,10 +35,10 @@ static struct pci_device_id vmic_ids[] = {
 };
 
 static struct pci_driver vmic_driver = {
-	.name = driver_name,
-	.id_table = vmic_ids,
-	.probe = vmic_probe,
-	.remove = vmic_remove,
+	.name		= driver_name,
+	.id_table	= vmic_ids,
+	.probe		= vmic_probe,
+	.remove		= vmic_remove,
 };
 
 static int __init vmic_init(void)
@@ -84,11 +84,11 @@ static int vmic_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	/* Enable the vme interface and byte swapping */
 	data = ioread32(vmic_base + VME_CONTROL) & 0x00000FFF;
 	data = data | BM_VME_CONTROL_MASTER_ENDIAN |
-			BM_VME_CONTROL_SLAVE_ENDIAN |
-			BM_VME_CONTROL_ABLE |
-			BM_VME_CONTROL_BERRI |
-			BM_VME_CONTROL_BPENA |
-			BM_VME_CONTROL_VBENA;
+	       BM_VME_CONTROL_SLAVE_ENDIAN |
+	       BM_VME_CONTROL_ABLE |
+	       BM_VME_CONTROL_BERRI |
+	       BM_VME_CONTROL_BPENA |
+	       BM_VME_CONTROL_VBENA;
 	iowrite32(data, vmic_base + VME_CONTROL);
 
 	return 0;
@@ -106,7 +106,6 @@ static void vmic_remove(struct pci_dev *pdev)
 	iounmap(vmic_base);
 	pci_release_regions(pdev);
 	pci_disable_device(pdev);
-
 }
 
 static void __exit vmic_exit(void)
@@ -120,4 +119,3 @@ MODULE_LICENSE("GPL");
 
 module_init(vmic_init);
 module_exit(vmic_exit);
-

@@ -29,13 +29,13 @@
  * Per performance monitor configuration as set via oprofilefs.
  */
 struct op_counter_config {
-	unsigned long count;
-	unsigned long enabled;
-	unsigned long event;
-	unsigned long unit_mask;
-	unsigned long kernel;
-	unsigned long user;
-	struct perf_event_attr attr;
+	unsigned long		count;
+	unsigned long		enabled;
+	unsigned long		event;
+	unsigned long		unit_mask;
+	unsigned long		kernel;
+	unsigned long		user;
+	struct perf_event_attr	attr;
 };
 
 static int op_arm_enabled;
@@ -49,7 +49,7 @@ static int perf_num_counters;
  * Overflow callback for oprofile.
  */
 static void op_overflow_handler(struct perf_event *event, int unused,
-			struct perf_sample_data *data, struct pt_regs *regs)
+				struct perf_sample_data *data, struct pt_regs *regs)
 {
 	int id;
 	u32 cpu = smp_processor_id();
@@ -62,7 +62,7 @@ static void op_overflow_handler(struct perf_event *event, int unused,
 		oprofile_add_sample(regs, id);
 	else
 		pr_warning("oprofile: ignoring spurious overflow "
-				"on cpu %u\n", cpu);
+			   "on cpu %u\n", cpu);
 }
 
 /*
@@ -79,11 +79,11 @@ static void op_perf_setup(void)
 	for (i = 0; i < perf_num_counters; ++i) {
 		attr = &counter_config[i].attr;
 		memset(attr, 0, size);
-		attr->type		= PERF_TYPE_RAW;
-		attr->size		= size;
-		attr->config		= counter_config[i].event;
-		attr->sample_period	= counter_config[i].count;
-		attr->pinned		= 1;
+		attr->type = PERF_TYPE_RAW;
+		attr->size = size;
+		attr->config = counter_config[i].event;
+		attr->sample_period = counter_config[i].count;
+		attr->pinned = 1;
 	}
 }
 
@@ -103,7 +103,7 @@ static int op_create_counter(int cpu, int event)
 		ret = PTR_ERR(pevent);
 	} else if (pevent->state != PERF_EVENT_STATE_ACTIVE) {
 		pr_warning("oprofile: failed to enable event %d "
-				"on CPU %d\n", event, cpu);
+			   "on CPU %d\n", event, cpu);
 		ret = -EBUSY;
 	} else {
 		perf_events[cpu][event] = pevent;
@@ -150,8 +150,8 @@ static void op_perf_stop(void)
 	int cpu, event;
 
 	for_each_online_cpu(cpu)
-		for (event = 0; event < perf_num_counters; ++event)
-			op_destroy_counter(cpu, event);
+	for (event = 0; event < perf_num_counters; ++event)
+		op_destroy_counter(cpu, event);
 }
 
 
@@ -247,8 +247,8 @@ static int op_arm_resume(struct platform_device *dev)
 }
 
 static struct platform_driver oprofile_driver = {
-	.driver		= {
-		.name		= "arm-oprofile",
+	.driver		={
+		.name	= "arm-oprofile",
 	},
 	.resume		= op_arm_resume,
 	.suspend	= op_arm_suspend,
@@ -264,8 +264,8 @@ static int __init init_driverfs(void)
 	if (ret)
 		goto out;
 
-	oprofile_pdev =	platform_device_register_simple(
-				oprofile_driver.driver.name, 0, NULL, 0);
+	oprofile_pdev = platform_device_register_simple(
+		oprofile_driver.driver.name, 0, NULL, 0);
 	if (IS_ERR(oprofile_pdev)) {
 		ret = PTR_ERR(oprofile_pdev);
 		platform_driver_unregister(&oprofile_driver);
@@ -281,7 +281,10 @@ static void  exit_driverfs(void)
 	platform_driver_unregister(&oprofile_driver);
 }
 #else
-static int __init init_driverfs(void) { return 0; }
+static int __init init_driverfs(void)
+{
+	return 0;
+}
 #define exit_driverfs() do { } while (0)
 #endif /* CONFIG_PM */
 
@@ -304,12 +307,12 @@ static int report_trace(struct stackframe *frame, void *d)
  * (struct frame_tail *)(xxx->fp)-1
  */
 struct frame_tail {
-	struct frame_tail *fp;
-	unsigned long sp;
-	unsigned long lr;
+	struct frame_tail *	fp;
+	unsigned long		sp;
+	unsigned long		lr;
 } __attribute__((packed));
 
-static struct frame_tail* user_backtrace(struct frame_tail *tail)
+static struct frame_tail * user_backtrace(struct frame_tail *tail)
 {
 	struct frame_tail buftail[2];
 
@@ -326,12 +329,12 @@ static struct frame_tail* user_backtrace(struct frame_tail *tail)
 	if (tail >= buftail[0].fp)
 		return NULL;
 
-	return buftail[0].fp-1;
+	return buftail[0].fp - 1;
 }
 
 static void arm_backtrace(struct pt_regs * const regs, unsigned int depth)
 {
-	struct frame_tail *tail = ((struct frame_tail *) regs->ARM_fp) - 1;
+	struct frame_tail *tail = ((struct frame_tail *)regs->ARM_fp) - 1;
 
 	if (!user_mode(regs)) {
 		struct stackframe frame;
@@ -343,7 +346,7 @@ static void arm_backtrace(struct pt_regs * const regs, unsigned int depth)
 		return;
 	}
 
-	while (depth-- && tail && !((unsigned long) tail & 3))
+	while (depth-- && tail && !((unsigned long)tail & 3))
 		tail = user_backtrace(tail);
 }
 
@@ -354,11 +357,11 @@ int __init oprofile_arch_init(struct oprofile_operations *ops)
 	perf_num_counters = armpmu_get_max_events();
 
 	counter_config = kcalloc(perf_num_counters,
-			sizeof(struct op_counter_config), GFP_KERNEL);
+				 sizeof(struct op_counter_config), GFP_KERNEL);
 
 	if (!counter_config) {
 		pr_info("oprofile: failed to allocate %d "
-				"counters\n", perf_num_counters);
+			"counters\n", perf_num_counters);
 		return -ENOMEM;
 	}
 
@@ -370,23 +373,23 @@ int __init oprofile_arch_init(struct oprofile_operations *ops)
 
 	for_each_possible_cpu(cpu) {
 		perf_events[cpu] = kcalloc(perf_num_counters,
-				sizeof(struct perf_event *), GFP_KERNEL);
+					   sizeof(struct perf_event *), GFP_KERNEL);
 		if (!perf_events[cpu]) {
 			pr_info("oprofile: failed to allocate %d perf events "
-					"for cpu %d\n", perf_num_counters, cpu);
+				"for cpu %d\n", perf_num_counters, cpu);
 			while (--cpu >= 0)
 				kfree(perf_events[cpu]);
 			return -ENOMEM;
 		}
 	}
 
-	ops->backtrace		= arm_backtrace;
-	ops->create_files	= op_arm_create_files;
-	ops->setup		= op_arm_setup;
-	ops->start		= op_arm_start;
-	ops->stop		= op_arm_stop;
-	ops->shutdown		= op_arm_stop;
-	ops->cpu_type		= op_name_from_perf_id(armpmu_get_pmu_id());
+	ops->backtrace = arm_backtrace;
+	ops->create_files = op_arm_create_files;
+	ops->setup = op_arm_setup;
+	ops->start = op_arm_start;
+	ops->stop = op_arm_stop;
+	ops->shutdown = op_arm_stop;
+	ops->cpu_type = op_name_from_perf_id(armpmu_get_pmu_id());
 
 	if (!ops->cpu_type)
 		ret = -ENODEV;
@@ -422,5 +425,7 @@ int __init oprofile_arch_init(struct oprofile_operations *ops)
 	pr_info("oprofile: hardware counters not available\n");
 	return -ENODEV;
 }
-void oprofile_arch_exit(void) {}
+void oprofile_arch_exit(void)
+{
+}
 #endif /* CONFIG_HW_PERF_EVENTS */

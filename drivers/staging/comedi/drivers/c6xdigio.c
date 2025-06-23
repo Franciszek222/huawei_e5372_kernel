@@ -1,39 +1,39 @@
 /*
-   comedi/drivers/c6xdigio.c
-
-   Hardware driver for Mechatronic Systems Inc. C6x_DIGIO DSP daughter card.
-   (http://robot0.ge.uiuc.edu/~spong/mecha/)
-
-   COMEDI - Linux Control and Measurement Device Interface
-   Copyright (C) 1999 Dan Block
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
+ * comedi/drivers/c6xdigio.c
+ *
+ * Hardware driver for Mechatronic Systems Inc. C6x_DIGIO DSP daughter card.
+ * (http://robot0.ge.uiuc.edu/~spong/mecha/)
+ *
+ * COMEDI - Linux Control and Measurement Device Interface
+ * Copyright (C) 1999 Dan Block
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
  */
 /*
-Driver: c6xdigio
-Description: Mechatronic Systems Inc. C6x_DIGIO DSP daughter card
-Author: Dan Block
-Status: unknown
-Devices: [Mechatronic Systems Inc.] C6x_DIGIO DSP daughter card (c6xdigio)
-Updated: Sun Nov 20 20:18:34 EST 2005
-
-This driver will not work with a 2.4 kernel.
-http://robot0.ge.uiuc.edu/~spong/mecha/
-
-*/
+ * Driver: c6xdigio
+ * Description: Mechatronic Systems Inc. C6x_DIGIO DSP daughter card
+ * Author: Dan Block
+ * Status: unknown
+ * Devices: [Mechatronic Systems Inc.] C6x_DIGIO DSP daughter card (c6xdigio)
+ * Updated: Sun Nov 20 20:18:34 EST 2005
+ *
+ * This driver will not work with a 2.4 kernel.
+ * http://robot0.ge.uiuc.edu/~spong/mecha/
+ *
+ */
 
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -53,6 +53,7 @@ http://robot0.ge.uiuc.edu/~spong/mecha/
 static u8 ReadByteFromHwPort(unsigned long addr)
 {
 	u8 result = inb(addr);
+
 	return result;
 }
 
@@ -70,41 +71,40 @@ static void WriteByteToHwPort(unsigned long addr, u8 val)
 #define C6XDIGIO_PARALLEL_STATUS 1
 #define C6XDIGIO_PARALLEL_CONTROL 2
 struct pwmbitstype {
-	unsigned sb0:2;
-	unsigned sb1:2;
-	unsigned sb2:2;
-	unsigned sb3:2;
-	unsigned sb4:2;
+	unsigned	sb0:2;
+	unsigned	sb1:2;
+	unsigned	sb2:2;
+	unsigned	sb3:2;
+	unsigned	sb4:2;
 };
 union pwmcmdtype {
-	unsigned cmd;		/*  assuming here that int is 32bit */
-	struct pwmbitstype bits;
+	unsigned		cmd; /*  assuming here that int is 32bit */
+	struct pwmbitstype	bits;
 };
 struct encbitstype {
-	unsigned sb0:3;
-	unsigned sb1:3;
-	unsigned sb2:3;
-	unsigned sb3:3;
-	unsigned sb4:3;
-	unsigned sb5:3;
-	unsigned sb6:3;
-	unsigned sb7:3;
+	unsigned	sb0:3;
+	unsigned	sb1:3;
+	unsigned	sb2:3;
+	unsigned	sb3:3;
+	unsigned	sb4:3;
+	unsigned	sb5:3;
+	unsigned	sb6:3;
+	unsigned	sb7:3;
 };
 union encvaluetype {
-	unsigned value;
-	struct encbitstype bits;
+	unsigned		value;
+	struct encbitstype	bits;
 };
 
 #define C6XDIGIO_TIME_OUT 20
 
-static int c6xdigio_attach(struct comedi_device *dev,
-			   struct comedi_devconfig *it);
+static int c6xdigio_attach(struct comedi_device *dev, struct comedi_devconfig *it);
 static int c6xdigio_detach(struct comedi_device *dev);
 struct comedi_driver driver_c6xdigio = {
-	.driver_name = "c6xdigio",
-	.module = THIS_MODULE,
-	.attach = c6xdigio_attach,
-	.detach = c6xdigio_detach,
+	.driver_name	= "c6xdigio",
+	.module		= THIS_MODULE,
+	.attach		= c6xdigio_attach,
+	.detach		= c6xdigio_detach,
 };
 
 static void C6X_pwmInit(unsigned long baseAddr)
@@ -115,30 +115,26 @@ static void C6X_pwmInit(unsigned long baseAddr)
 
 	WriteByteToHwPort(baseAddr, 0x70);
 	while (((ReadByteFromHwPort(baseAddr + 1) & 0x80) == 0)
-	       && (timeout < C6XDIGIO_TIME_OUT)) {
+	       && (timeout < C6XDIGIO_TIME_OUT))
 		timeout++;
-	}
 
 	WriteByteToHwPort(baseAddr, 0x74);
 	timeout = 0;
 	while (((ReadByteFromHwPort(baseAddr + 1) & 0x80) == 0x80)
-	       && (timeout < C6XDIGIO_TIME_OUT)) {
+	       && (timeout < C6XDIGIO_TIME_OUT))
 		timeout++;
-	}
 
 	WriteByteToHwPort(baseAddr, 0x70);
 	timeout = 0;
 	while (((ReadByteFromHwPort(baseAddr + 1) & 0x80) == 0x0)
-	       && (timeout < C6XDIGIO_TIME_OUT)) {
+	       && (timeout < C6XDIGIO_TIME_OUT))
 		timeout++;
-	}
 
 	WriteByteToHwPort(baseAddr, 0x0);
 	timeout = 0;
 	while (((ReadByteFromHwPort(baseAddr + 1) & 0x80) == 0x80)
-	       && (timeout < C6XDIGIO_TIME_OUT)) {
+	       && (timeout < C6XDIGIO_TIME_OUT))
 		timeout++;
-	}
 
 }
 
@@ -157,11 +153,11 @@ static void C6X_pwmOutput(unsigned long baseAddr, unsigned channel, int value)
 	if (pwm.cmd < 2)
 		pwm.cmd = 2;
 
-	if (channel == 0) {
+	if (channel == 0)
 		ppcmd = 0x28;
-	} else {		/*  if channel == 1 */
+	else                    /*  if channel == 1 */
 		ppcmd = 0x30;
-	}			/* endif */
+	/* endif */
 
 	WriteByteToHwPort(baseAddr, ppcmd + pwm.bits.sb0);
 	tmp = ReadByteFromHwPort(baseAddr + 1);
@@ -207,7 +203,6 @@ static void C6X_pwmOutput(unsigned long baseAddr, unsigned channel, int value)
 		tmp = ReadByteFromHwPort(baseAddr + 1);
 		timeout++;
 	}
-
 }
 
 static int C6X_encInput(unsigned long baseAddr, unsigned channel)
@@ -316,27 +311,23 @@ static void C6X_encResetAll(unsigned long baseAddr)
 
 	WriteByteToHwPort(baseAddr, 0x68);
 	while (((ReadByteFromHwPort(baseAddr + 1) & 0x80) == 0)
-	       && (timeout < C6XDIGIO_TIME_OUT)) {
+	       && (timeout < C6XDIGIO_TIME_OUT))
 		timeout++;
-	}
 	WriteByteToHwPort(baseAddr, 0x6C);
 	timeout = 0;
 	while (((ReadByteFromHwPort(baseAddr + 1) & 0x80) == 0x80)
-	       && (timeout < C6XDIGIO_TIME_OUT)) {
+	       && (timeout < C6XDIGIO_TIME_OUT))
 		timeout++;
-	}
 	WriteByteToHwPort(baseAddr, 0x68);
 	timeout = 0;
 	while (((ReadByteFromHwPort(baseAddr + 1) & 0x80) == 0x0)
-	       && (timeout < C6XDIGIO_TIME_OUT)) {
+	       && (timeout < C6XDIGIO_TIME_OUT))
 		timeout++;
-	}
 	WriteByteToHwPort(baseAddr, 0x0);
 	timeout = 0;
 	while (((ReadByteFromHwPort(baseAddr + 1) & 0x80) == 0x80)
-	       && (timeout < C6XDIGIO_TIME_OUT)) {
+	       && (timeout < C6XDIGIO_TIME_OUT))
 		timeout++;
-	}
 }
 
 static int c6xdigio_pwmo_insn_read(struct comedi_device *dev,
@@ -347,10 +338,10 @@ static int c6xdigio_pwmo_insn_read(struct comedi_device *dev,
 	return insn->n;
 }
 
-static int c6xdigio_pwmo_insn_write(struct comedi_device *dev,
-				    struct comedi_subdevice *s,
-				    struct comedi_insn *insn,
-				    unsigned int *data)
+static int c6xdigio_pwmo_insn_write(struct comedi_device *	dev,
+				    struct comedi_subdevice *	s,
+				    struct comedi_insn *	insn,
+				    unsigned int *		data)
 {
 	int i;
 	int chan = CR_CHAN(insn->chanspec);
@@ -379,8 +370,8 @@ static int c6xdigio_pwmo_insn_write(struct comedi_device *dev,
 /* { */
 /* int i; */
 /* int chan = CR_CHAN(insn->chanspec); */
-      /*  *//* C6X_encResetAll( dev->iobase ); */
-      /*  *//* return insn->n; */
+/*  *//* C6X_encResetAll( dev->iobase ); */
+/*  *//* return insn->n; */
 /* } */
 
 static int c6xdigio_ei_insn_read(struct comedi_device *dev,
@@ -399,12 +390,10 @@ static int c6xdigio_ei_insn_read(struct comedi_device *dev,
 
 static void board_init(struct comedi_device *dev)
 {
-
 	/* printk("Inside board_init\n"); */
 
 	C6X_pwmInit(dev->iobase);
 	C6X_encResetAll(dev->iobase);
-
 }
 
 /* static void board_halt(struct comedi_device *dev) { */
@@ -412,26 +401,26 @@ static void board_init(struct comedi_device *dev)
 /* } */
 
 /*
-   options[0] - I/O port
-   options[1] - irq
-   options[2] - number of encoder chips installed
+ * options[0] - I/O port
+ * options[1] - irq
+ * options[2] - number of encoder chips installed
  */
 
 static const struct pnp_device_id c6xdigio_pnp_tbl[] = {
 	/* Standard LPT Printer Port */
-	{.id = "PNP0400", .driver_data = 0},
+	{ .id = "PNP0400", .driver_data = 0 },
 	/* ECP Printer Port */
-	{.id = "PNP0401", .driver_data = 0},
+	{ .id = "PNP0401", .driver_data = 0 },
 	{}
 };
 
 static struct pnp_driver c6xdigio_pnp_driver = {
-	.name = "c6xdigio",
-	.id_table = c6xdigio_pnp_tbl,
+	.name		= "c6xdigio",
+	.id_table	= c6xdigio_pnp_tbl,
 };
 
-static int c6xdigio_attach(struct comedi_device *dev,
-			   struct comedi_devconfig *it)
+static int c6xdigio_attach(struct comedi_device *	dev,
+			   struct comedi_devconfig *	it)
 {
 	int result = 0;
 	unsigned long iobase;
@@ -447,7 +436,7 @@ static int c6xdigio_attach(struct comedi_device *dev,
 	dev->iobase = iobase;
 	dev->board_name = "c6xdigio";
 
-	result = alloc_subdevices(dev, 2);	/*  3 with encoder_init write */
+	result = alloc_subdevices(dev, 2);      /*  3 with encoder_init write */
 	if (result < 0)
 		return result;
 
@@ -462,14 +451,14 @@ static int c6xdigio_attach(struct comedi_device *dev,
 
 	s = dev->subdevices + 0;
 	/* pwm output subdevice */
-	s->type = COMEDI_SUBD_AO;	/*  Not sure what to put here */
+	s->type = COMEDI_SUBD_AO;       /*  Not sure what to put here */
 	s->subdev_flags = SDF_WRITEABLE;
 	s->n_chan = 2;
 	/*      s->trig[0] = c6xdigio_pwmo; */
 	s->insn_read = c6xdigio_pwmo_insn_read;
 	s->insn_write = c6xdigio_pwmo_insn_write;
 	s->maxdata = 500;
-	s->range_table = &range_bipolar10;	/*  A suitable lie */
+	s->range_table = &range_bipolar10;      /*  A suitable lie */
 
 	s = dev->subdevices + 1;
 	/* encoder (counter) subdevice */

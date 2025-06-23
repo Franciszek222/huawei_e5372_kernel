@@ -40,30 +40,30 @@
 #include "cvmx-stxx-defs.h"
 #include "cvmx-srxx-defs.h"
 
-#define INVOKE_CB(function_p, args...)		\
-	do {					\
-		if (function_p) {		\
+#define INVOKE_CB(function_p, args ...)          \
+	do {                                    \
+		if (function_p) {               \
 			res = function_p(args); \
-			if (res)		\
-				return res;	\
-		}				\
+			if (res)                \
+			return res;     \
+		}                               \
 	} while (0)
 
 #if CVMX_ENABLE_DEBUG_PRINTS
 static const char *modes[] =
-    { "UNKNOWN", "TX Halfplex", "Rx Halfplex", "Duplex" };
+{ "UNKNOWN", "TX Halfplex", "Rx Halfplex", "Duplex" };
 #endif
 
 /* Default callbacks, can be overridden
  *  using cvmx_spi_get_callbacks/cvmx_spi_set_callbacks
  */
 static cvmx_spi_callbacks_t cvmx_spi_callbacks = {
-	.reset_cb = cvmx_spi_reset_cb,
-	.calendar_setup_cb = cvmx_spi_calendar_setup_cb,
-	.clock_detect_cb = cvmx_spi_clock_detect_cb,
-	.training_cb = cvmx_spi_training_cb,
-	.calendar_sync_cb = cvmx_spi_calendar_sync_cb,
-	.interface_up_cb = cvmx_spi_interface_up_cb
+	.reset_cb		= cvmx_spi_reset_cb,
+	.calendar_setup_cb	= cvmx_spi_calendar_setup_cb,
+	.clock_detect_cb	= cvmx_spi_clock_detect_cb,
+	.training_cb		= cvmx_spi_training_cb,
+	.calendar_sync_cb	= cvmx_spi_calendar_sync_cb,
+	.interface_up_cb	= cvmx_spi_interface_up_cb
 };
 
 /**
@@ -218,8 +218,8 @@ int cvmx_spi_reset_cb(int interface, cvmx_spi_mode_t mode)
 	spxx_bist_stat.u64 = cvmx_read_csr(CVMX_SPXX_BIST_STAT(interface));
 	if (spxx_bist_stat.s.stat0)
 		cvmx_dprintf
-		    ("ERROR SPI%d: BIST failed on receive datapath FIFO\n",
-		     interface);
+			("ERROR SPI%d: BIST failed on receive datapath FIFO\n",
+			interface);
 	if (spxx_bist_stat.s.stat1)
 		cvmx_dprintf("ERROR SPI%d: BIST failed on RX calendar table\n",
 			     interface);
@@ -312,6 +312,7 @@ int cvmx_spi_calendar_setup_cb(int interface, cvmx_spi_mode_t mode,
 {
 	int port;
 	int index;
+
 	if (mode & CVMX_SPI_MODE_RX_HALFPLEX) {
 		union cvmx_srxx_com_ctl srxx_com_ctl;
 		union cvmx_srxx_spi4_stat srxx_spi4_stat;
@@ -334,7 +335,7 @@ int cvmx_spi_calendar_setup_cb(int interface, cvmx_spi_mode_t mode,
 			srxx_spi4_calx.s.prt2 = port++;
 			srxx_spi4_calx.s.prt3 = port++;
 			srxx_spi4_calx.s.oddpar =
-			    ~(cvmx_dpop(srxx_spi4_calx.u64) & 1);
+				~(cvmx_dpop(srxx_spi4_calx.u64) & 1);
 			cvmx_write_csr(CVMX_SRXX_SPI4_CALX(index, interface),
 				       srxx_spi4_calx.u64);
 			index++;
@@ -382,7 +383,7 @@ int cvmx_spi_calendar_setup_cb(int interface, cvmx_spi_mode_t mode,
 		stxx_spi4_dat.u64 = 0;
 		/*Minimum needed by dynamic alignment */
 		stxx_spi4_dat.s.alpha = 32;
-		stxx_spi4_dat.s.max_t = 0xFFFF;	/*Minimum interval is 0x20 */
+		stxx_spi4_dat.s.max_t = 0xFFFF; /*Minimum interval is 0x20 */
 		cvmx_write_csr(CVMX_STXX_SPI4_DAT(interface),
 			       stxx_spi4_dat.u64);
 
@@ -397,7 +398,7 @@ int cvmx_spi_calendar_setup_cb(int interface, cvmx_spi_mode_t mode,
 			stxx_spi4_calx.s.prt2 = port++;
 			stxx_spi4_calx.s.prt3 = port++;
 			stxx_spi4_calx.s.oddpar =
-			    ~(cvmx_dpop(stxx_spi4_calx.u64) & 1);
+				~(cvmx_dpop(stxx_spi4_calx.u64) & 1);
 			cvmx_write_csr(CVMX_STXX_SPI4_CALX(index, interface),
 				       stxx_spi4_calx.u64);
 			index++;
@@ -514,6 +515,7 @@ int cvmx_spi_training_cb(int interface, cvmx_spi_mode_t mode, int timeout)
 
 	/* SRX0 & STX0 Inf0 Links are configured - begin training */
 	union cvmx_spxx_clk_ctl spxx_clk_ctl;
+
 	spxx_clk_ctl.u64 = 0;
 	spxx_clk_ctl.s.seetrn = 0;
 	spxx_clk_ctl.s.clkdly = 0x10;
@@ -576,12 +578,13 @@ int cvmx_spi_training_cb(int interface, cvmx_spi_mode_t mode, int timeout)
 int cvmx_spi_calendar_sync_cb(int interface, cvmx_spi_mode_t mode, int timeout)
 {
 	uint64_t MS = cvmx_sysinfo_get()->cpu_clock_hz / 1000;
+
 	if (mode & CVMX_SPI_MODE_RX_HALFPLEX) {
 		/* SRX0 interface should be good, send calendar data */
 		union cvmx_srxx_com_ctl srxx_com_ctl;
 		cvmx_dprintf
-		    ("SPI%d: Rx is synchronized, start sending calendar data\n",
-		     interface);
+			("SPI%d: Rx is synchronized, start sending calendar data\n",
+			interface);
 		srxx_com_ctl.u64 = cvmx_read_csr(CVMX_SRXX_COM_CTL(interface));
 		srxx_com_ctl.s.inf_en = 1;
 		srxx_com_ctl.s.st_en = 1;

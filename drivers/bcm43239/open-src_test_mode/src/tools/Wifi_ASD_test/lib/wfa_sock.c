@@ -1,4 +1,3 @@
-
 /****************************************************************************
  *  (c) Copyright 2007 Wi-Fi Alliance.  All Rights Reserved
  *
@@ -133,129 +132,126 @@ int munlockall(void)
  */
 int wfaCreateTCPServSock(unsigned short port)
 {
-    int sock;                        /* socket to create */
-    struct sockaddr_in servAddr; /* Local address */
-    const int on = 1;
+	int sock;                       /* socket to create */
+	struct sockaddr_in servAddr;    /* Local address */
+	const int on = 1;
 
-    /* Create socket for incoming connections */
-    if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-    {
-        DPRINT_ERR(WFA_ERR, "createTCPServSock socket() failed");
-        return FALSE;
-    }
+	/* Create socket for incoming connections */
+	if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
+		DPRINT_ERR(WFA_ERR, "createTCPServSock socket() failed");
+		return FALSE;
+	}
 
-    /* Construct local address structure */
-    memset(&servAddr, 0, sizeof(servAddr));
+	/* Construct local address structure */
+	memset(&servAddr, 0, sizeof(servAddr));
 #ifndef WIN32
-    wfaGetifAddr(gnetIf, &servAddr);
+	wfaGetifAddr(gnetIf, &servAddr);
 #endif
-    servAddr.sin_family = AF_INET;        /* Internet address family */
+	servAddr.sin_family = AF_INET;    /* Internet address family */
 
 #ifdef WIN32
-    servAddr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
+	servAddr.sin_addr.s_addr = htonl(INADDR_ANY);   /* Any incoming interface */
 #endif
-    servAddr.sin_port = htons(port);              /* Local port */
+	servAddr.sin_port = htons(port);                /* Local port */
 
-    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char *)&on, sizeof(on));
-    /* Bind to the local address */
-    if (bind(sock, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0)
-    {
-        DPRINT_ERR(WFA_ERR, "bind() failed");
-        return FALSE;
-    }
+	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char *)&on, sizeof(on));
+	/* Bind to the local address */
+	if (bind(sock, (struct sockaddr *)&servAddr, sizeof(servAddr)) < 0) {
+		DPRINT_ERR(WFA_ERR, "bind() failed");
+		return FALSE;
+	}
 
-    /* Mark the socket so it will listen for incoming connections */
-    if (listen(sock, MAXPENDING) < 0)
-    {
-        DPRINT_ERR(WFA_ERR, "listen() failed");
-        return FALSE;
-    }
+	/* Mark the socket so it will listen for incoming connections */
+	if (listen(sock, MAXPENDING) < 0) {
+		DPRINT_ERR(WFA_ERR, "listen() failed");
+		return FALSE;
+	}
 
-    return sock;
+	return sock;
 }
 
 /*
  * wfaCreateUDPSock(): create a UDP socket
  * input:
-       ipaddr -- local ip address for test traffic
-       port -- UDP port to receive and send
+ *     ipaddr -- local ip address for test traffic
+ *     port -- UDP port to receive and send
  * return:    socket id
  */
 int wfaCreateUDPSock(char *ipaddr, unsigned short port)
 {
-    int udpsock;                        /* socket to create */
-    struct sockaddr_in servAddr; /* Local address */
+	int udpsock;                    /* socket to create */
+	struct sockaddr_in servAddr;    /* Local address */
+
 #ifdef WIN32
-    if((udpsock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+	if ((udpsock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
 #else
-    if((udpsock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+	if ((udpsock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
 #endif
-    {
-        DPRINT_ERR(WFA_ERR, "createUDPSock socket() failed");
-        return FALSE;
-    }
+	{
+		DPRINT_ERR(WFA_ERR, "createUDPSock socket() failed");
+		return FALSE;
+	}
 
 	memset(&servAddr, 0, sizeof(servAddr));
-    servAddr.sin_family      = AF_INET;
-    servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    DPRINT_INFO(WFA_OUT, "UDP port %i\n", port);
-    servAddr.sin_port        = htons(port);
+	servAddr.sin_family = AF_INET;
+	servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	DPRINT_INFO(WFA_OUT, "UDP port %i\n", port);
+	servAddr.sin_port = htons(port);
 
-   bind(udpsock, (struct sockaddr *) &servAddr, sizeof(servAddr));
+	bind(udpsock, (struct sockaddr *)&servAddr, sizeof(servAddr));
 
-    return udpsock;
+	return udpsock;
 }
 
 int wfaSetSockMcastSendOpt(int sockfd)
 {
 #ifdef WIN32
-     int ttlval = 64;
-	 DPRINT_INFO(WFA_OUT, "MCAST: McastSendOpt: sockfd = %d\r\n",sockfd);
-	return setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_TTL, (const char*)&ttlval, sizeof(int));
+	int ttlval = 64;
+	DPRINT_INFO(WFA_OUT, "MCAST: McastSendOpt: sockfd = %d\r\n", sockfd);
+	return setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_TTL, (const char *)&ttlval, sizeof(int));
 
 #else
 	unsigned char ttlval = 1;
 	return setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_TTL, &ttlval, sizeof(ttlval));
 
 #endif
-
 }
 
 int wfaSetSockMcastRecvOpt(int sockfd, char *mcastgroup)
 {
-    struct ip_mreq mcreq;
-    int so;
+	struct ip_mreq mcreq;
+	int so;
 
-    mcreq.imr_multiaddr.s_addr = inet_addr(mcastgroup);
+	mcreq.imr_multiaddr.s_addr = inet_addr(mcastgroup);
 #ifdef WIN32
-    mcreq.imr_interface.s_addr = INADDR_ANY;
+	mcreq.imr_interface.s_addr = INADDR_ANY;
 #else
-    mcreq.imr_interface.s_addr = htonl(INADDR_ANY);
+	mcreq.imr_interface.s_addr = htonl(INADDR_ANY);
 #endif
 #ifdef DEBUG
-    DPRINT_INFO(WFA_OUT, "MCAST: McastRecvOpt: mcastgroup = %s\r\n",mcastgroup);
+	DPRINT_INFO(WFA_OUT, "MCAST: McastRecvOpt: mcastgroup = %s\r\n", mcastgroup);
 #endif
-      so = setsockopt(sockfd, IPPROTO_IP, IP_ADD_MEMBERSHIP,
-                  (void *)&mcreq, sizeof(mcreq));
-    return so;
+	so = setsockopt(sockfd, IPPROTO_IP, IP_ADD_MEMBERSHIP,
+			(void *)&mcreq, sizeof(mcreq));
+	return so;
 }
 
 int wfaConnectUDPPeer(int mysock, char *daddr, unsigned short dport)
 {
-    struct sockaddr_in peerAddr;
+	struct sockaddr_in peerAddr;
 
-    memset(&peerAddr, 0, sizeof(peerAddr));
-    peerAddr.sin_family = AF_INET;
+	memset(&peerAddr, 0, sizeof(peerAddr));
+	peerAddr.sin_family = AF_INET;
 #ifndef WIN32
 	inet_aton(daddr, &peerAddr.sin_addr);
 #else
-	peerAddr.sin_addr.s_addr  =   inet_addr(daddr);
+	peerAddr.sin_addr.s_addr = inet_addr(daddr);
 #endif
 
-    peerAddr.sin_port   = htons(dport);
+	peerAddr.sin_port = htons(dport);
 
-    connect(mysock, (struct sockaddr *)&peerAddr, sizeof(peerAddr));
-    return mysock;
+	connect(mysock, (struct sockaddr *)&peerAddr, sizeof(peerAddr));
+	return mysock;
 }
 
 /*
@@ -265,46 +261,42 @@ int wfaConnectUDPPeer(int mysock, char *daddr, unsigned short dport)
  */
 int wfaAcceptTCPConn(int servSock)
 {
-    int clntSock;                /* Socket descriptor for client */
-    struct sockaddr_in clntAddr; /* Client address */
-    unsigned int clntLen;        /* Length of client address data structure */
+	int clntSock;                   /* Socket descriptor for client */
+	struct sockaddr_in clntAddr;    /* Client address */
+	unsigned int clntLen;           /* Length of client address data structure */
 
-    /* Set the size of the in-out parameter */
-    clntLen = sizeof(clntAddr);
+	/* Set the size of the in-out parameter */
+	clntLen = sizeof(clntAddr);
 
-    /* Wait for a client to connect */
-    if ((clntSock = accept(servSock, (struct sockaddr *) &clntAddr,
-           &clntLen)) < 0)
-    {
-        DPRINT_ERR(WFA_ERR, "accept() failed");
-        exit(1);
-    }
+	/* Wait for a client to connect */
+	if ((clntSock = accept(servSock, (struct sockaddr *)&clntAddr,
+			       &clntLen)) < 0) {
+		DPRINT_ERR(WFA_ERR, "accept() failed");
+		exit(1);
+	}
 
-    /* clntSock is connected to a client! */
-    return clntSock;
+	/* clntSock is connected to a client! */
+	return clntSock;
 }
 
 struct timeval *wfaSetTimer(int secs, int usecs, struct timeval *tv)
 {
-   struct timeval *mytv;
+	struct timeval *mytv;
 
-   if(gtgTransac != 0)
-   {
-      tv->tv_sec = secs ;             /* timeout (secs.) */
-      tv->tv_usec = usecs;            /* 0 microseconds */
-   }
-   else
-   {
-      tv->tv_sec =  0;
-      tv->tv_usec = 0;                /* 0 microseconds */
-   }
+	if (gtgTransac != 0) {
+		tv->tv_sec = secs;      /* timeout (secs.) */
+		tv->tv_usec = usecs;    /* 0 microseconds */
+	} else {
+		tv->tv_sec = 0;
+		tv->tv_usec = 0;      /* 0 microseconds */
+	}
 
-   if(tv->tv_sec == 0 && tv->tv_usec == 0)
-      mytv = NULL;
-   else
-      mytv = tv;
+	if (tv->tv_sec == 0 && tv->tv_usec == 0)
+		mytv = NULL;
+	else
+		mytv = tv;
 
-   return mytv;
+	return mytv;
 }
 
 /* this only set four file descriptors, the main agent fd, control agent
@@ -312,61 +304,53 @@ struct timeval *wfaSetTimer(int secs, int usecs, struct timeval *tv)
  */
 void wfaSetSockFiDesc(fd_set *fdset, int *maxfdn1, struct sockfds *fds)
 {
+	int i;
 
-    int i;
 
+	FD_ZERO(fdset);
+	if (fdset != NULL)
+		FD_SET(*fds->agtfd, fdset);
 
-    FD_ZERO(fdset);
-    if(fdset != NULL)
-       FD_SET(*fds->agtfd, fdset);
-
-    /* if the traffic generator socket port valid */
-    if(*fds->tgfd > 0)
-    {
-         FD_SET(*fds->tgfd, fdset);
-         *maxfdn1 = max(*maxfdn1-1, (int)*fds->tgfd) + 1;
-    }
+	/* if the traffic generator socket port valid */
+	if (*fds->tgfd > 0) {
+		FD_SET(*fds->tgfd, fdset);
+		*maxfdn1 = max(*maxfdn1 - 1, (int)*fds->tgfd) + 1;
+	}
 
 	/* if the traffic generator socket Recv port valid */
-    if(*fds->tgRevfd > 0)
-    {
+	if (*fds->tgRevfd > 0) {
 		FD_SET(*fds->tgRevfd, fdset);
-         *maxfdn1 = max(*maxfdn1-1, (int)*fds->tgRevfd) + 1;
-    }
+		*maxfdn1 = max(*maxfdn1 - 1, (int)*fds->tgRevfd) + 1;
+	}
 
 
-    /* if the control agent socket fd valid */
-    if(*fds->cafd >0)
-    {
-        FD_SET(*fds->cafd, fdset);
-         *maxfdn1 = max(*maxfdn1-1, (int)*fds->cafd) + 1;
-    }
+	/* if the control agent socket fd valid */
+	if (*fds->cafd > 0) {
+		FD_SET(*fds->cafd, fdset);
+		*maxfdn1 = max(*maxfdn1 - 1, (int)*fds->cafd) + 1;
+	}
 
-    /* if any of wmm traffic stream socket fd valid */
-    for(i = 0; i < WFA_MAX_TRAFFIC_STREAMS; i++)
-    {
-        if(fds->wmmfds[i] > 0)
-        {
-            if(fds->wmmfds[i] > FD_SETSIZE)
-            {
-           //    DPRINT_INFO(WFA_OUT, "Size greater than FD_SETSIZE\r\n");
-            }
-            FD_SET(fds->wmmfds[i], fdset);
-            *maxfdn1 = max(*maxfdn1-1, (int)fds->wmmfds[i]) +1;
-        }
-    }
+	/* if any of wmm traffic stream socket fd valid */
+	for (i = 0; i < WFA_MAX_TRAFFIC_STREAMS; i++) {
+		if (fds->wmmfds[i] > 0) {
+			if (fds->wmmfds[i] > FD_SETSIZE) {
+				//    DPRINT_INFO(WFA_OUT, "Size greater than FD_SETSIZE\r\n");
+			}
+			FD_SET(fds->wmmfds[i], fdset);
+			*maxfdn1 = max(*maxfdn1 - 1, (int)fds->wmmfds[i]) + 1;
+		}
+	}
 #ifdef WFA_WMM_EXT
 #ifdef WFA_WMM_PS_EXT
-    /* if the power save socket port valid */
-    if(*fds->psfd > 0)
-    {
-         FD_SET(*fds->psfd, fdset);
-         *maxfdn1 = max(*maxfdn1-1, (int)*fds->psfd) + 1;
-    }
+	/* if the power save socket port valid */
+	if (*fds->psfd > 0) {
+		FD_SET(*fds->psfd, fdset);
+		*maxfdn1 = max(*maxfdn1 - 1, (int)*fds->psfd) + 1;
+	}
 #endif
 
 #endif
-    return;
+	return;
 }
 
 /*
@@ -376,21 +360,19 @@ void wfaSetSockFiDesc(fd_set *fdset, int *maxfdn1, struct sockfds *fds)
  */
 int wfaCtrlSend(int sock, unsigned char *buf, int bufLen)
 {
-    int bytesSent = 0;
+	int bytesSent = 0;
 
-    if(bufLen == 0)
-        return FALSE;
-    if(buf == NULL)
-	DPRINT_INFO(WFA_OUT, "wfaCtrlSend: Buffer null\r\n");
-	
-    bytesSent = send(sock, buf, bufLen, 0);
+	if (bufLen == 0)
+		return FALSE;
+	if (buf == NULL)
+		DPRINT_INFO(WFA_OUT, "wfaCtrlSend: Buffer null\r\n");
 
-    if(bytesSent == -1)
-    {
-       DPRINT_WARNING(WFA_WNG, "Error sending tcp packet\n");
-    }
+	bytesSent = send(sock, buf, bufLen, 0);
 
-    return bytesSent;
+	if (bytesSent == -1)
+		DPRINT_WARNING(WFA_WNG, "Error sending tcp packet\n");
+
+	return bytesSent;
 }
 
 /*
@@ -400,11 +382,11 @@ int wfaCtrlSend(int sock, unsigned char *buf, int bufLen)
  */
 int wfaCtrlRecv(int sock, unsigned char *buf)
 {
-   int bytesRecvd = 0;
+	int bytesRecvd = 0;
 
-   bytesRecvd = recv(sock, buf, WFA_BUFF_1K-1, 0);
+	bytesRecvd = recv(sock, buf, WFA_BUFF_1K - 1, 0);
 
-   return bytesRecvd;
+	return bytesRecvd;
 }
 
 /*
@@ -413,11 +395,11 @@ int wfaCtrlRecv(int sock, unsigned char *buf)
  */
 int wfaTrafficSendTo(int sock, char *buf, int bufLen, struct sockaddr *to)
 {
-   int bytesSent;
+	int bytesSent;
 
-   bytesSent = sendto(sock, buf, bufLen, MSG_DONTWAIT, to, sizeof(struct sockaddr));
+	bytesSent = sendto(sock, buf, bufLen, MSG_DONTWAIT, to, sizeof(struct sockaddr));
 
-   return bytesSent;
+	return bytesSent;
 }
 
 /*
@@ -426,29 +408,29 @@ int wfaTrafficSendTo(int sock, char *buf, int bufLen, struct sockaddr *to)
  */
 int wfaTrafficRecv(int sock, char *buf, struct sockaddr *from)
 {
-   int bytesRecvd =0;
-   socklen_t  addrLen;
+	int bytesRecvd = 0;
+	socklen_t addrLen;
 
 #ifdef WIN32
-   struct sockaddr_in recFrom;
+	struct sockaddr_in recFrom;
 #endif
 
-   /* get current flags setting */
+	/* get current flags setting */
 #ifndef WIN32
-   int ioflags = fcntl(sock, F_GETFL, 0);
+	int ioflags = fcntl(sock, F_GETFL, 0);
 
 #ifdef TARGETENV_android
-if (gtgTransac)
-usleep(50);
+	if (gtgTransac)
+		usleep(50);
 #endif
 
-   /* set only BLOCKING flag to non-blocking */
-   fcntl(sock, F_SETFL, ioflags | O_NONBLOCK);
+	/* set only BLOCKING flag to non-blocking */
+	fcntl(sock, F_SETFL, ioflags | O_NONBLOCK);
 
-   bytesRecvd = recvfrom(sock, buf, MAX_UDP_LEN, 0, from, &addrLen);
+	bytesRecvd = recvfrom(sock, buf, MAX_UDP_LEN, 0, from, &addrLen);
 #ifdef TARGETENV_android
-if (errno == EAGAIN && gtgTransac)
-usleep(50);
+	if (errno == EAGAIN && gtgTransac)
+		usleep(50);
 #endif /* TARGETENV_android */
 
 #else
@@ -458,39 +440,34 @@ usleep(50);
 	bytesRecvd = recvfrom(sock, buf, MAX_UDP_LEN, 0, (struct sockaddr *)&recFrom, &addrLen);
 #endif
 
-   return bytesRecvd;
+	return bytesRecvd;
 }
 
 int wfaGetifAddr(char *ifname, struct sockaddr_in *sa)
 {
-    struct ifreq ifr;
-    int fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+	struct ifreq ifr;
+	int fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
 
-    if(fd < 0)
-    {
-       DPRINT_ERR(WFA_ERR, "socket open error\n");
-       return FALSE;
-    }
+	if (fd < 0) {
+		DPRINT_ERR(WFA_ERR, "socket open error\n");
+		return FALSE;
+	}
 
-    strncpy(ifr.ifr_name, ifname, strlen(ifname));
+	strncpy(ifr.ifr_name, ifname, strlen(ifname));
 #ifndef WIN32
-    ifr.ifr_addr.sa_family = AF_INET;
-    if(ioctl(fd, SIOCGIFADDR, &ifr) == 0)
-    {
-         memcpy(sa, (struct sockaddr_in *)&ifr.ifr_addr, sizeof(struct sockaddr_in));
-    }
-    else
-    {
-         return FALSE;
-    }
+	ifr.ifr_addr.sa_family = AF_INET;
+	if (ioctl(fd, SIOCGIFADDR, &ifr) == 0)
+		memcpy(sa, (struct sockaddr_in *)&ifr.ifr_addr, sizeof(struct sockaddr_in));
+	else
+		return FALSE;
 
 #else
 	ifr.ifr_addr.sin_family = AF_INET;
 	memcpy(sa, (struct sockaddr_in *)&ifr.ifr_addr, sizeof(struct sockaddr_in));
 #endif
 
-    asd_closeSocket(fd);
-    return FALSE;
+	asd_closeSocket(fd);
+	return FALSE;
 }
 
 /*
@@ -506,50 +483,38 @@ int wfaGetifAddr(char *ifname, struct sockaddr_in *sa)
 int wfaSetProcPriority(int set)
 {
 #ifndef WIN32
-    int maxprio, currprio;
-    struct sched_param schp;
+	int maxprio, currprio;
+	struct sched_param schp;
 
-    memset(&schp, 0, sizeof(schp));
-    sched_getparam(0, &schp);
+	memset(&schp, 0, sizeof(schp));
+	sched_getparam(0, &schp);
 
-    currprio = schp.sched_priority;
+	currprio = schp.sched_priority;
 
-    if(set != 0)
-    {
-        if(geteuid() == 0)
-        {
-           maxprio = sched_get_priority_max(SCHED_FIFO);
-           if(maxprio == -1)
-           {
-              return FALSE;
-           }
+	if (set != 0) {
+		if (geteuid() == 0) {
+			maxprio = sched_get_priority_max(SCHED_FIFO);
+			if (maxprio == -1)
+				return FALSE;
 
-           schp.sched_priority = maxprio;
-           if(sched_setscheduler(0, SCHED_FIFO, &schp) != 0)
-           {
-           }
-        }
+			schp.sched_priority = maxprio;
+			if (sched_setscheduler(0, SCHED_FIFO, &schp) != 0) {
+			}
+		}
 
-        if(mlockall(MCL_CURRENT | MCL_FUTURE) != 0)
-        {
+		if (mlockall(MCL_CURRENT | MCL_FUTURE) != 0) {
+		}
+	} else {
+		if (geteuid() == 0) {
+			schp.sched_priority = 0;
+			if (sched_setscheduler(0, SCHED_OTHER, &schp) != 0) {
+			}
+		}
 
-        }
-    }
-    else
-    {
-        if(geteuid() == 0)
-        {
-           schp.sched_priority = 0;
-           if(sched_setscheduler(0, SCHED_OTHER, &schp) != 0)
-           {
-           }
-        }
-
-        munlockall();
-    }
-    return currprio;
+		munlockall();
+	}
+	return currprio;
 #else
 	return 0;
 #endif
-
 }

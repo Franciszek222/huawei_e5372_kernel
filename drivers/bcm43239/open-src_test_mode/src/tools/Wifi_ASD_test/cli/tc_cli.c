@@ -39,7 +39,7 @@
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-******************************************************************************
+ ******************************************************************************
  */
 
 
@@ -118,14 +118,12 @@ int main(int argc, char *argv[])
 #endif
 
 
-	if ((argc != 2))
-	{
+	if ((argc != 2)) {
 		fprintf(stderr, "Usage: %s <command string>\n", argv[0]);
 		exit(1);
 	}
 
-	if ((tstr = getenv("WFA_ENV_TC_IPADDR")) == NULL)
-	{
+	if ((tstr = getenv("WFA_ENV_TC_IPADDR")) == NULL) {
 		printf("Environment variable WFA_ENV_TC_IPADDR not set\n");
 		exit(1);
 	}
@@ -144,19 +142,17 @@ int main(int argc, char *argv[])
 
 	servPort = atoi(tstr);
 
-	if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-	{
+	if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
 		perror("socket() failed");
 		exit(1);
 	}
 
 	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family      = AF_INET;
+	servAddr.sin_family = AF_INET;
 	servAddr.sin_addr.s_addr = inet_addr(servIP);
-	servAddr.sin_port        = htons(servPort);
+	servAddr.sin_port = htons(servPort);
 
-	if (connect(sock, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0)
-	{
+	if (connect(sock, (struct sockaddr *)&servAddr, sizeof(servAddr)) < 0) {
 		perror("connect() failed");
 		exit(1);
 	}
@@ -173,15 +169,13 @@ int main(int argc, char *argv[])
 
 	bytesRcvd = recv(sock, caCmdBuf, MAX_RECEIVE, 0);
 	done = 1;
-	while (done)
-	{
-
+	while (done) {
 		printf("=======Response======\n");
 		printf("%s\n", caCmdBuf);
 
 		if (strncmp("status,COMPLETE", (char *)caCmdBuf, 15) == 0 ||
-			strncmp("status,INVALID", (char *)caCmdBuf, 14) == 0 ||
-			strncmp("status,ERROR", (char *)caCmdBuf, 12) == 0)
+		    strncmp("status,INVALID", (char *)caCmdBuf, 14) == 0 ||
+		    strncmp("status,ERROR", (char *)caCmdBuf, 12) == 0)
 			break;
 
 		if (rspCnt == 3)
@@ -192,15 +186,14 @@ int main(int argc, char *argv[])
 		bytesRcvd = recv(sock, caCmdBuf, MAX_RECEIVE, 0);
 		rspCnt++;
 
-		if (bytesRcvd == -1)
-		{
+		if (bytesRcvd == -1) {
 			perror("Error receiving message from Test Console.\n");
 			break;
 		}
 	}
 	asd_closeSocket(sock);
 
-		/* Tell the user that we could not find a usable */
+	/* Tell the user that we could not find a usable */
 	/* WinSock DLL.                                  */
 #ifdef WIN32
 	WSACleanup();

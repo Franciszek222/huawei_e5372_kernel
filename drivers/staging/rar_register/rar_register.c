@@ -51,44 +51,44 @@
 #include <linux/kernel.h>
 
 /* === Lincroft Message Bus Interface === */
-#define LNC_MCR_OFFSET		0xD0	/* Message Control Register */
-#define LNC_MDR_OFFSET		0xD4	/* Message Data Register */
+#define LNC_MCR_OFFSET          0xD0    /* Message Control Register */
+#define LNC_MDR_OFFSET          0xD4    /* Message Data Register */
 
 /* Message Opcodes */
-#define LNC_MESSAGE_READ_OPCODE	0xD0
+#define LNC_MESSAGE_READ_OPCODE 0xD0
 #define LNC_MESSAGE_WRITE_OPCODE 0xE0
 
 /* Message Write Byte Enables */
-#define LNC_MESSAGE_BYTE_WRITE_ENABLES	0xF
+#define LNC_MESSAGE_BYTE_WRITE_ENABLES  0xF
 
 /* B-unit Port */
-#define LNC_BUNIT_PORT	0x3
+#define LNC_BUNIT_PORT  0x3
 
 /* === Lincroft B-Unit Registers - Programmed by IA32 firmware === */
-#define LNC_BRAR0L	0x10
-#define LNC_BRAR0H	0x11
-#define LNC_BRAR1L	0x12
-#define LNC_BRAR1H	0x13
+#define LNC_BRAR0L      0x10
+#define LNC_BRAR0H      0x11
+#define LNC_BRAR1L      0x12
+#define LNC_BRAR1H      0x13
 /* Reserved for SeP */
-#define LNC_BRAR2L	0x14
-#define LNC_BRAR2H	0x15
+#define LNC_BRAR2L      0x14
+#define LNC_BRAR2H      0x15
 
 /* Moorestown supports three restricted access regions. */
 #define MRST_NUM_RAR 3
 
 /* RAR Bus Address Range */
 struct rar_addr {
-	dma_addr_t low;
-	dma_addr_t high;
+	dma_addr_t	low;
+	dma_addr_t	high;
 };
 
 /*
  *	We create one of these for each RAR
  */
 struct client {
-	int (*callback)(unsigned long data);
-	unsigned long driver_priv;
-	bool busy;
+	int		(*callback)(unsigned long data);
+	unsigned long	driver_priv;
+	bool		busy;
 };
 
 static DEFINE_MUTEX(rar_mutex);
@@ -100,9 +100,9 @@ static DEFINE_MUTEX(lnc_reg_mutex);
 struct rar_device {
 	struct rar_addr rar_addr[MRST_NUM_RAR];
 	struct pci_dev *rar_dev;
-	bool registered;
-	bool allocated;
-	struct client client[MRST_NUM_RAR];
+	bool		registered;
+	bool		allocated;
+	struct client	client[MRST_NUM_RAR];
 };
 
 /* Current platforms have only one rar_device for 3 rar regions */
@@ -168,6 +168,7 @@ static struct rar_device *_rar_to_device(int rar, int *off)
 static struct rar_device *rar_to_device(int rar, int *off)
 {
 	struct rar_device *rar_dev = _rar_to_device(rar, off);
+
 	if (rar_dev == NULL || !rar_dev->registered)
 		return NULL;
 	return rar_dev;
@@ -184,6 +185,7 @@ static struct client *rar_to_client(int rar)
 {
 	int idx;
 	struct rar_device *r = _rar_to_device(rar, &idx);
+
 	if (r != NULL)
 		return &r->client[idx];
 	return NULL;
@@ -240,27 +242,27 @@ static int rar_read_addr(struct pci_dev *pdev, int offset, dma_addr_t *addr)
 	 *  Data being written to this register must be written before
 	 *  writing the appropriate control message to the MCR
 	 *  register.
-	*/
+	 */
 
 	int result;
 	u32 addr32;
 
 	/* Construct control message */
 	u32 const message =
-		 (LNC_MESSAGE_READ_OPCODE << 24)
-		 | (LNC_BUNIT_PORT << 16)
-		 | (offset << 8)
-		 | (LNC_MESSAGE_BYTE_WRITE_ENABLES << 4);
+		(LNC_MESSAGE_READ_OPCODE << 24)
+		| (LNC_BUNIT_PORT << 16)
+		| (offset << 8)
+		| (LNC_MESSAGE_BYTE_WRITE_ENABLES << 4);
 
 	dev_dbg(&pdev->dev, "Offset for 'get' LNC MSG is %x\n", offset);
 
 	/*
-	* We synchronize access to the Lincroft MCR and MDR registers
-	* until BOTH the command is issued through the MCR register
-	* and the corresponding data is read from the MDR register.
-	* Otherwise a race condition would exist between accesses to
-	* both registers.
-	*/
+	 * We synchronize access to the Lincroft MCR and MDR registers
+	 * until BOTH the command is issued through the MCR register
+	 * and the corresponding data is read from the MDR register.
+	 * Otherwise a race condition would exist between accesses to
+	 * both registers.
+	 */
 
 	mutex_lock(&lnc_reg_mutex);
 
@@ -285,32 +287,32 @@ static int rar_read_addr(struct pci_dev *pdev, int offset, dma_addr_t *addr)
  *	or an error code on failure.
  */
 static int rar_set_addr(struct pci_dev *pdev,
-	int offset,
-	dma_addr_t addr)
+			int		offset,
+			dma_addr_t	addr)
 {
 	/*
-	* Data being written to this register must be written before
-	* writing the appropriate control message to the MCR
-	* register.
-	* See rar_get_addrs() for a description of the
-	* message bus interface being used here.
-	*/
+	 * Data being written to this register must be written before
+	 * writing the appropriate control message to the MCR
+	 * register.
+	 * See rar_get_addrs() for a description of the
+	 * message bus interface being used here.
+	 */
 
 	int result;
 
 	/* Construct control message */
 	u32 const message = (LNC_MESSAGE_WRITE_OPCODE << 24)
-		| (LNC_BUNIT_PORT << 16)
-		| (offset << 8)
-		| (LNC_MESSAGE_BYTE_WRITE_ENABLES << 4);
+			    | (LNC_BUNIT_PORT << 16)
+			    | (offset << 8)
+			    | (LNC_MESSAGE_BYTE_WRITE_ENABLES << 4);
 
 	/*
-	* We synchronize access to the Lincroft MCR and MDR registers
-	* until BOTH the command is issued through the MCR register
-	* and the corresponding data is read from the MDR register.
-	* Otherwise a race condition would exist between accesses to
-	* both registers.
-	*/
+	 * We synchronize access to the Lincroft MCR and MDR registers
+	 * until BOTH the command is issued through the MCR register
+	 * and the corresponding data is read from the MDR register.
+	 * Otherwise a race condition would exist between accesses to
+	 * both registers.
+	 */
 
 	mutex_lock(&lnc_reg_mutex);
 
@@ -336,12 +338,12 @@ static int init_rar_params(struct rar_device *rar)
 	struct pci_dev *pdev = rar->rar_dev;
 	unsigned int i;
 	int result = 0;
-	int offset = 0x10;	/* RAR 0 to 2 in order low/high/low/high/... */
+	int offset = 0x10;      /* RAR 0 to 2 in order low/high/low/high/... */
 
 	/* Retrieve RAR start and end bus addresses.
-	* Access the RAR registers through the Lincroft Message Bus
-	* Interface on PCI device: 00:00.0 Host bridge.
-	*/
+	 * Access the RAR registers through the Lincroft Message Bus
+	 * Interface on PCI device: 00:00.0 Host bridge.
+	 */
 
 	for (i = 0; i < MRST_NUM_RAR; ++i) {
 		struct rar_addr *addr = &rar->rar_addr[i];
@@ -356,22 +358,22 @@ static int init_rar_params(struct rar_device *rar)
 
 
 		/*
-		* Only the upper 22 bits of the RAR addresses are
-		* stored in their corresponding RAR registers so we
-		* must set the lower 10 bits accordingly.
-
-		* The low address has its lower 10 bits cleared, and
-		* the high address has all its lower 10 bits set,
-		* e.g.:
-		* low = 0x2ffffc00
-		*/
+		 * Only the upper 22 bits of the RAR addresses are
+		 * stored in their corresponding RAR registers so we
+		 * must set the lower 10 bits accordingly.
+		 *
+		 * The low address has its lower 10 bits cleared, and
+		 * the high address has all its lower 10 bits set,
+		 * e.g.:
+		 * low = 0x2ffffc00
+		 */
 
 		addr->low &= (dma_addr_t)0xfffffc00u;
 
 		/*
-		* Set bits 9:0 on uppser address if bits 31:10 are non
-		* zero; otherwize clear all bits
-		*/
+		 * Set bits 9:0 on uppser address if bits 31:10 are non
+		 * zero; otherwize clear all bits
+		 */
 
 		if ((addr->high & 0xfffffc00u) == 0)
 			addr->high = 0;
@@ -383,13 +385,13 @@ static int init_rar_params(struct rar_device *rar)
 	if (result == 0) {
 		for (i = 0; i != MRST_NUM_RAR; ++i) {
 			/*
-			* "BRAR" refers to the RAR registers in the
-			* Lincroft B-unit.
-			*/
+			 * "BRAR" refers to the RAR registers in the
+			 * Lincroft B-unit.
+			 */
 			dev_info(&pdev->dev, "BRAR[%u] bus address range = "
-			  "[%lx, %lx]\n", i,
-			  (unsigned long)rar->rar_addr[i].low,
-			  (unsigned long)rar->rar_addr[i].high);
+				 "[%lx, %lx]\n", i,
+				 (unsigned long)rar->rar_addr[i].low,
+				 (unsigned long)rar->rar_addr[i].high);
 		}
 	}
 	return result;
@@ -451,9 +453,9 @@ int rar_lock(int rar_index)
 	high = rar->rar_addr[idx].high & 0xfffffc00u;
 
 	/*
-	* Only allow I/O from the graphics and Langwell;
-	* not from the x86 processor
-	*/
+	 * Only allow I/O from the graphics and Langwell;
+	 * not from the x86 processor
+	 */
 
 	if (rar_index == RAR_TYPE_VIDEO) {
 		low |= 0x00000009;
@@ -462,20 +464,21 @@ int rar_lock(int rar_index)
 		/* Only allow I/O from Langwell; nothing from x86 */
 		low |= 0x00000008;
 		high |= 0x00000018;
-	} else
+	} else {
 		/* Read-only from all agents */
 		high |= 0x00000018;
+	}
 
 	/*
-	* Now program the register using the Lincroft message
-	* bus interface.
-	*/
+	 * Now program the register using the Lincroft message
+	 * bus interface.
+	 */
 	result = rar_set_addr(rar->rar_dev,
-				2 * idx, low);
+			      2 * idx, low);
 
 	if (result == 0)
 		result = rar_set_addr(rar->rar_dev,
-				2 * idx + 1, high);
+				      2 * idx + 1, high);
 
 	return result;
 }
@@ -499,7 +502,7 @@ EXPORT_SYMBOL(rar_lock);
  *	This function return 0 on success an error code on failure.
  */
 int register_rar(int num, int (*callback)(unsigned long data),
-							unsigned long data)
+		 unsigned long data)
 {
 	/* For now we hardcode a single RAR device */
 	struct rar_device *rar;
@@ -527,9 +530,9 @@ int register_rar(int num, int (*callback)(unsigned long data),
 
 	if (rar) {
 		/*
-		* if the driver already registered, then we can simply
-		* call the callback right now
-		*/
+		 * if the driver already registered, then we can simply
+		 * call the callback right now
+		 */
 		(*callback)(data);
 		goto done;
 	}
@@ -551,7 +554,6 @@ EXPORT_SYMBOL(register_rar);
  *	pending then this function will either complete before the unregister
  *	returns or not at all.
  */
-
 void unregister_rar(int num)
 {
 	struct client *c;
@@ -572,7 +574,6 @@ EXPORT_SYMBOL(unregister_rar);
  *
  *	Process the callbacks for a newly found RAR device.
  */
-
 static void rar_callback(struct rar_device *rar)
 {
 	struct client *c = &rar->client[0];
@@ -580,7 +581,7 @@ static void rar_callback(struct rar_device *rar)
 
 	mutex_lock(&rar_mutex);
 
-	rar->registered = 1;	/* Ensure no more callbacks queue */
+	rar->registered = 1;    /* Ensure no more callbacks queue */
 
 	for (i = 0; i < MRST_NUM_RAR; i++) {
 		if (c->callback && c->busy) {
@@ -652,9 +653,9 @@ const struct pci_device_id *my_id_table = rar_pci_id_tbl;
 
 /* field for registering driver to PCI device */
 static struct pci_driver rar_pci_driver = {
-	.name = "rar_register_driver",
-	.id_table = rar_pci_id_tbl,
-	.probe = rar_probe,
+	.name		= "rar_register_driver",
+	.id_table	= rar_pci_id_tbl,
+	.probe		= rar_probe,
 	/* Cannot be unplugged - no remove */
 };
 

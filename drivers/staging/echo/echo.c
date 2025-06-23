@@ -32,75 +32,75 @@
 /*! \file */
 
 /* Implementation Notes
-   David Rowe
-   April 2007
-
-   This code started life as Steve's NLMS algorithm with a tap
-   rotation algorithm to handle divergence during double talk.  I
-   added a Geigel Double Talk Detector (DTD) [2] and performed some
-   G168 tests.  However I had trouble meeting the G168 requirements,
-   especially for double talk - there were always cases where my DTD
-   failed, for example where near end speech was under the 6dB
-   threshold required for declaring double talk.
-
-   So I tried a two path algorithm [1], which has so far given better
-   results.  The original tap rotation/Geigel algorithm is available
-   in SVN http://svn.rowetel.com/software/oslec/tags/before_16bit.
-   It's probably possible to make it work if some one wants to put some
-   serious work into it.
-
-   At present no special treatment is provided for tones, which
-   generally cause NLMS algorithms to diverge.  Initial runs of a
-   subset of the G168 tests for tones (e.g ./echo_test 6) show the
-   current algorithm is passing OK, which is kind of surprising.  The
-   full set of tests needs to be performed to confirm this result.
-
-   One other interesting change is that I have managed to get the NLMS
-   code to work with 16 bit coefficients, rather than the original 32
-   bit coefficents.  This reduces the MIPs and storage required.
-   I evaulated the 16 bit port using g168_tests.sh and listening tests
-   on 4 real-world samples.
-
-   I also attempted the implementation of a block based NLMS update
-   [2] but although this passes g168_tests.sh it didn't converge well
-   on the real-world samples.  I have no idea why, perhaps a scaling
-   problem.  The block based code is also available in SVN
-   http://svn.rowetel.com/software/oslec/tags/before_16bit.  If this
-   code can be debugged, it will lead to further reduction in MIPS, as
-   the block update code maps nicely onto DSP instruction sets (it's a
-   dot product) compared to the current sample-by-sample update.
-
-   Steve also has some nice notes on echo cancellers in echo.h
-
-   References:
-
-   [1] Ochiai, Areseki, and Ogihara, "Echo Canceller with Two Echo
-       Path Models", IEEE Transactions on communications, COM-25,
-       No. 6, June
-       1977.
-       http://www.rowetel.com/images/echo/dual_path_paper.pdf
-
-   [2] The classic, very useful paper that tells you how to
-       actually build a real world echo canceller:
-	 Messerschmitt, Hedberg, Cole, Haoui, Winship, "Digital Voice
-	 Echo Canceller with a TMS320020,
-	 http://www.rowetel.com/images/echo/spra129.pdf
-
-   [3] I have written a series of blog posts on this work, here is
-       Part 1: http://www.rowetel.com/blog/?p=18
-
-   [4] The source code http://svn.rowetel.com/software/oslec/
-
-   [5] A nice reference on LMS filters:
-	 http://en.wikipedia.org/wiki/Least_mean_squares_filter
-
-   Credits:
-
-   Thanks to Steve Underwood, Jean-Marc Valin, and Ramakrishnan
-   Muthukrishnan for their suggestions and email discussions.  Thanks
-   also to those people who collected echo samples for me such as
-   Mark, Pawel, and Pavel.
-*/
+ * David Rowe
+ * April 2007
+ *
+ * This code started life as Steve's NLMS algorithm with a tap
+ * rotation algorithm to handle divergence during double talk.  I
+ * added a Geigel Double Talk Detector (DTD) [2] and performed some
+ * G168 tests.  However I had trouble meeting the G168 requirements,
+ * especially for double talk - there were always cases where my DTD
+ * failed, for example where near end speech was under the 6dB
+ * threshold required for declaring double talk.
+ *
+ * So I tried a two path algorithm [1], which has so far given better
+ * results.  The original tap rotation/Geigel algorithm is available
+ * in SVN http://svn.rowetel.com/software/oslec/tags/before_16bit.
+ * It's probably possible to make it work if some one wants to put some
+ * serious work into it.
+ *
+ * At present no special treatment is provided for tones, which
+ * generally cause NLMS algorithms to diverge.  Initial runs of a
+ * subset of the G168 tests for tones (e.g ./echo_test 6) show the
+ * current algorithm is passing OK, which is kind of surprising.  The
+ * full set of tests needs to be performed to confirm this result.
+ *
+ * One other interesting change is that I have managed to get the NLMS
+ * code to work with 16 bit coefficients, rather than the original 32
+ * bit coefficents.  This reduces the MIPs and storage required.
+ * I evaulated the 16 bit port using g168_tests.sh and listening tests
+ * on 4 real-world samples.
+ *
+ * I also attempted the implementation of a block based NLMS update
+ * [2] but although this passes g168_tests.sh it didn't converge well
+ * on the real-world samples.  I have no idea why, perhaps a scaling
+ * problem.  The block based code is also available in SVN
+ * http://svn.rowetel.com/software/oslec/tags/before_16bit.  If this
+ * code can be debugged, it will lead to further reduction in MIPS, as
+ * the block update code maps nicely onto DSP instruction sets (it's a
+ * dot product) compared to the current sample-by-sample update.
+ *
+ * Steve also has some nice notes on echo cancellers in echo.h
+ *
+ * References:
+ *
+ * [1] Ochiai, Areseki, and Ogihara, "Echo Canceller with Two Echo
+ *     Path Models", IEEE Transactions on communications, COM-25,
+ *     No. 6, June
+ *     1977.
+ *     http://www.rowetel.com/images/echo/dual_path_paper.pdf
+ *
+ * [2] The classic, very useful paper that tells you how to
+ *     actually build a real world echo canceller:
+ *       Messerschmitt, Hedberg, Cole, Haoui, Winship, "Digital Voice
+ *       Echo Canceller with a TMS320020,
+ *       http://www.rowetel.com/images/echo/spra129.pdf
+ *
+ * [3] I have written a series of blog posts on this work, here is
+ *     Part 1: http://www.rowetel.com/blog/?p=18
+ *
+ * [4] The source code http://svn.rowetel.com/software/oslec/
+ *
+ * [5] A nice reference on LMS filters:
+ *       http://en.wikipedia.org/wiki/Least_mean_squares_filter
+ *
+ * Credits:
+ *
+ * Thanks to Steve Underwood, Jean-Marc Valin, and Ramakrishnan
+ * Muthukrishnan for their suggestions and email discussions.  Thanks
+ * also to those people who collected echo samples for me such as
+ * Mark, Pawel, and Pavel.
+ */
 
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -108,17 +108,17 @@
 
 #include "echo.h"
 
-#define MIN_TX_POWER_FOR_ADAPTION	64
-#define MIN_RX_POWER_FOR_ADAPTION	64
-#define DTD_HANGOVER			600	/* 600 samples, or 75ms     */
-#define DC_LOG2BETA			3	/* log2() of DC filter Beta */
+#define MIN_TX_POWER_FOR_ADAPTION       64
+#define MIN_RX_POWER_FOR_ADAPTION       64
+#define DTD_HANGOVER                    600     /* 600 samples, or 75ms     */
+#define DC_LOG2BETA                     3       /* log2() of DC filter Beta */
 
 
 /* adapting coeffs using the traditional stochastic descent (N)LMS algorithm */
 
 #ifdef __bfin__
 static inline void lms_adapt_bg(struct oslec_state *ec, int clean,
-				    int shift)
+				int shift)
 {
 	int i, j;
 	int offset1;
@@ -145,52 +145,52 @@ static inline void lms_adapt_bg(struct oslec_state *ec, int clean,
 	n = ec->taps;
 	for (i = 0, j = offset2; i < n; i++, j++) {
 		exp = *phist++ * factor;
-		ec->fir_taps16[1][i] += (int16_t) ((exp + (1 << 14)) >> 15);
+		ec->fir_taps16[1][i] += (int16_t)((exp + (1 << 14)) >> 15);
 	}
 	/* asm("en:"); */
 
 	/* Note the asm for the inner loop above generated by Blackfin gcc
-	   4.1.1 is pretty good (note even parallel instructions used):
-
-	   R0 = W [P0++] (X);
-	   R0 *= R2;
-	   R0 = R0 + R3 (NS) ||
-	   R1 = W [P1] (X) ||
-	   nop;
-	   R0 >>>= 15;
-	   R0 = R0 + R1;
-	   W [P1++] = R0;
-
-	   A block based update algorithm would be much faster but the
-	   above can't be improved on much.  Every instruction saved in
-	   the loop above is 2 MIPs/ch!  The for loop above is where the
-	   Blackfin spends most of it's time - about 17 MIPs/ch measured
-	   with speedtest.c with 256 taps (32ms).  Write-back and
-	   Write-through cache gave about the same performance.
+	 * 4.1.1 is pretty good (note even parallel instructions used):
+	 *
+	 * R0 = W [P0++] (X);
+	 * R0 *= R2;
+	 * R0 = R0 + R3 (NS) ||
+	 * R1 = W [P1] (X) ||
+	 * nop;
+	 * R0 >>>= 15;
+	 * R0 = R0 + R1;
+	 * W [P1++] = R0;
+	 *
+	 * A block based update algorithm would be much faster but the
+	 * above can't be improved on much.  Every instruction saved in
+	 * the loop above is 2 MIPs/ch!  The for loop above is where the
+	 * Blackfin spends most of it's time - about 17 MIPs/ch measured
+	 * with speedtest.c with 256 taps (32ms).  Write-back and
+	 * Write-through cache gave about the same performance.
 	 */
 }
 
 /*
-   IDEAS for further optimisation of lms_adapt_bg():
-
-   1/ The rounding is quite costly.  Could we keep as 32 bit coeffs
-   then make filter pluck the MS 16-bits of the coeffs when filtering?
-   However this would lower potential optimisation of filter, as I
-   think the dual-MAC architecture requires packed 16 bit coeffs.
-
-   2/ Block based update would be more efficient, as per comments above,
-   could use dual MAC architecture.
-
-   3/ Look for same sample Blackfin LMS code, see if we can get dual-MAC
-   packing.
-
-   4/ Execute the whole e/c in a block of say 20ms rather than sample
-   by sample.  Processing a few samples every ms is inefficient.
-*/
+ * IDEAS for further optimisation of lms_adapt_bg():
+ *
+ * 1/ The rounding is quite costly.  Could we keep as 32 bit coeffs
+ * then make filter pluck the MS 16-bits of the coeffs when filtering?
+ * However this would lower potential optimisation of filter, as I
+ * think the dual-MAC architecture requires packed 16 bit coeffs.
+ *
+ * 2/ Block based update would be more efficient, as per comments above,
+ * could use dual MAC architecture.
+ *
+ * 3/ Look for same sample Blackfin LMS code, see if we can get dual-MAC
+ * packing.
+ *
+ * 4/ Execute the whole e/c in a block of say 20ms rather than sample
+ * by sample.  Processing a few samples every ms is inefficient.
+ */
 
 #else
 static inline void lms_adapt_bg(struct oslec_state *ec, int clean,
-				    int shift)
+				int shift)
 {
 	int i;
 
@@ -211,11 +211,11 @@ static inline void lms_adapt_bg(struct oslec_state *ec, int clean,
 
 	for (i = ec->taps - 1; i >= offset1; i--) {
 		exp = (ec->fir_state_bg.history[i - offset1] * factor);
-		ec->fir_taps16[1][i] += (int16_t) ((exp + (1 << 14)) >> 15);
+		ec->fir_taps16[1][i] += (int16_t)((exp + (1 << 14)) >> 15);
 	}
 	for (; i >= 0; i--) {
 		exp = (ec->fir_state_bg.history[i + offset2] * factor);
-		ec->fir_taps16[1][i] += (int16_t) ((exp + (1 << 14)) >> 15);
+		ec->fir_taps16[1][i] += (int16_t)((exp + (1 << 14)) >> 15);
 	}
 }
 #endif
@@ -225,7 +225,7 @@ static inline int top_bit(unsigned int bits)
 	if (bits == 0)
 		return -1;
 	else
-		return (int)fls((int32_t)bits)-1;
+		return (int)fls((int32_t)bits) - 1;
 }
 
 struct oslec_state *oslec_create(int len, int adaption_mode)
@@ -243,7 +243,7 @@ struct oslec_state *oslec_create(int len, int adaption_mode)
 
 	for (i = 0; i < 2; i++) {
 		ec->fir_taps16[i] =
-		    kcalloc(ec->taps, sizeof(int16_t), GFP_KERNEL);
+			kcalloc(ec->taps, sizeof(int16_t), GFP_KERNEL);
 		if (!ec->fir_taps16[i])
 			goto error_oom;
 	}
@@ -396,19 +396,19 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
 	}
 
 	/* Block average of power in the filter states.  Used for
-	   adaption power calculation. */
+	 * adaption power calculation. */
 
 	{
 		int new, old;
 
 		/* efficient "out with the old and in with the new" algorithm so
-		   we don't have to recalculate over the whole block of
-		   samples. */
+		 * we don't have to recalculate over the whole block of
+		 * samples. */
 		new = (int)tx * (int)tx;
 		old = (int)ec->fir_state.history[ec->fir_state.curr_pos] *
-		    (int)ec->fir_state.history[ec->fir_state.curr_pos];
+		      (int)ec->fir_state.history[ec->fir_state.curr_pos];
 		ec->Pstates +=
-		    ((new - old) + (1 << (ec->log2taps-1))) >> ec->log2taps;
+			((new - old) + (1 << (ec->log2taps - 1))) >> ec->log2taps;
 		if (ec->Pstates < 0)
 			ec->Pstates = 0;
 	}
@@ -438,8 +438,8 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
 	/* Background Filter adaption */
 
 	/* Almost always adap bg filter, just simple DT and energy
-	   detection to minimise adaption in cases of strong double talk.
-	   However this is not critical for the dual path algorithm.
+	 * detection to minimise adaption in cases of strong double talk.
+	 * However this is not critical for the dual path algorithm.
 	 */
 	ec->factor = 0;
 	ec->shift = 0;
@@ -447,36 +447,36 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
 		int P, logP, shift;
 
 		/* Determine:
-
-		   f = Beta * clean_bg_rx/P ------ (1)
-
-		   where P is the total power in the filter states.
-
-		   The Boffins have shown that if we obey (1) we converge
-		   quickly and avoid instability.
-
-		   The correct factor f must be in Q30, as this is the fixed
-		   point format required by the lms_adapt_bg() function,
-		   therefore the scaled version of (1) is:
-
-		   (2^30) * f  = (2^30) * Beta * clean_bg_rx/P
-		   factor      = (2^30) * Beta * clean_bg_rx/P     ----- (2)
-
-		   We have chosen Beta = 0.25 by experiment, so:
-
-		   factor      = (2^30) * (2^-2) * clean_bg_rx/P
-
-						(30 - 2 - log2(P))
-		   factor      = clean_bg_rx 2                     ----- (3)
-
-		   To avoid a divide we approximate log2(P) as top_bit(P),
-		   which returns the position of the highest non-zero bit in
-		   P.  This approximation introduces an error as large as a
-		   factor of 2, but the algorithm seems to handle it OK.
-
-		   Come to think of it a divide may not be a big deal on a
-		   modern DSP, so its probably worth checking out the cycles
-		   for a divide versus a top_bit() implementation.
+		 *
+		 * f = Beta * clean_bg_rx/P ------ (1)
+		 *
+		 * where P is the total power in the filter states.
+		 *
+		 * The Boffins have shown that if we obey (1) we converge
+		 * quickly and avoid instability.
+		 *
+		 * The correct factor f must be in Q30, as this is the fixed
+		 * point format required by the lms_adapt_bg() function,
+		 * therefore the scaled version of (1) is:
+		 *
+		 * (2^30) * f  = (2^30) * Beta * clean_bg_rx/P
+		 * factor      = (2^30) * Beta * clean_bg_rx/P     ----- (2)
+		 *
+		 * We have chosen Beta = 0.25 by experiment, so:
+		 *
+		 * factor      = (2^30) * (2^-2) * clean_bg_rx/P
+		 *
+		 *                              (30 - 2 - log2(P))
+		 * factor      = clean_bg_rx 2                     ----- (3)
+		 *
+		 * To avoid a divide we approximate log2(P) as top_bit(P),
+		 * which returns the position of the highest non-zero bit in
+		 * P.  This approximation introduces an error as large as a
+		 * factor of 2, but the algorithm seems to handle it OK.
+		 *
+		 * Come to think of it a divide may not be a big deal on a
+		 * modern DSP, so its probably worth checking out the cycles
+		 * for a divide versus a top_bit() implementation.
 		 */
 
 		P = MIN_TX_POWER_FOR_ADAPTION + ec->Pstates;
@@ -488,7 +488,7 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
 	}
 
 	/* very simple DTD to make sure we dont try and adapt with strong
-	   near end speech */
+	 * near end speech */
 
 	ec->adapt = 0;
 	if ((ec->Lrx > MIN_RX_POWER_FOR_ADAPTION) && (ec->Lrx > ec->Ltx))
@@ -499,7 +499,7 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
 	/* Transfer logic */
 
 	/* These conditions are from the dual path paper [1], I messed with
-	   them a bit to improve performance. */
+	 * them a bit to improve performance. */
 
 	if ((ec->adaption_mode & ECHO_CAN_USE_ADAPTION) &&
 	    (ec->nonupdate_dwell == 0) &&
@@ -514,11 +514,13 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
 			 */
 			ec->adapt = 1;
 			memcpy(ec->fir_taps16[0], ec->fir_taps16[1],
-				ec->taps * sizeof(int16_t));
-		} else
+			       ec->taps * sizeof(int16_t));
+		} else {
 			ec->cond_met++;
-	} else
+		}
+	} else {
 		ec->cond_met = 0;
+	}
 
 	/* Non-Linear Processing */
 
@@ -551,13 +553,12 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
 				 */
 
 				ec->cng_rndnum =
-				    1664525U * ec->cng_rndnum + 1013904223U;
+					1664525U * ec->cng_rndnum + 1013904223U;
 				ec->cng_filter =
-				    ((ec->cng_rndnum & 0xFFFF) - 32768 +
-				     5 * ec->cng_filter) >> 3;
+					((ec->cng_rndnum & 0xFFFF) - 32768 +
+					 5 * ec->cng_filter) >> 3;
 				ec->clean_nlp =
-				    (ec->cng_filter * ec->cng_level * 8) >> 14;
-
+					(ec->cng_filter * ec->cng_level * 8) >> 14;
 			} else if (ec->adaption_mode & ECHO_CAN_USE_CLIP) {
 				/* This sounds much better than CNG */
 				if (ec->clean_nlp > ec->Lbgn)
@@ -599,32 +600,31 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
 
 	/* Output scaled back up again to match input scaling */
 
-	return (int16_t) ec->clean_nlp << 1;
+	return (int16_t)ec->clean_nlp << 1;
 }
 EXPORT_SYMBOL_GPL(oslec_update);
 
 /* This function is separated from the echo canceller is it is usually called
-   as part of the tx process.  See rx HP (DC blocking) filter above, it's
-   the same design.
-
-   Some soft phones send speech signals with a lot of low frequency
-   energy, e.g. down to 20Hz.  This can make the hybrid non-linear
-   which causes the echo canceller to fall over.  This filter can help
-   by removing any low frequency before it gets to the tx port of the
-   hybrid.
-
-   It can also help by removing and DC in the tx signal.  DC is bad
-   for LMS algorithms.
-
-   This is one of the classic DC removal filters, adjusted to provide
-   sufficient bass rolloff to meet the above requirement to protect hybrids
-   from things that upset them. The difference between successive samples
-   produces a lousy HPF, and then a suitably placed pole flattens things out.
-   The final result is a nicely rolled off bass end. The filtering is
-   implemented with extended fractional precision, which noise shapes things,
-   giving very clean DC removal.
-*/
-
+ * as part of the tx process.  See rx HP (DC blocking) filter above, it's
+ * the same design.
+ *
+ * Some soft phones send speech signals with a lot of low frequency
+ * energy, e.g. down to 20Hz.  This can make the hybrid non-linear
+ * which causes the echo canceller to fall over.  This filter can help
+ * by removing any low frequency before it gets to the tx port of the
+ * hybrid.
+ *
+ * It can also help by removing and DC in the tx signal.  DC is bad
+ * for LMS algorithms.
+ *
+ * This is one of the classic DC removal filters, adjusted to provide
+ * sufficient bass rolloff to meet the above requirement to protect hybrids
+ * from things that upset them. The difference between successive samples
+ * produces a lousy HPF, and then a suitably placed pole flattens things out.
+ * The final result is a nicely rolled off bass end. The filtering is
+ * implemented with extended fractional precision, which noise shapes things,
+ * giving very clean DC removal.
+ */
 int16_t oslec_hpf_tx(struct oslec_state *ec, int16_t tx)
 {
 	int tmp, tmp1;

@@ -24,22 +24,22 @@ static int debug;
 #define DRIVER_DESC "Quatech USB 2.0 to Serial Driver"
 
 /* vendor and device IDs */
-#define	USB_VENDOR_ID_QUATECH 0x061d	/* Quatech VID */
-#define QUATECH_SSU2_100 0xC120		/* RS232 single port */
-#define QUATECH_DSU2_100 0xC140		/* RS232 dual port */
-#define QUATECH_DSU2_400 0xC150		/* RS232/422/485 dual port */
-#define QUATECH_QSU2_100 0xC160		/* RS232 four port */
-#define QUATECH_QSU2_400 0xC170		/* RS232/422/485 four port */
-#define QUATECH_ESU2_100 0xC1A0		/* RS232 eight port */
-#define QUATECH_ESU2_400 0xC180		/* RS232/422/485 eight port */
+#define USB_VENDOR_ID_QUATECH 0x061d    /* Quatech VID */
+#define QUATECH_SSU2_100 0xC120         /* RS232 single port */
+#define QUATECH_DSU2_100 0xC140         /* RS232 dual port */
+#define QUATECH_DSU2_400 0xC150         /* RS232/422/485 dual port */
+#define QUATECH_QSU2_100 0xC160         /* RS232 four port */
+#define QUATECH_QSU2_400 0xC170         /* RS232/422/485 four port */
+#define QUATECH_ESU2_100 0xC1A0         /* RS232 eight port */
+#define QUATECH_ESU2_400 0xC180         /* RS232/422/485 eight port */
 
 /* magic numbers go here, when we find out which ones are needed */
 
-#define QU2BOXPWRON 0x8000		/* magic number to turn FPGA power on */
-#define QU2BOX232 0x40			/* RS232 mode on MEI devices */
-#define QU2BOXSPD9600 0x60		/* set speed to 9600 baud */
-#define QT2_FIFO_DEPTH 1024			/* size of hardware fifos */
-#define QT2_TX_HEADER_LENGTH	5
+#define QU2BOXPWRON 0x8000              /* magic number to turn FPGA power on */
+#define QU2BOX232 0x40                  /* RS232 mode on MEI devices */
+#define QU2BOXSPD9600 0x60              /* set speed to 9600 baud */
+#define QT2_FIFO_DEPTH 1024             /* size of hardware fifos */
+#define QT2_TX_HEADER_LENGTH    5
 /* length of the header sent to the box with each write URB */
 
 /* directions for USB transfers */
@@ -47,54 +47,54 @@ static int debug;
 #define USBD_TRANSFER_DIRECTION_OUT   0x40
 
 /* special Quatech command IDs. These are pushed down the
- USB control pipe to get the box on the end to do things */
-#define QT_SET_GET_DEVICE		0xc2
-#define QT_OPEN_CLOSE_CHANNEL		0xca
+ * USB control pipe to get the box on the end to do things */
+#define QT_SET_GET_DEVICE               0xc2
+#define QT_OPEN_CLOSE_CHANNEL           0xca
 /*#define QT_GET_SET_PREBUF_TRIG_LVL	0xcc
-#define QT_SET_ATF			0xcd*/
-#define QT2_GET_SET_REGISTER			0xc0
-#define QT2_GET_SET_UART			0xc1
-#define QT2_HW_FLOW_CONTROL_MASK		0xc5
-#define QT2_SW_FLOW_CONTROL_MASK		0xc6
-#define QT2_SW_FLOW_CONTROL_DISABLE		0xc7
-#define QT2_BREAK_CONTROL			0xc8
-#define QT2_STOP_RECEIVE			0xe0
-#define QT2_FLUSH_DEVICE			0xc4
-#define QT2_GET_SET_QMCR			0xe1
+ #define QT_SET_ATF			0xcd*/
+#define QT2_GET_SET_REGISTER                    0xc0
+#define QT2_GET_SET_UART                        0xc1
+#define QT2_HW_FLOW_CONTROL_MASK                0xc5
+#define QT2_SW_FLOW_CONTROL_MASK                0xc6
+#define QT2_SW_FLOW_CONTROL_DISABLE             0xc7
+#define QT2_BREAK_CONTROL                       0xc8
+#define QT2_STOP_RECEIVE                        0xe0
+#define QT2_FLUSH_DEVICE                        0xc4
+#define QT2_GET_SET_QMCR                        0xe1
 
 /* sorts of flush we can do on */
-#define QT2_FLUSH_RX			0x00
-#define QT2_FLUSH_TX			0x01
+#define QT2_FLUSH_RX                    0x00
+#define QT2_FLUSH_TX                    0x01
 
 /* port setting constants, used to set up serial port speeds, flow
  * control and so on */
-#define QT2_SERIAL_MCR_DTR	0x01
-#define QT2_SERIAL_MCR_RTS	0x02
-#define QT2_SERIAL_MCR_LOOP	0x10
+#define QT2_SERIAL_MCR_DTR      0x01
+#define QT2_SERIAL_MCR_RTS      0x02
+#define QT2_SERIAL_MCR_LOOP     0x10
 
-#define QT2_SERIAL_MSR_CTS	0x10
-#define QT2_SERIAL_MSR_CD	0x80
-#define QT2_SERIAL_MSR_RI	0x40
-#define QT2_SERIAL_MSR_DSR	0x20
-#define QT2_SERIAL_MSR_MASK	0xf0
+#define QT2_SERIAL_MSR_CTS      0x10
+#define QT2_SERIAL_MSR_CD       0x80
+#define QT2_SERIAL_MSR_RI       0x40
+#define QT2_SERIAL_MSR_DSR      0x20
+#define QT2_SERIAL_MSR_MASK     0xf0
 
-#define QT2_SERIAL_8_DATA	0x03
-#define QT2_SERIAL_7_DATA	0x02
-#define QT2_SERIAL_6_DATA	0x01
-#define QT2_SERIAL_5_DATA	0x00
+#define QT2_SERIAL_8_DATA       0x03
+#define QT2_SERIAL_7_DATA       0x02
+#define QT2_SERIAL_6_DATA       0x01
+#define QT2_SERIAL_5_DATA       0x00
 
-#define QT2_SERIAL_ODD_PARITY	0x08
-#define QT2_SERIAL_EVEN_PARITY	0x18
-#define QT2_SERIAL_TWO_STOPB	0x04
-#define QT2_SERIAL_ONE_STOPB	0x00
+#define QT2_SERIAL_ODD_PARITY   0x08
+#define QT2_SERIAL_EVEN_PARITY  0x18
+#define QT2_SERIAL_TWO_STOPB    0x04
+#define QT2_SERIAL_ONE_STOPB    0x00
 
-#define QT2_MAX_BAUD_RATE	921600
-#define QT2_MAX_BAUD_REMAINDER	4608
+#define QT2_MAX_BAUD_RATE       921600
+#define QT2_MAX_BAUD_REMAINDER  4608
 
-#define QT2_SERIAL_LSR_OE	0x02
-#define QT2_SERIAL_LSR_PE	0x04
-#define QT2_SERIAL_LSR_FE	0x08
-#define QT2_SERIAL_LSR_BI	0x10
+#define QT2_SERIAL_LSR_OE       0x02
+#define QT2_SERIAL_LSR_PE       0x04
+#define QT2_SERIAL_LSR_FE       0x08
+#define QT2_SERIAL_LSR_BI       0x10
 
 /* value of Line Status Register when UART has completed
  * emptying data out on the line */
@@ -110,32 +110,32 @@ static int debug;
 #define  QT2_MODEM_STATUS_REGISTER      0x06
 
 /* handy macros for doing escape sequence parsing on data reads */
-#define THISCHAR	((unsigned char *)(urb->transfer_buffer))[i]
-#define NEXTCHAR	((unsigned char *)(urb->transfer_buffer))[i + 1]
-#define THIRDCHAR	((unsigned char *)(urb->transfer_buffer))[i + 2]
-#define FOURTHCHAR	((unsigned char *)(urb->transfer_buffer))[i + 3]
-#define FIFTHCHAR	((unsigned char *)(urb->transfer_buffer))[i + 4]
+#define THISCHAR        ((unsigned char *)(urb->transfer_buffer))[i]
+#define NEXTCHAR        ((unsigned char *)(urb->transfer_buffer))[i + 1]
+#define THIRDCHAR       ((unsigned char *)(urb->transfer_buffer))[i + 2]
+#define FOURTHCHAR      ((unsigned char *)(urb->transfer_buffer))[i + 3]
+#define FIFTHCHAR       ((unsigned char *)(urb->transfer_buffer))[i + 4]
 
 static const struct usb_device_id quausb2_id_table[] = {
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_SSU2_100)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU2_100)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU2_400)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU2_100)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU2_400)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU2_100)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU2_400)},
-	{}	/* Terminating entry */
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_SSU2_100) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU2_100) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU2_400) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU2_100) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU2_400) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU2_100) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU2_400) },
+	{}      /* Terminating entry */
 };
 
 MODULE_DEVICE_TABLE(usb, quausb2_id_table);
 
 /* custom structures we need go here */
 static struct usb_driver quausb2_usb_driver = {
-	.name = "quatech-usb2-serial",
-	.probe = usb_serial_probe,
-	.disconnect = usb_serial_disconnect,
-	.id_table = quausb2_id_table,
-	.no_dynamic_id = 1,
+	.name		= "quatech-usb2-serial",
+	.probe		= usb_serial_probe,
+	.disconnect	= usb_serial_disconnect,
+	.id_table	= quausb2_id_table,
+	.no_dynamic_id	= 1,
 };
 
 /**
@@ -169,25 +169,25 @@ static struct usb_driver quausb2_usb_driver = {
  * it open, i.e. the reference count.
  */
 struct quatech2_port {
-	int	magic;
-	bool	read_urb_busy;
-	bool	close_pending;
-	__u8	shadowLSR;
-	__u8	shadowMSR;
-	bool	rcv_flush;
-	bool	xmit_flush;
-	int	tx_pending_bytes;
-	struct mutex modelock;
-	int	open_count;
+	int			magic;
+	bool			read_urb_busy;
+	bool			close_pending;
+	__u8			shadowLSR;
+	__u8			shadowMSR;
+	bool			rcv_flush;
+	bool			xmit_flush;
+	int			tx_pending_bytes;
+	struct mutex		modelock;
+	int			open_count;
 
-	char	active;		/* someone has this device open */
-	unsigned char		*xfer_to_tty_buffer;
+	char			active; /* someone has this device open */
+	unsigned char *		xfer_to_tty_buffer;
 	wait_queue_head_t	wait;
-	__u8	shadowLCR;	/* last LCR value received */
-	__u8	shadowMCR;	/* last MCR value received */
-	char	RxHolding;
-	struct semaphore	pend_xmit_sem;	/* locks this structure */
-	spinlock_t lock;
+	__u8			shadowLCR;      /* last LCR value received */
+	__u8			shadowMCR;      /* last MCR value received */
+	char			RxHolding;
+	struct semaphore	pend_xmit_sem;  /* locks this structure */
+	spinlock_t		lock;
 };
 
 /**
@@ -204,77 +204,58 @@ struct quatech2_port {
  * port is opened and a new buffer is allocated.
  */
 struct quatech2_dev {
-	bool	ReadBulkStopped;
-	char	open_ports;
+	bool			ReadBulkStopped;
+	char			open_ports;
 	struct usb_serial_port *current_port;
-	int	buffer_size;
+	int			buffer_size;
 };
 
 /* structure which holds line and modem status flags */
 struct qt2_status_data {
-	__u8 line_status;
-	__u8 modem_status;
+	__u8	line_status;
+	__u8	modem_status;
 };
 
 /* Function prototypes */
 static int qt2_boxpoweron(struct usb_serial *serial);
-static int qt2_boxsetQMCR(struct usb_serial *serial, __u16 Uart_Number,
-			__u8 QMCR_Value);
-static int port_paranoia_check(struct usb_serial_port *port,
-			const char *function);
-static int serial_paranoia_check(struct usb_serial *serial,
-			 const char *function);
+static int qt2_boxsetQMCR(struct usb_serial *serial, __u16 Uart_Number, __u8 QMCR_Value);
+static int port_paranoia_check(struct usb_serial_port *port, const char *function);
+static int serial_paranoia_check(struct usb_serial *serial, const char *function);
 static inline struct quatech2_port *qt2_get_port_private(struct usb_serial_port
-			*port);
-static inline void qt2_set_port_private(struct usb_serial_port *port,
-			struct quatech2_port *data);
+							 *port);
+static inline void qt2_set_port_private(struct usb_serial_port *port, struct quatech2_port *data);
 static inline struct quatech2_dev *qt2_get_dev_private(struct usb_serial
-			*serial);
-static inline void qt2_set_dev_private(struct usb_serial *serial,
-			struct quatech2_dev *data);
+						       *serial);
+static inline void qt2_set_dev_private(struct usb_serial *serial, struct quatech2_dev *data);
 static int qt2_openboxchannel(struct usb_serial *serial, __u16
-			Uart_Number, struct qt2_status_data *pDeviceData);
+			      Uart_Number, struct qt2_status_data *pDeviceData);
 static int qt2_closeboxchannel(struct usb_serial *serial, __u16
-			Uart_Number);
-static int qt2_conf_uart(struct usb_serial *serial,  unsigned short Uart_Number,
-			 unsigned short divisor, unsigned char LCR);
+			       Uart_Number);
+static int qt2_conf_uart(struct usb_serial *serial, unsigned short Uart_Number, unsigned short divisor, unsigned char LCR);
 static void qt2_read_bulk_callback(struct urb *urb);
 static void qt2_write_bulk_callback(struct urb *urb);
-static void qt2_process_line_status(struct usb_serial_port *port,
-			      unsigned char LineStatus);
-static void qt2_process_modem_status(struct usb_serial_port *port,
-			       unsigned char ModemStatus);
-static void qt2_process_xmit_empty(struct usb_serial_port *port,
-	unsigned char fourth_char, unsigned char fifth_char);
-static void qt2_process_port_change(struct usb_serial_port *port,
-			      unsigned char New_Current_Port);
+static void qt2_process_line_status(struct usb_serial_port *port, unsigned char LineStatus);
+static void qt2_process_modem_status(struct usb_serial_port *port, unsigned char ModemStatus);
+static void qt2_process_xmit_empty(struct usb_serial_port *port, unsigned char fourth_char, unsigned char fifth_char);
+static void qt2_process_port_change(struct usb_serial_port *port, unsigned char New_Current_Port);
 static void qt2_process_rcv_flush(struct usb_serial_port *port);
 static void qt2_process_xmit_flush(struct usb_serial_port *port);
-static void qt2_process_rx_char(struct usb_serial_port *port,
-				unsigned char data);
-static int qt2_box_get_register(struct usb_serial *serial,
-		unsigned char uart_number, unsigned short register_num,
-		__u8 *pValue);
-static int qt2_box_set_register(struct usb_serial *serial,
-		unsigned short Uart_Number, unsigned short Register_Num,
-		unsigned short Value);
-static int qt2_box_flush(struct usb_serial *serial,  unsigned char uart_number,
-		unsigned short rcv_or_xmit);
-static int qt2_boxsetuart(struct usb_serial *serial, unsigned short Uart_Number,
-		unsigned short default_divisor, unsigned char default_LCR);
-static int qt2_boxsethw_flowctl(struct usb_serial *serial,
-		unsigned int UartNumber, bool bSet);
-static int qt2_boxsetsw_flowctl(struct usb_serial *serial, __u16 UartNumber,
-		unsigned char stop_char,  unsigned char start_char);
+static void qt2_process_rx_char(struct usb_serial_port *port, unsigned char data);
+static int qt2_box_get_register(struct usb_serial *serial, unsigned char uart_number, unsigned short register_num, __u8 *pValue);
+static int qt2_box_set_register(struct usb_serial *serial, unsigned short Uart_Number, unsigned short Register_Num, unsigned short Value);
+static int qt2_box_flush(struct usb_serial *serial, unsigned char uart_number, unsigned short rcv_or_xmit);
+static int qt2_boxsetuart(struct usb_serial *serial, unsigned short Uart_Number, unsigned short default_divisor, unsigned char default_LCR);
+static int qt2_boxsethw_flowctl(struct usb_serial *serial, unsigned int UartNumber, bool bSet);
+static int qt2_boxsetsw_flowctl(struct usb_serial *serial, __u16 UartNumber, unsigned char stop_char, unsigned char start_char);
 static int qt2_boxunsetsw_flowctl(struct usb_serial *serial, __u16 UartNumber);
-static int qt2_boxstoprx(struct usb_serial *serial, unsigned short uart_number,
-			 unsigned short stop);
+static int qt2_boxstoprx(struct usb_serial *serial, unsigned short uart_number, unsigned short stop);
 
 /* implementation functions, roughly in order of use, are here */
 static int qt2_calc_num_ports(struct usb_serial *serial)
 {
 	int num_ports;
 	int flag_as_400;
+
 	switch (serial->dev->descriptor.idProduct) {
 	case QUATECH_SSU2_100:
 		num_ports = 1;
@@ -284,22 +265,22 @@ static int qt2_calc_num_ports(struct usb_serial *serial)
 		flag_as_400 = true;
 	case QUATECH_DSU2_100:
 		num_ports = 2;
-	break;
+		break;
 
 	case QUATECH_QSU2_400:
 		flag_as_400 = true;
 	case QUATECH_QSU2_100:
 		num_ports = 4;
-	break;
+		break;
 
 	case QUATECH_ESU2_400:
 		flag_as_400 = true;
 	case QUATECH_ESU2_100:
 		num_ports = 8;
-	break;
+		break;
 	default:
-	num_ports = 1;
-	break;
+		num_ports = 1;
+		break;
 	}
 	return num_ports;
 }
@@ -307,19 +288,20 @@ static int qt2_calc_num_ports(struct usb_serial *serial)
 static int qt2_attach(struct usb_serial *serial)
 {
 	struct usb_serial_port *port;
-	struct quatech2_port *qt2_port;	/* port-specific private data pointer */
-	struct quatech2_dev  *qt2_dev;	/* dev-specific private data pointer */
+	struct quatech2_port *qt2_port; /* port-specific private data pointer */
+	struct quatech2_dev *qt2_dev;   /* dev-specific private data pointer */
 	int i;
 	/* stuff for storing endpoint addresses now */
 	struct usb_endpoint_descriptor *endpoint;
 	struct usb_host_interface *iface_desc;
-	struct usb_serial_port *port0;	/* first port structure on device */
+	struct usb_serial_port *port0;  /* first port structure on device */
 
 	/* check how many endpoints there are on the device, for
 	 * sanity's sake */
+
 	dbg("%s(): Endpoints: %d bulk in, %d bulk out, %d interrupt in",
-			__func__, serial->num_bulk_in,
-			serial->num_bulk_out, serial->num_interrupt_in);
+	    __func__, serial->num_bulk_in,
+	    serial->num_bulk_out, serial->num_interrupt_in);
 	if ((serial->num_bulk_in != 1) || (serial->num_bulk_out != 1)) {
 		dbg("Device has wrong number of bulk endpoints!");
 		return -ENODEV;
@@ -334,8 +316,8 @@ static int qt2_attach(struct usb_serial *serial)
 		    __func__);
 		return -ENOMEM;
 	}
-	qt2_dev->open_ports = 0;	/* no ports open */
-	qt2_set_dev_private(serial, qt2_dev);	/* store private data */
+	qt2_dev->open_ports = 0;                /* no ports open */
+	qt2_set_dev_private(serial, qt2_dev);   /* store private data */
 
 	/* Now setup per port private data, which replaces all the things
 	 * that quatech added to standard kernel structures in their driver */
@@ -348,7 +330,7 @@ static int qt2_attach(struct usb_serial *serial)
 			return -ENOMEM;
 		}
 		/* initialise stuff in the structure */
-		qt2_port->open_count = 0;	/* port is not open */
+		qt2_port->open_count = 0;       /* port is not open */
 		spin_lock_init(&qt2_port->lock);
 		mutex_init(&qt2_port->modelock);
 		qt2_set_port_private(port, qt2_port);
@@ -365,21 +347,21 @@ static int qt2_attach(struct usb_serial *serial)
 	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
 		endpoint = &iface_desc->endpoint[i].desc;
 		if ((endpoint->bEndpointAddress & 0x80) &&
-			((endpoint->bmAttributes & 3) == 0x02)) {
+		    ((endpoint->bmAttributes & 3) == 0x02)) {
 			/* we found a bulk in endpoint */
 			dbg("found bulk in at %#.2x",
-				endpoint->bEndpointAddress);
+			    endpoint->bEndpointAddress);
 		}
 
 		if (((endpoint->bEndpointAddress & 0x80) == 0x00) &&
-			((endpoint->bmAttributes & 3) == 0x02)) {
+		    ((endpoint->bmAttributes & 3) == 0x02)) {
 			/* we found a bulk out endpoint */
 			dbg("found bulk out at %#.2x",
-				endpoint->bEndpointAddress);
+			    endpoint->bEndpointAddress);
 			qt2_dev->buffer_size = endpoint->wMaxPacketSize;
 			/* max size of URB needs recording for the device */
 		}
-	}	/* end printing endpoint addresses */
+	}       /* end printing endpoint addresses */
 
 	/* switch on power to the hardware */
 	if (qt2_boxpoweron(serial) < 0) {
@@ -390,7 +372,7 @@ static int qt2_attach(struct usb_serial *serial)
 	for (i = 0; i < serial->num_ports; ++i) {
 		if (qt2_boxsetQMCR(serial, i, QU2BOX232) < 0) {
 			dbg("qt2_boxsetQMCR() on port %d failed",
-				i);
+			    i);
 			goto startup_error;
 		}
 	}
@@ -444,14 +426,14 @@ static void qt2_release(struct usb_serial *serial)
  */
 int qt2_open(struct tty_struct *tty, struct usb_serial_port *port)
 {
-	struct usb_serial *serial;	/* device structure */
-	struct usb_serial_port *port0;	/* first port structure on device */
+	struct usb_serial *serial;              /* device structure */
+	struct usb_serial_port *port0;          /* first port structure on device */
 	struct quatech2_port *port_extra;       /* extra data for this port */
-	struct quatech2_port *port0_extra;	/* extra data for first port */
-	struct quatech2_dev *dev_extra;		/* extra data for the device */
+	struct quatech2_port *port0_extra;      /* extra data for first port */
+	struct quatech2_dev *dev_extra;         /* extra data for the device */
 	struct qt2_status_data ChannelData;
 	unsigned short default_divisor = QU2BOXSPD9600;
-	unsigned char  default_LCR = QT2_SERIAL_8_DATA;
+	unsigned char default_LCR = QT2_SERIAL_8_DATA;
 	int status;
 	int result;
 
@@ -460,7 +442,7 @@ int qt2_open(struct tty_struct *tty, struct usb_serial_port *port)
 
 	dbg("%s(): port %d", __func__, port->number);
 
-	serial = port->serial;	/* get the parent device structure */
+	serial = port->serial;  /* get the parent device structure */
 	if (serial_paranoia_check(serial, __func__)) {
 		dbg("usb_serial struct failed sanity check");
 		return -ENODEV;
@@ -487,18 +469,18 @@ int qt2_open(struct tty_struct *tty, struct usb_serial_port *port)
 	/* FIXME: are these needed?  Does it even do anything useful? */
 	/* get the modem and line status values from the UART */
 	status = qt2_openboxchannel(serial, port->number,
-			&ChannelData);
+				    &ChannelData);
 	if (status < 0) {
 		dbg("qt2_openboxchannel on channel %d failed",
 		    port->number);
 		return status;
 	}
 	port_extra->shadowLSR = ChannelData.line_status &
-			(QT2_SERIAL_LSR_OE | QT2_SERIAL_LSR_PE |
-			QT2_SERIAL_LSR_FE | QT2_SERIAL_LSR_BI);
+				(QT2_SERIAL_LSR_OE | QT2_SERIAL_LSR_PE |
+				 QT2_SERIAL_LSR_FE | QT2_SERIAL_LSR_BI);
 	port_extra->shadowMSR = ChannelData.modem_status &
-			(QT2_SERIAL_MSR_CTS | QT2_SERIAL_MSR_DSR |
-			QT2_SERIAL_MSR_RI | QT2_SERIAL_MSR_CD);
+				(QT2_SERIAL_MSR_CTS | QT2_SERIAL_MSR_DSR |
+				 QT2_SERIAL_MSR_RI | QT2_SERIAL_MSR_CD);
 
 /*	port_extra->fifo_empty_flag = true;*/
 	dbg("qt2_openboxchannel on channel %d completed.",
@@ -506,14 +488,14 @@ int qt2_open(struct tty_struct *tty, struct usb_serial_port *port)
 
 	/* Set Baud rate to default and turn off flow control here */
 	status = qt2_conf_uart(serial, port->number, default_divisor,
-				default_LCR);
+			       default_LCR);
 	if (status < 0) {
 		dbg("qt2_conf_uart() failed on channel %d",
 		    port->number);
 		return status;
 	}
 	dbg("qt2_conf_uart() completed on channel %d",
-		port->number);
+	    port->number);
 
 	/*
 	 * At this point we will need some end points to make further progress.
@@ -532,7 +514,7 @@ int qt2_open(struct tty_struct *tty, struct usb_serial_port *port)
 	 */
 	dbg("port0 bulk in endpoint is %#.2x", port0->bulk_in_endpointAddress);
 	dbg("port0 bulk out endpoint is %#.2x",
-		port0->bulk_out_endpointAddress);
+	    port0->bulk_out_endpointAddress);
 
 	/* set up write_urb for bulk out transfers on this port. The USB
 	 * serial framework will have allocated a blank URB, buffer etc for
@@ -561,12 +543,12 @@ int qt2_open(struct tty_struct *tty, struct usb_serial_port *port)
 	dbg("port->bulk_out_size is %d", port->bulk_out_size);
 
 	usb_fill_bulk_urb(port->write_urb, serial->dev,
-			usb_sndbulkpipe(serial->dev,
-			port0->bulk_out_endpointAddress),
-			port->bulk_out_buffer,
-			port->bulk_out_size,
-			qt2_write_bulk_callback,
-			port);
+			  usb_sndbulkpipe(serial->dev,
+					  port0->bulk_out_endpointAddress),
+			  port->bulk_out_buffer,
+			  port->bulk_out_size,
+			  qt2_write_bulk_callback,
+			  port);
 	port_extra->tx_pending_bytes = 0;
 
 	if (dev_extra->open_ports == 0) {
@@ -574,11 +556,11 @@ int qt2_open(struct tty_struct *tty, struct usb_serial_port *port)
 		 * initialised for bulk in transfers (this is shared amongst
 		 * all the ports on the device) */
 		usb_fill_bulk_urb(port0->read_urb, serial->dev,
-			usb_rcvbulkpipe(serial->dev,
-			port0->bulk_in_endpointAddress),
-			port0->bulk_in_buffer,
-			port0->bulk_in_size,
-			qt2_read_bulk_callback, serial);
+				  usb_rcvbulkpipe(serial->dev,
+						  port0->bulk_in_endpointAddress),
+				  port0->bulk_in_buffer,
+				  port0->bulk_in_size,
+				  qt2_read_bulk_callback, serial);
 		dbg("port0 bulk in URB intialised");
 
 		/* submit URB, i.e. start reading from device (async) */
@@ -587,7 +569,7 @@ int qt2_open(struct tty_struct *tty, struct usb_serial_port *port)
 		result = usb_submit_urb(port->read_urb, GFP_KERNEL);
 		if (result) {
 			dev_err(&port->dev,
-				 "%s(): Error %d submitting bulk in urb",
+				"%s(): Error %d submitting bulk in urb",
 				__func__, result);
 			port_extra->read_urb_busy = false;
 			dev_extra->ReadBulkStopped = true;
@@ -633,14 +615,14 @@ static void qt2_close(struct usb_serial_port *port)
 {
 	/* time out value for flush loops */
 	unsigned long jift;
-	struct quatech2_port *port_extra;	/* extra data for this port */
-	struct usb_serial *serial;	/* device structure */
-	struct quatech2_dev *dev_extra; /* extra data for the device */
-	__u8  lsr_value = 0;	/* value of Line Status Register */
-	int status;	/* result of last USB comms function */
+	struct quatech2_port *port_extra;       /* extra data for this port */
+	struct usb_serial *serial;              /* device structure */
+	struct quatech2_dev *dev_extra;         /* extra data for the device */
+	__u8 lsr_value = 0;                     /* value of Line Status Register */
+	int status;                             /* result of last USB comms function */
 
 	dbg("%s(): port %d", __func__, port->number);
-	serial = port->serial;	/* get the parent device structure */
+	serial = port->serial;  /* get the parent device structure */
 	dev_extra = qt2_get_dev_private(serial);
 	/* get the device private data */
 	port_extra = qt2_get_port_private(port); /* port private data */
@@ -658,10 +640,10 @@ static void qt2_close(struct usb_serial_port *port)
 	/* FIXME: slow this polling down so it doesn't run the USB bus flat out
 	 * if it actually has to spend any time in this loop (which it normally
 	 * doesn't because the buffer is nearly empty) */
-	jift = jiffies + (10 * HZ);	/* 10 sec timeout */
+	jift = jiffies + (10 * HZ);     /* 10 sec timeout */
 	do {
 		status = qt2_box_get_register(serial, port->number,
-			QT2_LINE_STATUS_REGISTER, &lsr_value);
+					      QT2_LINE_STATUS_REGISTER, &lsr_value);
 		if (status < 0) {
 			dbg("%s(): qt2_box_get_register failed", __func__);
 			break;
@@ -676,7 +658,7 @@ static void qt2_close(struct usb_serial_port *port)
 	status = qt2_closeboxchannel(serial, port->number);
 	if (status < 0)
 		dbg("%s(): port %d qt2_box_open_close_channel failed",
-			__func__, port->number);
+		    __func__, port->number);
 	/* to avoid leaking URBs, we should now free the write_urb for this
 	 * port and set the pointer to null so that next time the port is opened
 	 * a new URB is allocated. This avoids leaking URBs when the device is
@@ -691,7 +673,7 @@ static void qt2_close(struct usb_serial_port *port)
 	/* one less overall open as well */
 	dev_extra->open_ports--;
 	dbg("%s(): Exit, dev_extra->open_ports  = %d", __func__,
-		dev_extra->open_ports);
+	    dev_extra->open_ports);
 }
 
 /**
@@ -701,24 +683,24 @@ static void qt2_close(struct usb_serial_port *port)
  * @return The number of bytes actually accepted for transmission to the device.
  */
 static int qt2_write(struct tty_struct *tty, struct usb_serial_port *port,
-		const unsigned char *buf, int count)
+		     const unsigned char *buf, int count)
 {
-	struct usb_serial *serial;	/* parent device struct */
-	__u8 header_array[5];	/* header used to direct writes to the correct
-	port on the device */
-	struct quatech2_port *port_extra;	/* extra data for this port */
+	struct usb_serial *serial;              /* parent device struct */
+	__u8 header_array[5];                   /* header used to direct writes to the correct
+	                                         * port on the device */
+	struct quatech2_port *port_extra;       /* extra data for this port */
 	int result;
 
-	serial = port->serial; /* get the parent device of the port */
-	port_extra = qt2_get_port_private(port); /* port extra info */
+	serial = port->serial;                          /* get the parent device of the port */
+	port_extra = qt2_get_port_private(port);        /* port extra info */
 	if (serial == NULL)
 		return -ENODEV;
 	dbg("%s(): port %d, requested to write %d bytes, %d already pending",
-		__func__, port->number, count, port_extra->tx_pending_bytes);
+	    __func__, port->number, count, port_extra->tx_pending_bytes);
 
-	if (count <= 0)	{
+	if (count <= 0) {
 		dbg("%s(): write request of <= 0 bytes", __func__);
-		return 0;	/* no bytes written */
+		return 0;       /* no bytes written */
 	}
 
 	/* check if the write urb is already in use, i.e. data already being
@@ -726,7 +708,7 @@ static int qt2_write(struct tty_struct *tty, struct usb_serial_port *port,
 	if ((port->write_urb->status == -EINPROGRESS)) {
 		/* Fifo hasn't been emptied since last write to this port */
 		dbg("%s(): already writing, port->write_urb->status == "
-			"-EINPROGRESS", __func__);
+		    "-EINPROGRESS", __func__);
 		/* schedule_work(&port->work); commented in vendor driver */
 		return 0;
 	} else if (port_extra->tx_pending_bytes >= QT2_FIFO_DEPTH) {
@@ -748,7 +730,7 @@ static int qt2_write(struct tty_struct *tty, struct usb_serial_port *port,
 	if (count > port->bulk_out_size - QT2_TX_HEADER_LENGTH) {
 		count = port->bulk_out_size - QT2_TX_HEADER_LENGTH;
 		dbg("%s(): write request bigger than urb, only accepting "
-			"%d bytes", __func__, count);
+		    "%d bytes", __func__, count);
 	}
 	/* we must also ensure that the FIFO at the other end can cope with the
 	 * URB we send it, otherwise it will have problems. As above, we can
@@ -756,7 +738,7 @@ static int qt2_write(struct tty_struct *tty, struct usb_serial_port *port,
 	if (count > (QT2_FIFO_DEPTH - port_extra->tx_pending_bytes)) {
 		count = QT2_FIFO_DEPTH - port_extra->tx_pending_bytes;
 		dbg("%s(): not enough room in buffer, only accepting %d bytes",
-			__func__, count);
+		    __func__, count);
 	}
 	/* now build the header for transmission */
 	header_array[0] = 0x1b;
@@ -766,7 +748,7 @@ static int qt2_write(struct tty_struct *tty, struct usb_serial_port *port,
 	header_array[4] = (__u8)count >> 8;
 	/* copy header into URB */
 	memcpy(port->write_urb->transfer_buffer, header_array,
-		QT2_TX_HEADER_LENGTH);
+	       QT2_TX_HEADER_LENGTH);
 	/* and actual data to write */
 	memcpy(port->write_urb->transfer_buffer + 5, buf, count);
 
@@ -774,23 +756,23 @@ static int qt2_write(struct tty_struct *tty, struct usb_serial_port *port,
 
 	/* set up our urb */
 	usb_fill_bulk_urb(port->write_urb, serial->dev,
-			usb_sndbulkpipe(serial->dev,
-			port->bulk_out_endpointAddress),
-			port->write_urb->transfer_buffer, count + 5,
-			(qt2_write_bulk_callback), port);
+			  usb_sndbulkpipe(serial->dev,
+					  port->bulk_out_endpointAddress),
+			  port->write_urb->transfer_buffer, count + 5,
+			  (qt2_write_bulk_callback), port);
 	/* send the data out the bulk port */
 	result = usb_submit_urb(port->write_urb, GFP_ATOMIC);
 	if (result) {
 		/* error couldn't submit urb */
-		result = 0;	/* return 0 as nothing got written */
+		result = 0;     /* return 0 as nothing got written */
 		dbg("%s(): failed submitting write urb, error %d",
-			__func__, result);
+		    __func__, result);
 	} else {
 		port_extra->tx_pending_bytes += count;
-		result = count;	/* return number of bytes written, i.e. count */
+		result = count; /* return number of bytes written, i.e. count */
 		dbg("%s(): submitted write urb, wrote %d bytes, "
-			"total pending bytes %d",
-			__func__, result, port_extra->tx_pending_bytes);
+		    "total pending bytes %d",
+		    __func__, result, port_extra->tx_pending_bytes);
 	}
 	return result;
 }
@@ -807,9 +789,10 @@ static int qt2_write(struct tty_struct *tty, struct usb_serial_port *port,
 static int qt2_write_room(struct tty_struct *tty)
 {
 	struct usb_serial_port *port = tty->driver_data;
-		/* parent usb_serial_port pointer */
-	struct quatech2_port *port_extra;	/* extra data for this port */
+	/* parent usb_serial_port pointer */
+	struct quatech2_port *port_extra;       /* extra data for this port */
 	int room = 0;
+
 	port_extra = qt2_get_port_private(port);
 
 	if (port_extra->close_pending == true) {
@@ -822,7 +805,7 @@ static int qt2_write_room(struct tty_struct *tty)
 	 * out of the port, unless this is more than the size of the
 	 * write_urb output buffer less the header, which is the maximum
 	 * size write we can do.
-
+	 *
 	 * Most of the implementation of this is done when writes to the device
 	 * are started or terminate. When we send a write to the device, we
 	 * reduce the free space count by the size of the dispatched write.
@@ -845,11 +828,12 @@ static int qt2_chars_in_buffer(struct tty_struct *tty)
 {
 	struct usb_serial_port *port = tty->driver_data;
 	/* parent usb_serial_port pointer */
-	struct quatech2_port *port_extra;	/* extra data for this port */
+	struct quatech2_port *port_extra;       /* extra data for this port */
+
 	port_extra = qt2_get_port_private(port);
 
 	dbg("%s(): port %d: chars_in_buffer = %d", __func__,
-		port->number, port_extra->tx_pending_bytes);
+	    port->number, port_extra->tx_pending_bytes);
 	return port_extra->tx_pending_bytes;
 }
 
@@ -862,12 +846,13 @@ static int qt2_ioctl(struct tty_struct *tty, struct file *file,
 {
 	struct usb_serial_port *port = tty->driver_data;
 	struct usb_serial *serial = port->serial;
-	__u8 mcr_value;	/* Modem Control Register value */
-	__u8 msr_value; /* Modem Status Register value */
-	unsigned short prev_msr_value; /* Previous value of Modem Status
-	 * Register used to implement waiting for a line status change to
-	 * occur */
-	struct quatech2_port *port_extra;	/* extra data for this port */
+	__u8 mcr_value;                         /* Modem Control Register value */
+	__u8 msr_value;                         /* Modem Status Register value */
+	unsigned short prev_msr_value;          /* Previous value of Modem Status
+	                                         * Register used to implement waiting for a line status change to
+	                                         * occur */
+	struct quatech2_port *port_extra;       /* extra data for this port */
+
 	DECLARE_WAITQUEUE(wait, current);
 	/* Declare a wait queue named "wait" */
 
@@ -884,10 +869,10 @@ static int qt2_ioctl(struct tty_struct *tty, struct file *file,
 
 	if (cmd == TIOCMBIS || cmd == TIOCMBIC) {
 		if (qt2_box_get_register(port->serial, UartNumber,
-			QT2_MODEM_CONTROL_REGISTER, &mcr_value) < 0)
+					 QT2_MODEM_CONTROL_REGISTER, &mcr_value) < 0)
 			return -ESPIPE;
 		if (copy_from_user(&value, (unsigned int *)arg,
-			sizeof(value)))
+				   sizeof(value)))
 			return -EFAULT;
 
 		switch (cmd) {
@@ -898,7 +883,7 @@ static int qt2_ioctl(struct tty_struct *tty, struct file *file,
 				mcr_value |= QT2_SERIAL_MCR_DTR;
 			if (value & TIOCM_LOOP)
 				mcr_value |= QT2_SERIAL_MCR_LOOP;
-		break;
+			break;
 		case TIOCMBIC:
 			if (value & TIOCM_RTS)
 				mcr_value &= ~QT2_SERIAL_MCR_RTS;
@@ -906,12 +891,12 @@ static int qt2_ioctl(struct tty_struct *tty, struct file *file,
 				mcr_value &= ~QT2_SERIAL_MCR_DTR;
 			if (value & TIOCM_LOOP)
 				mcr_value &= ~QT2_SERIAL_MCR_LOOP;
-		break;
+			break;
 		default:
-		break;
-		}	/* end of local switch on cmd */
-		if (qt2_box_set_register(port->serial,  UartNumber,
-		    QT2_MODEM_CONTROL_REGISTER, mcr_value) < 0) {
+			break;
+		}       /* end of local switch on cmd */
+		if (qt2_box_set_register(port->serial, UartNumber,
+					 QT2_MODEM_CONTROL_REGISTER, mcr_value) < 0) {
 			return -ESPIPE;
 		} else {
 			port_extra->shadowMCR = mcr_value;
@@ -919,14 +904,14 @@ static int qt2_ioctl(struct tty_struct *tty, struct file *file,
 		}
 	} else if (cmd == TIOCMIWAIT) {
 		dbg("%s() port %d, cmd == TIOCMIWAIT enter",
-			__func__, port->number);
-		prev_msr_value = port_extra->shadowMSR  & QT2_SERIAL_MSR_MASK;
+		    __func__, port->number);
+		prev_msr_value = port_extra->shadowMSR & QT2_SERIAL_MSR_MASK;
 		while (1) {
 			add_wait_queue(&port_extra->wait, &wait);
 			set_current_state(TASK_INTERRUPTIBLE);
 			schedule();
 			dbg("%s(): port %d, cmd == TIOCMIWAIT here\n",
-				__func__, port->number);
+			    __func__, port->number);
 			remove_wait_queue(&port_extra->wait, &wait);
 			/* see if a signal woke us up */
 			if (signal_pending(current))
@@ -935,28 +920,27 @@ static int qt2_ioctl(struct tty_struct *tty, struct file *file,
 			if (msr_value == prev_msr_value)
 				return -EIO;  /* no change - error */
 			if ((arg & TIOCM_RNG &&
-				((prev_msr_value & QT2_SERIAL_MSR_RI) ==
-					(msr_value & QT2_SERIAL_MSR_RI))) ||
-				(arg & TIOCM_DSR &&
-				((prev_msr_value & QT2_SERIAL_MSR_DSR) ==
-					(msr_value & QT2_SERIAL_MSR_DSR))) ||
-				(arg & TIOCM_CD &&
-				((prev_msr_value & QT2_SERIAL_MSR_CD) ==
-					(msr_value & QT2_SERIAL_MSR_CD))) ||
-				(arg & TIOCM_CTS &&
-				((prev_msr_value & QT2_SERIAL_MSR_CTS) ==
-					(msr_value & QT2_SERIAL_MSR_CTS)))) {
+			     ((prev_msr_value & QT2_SERIAL_MSR_RI) ==
+			      (msr_value & QT2_SERIAL_MSR_RI))) ||
+			    (arg & TIOCM_DSR &&
+			     ((prev_msr_value & QT2_SERIAL_MSR_DSR) ==
+			      (msr_value & QT2_SERIAL_MSR_DSR))) ||
+			    (arg & TIOCM_CD &&
+			     ((prev_msr_value & QT2_SERIAL_MSR_CD) ==
+			      (msr_value & QT2_SERIAL_MSR_CD))) ||
+			    (arg & TIOCM_CTS &&
+			     ((prev_msr_value & QT2_SERIAL_MSR_CTS) ==
+			      (msr_value & QT2_SERIAL_MSR_CTS))))
 				return 0;
-			}
 		} /* end inifinite while */
-		/* FIXME: This while loop needs a way to break out if the device
-		 * is disconnected while a process is waiting for the MSR to
-		 * change, because once it's disconnected, it isn't going to
-		 * change state ... */
+		  /* FIXME: This while loop needs a way to break out if the device
+		   * is disconnected while a process is waiting for the MSR to
+		   * change, because once it's disconnected, it isn't going to
+		   * change state ... */
 	} else {
 		/* any other ioctls we don't know about come here */
 		dbg("%s(): No ioctl for that one. port = %d", __func__,
-			port->number);
+		    port->number);
 		return -ENOIOCTLCMD;
 	}
 }
@@ -964,7 +948,7 @@ static int qt2_ioctl(struct tty_struct *tty, struct file *file,
 /* Called when the user wishes to change the port settings using the termios
  * userspace interface */
 static void qt2_set_termios(struct tty_struct *tty,
-	struct usb_serial_port *port, struct ktermios *old_termios)
+			    struct usb_serial_port *port, struct ktermios *old_termios)
 {
 	struct usb_serial *serial; /* parent serial device */
 	int baud, divisor, remainder;
@@ -1020,10 +1004,9 @@ static void qt2_set_termios(struct tty_struct *tty,
 	/* Thats the LCR stuff, next we need to work out the divisor as the
 	 * LCR and the divisor are set together */
 	baud = tty_get_baud_rate(tty);
-	if (!baud) {
+	if (!baud)
 		/* pick a default, any default... */
 		baud = 9600;
-	}
 	dbg("%s(): got baud = %d", __func__, baud);
 
 	divisor = QT2_MAX_BAUD_RATE / baud;
@@ -1032,11 +1015,11 @@ static void qt2_set_termios(struct tty_struct *tty,
 	if (((remainder * 2) >= baud) && (baud != 110))
 		divisor++;
 	dbg("%s(): setting divisor = %d, QT2_MAX_BAUD_RATE = %d , LCR = %#.2x",
-	      __func__, divisor, QT2_MAX_BAUD_RATE, LCR_change_to);
+	    __func__, divisor, QT2_MAX_BAUD_RATE, LCR_change_to);
 
-	status = qt2_boxsetuart(serial, UartNumber, (unsigned short) divisor,
-			    LCR_change_to);
-	if (status < 0)	{
+	status = qt2_boxsetuart(serial, UartNumber, (unsigned short)divisor,
+				LCR_change_to);
+	if (status < 0) {
 		dbg("qt2_boxsetuart() failed");
 		return;
 	} else {
@@ -1049,7 +1032,7 @@ static void qt2_set_termios(struct tty_struct *tty,
 	/* Now determine flow control */
 	if (tty->termios->c_cflag & CRTSCTS) {
 		dbg("%s(): Enabling HW flow control port %d", __func__,
-		      port->number);
+		    port->number);
 		/* Enable  RTS/CTS flow control */
 		status = qt2_boxsethw_flowctl(serial, UartNumber, true);
 		if (status < 0) {
@@ -1059,9 +1042,9 @@ static void qt2_set_termios(struct tty_struct *tty,
 	} else {
 		/* Disable RTS/CTS flow control */
 		dbg("%s(): disabling HW flow control port %d", __func__,
-			port->number);
+		    port->number);
 		status = qt2_boxsethw_flowctl(serial, UartNumber, false);
-		if (status < 0)	{
+		if (status < 0) {
 			dbg("qt2_boxsethw_flowctl failed");
 			return;
 		}
@@ -1069,10 +1052,10 @@ static void qt2_set_termios(struct tty_struct *tty,
 	/* if we are implementing XON/XOFF, set the start and stop character
 	 * in the device */
 	if (I_IXOFF(tty) || I_IXON(tty)) {
-		unsigned char stop_char  = STOP_CHAR(tty);
+		unsigned char stop_char = STOP_CHAR(tty);
 		unsigned char start_char = START_CHAR(tty);
 		status = qt2_boxsetsw_flowctl(serial, UartNumber, stop_char,
-				start_char);
+					      start_char);
 		if (status < 0)
 			dbg("qt2_boxsetsw_flowctl (enabled) failed");
 	} else {
@@ -1088,8 +1071,8 @@ static int qt2_tiocmget(struct tty_struct *tty, struct file *file)
 	struct usb_serial_port *port = tty->driver_data;
 	struct usb_serial *serial = port->serial;
 
-	__u8 mcr_value;	/* Modem Control Register value */
-	__u8 msr_value;	/* Modem Status Register value */
+	__u8 mcr_value; /* Modem Control Register value */
+	__u8 msr_value; /* Modem Status Register value */
 	unsigned int result = 0;
 	int status;
 	unsigned int UartNumber;
@@ -1102,24 +1085,23 @@ static int qt2_tiocmget(struct tty_struct *tty, struct file *file)
 	dbg("UartNumber is %d", UartNumber);
 
 	status = qt2_box_get_register(port->serial, UartNumber,
-			QT2_MODEM_CONTROL_REGISTER,	&mcr_value);
-	if (status >= 0) {
-		status = qt2_box_get_register(port->serial,  UartNumber,
-				QT2_MODEM_STATUS_REGISTER, &msr_value);
-	}
+				      QT2_MODEM_CONTROL_REGISTER, &mcr_value);
+	if (status >= 0)
+		status = qt2_box_get_register(port->serial, UartNumber,
+					      QT2_MODEM_STATUS_REGISTER, &msr_value);
 	if (status >= 0) {
 		result = ((mcr_value & QT2_SERIAL_MCR_DTR) ? TIOCM_DTR : 0)
-				/*DTR set */
-			| ((mcr_value & QT2_SERIAL_MCR_RTS)  ? TIOCM_RTS : 0)
-				/*RTS set */
-			| ((msr_value & QT2_SERIAL_MSR_CTS)  ? TIOCM_CTS : 0)
-				/* CTS set */
-			| ((msr_value & QT2_SERIAL_MSR_CD)  ? TIOCM_CAR : 0)
-				/*Carrier detect set */
-			| ((msr_value & QT2_SERIAL_MSR_RI)  ? TIOCM_RI : 0)
-				/* Ring indicator set */
-			| ((msr_value & QT2_SERIAL_MSR_DSR)  ? TIOCM_DSR : 0);
-				/* DSR set */
+		                /*DTR set */
+			 | ((mcr_value & QT2_SERIAL_MCR_RTS)  ? TIOCM_RTS : 0)
+		                /*RTS set */
+			 | ((msr_value & QT2_SERIAL_MSR_CTS)  ? TIOCM_CTS : 0)
+		                /* CTS set */
+			 | ((msr_value & QT2_SERIAL_MSR_CD)  ? TIOCM_CAR : 0)
+		                /*Carrier detect set */
+			 | ((msr_value & QT2_SERIAL_MSR_RI)  ? TIOCM_RI : 0)
+		                /* Ring indicator set */
+			 | ((msr_value & QT2_SERIAL_MSR_DSR)  ? TIOCM_DSR : 0);
+		/* DSR set */
 		return result;
 	} else {
 		return -ESPIPE;
@@ -1127,11 +1109,11 @@ static int qt2_tiocmget(struct tty_struct *tty, struct file *file)
 }
 
 static int qt2_tiocmset(struct tty_struct *tty, struct file *file,
-		       unsigned int set, unsigned int clear)
+			unsigned int set, unsigned int clear)
 {
 	struct usb_serial_port *port = tty->driver_data;
 	struct usb_serial *serial = port->serial;
-	__u8 mcr_value;	/* Modem Control Register value */
+	__u8 mcr_value; /* Modem Control Register value */
 	int status;
 	unsigned int UartNumber;
 
@@ -1142,14 +1124,14 @@ static int qt2_tiocmset(struct tty_struct *tty, struct file *file,
 	dbg("%s(): port %d, UartNumber %d", __func__, port->number, UartNumber);
 
 	status = qt2_box_get_register(port->serial, UartNumber,
-			QT2_MODEM_CONTROL_REGISTER, &mcr_value);
+				      QT2_MODEM_CONTROL_REGISTER, &mcr_value);
 	if (status < 0)
 		return -ESPIPE;
 
 	/* Turn off RTS, DTR and loopback, then only turn on what was asked
 	 * for */
 	mcr_value &= ~(QT2_SERIAL_MCR_RTS | QT2_SERIAL_MCR_DTR |
-			QT2_SERIAL_MCR_LOOP);
+		       QT2_SERIAL_MCR_LOOP);
 	if (set & TIOCM_RTS)
 		mcr_value |= QT2_SERIAL_MCR_RTS;
 	if (set & TIOCM_DTR)
@@ -1158,7 +1140,7 @@ static int qt2_tiocmset(struct tty_struct *tty, struct file *file,
 		mcr_value |= QT2_SERIAL_MCR_LOOP;
 
 	status = qt2_box_set_register(port->serial, UartNumber,
-			QT2_MODEM_CONTROL_REGISTER, mcr_value);
+				      QT2_MODEM_CONTROL_REGISTER, mcr_value);
 	if (status < 0)
 		return -ESPIPE;
 	else
@@ -1169,9 +1151,9 @@ static int qt2_tiocmset(struct tty_struct *tty, struct file *file,
  */
 static void qt2_break(struct tty_struct *tty, int break_state)
 {
-	struct usb_serial_port *port = tty->driver_data; /* parent port */
-	struct usb_serial *serial = port->serial;	/* parent device */
-	struct quatech2_port *port_extra;	/* extra data for this port */
+	struct usb_serial_port *port = tty->driver_data;        /* parent port */
+	struct usb_serial *serial = port->serial;               /* parent device */
+	struct quatech2_port *port_extra;                       /* extra data for this port */
 	__u16 break_value;
 	unsigned int result;
 
@@ -1186,7 +1168,7 @@ static void qt2_break(struct tty_struct *tty, int break_state)
 	else
 		break_value = 0;
 	dbg("%s(): port %d, break_value %d", __func__, port->number,
-		break_value);
+	    break_value);
 
 	mutex_lock(&port_extra->modelock);
 	if (!port_extra->open_count) {
@@ -1195,12 +1177,11 @@ static void qt2_break(struct tty_struct *tty, int break_state)
 	}
 
 	result = usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-				QT2_BREAK_CONTROL, 0x40, break_value,
-				port->number, NULL, 0, 300);
+				 QT2_BREAK_CONTROL, 0x40, break_value,
+				 port->number, NULL, 0, 300);
 exit:
 	mutex_unlock(&port_extra->modelock);
 	dbg("%s(): exit port %d", __func__, port->number);
-
 }
 /**
  * qt2_throttle: - stop reading new data from the port
@@ -1209,17 +1190,18 @@ static void qt2_throttle(struct tty_struct *tty)
 {
 	struct usb_serial_port *port = tty->driver_data;
 	struct usb_serial *serial = port->serial;
-	struct quatech2_port *port_extra;	/* extra data for this port */
+	struct quatech2_port *port_extra;       /* extra data for this port */
+
 	dbg("%s(): port %d", __func__, port->number);
 
 	port_extra = qt2_get_port_private(port);
 	if (!serial) {
 		dbg("%s(): enter port %d no serial object", __func__,
-		      port->number);
+		    port->number);
 		return;
 	}
 
-	mutex_lock(&port_extra->modelock);	/* lock structure */
+	mutex_lock(&port_extra->modelock);      /* lock structure */
 	if (!port_extra->open_count) {
 		dbg("%s(): port not open", __func__);
 		goto exit;
@@ -1247,13 +1229,13 @@ static void qt2_unthrottle(struct tty_struct *tty)
 {
 	struct usb_serial_port *port = tty->driver_data;
 	struct usb_serial *serial = port->serial;
-	struct quatech2_port *port_extra;	/* extra data for this port */
-	struct usb_serial_port *port0;	/* first port structure on device */
-	struct quatech2_dev *dev_extra;		/* extra data for the device */
+	struct quatech2_port *port_extra;       /* extra data for this port */
+	struct usb_serial_port *port0;          /* first port structure on device */
+	struct quatech2_dev *dev_extra;         /* extra data for the device */
 
 	if (!serial) {
 		dbg("%s() enter port %d no serial object!", __func__,
-			port->number);
+		    port->number);
 		return;
 	}
 	dbg("%s(): enter port %d", __func__, port->number);
@@ -1273,15 +1255,15 @@ static void qt2_unthrottle(struct tty_struct *tty)
 		port->throttled = 0;
 		/* Send command to box to start receiving stuff */
 		if (serial->dev->descriptor.idProduct != QUATECH_SSU2_100) {
-			qt2_boxstoprx(serial,  port->number, 0);
+			qt2_boxstoprx(serial, port->number, 0);
 		} else if (dev_extra->ReadBulkStopped == true) {
 			usb_fill_bulk_urb(port0->read_urb, serial->dev,
-				usb_rcvbulkpipe(serial->dev,
-				port0->bulk_in_endpointAddress),
-				port0->bulk_in_buffer,
-				port0->bulk_in_size,
-				qt2_read_bulk_callback,
-				serial);
+					  usb_rcvbulkpipe(serial->dev,
+							  port0->bulk_in_endpointAddress),
+					  port0->bulk_in_buffer,
+					  port0->bulk_in_size,
+					  qt2_read_bulk_callback,
+					  serial);
 		}
 	}
 exit:
@@ -1296,13 +1278,14 @@ exit:
 static int qt2_boxpoweron(struct usb_serial *serial)
 {
 	int result;
-	__u8  Direcion;
+	__u8 Direcion;
 	unsigned int pipe;
+
 	Direcion = USBD_TRANSFER_DIRECTION_OUT;
 	pipe = usb_rcvctrlpipe(serial->dev, 0);
 	result = usb_control_msg(serial->dev, pipe, QT_SET_GET_DEVICE,
-				Direcion, QU2BOXPWRON, 0x00, NULL, 0x00,
-				5000);
+				 Direcion, QU2BOXPWRON, 0x00, NULL, 0x00,
+				 5000);
 	return result;
 }
 
@@ -1320,16 +1303,16 @@ static int qt2_boxsetQMCR(struct usb_serial *serial, __u16 Uart_Number,
 	PortSettings = (__u16)(QMCR_Value);
 
 	dbg("%s(): Port = %d, PortSettings = 0x%x", __func__,
-			Uart_Number, PortSettings);
+	    Uart_Number, PortSettings);
 
 	result = usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-				QT2_GET_SET_QMCR, 0x40, PortSettings,
-				(__u16)Uart_Number, NULL, 0, 5000);
+				 QT2_GET_SET_QMCR, 0x40, PortSettings,
+				 (__u16)Uart_Number, NULL, 0, 5000);
 	return result;
 }
 
-static int port_paranoia_check(struct usb_serial_port *port,
-			       const char *function)
+static int port_paranoia_check(struct usb_serial_port * port,
+			       const char *		function)
 {
 	if (!port) {
 		dbg("%s - port == NULL", function);
@@ -1342,8 +1325,8 @@ static int port_paranoia_check(struct usb_serial_port *port,
 	return 0;
 }
 
-static int serial_paranoia_check(struct usb_serial *serial,
-				 const char *function)
+static int serial_paranoia_check(struct usb_serial *	serial,
+				 const char *		function)
 {
 	if (!serial) {
 		dbg("%s - serial == NULL\n", function);
@@ -1359,59 +1342,61 @@ static int serial_paranoia_check(struct usb_serial *serial,
 }
 
 static inline struct quatech2_port *qt2_get_port_private(struct usb_serial_port
-		*port)
+							 *port)
 {
 	return (struct quatech2_port *)usb_get_serial_port_data(port);
 }
 
 static inline void qt2_set_port_private(struct usb_serial_port *port,
-		struct quatech2_port *data)
+					struct quatech2_port *	data)
 {
 	usb_set_serial_port_data(port, (void *)data);
 }
 
 static inline struct quatech2_dev *qt2_get_dev_private(struct usb_serial
-		*serial)
+						       *serial)
 {
 	return (struct quatech2_dev *)usb_get_serial_data(serial);
 }
-static inline void qt2_set_dev_private(struct usb_serial *serial,
-		struct quatech2_dev *data)
+static inline void qt2_set_dev_private(struct usb_serial *	serial,
+				       struct quatech2_dev *	data)
 {
 	usb_set_serial_data(serial, (void *)data);
 }
 
 static int qt2_openboxchannel(struct usb_serial *serial, __u16
-		Uart_Number, struct qt2_status_data *status)
+			      Uart_Number, struct qt2_status_data *status)
 {
 	int result;
 	__u16 length;
-	__u8  Direcion;
+	__u8 Direcion;
 	unsigned int pipe;
+
 	length = sizeof(struct qt2_status_data);
 	Direcion = USBD_TRANSFER_DIRECTION_IN;
 	pipe = usb_rcvctrlpipe(serial->dev, 0);
 	result = usb_control_msg(serial->dev, pipe, QT_OPEN_CLOSE_CHANNEL,
-			Direcion, 0x00, Uart_Number, status, length, 5000);
+				 Direcion, 0x00, Uart_Number, status, length, 5000);
 	return result;
 }
 static int qt2_closeboxchannel(struct usb_serial *serial, __u16 Uart_Number)
 {
 	int result;
-	__u8  direcion;
+	__u8 direcion;
 	unsigned int pipe;
+
 	direcion = USBD_TRANSFER_DIRECTION_OUT;
 	pipe = usb_sndctrlpipe(serial->dev, 0);
 	result = usb_control_msg(serial->dev, pipe, QT_OPEN_CLOSE_CHANNEL,
-		  direcion, 0, Uart_Number, NULL, 0, 5000);
+				 direcion, 0, Uart_Number, NULL, 0, 5000);
 	return result;
 }
 
 /* qt2_conf_uart Issue a SET_UART vendor-spcific request on the default
  * control pipe. If successful sets baud rate divisor and LCR value
  */
-static int qt2_conf_uart(struct usb_serial *serial,  unsigned short Uart_Number,
-		      unsigned short divisor, unsigned char LCR)
+static int qt2_conf_uart(struct usb_serial *serial, unsigned short Uart_Number,
+			 unsigned short divisor, unsigned char LCR)
 {
 	int result;
 	unsigned short UartNumandLCR;
@@ -1419,8 +1404,8 @@ static int qt2_conf_uart(struct usb_serial *serial,  unsigned short Uart_Number,
 	UartNumandLCR = (LCR << 8) + Uart_Number;
 
 	result = usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-				QT2_GET_SET_UART, 0x40, divisor, UartNumandLCR,
-				NULL, 0, 300);
+				 QT2_GET_SET_UART, 0x40, divisor, UartNumandLCR,
+				 NULL, 0, 300);
 	return result;
 }
 
@@ -1446,32 +1431,33 @@ static void qt2_read_bulk_callback(struct urb *urb)
 	struct quatech2_port *active_extra = qt2_get_port_private(active);
 	/* When we finally get to doing some tty stuff, we will need this */
 	struct tty_struct *tty_st;
-	unsigned int RxCount;	/* the length of the data to process */
-	unsigned int i;	/* loop counter over the data to process */
-	int result;	/* return value cache variable */
-	bool escapeflag;	/* flag set to true if this loop iteration is
-				 * parsing an escape sequence, rather than
-				 * ordinary data */
+	unsigned int RxCount;   /* the length of the data to process */
+	unsigned int i;         /* loop counter over the data to process */
+	int result;             /* return value cache variable */
+	bool escapeflag;        /* flag set to true if this loop iteration is
+	                         * parsing an escape sequence, rather than
+	                         * ordinary data */
+
 	dbg("%s(): callback running, active port is %d", __func__,
-		active->number);
+	    active->number);
 
 	if (urb->status) {
 		/* read didn't go well */
 		dev_extra->ReadBulkStopped = true;
 		dbg("%s(): nonzero bulk read status received: %d",
-			__func__, urb->status);
+		    __func__, urb->status);
 		return;
 	}
 
 	/* inline port_sofrint() here */
 	if (port_paranoia_check(port0, __func__) != 0) {
 		dbg("%s - port_paranoia_check on port0 failed, exiting\n",
-__func__);
+		    __func__);
 		return;
 	}
 	if (port_paranoia_check(active, __func__) != 0) {
 		dbg("%s - port_paranoia_check on current_port "
-			"failed, exiting", __func__);
+		    "failed, exiting", __func__);
 		return;
 	}
 
@@ -1507,7 +1493,7 @@ __func__);
 	 * control
 	 */
 	if ((port0_extra->RxHolding == true) &&
-		    (serial->dev->descriptor.idProduct == QUATECH_SSU2_100)) {
+	    (serial->dev->descriptor.idProduct == QUATECH_SSU2_100)) {
 		/* single port device, input is already stopped, so we don't
 		 * need any more input data */
 		dev_extra->ReadBulkStopped = true;
@@ -1527,14 +1513,14 @@ __func__);
 		dbg("%s - bad tty pointer - exiting", __func__);
 		return;
 	}
-	RxCount = urb->actual_length;	/* grab length of data handy */
+	RxCount = urb->actual_length;   /* grab length of data handy */
 
 	if (RxCount) {
 		/* skip all this if no data to process */
 		for (i = 0; i < RxCount ; ++i) {
 			/* Look ahead code here -works on several bytes at onc*/
 			if ((i <= (RxCount - 3)) && (THISCHAR == 0x1b)
-				&& (NEXTCHAR == 0x1b)) {
+			    && (NEXTCHAR == 0x1b)) {
 				/* we are in an escape sequence, type
 				 * determined by the 3rd char */
 				escapeflag = false;
@@ -1544,11 +1530,11 @@ __func__);
 					 * follow */
 					if (i > (RxCount - 4)) {
 						dbg("Illegal escape sequences "
-						"in received data");
+						    "in received data");
 						break;
 					}
 					qt2_process_line_status(active,
-						FOURTHCHAR);
+								FOURTHCHAR);
 					i += 3;
 					escapeflag = true;
 					break;
@@ -1557,11 +1543,11 @@ __func__);
 					 * must follow */
 					if (i > (RxCount - 4)) {
 						dbg("Illegal escape sequences "
-						"in received data");
+						    "in received data");
 						break;
 					}
 					qt2_process_modem_status(active,
-						FOURTHCHAR);
+								 FOURTHCHAR);
 					i += 3;
 					escapeflag = true;
 					break;
@@ -1570,11 +1556,11 @@ __func__);
 					 * must follow */
 					if (i > (RxCount - 4)) {
 						dbg("Illegal escape sequences "
-						"in received data");
+						    "in received data");
 						break;
 					}
 					qt2_process_xmit_empty(active,
-						FOURTHCHAR, FIFTHCHAR);
+							       FOURTHCHAR, FIFTHCHAR);
 					i += 4;
 					escapeflag = true;
 					break;
@@ -1583,18 +1569,18 @@ __func__);
 					 * must follow */
 					if (i > (RxCount - 4)) {
 						dbg("Illegal escape sequences "
-						"in received data");
+						    "in received data");
 						break;
 					}
 					/* Port change. If port open push
-					 * current data up to tty layer */
+					* current data up to tty layer */
 					if (active_extra->open_count > 0)
 						tty_flip_buffer_push(tty_st);
 
 					dbg("Port Change: new port = %d",
-						FOURTHCHAR);
+					    FOURTHCHAR);
 					qt2_process_port_change(active,
-						FOURTHCHAR);
+								FOURTHCHAR);
 					i += 3;
 					escapeflag = true;
 					/* having changed port, the pointers for
@@ -1611,7 +1597,7 @@ __func__);
 					 * follow */
 					if (i > (RxCount - 3)) {
 						dbg("Illegal escape sequences "
-							"in received data");
+						    "in received data");
 						break;
 					}
 					qt2_process_rcv_flush(active);
@@ -1622,7 +1608,7 @@ __func__);
 					/* xmit flush 3rd byte must follow */
 					if (i > (RxCount - 3)) {
 						dbg("Illegal escape sequences "
-						"in received data");
+						    "in received data");
 						break;
 					}
 					qt2_process_xmit_flush(active);
@@ -1649,26 +1635,26 @@ __func__);
 			if (tty_st && urb->actual_length) {
 				tty_buffer_request_room(tty_st, 1);
 				tty_insert_flip_string(tty_st, &(
-						(unsigned char *)
-						(urb->transfer_buffer)
-					)[i], 1);
+							       (unsigned char *)
+							       (urb->transfer_buffer)
+							       )[i], 1);
 			}
-		} /*endfor*/
+		}       /*endfor*/
 		tty_flip_buffer_push(tty_st);
-	} /*endif*/
+	}               /*endif*/
 
 	/* at this point we have complete dealing with the data for this
 	 * callback. All we have to do now is to start the async read process
 	 * back off again. */
 
 	usb_fill_bulk_urb(port0->read_urb, serial->dev,
-		usb_rcvbulkpipe(serial->dev, port0->bulk_in_endpointAddress),
-		port0->bulk_in_buffer, port0->bulk_in_size,
-		qt2_read_bulk_callback, serial);
+			  usb_rcvbulkpipe(serial->dev, port0->bulk_in_endpointAddress),
+			  port0->bulk_in_buffer, port0->bulk_in_size,
+			  qt2_read_bulk_callback, serial);
 	result = usb_submit_urb(port0->read_urb, GFP_ATOMIC);
 	if (result) {
 		dbg("%s(): failed resubmitting read urb, error %d",
-			__func__, result);
+		    __func__, result);
 	} else {
 		dbg("%s() successfully resubmitted read urb", __func__);
 		if (tty_st && RxCount) {
@@ -1697,6 +1683,7 @@ static void qt2_write_bulk_callback(struct urb *urb)
 {
 	struct usb_serial_port *port = (struct usb_serial_port *)urb->context;
 	struct usb_serial *serial = port->serial;
+
 	dbg("%s(): port %d", __func__, port->number);
 	if (!serial) {
 		dbg("%s(): bad serial pointer, exiting", __func__);
@@ -1704,7 +1691,7 @@ static void qt2_write_bulk_callback(struct urb *urb)
 	}
 	if (urb->status) {
 		dbg("%s(): nonzero write bulk status received: %d",
-			__func__, urb->status);
+		    __func__, urb->status);
 		return;
 	}
 	/* FIXME What is supposed to be going on here?
@@ -1716,19 +1703,21 @@ static void qt2_write_bulk_callback(struct urb *urb)
 	return;
 }
 
-static void qt2_process_line_status(struct usb_serial_port *port,
-	unsigned char LineStatus)
+static void qt2_process_line_status(struct usb_serial_port *	port,
+				    unsigned char		LineStatus)
 {
 	/* obtain the private structure for the port */
 	struct quatech2_port *port_extra = qt2_get_port_private(port);
+
 	port_extra->shadowLSR = LineStatus & (QT2_SERIAL_LSR_OE |
-		QT2_SERIAL_LSR_PE | QT2_SERIAL_LSR_FE | QT2_SERIAL_LSR_BI);
+					      QT2_SERIAL_LSR_PE | QT2_SERIAL_LSR_FE | QT2_SERIAL_LSR_BI);
 }
-static void qt2_process_modem_status(struct usb_serial_port *port,
-	unsigned char ModemStatus)
+static void qt2_process_modem_status(struct usb_serial_port *	port,
+				     unsigned char		ModemStatus)
 {
 	/* obtain the private structure for the port */
 	struct quatech2_port *port_extra = qt2_get_port_private(port);
+
 	port_extra->shadowMSR = ModemStatus;
 	wake_up_interruptible(&port_extra->wait);
 	/* this wakes up the otherwise indefinitely waiting code for
@@ -1738,14 +1727,14 @@ static void qt2_process_modem_status(struct usb_serial_port *port,
 }
 
 static void qt2_process_xmit_empty(struct usb_serial_port *port,
-	unsigned char fourth_char, unsigned char fifth_char)
+				   unsigned char fourth_char, unsigned char fifth_char)
 {
 	int byte_count;
 	/* obtain the private structure for the port */
 	struct quatech2_port *port_extra = qt2_get_port_private(port);
 
 	byte_count = (int)(fifth_char * 16);
-	byte_count +=  (int)fourth_char;
+	byte_count += (int)fourth_char;
 	/* byte_count indicates how many bytes the device has written out. This
 	 * message appears to occur regularly, and is used in the vendor driver
 	 * to keep track of the fill state of the port transmit buffer */
@@ -1753,18 +1742,19 @@ static void qt2_process_xmit_empty(struct usb_serial_port *port,
 	/* reduce the stored data queue length by the known number of bytes
 	 * sent */
 	dbg("port %d: %d bytes reported sent, %d still pending", port->number,
-			byte_count, port_extra->tx_pending_bytes);
+	    byte_count, port_extra->tx_pending_bytes);
 
 	/*port_extra->xmit_fifo_room_bytes = FIFO_DEPTH; ???*/
 }
 
-static void qt2_process_port_change(struct usb_serial_port *port,
-	unsigned char New_Current_Port)
+static void qt2_process_port_change(struct usb_serial_port *	port,
+				    unsigned char		New_Current_Port)
 {
 	/* obtain the parent usb serial device structure */
 	struct usb_serial *serial = port->serial;
 	/* obtain the private structure for the device */
 	struct quatech2_dev *dev_extra = qt2_get_dev_private(serial);
+
 	dev_extra->current_port = serial->port[New_Current_Port];
 	/* what should I do with this? commented out in upstream
 	 * driver */
@@ -1775,17 +1765,19 @@ static void qt2_process_rcv_flush(struct usb_serial_port *port)
 {
 	/* obtain the private structure for the port */
 	struct quatech2_port *port_extra = qt2_get_port_private(port);
+
 	port_extra->rcv_flush = true;
 }
 static void qt2_process_xmit_flush(struct usb_serial_port *port)
 {
 	/* obtain the private structure for the port */
 	struct quatech2_port *port_extra = qt2_get_port_private(port);
+
 	port_extra->xmit_flush = true;
 }
 
 static void qt2_process_rx_char(struct usb_serial_port *port,
-	unsigned char data)
+				unsigned char		data)
 {
 	/* get the tty_struct for this port */
 	struct tty_struct *tty = tty_port_tty_get(&(port->port));
@@ -1811,13 +1803,14 @@ static void qt2_process_rx_char(struct usb_serial_port *port,
  * @param pValue Pointer to somewhere to put the retrieved value
  */
 static int qt2_box_get_register(struct usb_serial *serial,
-		unsigned char uart_number, unsigned short register_num,
-		__u8 *pValue)
+				unsigned char uart_number, unsigned short register_num,
+				__u8 *pValue)
 {
 	int result;
+
 	result = usb_control_msg(serial->dev, usb_rcvctrlpipe(serial->dev, 0),
-			QT2_GET_SET_REGISTER, 0xC0, register_num,
-			uart_number, (void *)pValue, sizeof(*pValue), 300);
+				 QT2_GET_SET_REGISTER, 0xC0, register_num,
+				 uart_number, (void *)pValue, sizeof(*pValue), 300);
 	return result;
 }
 
@@ -1825,8 +1818,8 @@ static int qt2_box_get_register(struct usb_serial *serial,
  * Issue a SET_REGISTER vendor-specific request on the default control pipe
  */
 static int qt2_box_set_register(struct usb_serial *serial,
-		unsigned short Uart_Number, unsigned short Register_Num,
-		unsigned short Value)
+				unsigned short Uart_Number, unsigned short Register_Num,
+				unsigned short Value)
 {
 	int result;
 	unsigned short reg_and_byte;
@@ -1836,8 +1829,8 @@ static int qt2_box_set_register(struct usb_serial *serial,
 	reg_and_byte = reg_and_byte + Register_Num;
 
 	result = usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			QT2_GET_SET_REGISTER, 0x40, reg_and_byte,
-			Uart_Number, NULL, 0, 300);
+				 QT2_GET_SET_REGISTER, 0x40, reg_and_byte,
+				 Uart_Number, NULL, 0, 300);
 	return result;
 }
 
@@ -1849,13 +1842,14 @@ static int qt2_box_set_register(struct usb_serial *serial,
  * Rx flush: add a flag in the data stream now so we know when it's made it's
  * way up to us.
  */
-static int qt2_box_flush(struct usb_serial *serial,  unsigned char uart_number,
-		    unsigned short rcv_or_xmit)
+static int qt2_box_flush(struct usb_serial *serial, unsigned char uart_number,
+			 unsigned short rcv_or_xmit)
 {
 	int result;
+
 	result = usb_control_msg(serial->dev, usb_rcvctrlpipe(serial->dev, 0),
-		QT2_FLUSH_DEVICE, 0x40, rcv_or_xmit, uart_number, NULL, 0,
-		300);
+				 QT2_FLUSH_DEVICE, 0x40, rcv_or_xmit, uart_number, NULL, 0,
+				 300);
 	return result;
 }
 
@@ -1863,63 +1857,61 @@ static int qt2_box_flush(struct usb_serial *serial,  unsigned char uart_number,
  * control pipe. If successful sets baud rate divisor and LCR value.
  */
 static int qt2_boxsetuart(struct usb_serial *serial, unsigned short Uart_Number,
-		unsigned short default_divisor, unsigned char default_LCR)
+			  unsigned short default_divisor, unsigned char default_LCR)
 {
 	unsigned short UartNumandLCR;
 
 	UartNumandLCR = (default_LCR << 8) + Uart_Number;
 
 	return usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			QT2_GET_SET_UART, 0x40, default_divisor, UartNumandLCR,
-			NULL, 0, 300);
+			       QT2_GET_SET_UART, 0x40, default_divisor, UartNumandLCR,
+			       NULL, 0, 300);
 }
 /** qt2_boxsethw_flowctl - Turn hardware (RTS/CTS) flow control on and off for
  * a hardware UART.
  */
 static int qt2_boxsethw_flowctl(struct usb_serial *serial,
-		unsigned int UartNumber, bool bSet)
+				unsigned int UartNumber, bool bSet)
 {
 	__u8 MCR_Value = 0;
 	__u8 MSR_Value = 0;
 	__u16 MOUT_Value = 0;
 
-	if (bSet == true) {
-		MCR_Value =  QT2_SERIAL_MCR_RTS;
+	if (bSet == true)
+		MCR_Value = QT2_SERIAL_MCR_RTS;
 		/* flow control, box will clear RTS line to prevent remote
 		 * device from transmitting more chars */
-	} else {
+	else
 		/* no flow control to remote device */
-		MCR_Value =  0;
-	}
+		MCR_Value = 0;
 	MOUT_Value = MCR_Value << 8;
 
-	if (bSet == true) {
+	if (bSet == true)
 		MSR_Value = QT2_SERIAL_MSR_CTS;
 		/* flow control on, box will inhibit tx data if CTS line is
 		 * asserted */
-	} else {
+	else
 		/* Box will not inhibit tx data due to CTS line */
 		MSR_Value = 0;
-	}
 	MOUT_Value |= MSR_Value;
 	return usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			QT2_HW_FLOW_CONTROL_MASK, 0x40, MOUT_Value, UartNumber,
-			NULL, 0, 300);
+			       QT2_HW_FLOW_CONTROL_MASK, 0x40, MOUT_Value, UartNumber,
+			       NULL, 0, 300);
 }
 
 /** qt2_boxsetsw_flowctl - Turn software (XON/XOFF) flow control on for
  * a hardware UART, and set the XON and XOFF characters.
  */
 static int qt2_boxsetsw_flowctl(struct usb_serial *serial, __u16 UartNumber,
-			unsigned char stop_char,  unsigned char start_char)
+				unsigned char stop_char, unsigned char start_char)
 {
 	__u16 nSWflowout;
 
 	nSWflowout = start_char << 8;
 	nSWflowout = (unsigned short)stop_char;
 	return usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			QT2_SW_FLOW_CONTROL_MASK, 0x40, nSWflowout, UartNumber,
-			NULL, 0, 300);
+			       QT2_SW_FLOW_CONTROL_MASK, 0x40, nSWflowout, UartNumber,
+			       NULL, 0, 300);
 }
 
 /** qt2_boxunsetsw_flowctl - Turn software (XON/XOFF) flow control off for
@@ -1928,8 +1920,8 @@ static int qt2_boxsetsw_flowctl(struct usb_serial *serial, __u16 UartNumber,
 static int qt2_boxunsetsw_flowctl(struct usb_serial *serial, __u16 UartNumber)
 {
 	return usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			QT2_SW_FLOW_CONTROL_DISABLE, 0x40, 0, UartNumber, NULL,
-			0, 300);
+			       QT2_SW_FLOW_CONTROL_DISABLE, 0x40, 0, UartNumber, NULL,
+			       0, 300);
 }
 
 /**
@@ -1941,10 +1933,10 @@ static int qt2_boxunsetsw_flowctl(struct usb_serial *serial, __u16 UartNumber)
  * received, and to 0 to start it being received.
  */
 static int qt2_boxstoprx(struct usb_serial *serial, unsigned short uart_number,
-		unsigned short stop)
+			 unsigned short stop)
 {
 	return usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-		QT2_STOP_RECEIVE, 0x40, stop, uart_number, NULL, 0, 300);
+			       QT2_STOP_RECEIVE, 0x40, stop, uart_number, NULL, 0, 300);
 }
 
 
@@ -1954,31 +1946,31 @@ static int qt2_boxstoprx(struct usb_serial *serial, unsigned short uart_number,
  */
 
 static struct usb_serial_driver quatech2_device = {
-	.driver = {
-		.owner = THIS_MODULE,
-		.name = "quatech_usb2",
+	.driver			={
+		.owner		= THIS_MODULE,
+		.name		= "quatech_usb2",
 	},
-	.description = DRIVER_DESC,
-	.usb_driver = &quausb2_usb_driver,
-	.id_table = quausb2_id_table,
-	.num_ports = 8,
-	.open = qt2_open,
-	.close = qt2_close,
-	.write = qt2_write,
-	.write_room = qt2_write_room,
-	.chars_in_buffer = qt2_chars_in_buffer,
-	.throttle = qt2_throttle,
-	.unthrottle = qt2_unthrottle,
-	.calc_num_ports = qt2_calc_num_ports,
-	.ioctl = qt2_ioctl,
-	.set_termios = qt2_set_termios,
-	.break_ctl = qt2_break,
-	.tiocmget = qt2_tiocmget,
-	.tiocmset = qt2_tiocmset,
-	.attach = qt2_attach,
-	.release = qt2_release,
-	.read_bulk_callback = qt2_read_bulk_callback,
-	.write_bulk_callback = qt2_write_bulk_callback,
+	.description		= DRIVER_DESC,
+	.usb_driver		= &quausb2_usb_driver,
+	.id_table		= quausb2_id_table,
+	.num_ports		= 8,
+	.open			= qt2_open,
+	.close			= qt2_close,
+	.write			= qt2_write,
+	.write_room		= qt2_write_room,
+	.chars_in_buffer	= qt2_chars_in_buffer,
+	.throttle		= qt2_throttle,
+	.unthrottle		= qt2_unthrottle,
+	.calc_num_ports		= qt2_calc_num_ports,
+	.ioctl			= qt2_ioctl,
+	.set_termios		= qt2_set_termios,
+	.break_ctl		= qt2_break,
+	.tiocmget		= qt2_tiocmget,
+	.tiocmset		= qt2_tiocmset,
+	.attach			= qt2_attach,
+	.release		= qt2_release,
+	.read_bulk_callback	= qt2_read_bulk_callback,
+	.write_bulk_callback	= qt2_write_bulk_callback,
 };
 
 static int __init quausb2_usb_init(void)
@@ -1994,7 +1986,7 @@ static int __init quausb2_usb_init(void)
 		goto failed_usb_serial_register;
 
 	printk(KERN_INFO KBUILD_MODNAME ": " DRIVER_VERSION ":"
-			DRIVER_DESC "\n");
+	       DRIVER_DESC "\n");
 
 	/* register with usb */
 
@@ -2005,7 +1997,7 @@ static int __init quausb2_usb_init(void)
 	/* if we're here, usb_register() failed */
 	usb_serial_deregister(&quatech2_device);
 failed_usb_serial_register:
-		return retval;
+	return retval;
 }
 
 static void __exit quausb2_usb_exit(void)

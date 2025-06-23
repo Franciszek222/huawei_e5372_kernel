@@ -1,4 +1,3 @@
-
 /****************************************************************************
  *  (c) Copyright 2007 Wi-Fi Alliance.  All Rights Reserved
  *
@@ -104,7 +103,7 @@
 #ifdef WIN32
 extern HANDLE thr_flag_cond;
 extern HANDLE thr_stop_cond;
-extern void Win32_tmout_stop_send(LPVOID num ) ;
+extern void Win32_tmout_stop_send(LPVOID num);
 #endif /* WIN32 */
 
 #ifdef WFA_WMM_EXT
@@ -128,16 +127,16 @@ extern wfaWmmPS_t wmmps_info;
 extern void wfaSetDUTPwrMgmt(int mode);
 extern void BUILD_APTS_MSG(int msg, unsigned long *txbuf);
 extern void wmmps_wait_state_proc();
-extern void mpx(char *m,void *buf_v,int len);
+extern void mpx(char *m, void *buf_v, int len);
 extern unsigned int psTxMsg[];
 extern unsigned int psRxMsg[];
 int msgsize = 256;
-extern StationProcStatetbl_t stationProcStatetbl[LAST_TEST+1][11];
+extern StationProcStatetbl_t stationProcStatetbl[LAST_TEST + 1][11];
 #endif /* WFA_WMM_PS_EXT */
 
-extern void wfaGetSockOpt(int sockfd, int* tosval, socklen_t* size);
-extern int wfaSetSockOpt(int sockfd, int* tosval, int size);
-void tmout_stop_send(int num) ;
+extern void wfaGetSockOpt(int sockfd, int *tosval, socklen_t *size);
+extern int wfaSetSockOpt(int sockfd, int *tosval, int size);
+void tmout_stop_send(int num);
 
 /*
  * wfaTGSetPrio(): This depends on the network interface card.
@@ -154,8 +153,7 @@ int wfaTGSetPrio(int sockfd, int tgClass)
 
 	wfaGetSockOpt(sockfd, &tosval, &size);
 
-	switch(tgClass)
-	{
+	switch (tgClass) {
 	case TG_WMM_AC_BK:
 		tosval = 0x20;
 		break;
@@ -181,34 +179,33 @@ int wfaTGSetPrio(int sockfd, int tgClass)
 #endif /* WFA_WMM_PS_EXT*/
 #endif /* WFA_WMM_EXT*/
 
-	if(wfaSetSockOpt(sockfd, &tosval, sizeof(tosval)) != 0)
-	{
+	if (wfaSetSockOpt(sockfd, &tosval, sizeof(tosval)) != 0)
 		DPRINT_ERR(WFA_ERR, "Failed to set IP_TOS\n");
-	}
 	return (tosval == 0xE0)?0xD8:tosval;
 }
 
 #ifdef WFA_WMM_EXT
 #ifdef WFA_WMM_PS_EXT
 /*
- * sender(): This is a generic function to send a packed for the given dsc 
+ * sender(): This is a generic function to send a packed for the given dsc
  *               (ac:VI/VO/BE/BK), before sending the packet the function
- *               puts the station into the PS mode indicated by psave and 
+ *               puts the station into the PS mode indicated by psave and
  *               sends the packet after sleeping for sllep_period
  */
-int sender(char psave,int sleep_period,int dsc)
+int sender(char psave, int sleep_period, int dsc)
 {
-   int r;
-   PRINTF("\nsleeping for %d",sleep_period);
-   wfaSetDUTPwrMgmt(psave);
-   uapsd_sleep(sleep_period);
-   PRINTF("\nAfter create sending %d\n",dsc);
-   create_apts_msg(APTS_DEFAULT, psTxMsg,wmmps_info.my_sta_id);
-   wfaTGSetPrio(psSockfd, dsc);
-   PRINTF("\nAfter create");
-   PRINTF("\nlock met");
-   r = wfaTrafficSendTo(psSockfd, (char *)psTxMsg, msgsize, (struct sockaddr *)&wmmps_info.psToAddr);
-   return r;
+	int r;
+
+	PRINTF("\nsleeping for %d", sleep_period);
+	wfaSetDUTPwrMgmt(psave);
+	uapsd_sleep(sleep_period);
+	PRINTF("\nAfter create sending %d\n", dsc);
+	create_apts_msg(APTS_DEFAULT, psTxMsg, wmmps_info.my_sta_id);
+	wfaTGSetPrio(psSockfd, dsc);
+	PRINTF("\nAfter create");
+	PRINTF("\nlock met");
+	r = wfaTrafficSendTo(psSockfd, (char *)psTxMsg, msgsize, (struct sockaddr *)&wmmps_info.psToAddr);
+	return r;
 }
 
 /*
@@ -216,17 +213,18 @@ int sender(char psave,int sleep_period,int dsc)
  *                which is sent after the console sends the
  *                test name to the station
  */
-int WfaStaSndConfirm(char psave,int sleep_period,int *state)
+int WfaStaSndConfirm(char psave, int sleep_period, int *state)
 {
-   int r;
-   static int num_hello=0;
-   wfaSetDUTPwrMgmt(psave);
-   if(!num_hello)
-      create_apts_msg(APTS_CONFIRM, psTxMsg,0);
-   r = wfaTrafficSendTo(psSockfd, (char *)psTxMsg, msgsize, (struct sockaddr *)&wmmps_info.psToAddr);
-   (*state)++;
+	int r;
+	static int num_hello = 0;
 
-   return 0;
+	wfaSetDUTPwrMgmt(psave);
+	if (!num_hello)
+		create_apts_msg(APTS_CONFIRM, psTxMsg, 0);
+	r = wfaTrafficSendTo(psSockfd, (char *)psTxMsg, msgsize, (struct sockaddr *)&wmmps_info.psToAddr);
+	(*state)++;
+
+	return 0;
 }
 
 /*
@@ -234,17 +232,18 @@ int WfaStaSndConfirm(char psave,int sleep_period,int *state)
  *                after the time specified by sleep_period
  *                and advances to the next state for the given test case
  */
-int WfaStaSndVO(char psave,int sleep_period,int *state)
+int WfaStaSndVO(char psave, int sleep_period, int *state)
 {
-   int r;
-   static int en=1;
-   PRINTF("\r\nEnterring WfastasndVO %d",en++);
-   if ((r=sender(psave,sleep_period,TG_WMM_AC_VO))>=0)
-      (*state)++;
-   else
-      PRINTF("\r\nError\n");
+	int r;
+	static int en = 1;
 
-   return 0;
+	PRINTF("\r\nEnterring WfastasndVO %d", en++);
+	if ((r = sender(psave, sleep_period, TG_WMM_AC_VO)) >= 0)
+		(*state)++;
+	else
+		PRINTF("\r\nError\n");
+
+	return 0;
 }
 
 /*
@@ -252,22 +251,21 @@ int WfaStaSndVO(char psave,int sleep_period,int *state)
  *                after the time specified by sleep_period
  *                and advances to the next state for the given test case
  */
-int WfaStaSnd2VO(char psave,int sleep_period,int *state)
+int WfaStaSnd2VO(char psave, int sleep_period, int *state)
 {
-   int r;
-   static int en=1;
+	int r;
+	static int en = 1;
 
-   PRINTF("\r\nEnterring WfastasndVO %d",en++);
-   if ((r=sender(psave,sleep_period,TG_WMM_AC_VO))>=0)
-   {
-	   r = wfaTrafficSendTo(psSockfd, (char *)psTxMsg, msgsize, (struct sockaddr *)&wmmps_info.psToAddr);
-       mpx("STA msg",psTxMsg,64);
-       (*state)++;
-   }
-   else
-      PRINTF("\r\nError\n");
+	PRINTF("\r\nEnterring WfastasndVO %d", en++);
+	if ((r = sender(psave, sleep_period, TG_WMM_AC_VO)) >= 0) {
+		r = wfaTrafficSendTo(psSockfd, (char *)psTxMsg, msgsize, (struct sockaddr *)&wmmps_info.psToAddr);
+		mpx("STA msg", psTxMsg, 64);
+		(*state)++;
+	} else {
+		PRINTF("\r\nError\n");
+	}
 
-   return 0;
+	return 0;
 }
 
 /*
@@ -275,16 +273,16 @@ int WfaStaSnd2VO(char psave,int sleep_period,int *state)
  *                after the time specified by sleep_period
  *                and advances to the next state for the given test case
  */
-int WfaStaSndVI(char psave,int sleep_period,int *state)
+int WfaStaSndVI(char psave, int sleep_period, int *state)
 {
-   int r;
-   static int en=1;
+	int r;
+	static int en = 1;
 
-   PRINTF("\r\nEnterring WfastasndVI %d",en++);
-   if ((r=sender(psave,sleep_period,TG_WMM_AC_VI))>=0)
-      (*state)++;
+	PRINTF("\r\nEnterring WfastasndVI %d", en++);
+	if ((r = sender(psave, sleep_period, TG_WMM_AC_VI)) >= 0)
+		(*state)++;
 
-   return 0;
+	return 0;
 }
 
 /*
@@ -292,32 +290,32 @@ int WfaStaSndVI(char psave,int sleep_period,int *state)
  *                after the time specified by sleep_period
  *                and advances to the next state for the given test case
  */
-int WfaStaSndBE(char psave,int sleep_period,int *state)
+int WfaStaSndBE(char psave, int sleep_period, int *state)
 {
-   int r;
-   static int en=1;
+	int r;
+	static int en = 1;
 
-   PRINTF("\r\nEnterring WfastasndBE %d",en++);
-   if ((r=sender(psave,sleep_period,TG_WMM_AC_BE))>=0)
-      (*state)++;
+	PRINTF("\r\nEnterring WfastasndBE %d", en++);
+	if ((r = sender(psave, sleep_period, TG_WMM_AC_BE)) >= 0)
+		(*state)++;
 
-   return 0;
+	return 0;
 }
 /*
  * WfaStaSndBK(): This function sends a AC_BK packet
  *                after the time specified by sleep_period
  *                and advances to the next state for the given test case
  */
-int WfaStaSndBK(char psave,int sleep_period,int *state)
+int WfaStaSndBK(char psave, int sleep_period, int *state)
 {
-   int r;
-   static int en=1;
+	int r;
+	static int en = 1;
 
-   PRINTF("\r\nEnterring WfastasndBK %d",en++);
-   if ((r=sender(psave,sleep_period,TG_WMM_AC_BK))>=0)
-      (*state)++;
+	PRINTF("\r\nEnterring WfastasndBK %d", en++);
+	if ((r = sender(psave, sleep_period, TG_WMM_AC_BK)) >= 0)
+		(*state)++;
 
-   return 0;
+	return 0;
 }
 
 /*
@@ -325,23 +323,21 @@ int WfaStaSndBK(char psave,int sleep_period,int *state)
  *                      caseThis function sends 3000 AC_VO packet
  *                      after the time specified by sleep_period (20ms)
  */
-int WfaStaSndVOCyclic(char psave,int sleep_period,int *state)
+int WfaStaSndVOCyclic(char psave, int sleep_period, int *state)
 {
-   int i;
-   static int en=1;
+	int i;
+	static int en = 1;
 
-   for(i=0;i<3000;i++)
-   {
-       PRINTF("\r\nEnterring WfastasndVOCyclic %d",en++);
-       sender(psave,sleep_period,TG_WMM_AC_VO);
-       if(!(i%50))
-       {
-         PRINTF(".");
-         fflush(stdout);
-       }
-   }
-   (*state)++;
-   return 0;
+	for (i = 0; i < 3000; i++) {
+		PRINTF("\r\nEnterring WfastasndVOCyclic %d", en++);
+		sender(psave, sleep_period, TG_WMM_AC_VO);
+		if (!(i % 50)) {
+			PRINTF(".");
+			fflush(stdout);
+		}
+	}
+	(*state)++;
+	return 0;
 }
 #endif /* WFA_WMM_PS_EXT */
 #endif /* WFA_WMM_EXT */

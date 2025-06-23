@@ -28,13 +28,13 @@
 #define __OSLEC_H
 
 /* Mask bits for the adaption mode */
-#define ECHO_CAN_USE_ADAPTION	0x01
-#define ECHO_CAN_USE_NLP	0x02
-#define ECHO_CAN_USE_CNG	0x04
-#define ECHO_CAN_USE_CLIP	0x08
-#define ECHO_CAN_USE_TX_HPF	0x10
-#define ECHO_CAN_USE_RX_HPF	0x20
-#define ECHO_CAN_DISABLE	0x40
+#define ECHO_CAN_USE_ADAPTION   0x01
+#define ECHO_CAN_USE_NLP        0x02
+#define ECHO_CAN_USE_CNG        0x04
+#define ECHO_CAN_USE_CLIP       0x08
+#define ECHO_CAN_USE_TX_HPF     0x10
+#define ECHO_CAN_USE_RX_HPF     0x20
+#define ECHO_CAN_DISABLE        0x40
 
 /**
  * oslec_state: G.168 echo canceller descriptor.

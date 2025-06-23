@@ -2,13 +2,13 @@
  * BT-AMP support routines
  *
  * Copyright (C) 1999-2011, Broadcom Corporation
- * 
+ *
  *         Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -25,7 +25,7 @@
  */
 #ifndef WLBTAMP
 #error "WLBTAMP is not defined"
-#endif	/* WLBTAMP */
+#endif  /* WLBTAMP */
 
 #include <typedefs.h>
 #include <osl.h>
@@ -64,7 +64,7 @@ dhd_bta_docmd(dhd_pub_t *pub, void *cmd_buf, uint cmd_len)
 		return BCME_BADLEN;
 
 	len = bcm_mkiovar("HCI_cmd",
-		(char *)cmd, (uint)cmd->plen + HCI_CMD_PREAMBLE_SIZE, (char *)buf, len);
+			  (char *)cmd, (uint)cmd->plen + HCI_CMD_PREAMBLE_SIZE, (char *)buf, len);
 
 
 	memset(&ioc, 0, sizeof(ioc));
@@ -106,22 +106,22 @@ dhd_bta_flush_hcidata(dhd_pub_t *pub, uint16 llh)
 
 			if (PKTLEN(pub->osh, pkt) >= RFC1042_HDR_LEN) {
 				struct ether_header *eh =
-				        (struct ether_header *)PKTDATA(pub->osh, pkt);
+					(struct ether_header *)PKTDATA(pub->osh, pkt);
 
 				if (ntoh16(eh->ether_type) < ETHER_TYPE_MIN) {
 					struct dot11_llc_snap_header *lsh =
-					        (struct dot11_llc_snap_header *)&eh[1];
+						(struct dot11_llc_snap_header *)&eh[1];
 
 					if (bcmp(lsh, BT_SIG_SNAP_MPROT,
-					         DOT11_LLC_SNAP_HDR_LEN - 2) == 0 &&
+						 DOT11_LLC_SNAP_HDR_LEN - 2) == 0 &&
 					    ntoh16(lsh->type) == BTA_PROT_L2CAP) {
 						amp_hci_ACL_data_t *ACL_data =
-						        (amp_hci_ACL_data_t *)&lsh[1];
+							(amp_hci_ACL_data_t *)&lsh[1];
 						uint16 handle = ltoh16(ACL_data->handle);
 
 						if (HCI_ACL_DATA_HANDLE(handle) == llh) {
 							PKTFREE(pub->osh, pkt, TRUE);
-							count ++;
+							count++;
 							continue;
 						}
 					}
@@ -184,7 +184,7 @@ dhd_bta_docmd(dhd_pub_t *pub, void *cmd_buf, uint cmd_len)
 
 	if ((len = (uint)cmd->plen + HCI_CMD_PREAMBLE_SIZE) > cmd_len) {
 		DHD_ERROR(("dhd_bta_docmd: malformed command, len %u cmd_len %u\n",
-		           len, cmd_len));
+			   len, cmd_len));
 		/* return BCME_BADLEN; */
 	}
 
@@ -238,7 +238,7 @@ dhd_bta_tx_hcidata(dhd_pub_t *pub, void *data_buf, uint data_len)
 
 	if ((len = (uint)ltoh16(data->dlen) + HCI_ACL_DATA_PREAMBLE_SIZE) > data_len) {
 		DHD_ERROR(("dhd_bta_tx_hcidata: malformed hci data, len %u data_len %u\n",
-		           len, data_len));
+			   len, data_len));
 		/* return BCME_BADLEN; */
 	}
 
@@ -319,7 +319,7 @@ dhd_bta_doevt(dhd_pub_t *dhdp, void *data_buf, uint data_len)
 		switch (ltoh16_ua((uint8 *)&parms->opcode)) {
 		case HCI_Read_Data_Block_Size: {
 			read_data_block_size_evt_parms_t *parms2 =
-			        (read_data_block_size_evt_parms_t *)parms->parms;
+				(read_data_block_size_evt_parms_t *)parms->parms;
 			dhdp->maxdatablks = ltoh16_ua((uint8 *)&parms2->data_block_num);
 			break;
 		}

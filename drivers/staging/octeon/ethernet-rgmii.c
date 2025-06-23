@@ -23,7 +23,7 @@
  *
  * This file may also be available under a different license from Cavium.
  * Contact Cavium Networks for more information
-**********************************************************************/
+ **********************************************************************/
 #include <linux/kernel.h>
 #include <linux/netdevice.h>
 #include <linux/phy.h>
@@ -53,25 +53,22 @@ static void cvm_oct_rgmii_poll(struct net_device *dev)
 	int use_global_register_lock = (priv->phydev == NULL);
 
 	BUG_ON(in_interrupt());
-	if (use_global_register_lock) {
+	if (use_global_register_lock)
 		/*
 		 * Take the global register lock since we are going to
 		 * touch registers that affect more than one port.
 		 */
 		spin_lock_irqsave(&global_register_lock, flags);
-	} else {
+	else
 		mutex_lock(&priv->phydev->bus->mdio_lock);
-	}
 
 	link_info = cvmx_helper_link_get(priv->port);
 	if (link_info.u64 == priv->link_info) {
-
 		/*
 		 * If the 10Mbps preamble workaround is supported and we're
 		 * at 10Mbps we may need to do some special checking.
 		 */
 		if (USE_10MBPS_PREAMBLE_WORKAROUND && (link_info.s.speed == 10)) {
-
 			/*
 			 * Read the GMXX_RXX_INT_REG[PCTERR] bit and
 			 * see if we are getting preamble errors.
@@ -80,10 +77,9 @@ static void cvm_oct_rgmii_poll(struct net_device *dev)
 			int index = INDEX(priv->port);
 			union cvmx_gmxx_rxx_int_reg gmxx_rxx_int_reg;
 			gmxx_rxx_int_reg.u64 =
-			    cvmx_read_csr(CVMX_GMXX_RXX_INT_REG
-					  (index, interface));
+				cvmx_read_csr(CVMX_GMXX_RXX_INT_REG
+						      (index, interface));
 			if (gmxx_rxx_int_reg.s.pcterr) {
-
 				/*
 				 * We are getting preamble errors at
 				 * 10Mbps.  Most likely the PHY is
@@ -97,28 +93,28 @@ static void cvm_oct_rgmii_poll(struct net_device *dev)
 
 				/* Disable preamble checking */
 				gmxx_rxx_frm_ctl.u64 =
-				    cvmx_read_csr(CVMX_GMXX_RXX_FRM_CTL
-						  (index, interface));
+					cvmx_read_csr(CVMX_GMXX_RXX_FRM_CTL
+							      (index, interface));
 				gmxx_rxx_frm_ctl.s.pre_chk = 0;
 				cvmx_write_csr(CVMX_GMXX_RXX_FRM_CTL
-					       (index, interface),
+						       (index, interface),
 					       gmxx_rxx_frm_ctl.u64);
 
 				/* Disable FCS stripping */
 				ipd_sub_port_fcs.u64 =
-				    cvmx_read_csr(CVMX_IPD_SUB_PORT_FCS);
+					cvmx_read_csr(CVMX_IPD_SUB_PORT_FCS);
 				ipd_sub_port_fcs.s.port_bit &=
-				    0xffffffffull ^ (1ull << priv->port);
+					0xffffffffull ^ (1ull << priv->port);
 				cvmx_write_csr(CVMX_IPD_SUB_PORT_FCS,
 					       ipd_sub_port_fcs.u64);
 
 				/* Clear any error bits */
 				cvmx_write_csr(CVMX_GMXX_RXX_INT_REG
-					       (index, interface),
+						       (index, interface),
 					       gmxx_rxx_int_reg.u64);
 				DEBUGPRINT("%s: Using 10Mbps with software "
 					   "preamble removal\n",
-				     dev->name);
+					   dev->name);
 			}
 		}
 
@@ -130,11 +126,10 @@ static void cvm_oct_rgmii_poll(struct net_device *dev)
 	}
 
 	/* If the 10Mbps preamble workaround is allowed we need to on
-	   preamble checking, FCS stripping, and clear error bits on
-	   every speed change. If errors occur during 10Mbps operation
-	   the above code will change this stuff */
+	 * preamble checking, FCS stripping, and clear error bits on
+	 * every speed change. If errors occur during 10Mbps operation
+	 * the above code will change this stuff */
 	if (USE_10MBPS_PREAMBLE_WORKAROUND) {
-
 		union cvmx_gmxx_rxx_frm_ctl gmxx_rxx_frm_ctl;
 		union cvmx_ipd_sub_port_fcs ipd_sub_port_fcs;
 		union cvmx_gmxx_rxx_int_reg gmxx_rxx_int_reg;
@@ -143,7 +138,7 @@ static void cvm_oct_rgmii_poll(struct net_device *dev)
 
 		/* Enable preamble checking */
 		gmxx_rxx_frm_ctl.u64 =
-		    cvmx_read_csr(CVMX_GMXX_RXX_FRM_CTL(index, interface));
+			cvmx_read_csr(CVMX_GMXX_RXX_FRM_CTL(index, interface));
 		gmxx_rxx_frm_ctl.s.pre_chk = 1;
 		cvmx_write_csr(CVMX_GMXX_RXX_FRM_CTL(index, interface),
 			       gmxx_rxx_frm_ctl.u64);
@@ -153,7 +148,7 @@ static void cvm_oct_rgmii_poll(struct net_device *dev)
 		cvmx_write_csr(CVMX_IPD_SUB_PORT_FCS, ipd_sub_port_fcs.u64);
 		/* Clear any error bits */
 		gmxx_rxx_int_reg.u64 =
-		    cvmx_read_csr(CVMX_GMXX_RXX_INT_REG(index, interface));
+			cvmx_read_csr(CVMX_GMXX_RXX_INT_REG(index, interface));
 		cvmx_write_csr(CVMX_GMXX_RXX_INT_REG(index, interface),
 			       gmxx_rxx_int_reg.u64);
 	}
@@ -164,29 +159,29 @@ static void cvm_oct_rgmii_poll(struct net_device *dev)
 
 	if (use_global_register_lock)
 		spin_unlock_irqrestore(&global_register_lock, flags);
-	else {
+	else
 		mutex_unlock(&priv->phydev->bus->mdio_lock);
-	}
 
 	if (priv->phydev == NULL) {
 		/* Tell core. */
 		if (link_info.s.link_up) {
 			if (!netif_carrier_ok(dev))
 				netif_carrier_on(dev);
-			if (priv->queue != -1)
+			if (priv->queue != -1) {
 				DEBUGPRINT("%s: %u Mbps %s duplex, "
 					   "port %2d, queue %2d\n",
 					   dev->name, link_info.s.speed,
 					   (link_info.s.full_duplex) ?
-						"Full" : "Half",
+					   "Full" : "Half",
 					   priv->port, priv->queue);
-			else
+			} else {
 				DEBUGPRINT("%s: %u Mbps %s duplex, "
 					   "port %2d, POW\n",
 					   dev->name, link_info.s.speed,
 					   (link_info.s.full_duplex) ?
-						"Full" : "Half",
+					   "Full" : "Half",
 					   priv->port);
+			}
 		} else {
 			if (netif_carrier_ok(dev))
 				netif_carrier_off(dev);
@@ -205,29 +200,26 @@ static irqreturn_t cvm_oct_rgmii_rml_interrupt(int cpl, void *dev_id)
 
 	/* Check and see if this interrupt was caused by the GMX0 block */
 	if (rsl_int_blocks.s.gmx0) {
-
 		int interface = 0;
 		/* Loop through every port of this interface */
 		for (index = 0;
 		     index < cvmx_helper_ports_on_interface(interface);
 		     index++) {
-
 			/* Read the GMX interrupt status bits */
 			union cvmx_gmxx_rxx_int_reg gmx_rx_int_reg;
 			gmx_rx_int_reg.u64 =
-			    cvmx_read_csr(CVMX_GMXX_RXX_INT_REG
-					  (index, interface));
+				cvmx_read_csr(CVMX_GMXX_RXX_INT_REG
+						      (index, interface));
 			gmx_rx_int_reg.u64 &=
-			    cvmx_read_csr(CVMX_GMXX_RXX_INT_EN
-					  (index, interface));
+				cvmx_read_csr(CVMX_GMXX_RXX_INT_EN
+						      (index, interface));
 			/* Poll the port if inband status changed */
 			if (gmx_rx_int_reg.s.phy_dupx
 			    || gmx_rx_int_reg.s.phy_link
 			    || gmx_rx_int_reg.s.phy_spd) {
-
 				struct net_device *dev =
-				    cvm_oct_device[cvmx_helper_get_ipd_port
-						   (interface, index)];
+					cvm_oct_device[cvmx_helper_get_ipd_port
+							       (interface, index)];
 				struct octeon_ethernet *priv = netdev_priv(dev);
 
 				if (dev && !atomic_read(&cvm_oct_poll_queue_stopping))
@@ -238,7 +230,7 @@ static irqreturn_t cvm_oct_rgmii_rml_interrupt(int cpl, void *dev_id)
 				gmx_rx_int_reg.s.phy_link = 1;
 				gmx_rx_int_reg.s.phy_spd = 1;
 				cvmx_write_csr(CVMX_GMXX_RXX_INT_REG
-					       (index, interface),
+						       (index, interface),
 					       gmx_rx_int_reg.u64);
 				return_status = IRQ_HANDLED;
 			}
@@ -247,29 +239,26 @@ static irqreturn_t cvm_oct_rgmii_rml_interrupt(int cpl, void *dev_id)
 
 	/* Check and see if this interrupt was caused by the GMX1 block */
 	if (rsl_int_blocks.s.gmx1) {
-
 		int interface = 1;
 		/* Loop through every port of this interface */
 		for (index = 0;
 		     index < cvmx_helper_ports_on_interface(interface);
 		     index++) {
-
 			/* Read the GMX interrupt status bits */
 			union cvmx_gmxx_rxx_int_reg gmx_rx_int_reg;
 			gmx_rx_int_reg.u64 =
-			    cvmx_read_csr(CVMX_GMXX_RXX_INT_REG
-					  (index, interface));
+				cvmx_read_csr(CVMX_GMXX_RXX_INT_REG
+						      (index, interface));
 			gmx_rx_int_reg.u64 &=
-			    cvmx_read_csr(CVMX_GMXX_RXX_INT_EN
-					  (index, interface));
+				cvmx_read_csr(CVMX_GMXX_RXX_INT_EN
+						      (index, interface));
 			/* Poll the port if inband status changed */
 			if (gmx_rx_int_reg.s.phy_dupx
 			    || gmx_rx_int_reg.s.phy_link
 			    || gmx_rx_int_reg.s.phy_spd) {
-
 				struct net_device *dev =
-				    cvm_oct_device[cvmx_helper_get_ipd_port
-						   (interface, index)];
+					cvm_oct_device[cvmx_helper_get_ipd_port
+							       (interface, index)];
 				struct octeon_ethernet *priv = netdev_priv(dev);
 
 				if (dev && !atomic_read(&cvm_oct_poll_queue_stopping))
@@ -280,7 +269,7 @@ static irqreturn_t cvm_oct_rgmii_rml_interrupt(int cpl, void *dev_id)
 				gmx_rx_int_reg.s.phy_link = 1;
 				gmx_rx_int_reg.s.phy_spd = 1;
 				cvmx_write_csr(CVMX_GMXX_RXX_INT_REG
-					       (index, interface),
+						       (index, interface),
 					       gmx_rx_int_reg.u64);
 				return_status = IRQ_HANDLED;
 			}
@@ -326,6 +315,7 @@ int cvm_oct_rgmii_stop(struct net_device *dev)
 static void cvm_oct_rgmii_immediate_poll(struct work_struct *work)
 {
 	struct octeon_ethernet *priv = container_of(work, struct octeon_ethernet, port_work);
+
 	cvm_oct_rgmii_poll(cvm_oct_device[priv->port]);
 }
 
@@ -360,9 +350,7 @@ int cvm_oct_rgmii_init(struct net_device *dev)
 	if (((priv->imode == CVMX_HELPER_INTERFACE_MODE_GMII)
 	     && (priv->port == 0))
 	    || (priv->imode == CVMX_HELPER_INTERFACE_MODE_RGMII)) {
-
 		if (!octeon_is_simulation()) {
-
 			union cvmx_gmxx_rxx_int_en gmx_rx_int_en;
 			int interface = INTERFACE(priv->port);
 			int index = INDEX(priv->port);
@@ -372,8 +360,8 @@ int cvm_oct_rgmii_init(struct net_device *dev)
 			 * for this port.
 			 */
 			gmx_rx_int_en.u64 =
-			    cvmx_read_csr(CVMX_GMXX_RXX_INT_EN
-					  (index, interface));
+				cvmx_read_csr(CVMX_GMXX_RXX_INT_EN
+						      (index, interface));
 			gmx_rx_int_en.s.phy_dupx = 1;
 			gmx_rx_int_en.s.phy_link = 1;
 			gmx_rx_int_en.s.phy_spd = 1;
@@ -389,6 +377,7 @@ int cvm_oct_rgmii_init(struct net_device *dev)
 void cvm_oct_rgmii_uninit(struct net_device *dev)
 {
 	struct octeon_ethernet *priv = netdev_priv(dev);
+
 	cvm_oct_common_uninit(dev);
 
 	/*
@@ -398,9 +387,7 @@ void cvm_oct_rgmii_uninit(struct net_device *dev)
 	if (((priv->imode == CVMX_HELPER_INTERFACE_MODE_GMII)
 	     && (priv->port == 0))
 	    || (priv->imode == CVMX_HELPER_INTERFACE_MODE_RGMII)) {
-
 		if (!octeon_is_simulation()) {
-
 			union cvmx_gmxx_rxx_int_en gmx_rx_int_en;
 			int interface = INTERFACE(priv->port);
 			int index = INDEX(priv->port);
@@ -410,8 +397,8 @@ void cvm_oct_rgmii_uninit(struct net_device *dev)
 			 * for this port.
 			 */
 			gmx_rx_int_en.u64 =
-			    cvmx_read_csr(CVMX_GMXX_RXX_INT_EN
-					  (index, interface));
+				cvmx_read_csr(CVMX_GMXX_RXX_INT_EN
+						      (index, interface));
 			gmx_rx_int_en.s.phy_dupx = 0;
 			gmx_rx_int_en.s.phy_link = 0;
 			gmx_rx_int_en.s.phy_spd = 0;

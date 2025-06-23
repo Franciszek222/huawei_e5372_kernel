@@ -29,8 +29,9 @@
 
 static irqreturn_t balong_timer_irq_handler(int irq, void *dev_id)
 {
-    unsigned int readValue;
-    readValue = readl(__io_address(PV500V1_TIMER14_BASE) + CLK_REGOFF_CLEAR);
+	unsigned int readValue;
+
+	readValue = readl(__io_address(PV500V1_TIMER14_BASE) + CLK_REGOFF_CLEAR);
 	timer_tick();
 	return IRQ_HANDLED;
 }
@@ -44,33 +45,34 @@ static struct irqaction balong_timer_irq = {
 #define sysClkTicksPerSecond    100
 void __init balong_timer_init(unsigned int timer_irq)
 {
-    unsigned int tc;
-    #if 0
-    *(volatile int*)0xf1001824 = 0x02010101;
-    #endif
-    writel(CLK_DEF_DISABLE, __io_address(PV500V1_TIMER14_BASE) + CLK_REGOFF_CTRL);
-    tc = (SYS_TIMER_CLK / sysClkTicksPerSecond) - AMBA_RELOAD_TICKS;
-    writel(tc, __io_address(PV500V1_TIMER14_BASE) + CLK_REGOFF_LOAD);
-    writel(CLK_DEF_ENABLE, __io_address(PV500V1_TIMER14_BASE) + CLK_REGOFF_CTRL);
-    
-    
-    setup_irq (INT_LVL_TIMER_14, &balong_timer_irq);
+	unsigned int tc;
+
+#if 0
+	*(volatile int *)0xf1001824 = 0x02010101;
+#endif
+	writel(CLK_DEF_DISABLE, __io_address(PV500V1_TIMER14_BASE) + CLK_REGOFF_CTRL);
+	tc = (SYS_TIMER_CLK / sysClkTicksPerSecond) - AMBA_RELOAD_TICKS;
+	writel(tc, __io_address(PV500V1_TIMER14_BASE) + CLK_REGOFF_LOAD);
+	writel(CLK_DEF_ENABLE, __io_address(PV500V1_TIMER14_BASE) + CLK_REGOFF_CTRL);
+
+
+	setup_irq(INT_LVL_TIMER_14, &balong_timer_irq);
 }
 
-int clk_enable (struct clk *clk)
+int clk_enable(struct clk *clk)
 {
-    //writel(CLK_DEF_ENABLE, __io_address(PV500V1_TIMER0_BASE) + CLK_REGOFF_CTRL);
+	//writel(CLK_DEF_ENABLE, __io_address(PV500V1_TIMER0_BASE) + CLK_REGOFF_CTRL);
 	return 0;
 }
 EXPORT_SYMBOL(clk_enable);
 
-void clk_disable (struct clk *clk)
+void clk_disable(struct clk *clk)
 {
-    //writel(CLK_DEF_DISABLE, __io_address(CLK_DEF_DISABLE) + CLK_REGOFF_CTRL);
+	//writel(CLK_DEF_DISABLE, __io_address(CLK_DEF_DISABLE) + CLK_REGOFF_CTRL);
 }
 EXPORT_SYMBOL(clk_disable);
 
-unsigned long clk_get_rate (struct clk *clk)
+unsigned long clk_get_rate(struct clk *clk)
 {
 	return SYS_TIMER_CLK;
 }
@@ -83,5 +85,3 @@ struct clk *clk_get(struct device *dev, const char *id)
 void clk_put(struct clk *clk)
 {
 }
-
-

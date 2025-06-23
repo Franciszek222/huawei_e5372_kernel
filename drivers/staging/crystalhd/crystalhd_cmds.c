@@ -46,10 +46,9 @@ static int bc_cproc_get_user_count(struct crystalhd_cmd *ctx)
 {
 	int i, count = 0;
 
-	for (i = 0; i < BC_LINK_MAX_OPENS; i++) {
+	for (i = 0; i < BC_LINK_MAX_OPENS; i++)
 		if (ctx->user[i].in_use)
 			count++;
-	}
 
 	return count;
 }
@@ -69,8 +68,8 @@ static void bc_cproc_mark_pwr_state(struct crystalhd_cmd *ctx)
 	}
 }
 
-static enum BC_STATUS bc_cproc_notify_mode(struct crystalhd_cmd *ctx,
-				      struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_notify_mode(struct crystalhd_cmd *	ctx,
+					   struct crystalhd_ioctl_data *idata)
 {
 	int rc = 0, i = 0;
 
@@ -111,23 +110,22 @@ static enum BC_STATUS bc_cproc_notify_mode(struct crystalhd_cmd *ctx,
 	return crystalhd_hw_setup_dma_rings(&ctx->hw_ctx);
 }
 
-static enum BC_STATUS bc_cproc_get_version(struct crystalhd_cmd *ctx,
-				      struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_get_version(struct crystalhd_cmd *	ctx,
+					   struct crystalhd_ioctl_data *idata)
 {
-
 	if (!ctx || !idata) {
 		BCMLOG_ERR("Invalid Arg!!\n");
 		return BC_STS_INV_ARG;
 	}
 	idata->udata.u.VerInfo.DriverMajor = crystalhd_kmod_major;
 	idata->udata.u.VerInfo.DriverMinor = crystalhd_kmod_minor;
-	idata->udata.u.VerInfo.DriverRevision	= crystalhd_kmod_rev;
+	idata->udata.u.VerInfo.DriverRevision = crystalhd_kmod_rev;
 	return BC_STS_SUCCESS;
 }
 
 
-static enum BC_STATUS bc_cproc_get_hwtype(struct crystalhd_cmd *ctx,
-					struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_get_hwtype(struct crystalhd_cmd *	ctx,
+					  struct crystalhd_ioctl_data * idata)
 {
 	if (!ctx || !idata) {
 		BCMLOG_ERR("Invalid Arg!!\n");
@@ -135,27 +133,27 @@ static enum BC_STATUS bc_cproc_get_hwtype(struct crystalhd_cmd *ctx,
 	}
 
 	crystalhd_pci_cfg_rd(ctx->adp, 0, 2,
-			   (uint32_t *)&idata->udata.u.hwType.PciVenId);
+			     (uint32_t *)&idata->udata.u.hwType.PciVenId);
 	crystalhd_pci_cfg_rd(ctx->adp, 2, 2,
-			   (uint32_t *)&idata->udata.u.hwType.PciDevId);
+			     (uint32_t *)&idata->udata.u.hwType.PciDevId);
 	crystalhd_pci_cfg_rd(ctx->adp, 8, 1,
-			   (uint32_t *)&idata->udata.u.hwType.HwRev);
+			     (uint32_t *)&idata->udata.u.hwType.HwRev);
 
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_reg_rd(struct crystalhd_cmd *ctx,
-				 struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_reg_rd(struct crystalhd_cmd *		ctx,
+				      struct crystalhd_ioctl_data *	idata)
 {
 	if (!ctx || !idata)
 		return BC_STS_INV_ARG;
 	idata->udata.u.regAcc.Value = bc_dec_reg_rd(ctx->adp,
-					idata->udata.u.regAcc.Offset);
+						    idata->udata.u.regAcc.Offset);
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_reg_wr(struct crystalhd_cmd *ctx,
-				 struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_reg_wr(struct crystalhd_cmd *		ctx,
+				      struct crystalhd_ioctl_data *	idata)
 {
 	if (!ctx || !idata)
 		return BC_STS_INV_ARG;
@@ -166,31 +164,31 @@ static enum BC_STATUS bc_cproc_reg_wr(struct crystalhd_cmd *ctx,
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_link_reg_rd(struct crystalhd_cmd *ctx,
-				      struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_link_reg_rd(struct crystalhd_cmd *	ctx,
+					   struct crystalhd_ioctl_data *idata)
 {
 	if (!ctx || !idata)
 		return BC_STS_INV_ARG;
 
 	idata->udata.u.regAcc.Value = crystalhd_reg_rd(ctx->adp,
-					idata->udata.u.regAcc.Offset);
+						       idata->udata.u.regAcc.Offset);
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_link_reg_wr(struct crystalhd_cmd *ctx,
-				      struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_link_reg_wr(struct crystalhd_cmd *	ctx,
+					   struct crystalhd_ioctl_data *idata)
 {
 	if (!ctx || !idata)
 		return BC_STS_INV_ARG;
 
 	crystalhd_reg_wr(ctx->adp, idata->udata.u.regAcc.Offset,
-		       idata->udata.u.regAcc.Value);
+			 idata->udata.u.regAcc.Value);
 
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_mem_rd(struct crystalhd_cmd *ctx,
-				 struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_mem_rd(struct crystalhd_cmd *		ctx,
+				      struct crystalhd_ioctl_data *	idata)
 {
 	enum BC_STATUS sts = BC_STS_SUCCESS;
 
@@ -202,14 +200,13 @@ static enum BC_STATUS bc_cproc_mem_rd(struct crystalhd_cmd *ctx,
 		return BC_STS_INV_ARG;
 	}
 	sts = crystalhd_mem_rd(ctx->adp, idata->udata.u.devMem.StartOff,
-			     idata->udata.u.devMem.NumDwords,
-			     (uint32_t *)idata->add_cdata);
+			       idata->udata.u.devMem.NumDwords,
+			       (uint32_t *)idata->add_cdata);
 	return sts;
-
 }
 
-static enum BC_STATUS bc_cproc_mem_wr(struct crystalhd_cmd *ctx,
-				 struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_mem_wr(struct crystalhd_cmd *		ctx,
+				      struct crystalhd_ioctl_data *	idata)
 {
 	enum BC_STATUS sts = BC_STS_SUCCESS;
 
@@ -222,22 +219,23 @@ static enum BC_STATUS bc_cproc_mem_wr(struct crystalhd_cmd *ctx,
 	}
 
 	sts = crystalhd_mem_wr(ctx->adp, idata->udata.u.devMem.StartOff,
-			     idata->udata.u.devMem.NumDwords,
-			     (uint32_t *)idata->add_cdata);
+			       idata->udata.u.devMem.NumDwords,
+			       (uint32_t *)idata->add_cdata);
 	return sts;
 }
 
-static enum BC_STATUS bc_cproc_cfg_rd(struct crystalhd_cmd *ctx,
-				 struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_cfg_rd(struct crystalhd_cmd *		ctx,
+				      struct crystalhd_ioctl_data *	idata)
 {
 	uint32_t ix, cnt, off, len;
 	enum BC_STATUS sts = BC_STS_SUCCESS;
+
 	uint32_t *temp;
 
 	if (!ctx || !idata)
 		return BC_STS_INV_ARG;
 
-	temp = (uint32_t *) idata->udata.u.pciCfg.pci_cfg_space;
+	temp = (uint32_t *)idata->udata.u.pciCfg.pci_cfg_space;
 	off = idata->udata.u.pciCfg.Offset;
 	len = idata->udata.u.pciCfg.Size;
 
@@ -259,17 +257,18 @@ static enum BC_STATUS bc_cproc_cfg_rd(struct crystalhd_cmd *ctx,
 	return sts;
 }
 
-static enum BC_STATUS bc_cproc_cfg_wr(struct crystalhd_cmd *ctx,
-				 struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_cfg_wr(struct crystalhd_cmd *		ctx,
+				      struct crystalhd_ioctl_data *	idata)
 {
 	uint32_t ix, cnt, off, len;
 	enum BC_STATUS sts = BC_STS_SUCCESS;
+
 	uint32_t *temp;
 
 	if (!ctx || !idata)
 		return BC_STS_INV_ARG;
 
-	temp = (uint32_t *) idata->udata.u.pciCfg.pci_cfg_space;
+	temp = (uint32_t *)idata->udata.u.pciCfg.pci_cfg_space;
 	off = idata->udata.u.pciCfg.Offset;
 	len = idata->udata.u.pciCfg.Size;
 
@@ -291,8 +290,8 @@ static enum BC_STATUS bc_cproc_cfg_wr(struct crystalhd_cmd *ctx,
 	return sts;
 }
 
-static enum BC_STATUS bc_cproc_download_fw(struct crystalhd_cmd *ctx,
-				      struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_download_fw(struct crystalhd_cmd *	ctx,
+					   struct crystalhd_ioctl_data *idata)
 {
 	enum BC_STATUS sts = BC_STS_SUCCESS;
 
@@ -307,11 +306,11 @@ static enum BC_STATUS bc_cproc_download_fw(struct crystalhd_cmd *ctx,
 	}
 
 	sts = crystalhd_download_fw(ctx->adp, (uint8_t *)idata->add_cdata,
-				  idata->add_cdata_sz);
+				    idata->add_cdata_sz);
 
-	if (sts != BC_STS_SUCCESS) {
+	if (sts != BC_STS_SUCCESS)
 		BCMLOG_ERR("Firmware Download Failure!! - %d\n", sts);
-	} else
+	else
 		ctx->state |= BC_LINK_INIT;
 
 	return sts;
@@ -330,10 +329,11 @@ static enum BC_STATUS bc_cproc_download_fw(struct crystalhd_cmd *ctx,
  *	Abort pending input transfers and issue decoder flush command.
  *
  */
-static enum BC_STATUS bc_cproc_do_fw_cmd(struct crystalhd_cmd *ctx,
-					struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_do_fw_cmd(struct crystalhd_cmd *		ctx,
+					 struct crystalhd_ioctl_data *	idata)
 {
 	enum BC_STATUS sts;
+
 	uint32_t *cmd;
 
 	if (!(ctx->state & BC_LINK_INIT)) {
@@ -408,9 +408,9 @@ static enum BC_STATUS bc_cproc_codein_sleep(struct crystalhd_cmd *ctx)
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_hw_txdma(struct crystalhd_cmd *ctx,
-				   struct crystalhd_ioctl_data *idata,
-				   struct crystalhd_dio_req *dio)
+static enum BC_STATUS bc_cproc_hw_txdma(struct crystalhd_cmd *		ctx,
+					struct crystalhd_ioctl_data *	idata,
+					struct crystalhd_dio_req *	dio)
 {
 	uint32_t tx_listid = 0;
 	enum BC_STATUS sts = BC_STS_SUCCESS;
@@ -427,17 +427,17 @@ static enum BC_STATUS bc_cproc_hw_txdma(struct crystalhd_cmd *ctx,
 	ctx->tx_list_id = 0;
 	/* msleep_interruptible(2000); */
 	sts = crystalhd_hw_post_tx(&ctx->hw_ctx, dio, bc_proc_in_completion,
-				 &event, &tx_listid,
-				 idata->udata.u.ProcInput.Encrypted);
+				   &event, &tx_listid,
+				   idata->udata.u.ProcInput.Encrypted);
 
 	while (sts == BC_STS_BUSY) {
 		sts = bc_cproc_codein_sleep(ctx);
 		if (sts != BC_STS_SUCCESS)
 			break;
 		sts = crystalhd_hw_post_tx(&ctx->hw_ctx, dio,
-					 bc_proc_in_completion,
-					 &event, &tx_listid,
-					 idata->udata.u.ProcInput.Encrypted);
+					   bc_proc_in_completion,
+					   &event, &tx_listid,
+					   idata->udata.u.ProcInput.Encrypted);
 	}
 	if (sts != BC_STS_SUCCESS) {
 		BCMLOG(BCMLOG_DBG, "_hw_txdma returning sts:%d\n", sts);
@@ -474,18 +474,18 @@ static enum BC_STATUS bc_cproc_hw_txdma(struct crystalhd_cmd *ctx,
 
 /* Helper function to check on user buffers */
 static enum BC_STATUS bc_cproc_check_inbuffs(bool pin, void *ubuff, uint32_t ub_sz,
-					uint32_t uv_off, bool en_422)
+					     uint32_t uv_off, bool en_422)
 {
 	if (!ubuff || !ub_sz) {
 		BCMLOG_ERR("%s->Invalid Arg %p %x\n",
-			((pin) ? "TX" : "RX"), ubuff, ub_sz);
+			   ((pin) ? "TX" : "RX"), ubuff, ub_sz);
 		return BC_STS_INV_ARG;
 	}
 
 	/* Check for alignment */
 	if (((uintptr_t)ubuff) & 0x03) {
 		BCMLOG_ERR("%s-->Un-aligned address not implemented yet.. %p\n",
-				((pin) ? "TX" : "RX"), ubuff);
+			   ((pin) ? "TX" : "RX"), ubuff);
 		return BC_STS_NOT_IMPL;
 	}
 	if (pin)
@@ -504,8 +504,8 @@ static enum BC_STATUS bc_cproc_check_inbuffs(bool pin, void *ubuff, uint32_t ub_
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_proc_input(struct crystalhd_cmd *ctx,
-					struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_proc_input(struct crystalhd_cmd *	ctx,
+					  struct crystalhd_ioctl_data * idata)
 {
 	void *ubuff;
 	uint32_t ub_sz;
@@ -540,8 +540,8 @@ static enum BC_STATUS bc_cproc_proc_input(struct crystalhd_cmd *ctx,
 	return sts;
 }
 
-static enum BC_STATUS bc_cproc_add_cap_buff(struct crystalhd_cmd *ctx,
-				       struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_add_cap_buff(struct crystalhd_cmd *		ctx,
+					    struct crystalhd_ioctl_data *	idata)
 {
 	void *ubuff;
 	uint32_t ub_sz, uv_off;
@@ -564,7 +564,7 @@ static enum BC_STATUS bc_cproc_add_cap_buff(struct crystalhd_cmd *ctx,
 		return sts;
 
 	sts = crystalhd_map_dio(ctx->adp, ubuff, ub_sz, uv_off,
-			      en_422, 0, &dio_hnd);
+				en_422, 0, &dio_hnd);
 	if (sts != BC_STS_SUCCESS) {
 		BCMLOG_ERR("dio map - %d\n", sts);
 		return sts;
@@ -582,8 +582,8 @@ static enum BC_STATUS bc_cproc_add_cap_buff(struct crystalhd_cmd *ctx,
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_fmt_change(struct crystalhd_cmd *ctx,
-				     struct crystalhd_dio_req *dio)
+static enum BC_STATUS bc_cproc_fmt_change(struct crystalhd_cmd *	ctx,
+					  struct crystalhd_dio_req *	dio)
 {
 	enum BC_STATUS sts = BC_STS_SUCCESS;
 
@@ -598,8 +598,8 @@ static enum BC_STATUS bc_cproc_fmt_change(struct crystalhd_cmd *ctx,
 	return sts;
 }
 
-static enum BC_STATUS bc_cproc_fetch_frame(struct crystalhd_cmd *ctx,
-				      struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_fetch_frame(struct crystalhd_cmd *	ctx,
+					   struct crystalhd_ioctl_data *idata)
 {
 	struct crystalhd_dio_req *dio = NULL;
 	enum BC_STATUS sts = BC_STS_SUCCESS;
@@ -639,8 +639,8 @@ static enum BC_STATUS bc_cproc_fetch_frame(struct crystalhd_cmd *ctx,
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_start_capture(struct crystalhd_cmd *ctx,
-					struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_start_capture(struct crystalhd_cmd *		ctx,
+					     struct crystalhd_ioctl_data *	idata)
 {
 	ctx->state |= BC_LINK_CAP_EN;
 	if (ctx->state == BC_LINK_READY)
@@ -649,8 +649,8 @@ static enum BC_STATUS bc_cproc_start_capture(struct crystalhd_cmd *ctx,
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_flush_cap_buffs(struct crystalhd_cmd *ctx,
-					  struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_flush_cap_buffs(struct crystalhd_cmd *		ctx,
+					       struct crystalhd_ioctl_data *	idata)
 {
 	struct crystalhd_dio_req *dio = NULL;
 	enum BC_STATUS sts = BC_STS_SUCCESS;
@@ -669,11 +669,10 @@ static enum BC_STATUS bc_cproc_flush_cap_buffs(struct crystalhd_cmd *ctx,
 	if (!(ctx->state & BC_LINK_READY))
 		return crystalhd_hw_stop_capture(&ctx->hw_ctx);
 
-	ctx->state &= ~(BC_LINK_CAP_EN|BC_LINK_FMT_CHG);
+	ctx->state &= ~(BC_LINK_CAP_EN | BC_LINK_FMT_CHG);
 
 	frame = &idata->udata.u.DecOutData;
 	for (count = 0; count < BC_RX_LIST_CNT; count++) {
-
 		sts = crystalhd_hw_get_cap_buffer(&ctx->hw_ctx, &frame->PibInfo, &dio);
 		if (sts != BC_STS_SUCCESS)
 			break;
@@ -684,11 +683,11 @@ static enum BC_STATUS bc_cproc_flush_cap_buffs(struct crystalhd_cmd *ctx,
 	return crystalhd_hw_stop_capture(&ctx->hw_ctx);
 }
 
-static enum BC_STATUS bc_cproc_get_stats(struct crystalhd_cmd *ctx,
-				    struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_get_stats(struct crystalhd_cmd *		ctx,
+					 struct crystalhd_ioctl_data *	idata)
 {
 	struct BC_DTS_STATS *stats;
-	struct crystalhd_hw_stats	hw_stats;
+	struct crystalhd_hw_stats hw_stats;
 
 	if (!ctx || !idata) {
 		BCMLOG_ERR("Invalid Arg!!\n");
@@ -704,7 +703,7 @@ static enum BC_STATUS bc_cproc_get_stats(struct crystalhd_cmd *ctx,
 	stats->DrvTotalHWErrs = hw_stats.rx_errors + hw_stats.tx_errors;
 	stats->intCount = hw_stats.num_interrupts;
 	stats->DrvIgnIntrCnt = hw_stats.num_interrupts -
-				hw_stats.dev_interrupts;
+			       hw_stats.dev_interrupts;
 	stats->TxFifoBsyCnt = hw_stats.cin_busy;
 	stats->pauseCount = hw_stats.pause_cnt;
 
@@ -716,16 +715,16 @@ static enum BC_STATUS bc_cproc_get_stats(struct crystalhd_cmd *ctx,
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_reset_stats(struct crystalhd_cmd *ctx,
-				      struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_reset_stats(struct crystalhd_cmd *	ctx,
+					   struct crystalhd_ioctl_data *idata)
 {
 	crystalhd_hw_stats(&ctx->hw_ctx, NULL);
 
 	return BC_STS_SUCCESS;
 }
 
-static enum BC_STATUS bc_cproc_chg_clk(struct crystalhd_cmd *ctx,
-				  struct crystalhd_ioctl_data *idata)
+static enum BC_STATUS bc_cproc_chg_clk(struct crystalhd_cmd *		ctx,
+				       struct crystalhd_ioctl_data *	idata)
 {
 	struct BC_CLOCK *clock;
 	uint32_t oldClk;
@@ -752,29 +751,29 @@ static enum BC_STATUS bc_cproc_chg_clk(struct crystalhd_cmd *ctx,
 }
 
 /*=============== Cmd Proc Table.. ======================================*/
-static const struct crystalhd_cmd_tbl	g_crystalhd_cproc_tbl[] = {
-	{ BCM_IOC_GET_VERSION,		bc_cproc_get_version,	0},
-	{ BCM_IOC_GET_HWTYPE,		bc_cproc_get_hwtype,	0},
-	{ BCM_IOC_REG_RD,		bc_cproc_reg_rd,	0},
-	{ BCM_IOC_REG_WR,		bc_cproc_reg_wr,	0},
-	{ BCM_IOC_FPGA_RD,		bc_cproc_link_reg_rd,	0},
-	{ BCM_IOC_FPGA_WR,		bc_cproc_link_reg_wr,	0},
-	{ BCM_IOC_MEM_RD,		bc_cproc_mem_rd,	0},
-	{ BCM_IOC_MEM_WR,		bc_cproc_mem_wr,	0},
-	{ BCM_IOC_RD_PCI_CFG,		bc_cproc_cfg_rd,	0},
-	{ BCM_IOC_WR_PCI_CFG,		bc_cproc_cfg_wr,	1},
-	{ BCM_IOC_FW_DOWNLOAD,		bc_cproc_download_fw,	1},
-	{ BCM_IOC_FW_CMD,		bc_cproc_do_fw_cmd,	1},
-	{ BCM_IOC_PROC_INPUT,		bc_cproc_proc_input,	1},
-	{ BCM_IOC_ADD_RXBUFFS,		bc_cproc_add_cap_buff,	1},
-	{ BCM_IOC_FETCH_RXBUFF,		bc_cproc_fetch_frame,	1},
-	{ BCM_IOC_START_RX_CAP,		bc_cproc_start_capture,	1},
-	{ BCM_IOC_FLUSH_RX_CAP,		bc_cproc_flush_cap_buffs, 1},
-	{ BCM_IOC_GET_DRV_STAT,		bc_cproc_get_stats,	0},
-	{ BCM_IOC_RST_DRV_STAT,		bc_cproc_reset_stats,	0},
-	{ BCM_IOC_NOTIFY_MODE,		bc_cproc_notify_mode,	0},
-	{ BCM_IOC_CHG_CLK,		bc_cproc_chg_clk, 0},
-	{ BCM_IOC_END,			NULL},
+static const struct crystalhd_cmd_tbl g_crystalhd_cproc_tbl[] = {
+	{ BCM_IOC_GET_VERSION,	bc_cproc_get_version,	  0 },
+	{ BCM_IOC_GET_HWTYPE,	bc_cproc_get_hwtype,	  0 },
+	{ BCM_IOC_REG_RD,	bc_cproc_reg_rd,	  0 },
+	{ BCM_IOC_REG_WR,	bc_cproc_reg_wr,	  0 },
+	{ BCM_IOC_FPGA_RD,	bc_cproc_link_reg_rd,	  0 },
+	{ BCM_IOC_FPGA_WR,	bc_cproc_link_reg_wr,	  0 },
+	{ BCM_IOC_MEM_RD,	bc_cproc_mem_rd,	  0 },
+	{ BCM_IOC_MEM_WR,	bc_cproc_mem_wr,	  0 },
+	{ BCM_IOC_RD_PCI_CFG,	bc_cproc_cfg_rd,	  0 },
+	{ BCM_IOC_WR_PCI_CFG,	bc_cproc_cfg_wr,	  1 },
+	{ BCM_IOC_FW_DOWNLOAD,	bc_cproc_download_fw,	  1 },
+	{ BCM_IOC_FW_CMD,	bc_cproc_do_fw_cmd,	  1 },
+	{ BCM_IOC_PROC_INPUT,	bc_cproc_proc_input,	  1 },
+	{ BCM_IOC_ADD_RXBUFFS,	bc_cproc_add_cap_buff,	  1 },
+	{ BCM_IOC_FETCH_RXBUFF, bc_cproc_fetch_frame,	  1 },
+	{ BCM_IOC_START_RX_CAP, bc_cproc_start_capture,	  1 },
+	{ BCM_IOC_FLUSH_RX_CAP, bc_cproc_flush_cap_buffs, 1 },
+	{ BCM_IOC_GET_DRV_STAT, bc_cproc_get_stats,	  0 },
+	{ BCM_IOC_RST_DRV_STAT, bc_cproc_reset_stats,	  0 },
+	{ BCM_IOC_NOTIFY_MODE,	bc_cproc_notify_mode,	  0 },
+	{ BCM_IOC_CHG_CLK,	bc_cproc_chg_clk,	  0 },
+	{ BCM_IOC_END,		NULL },
 };
 
 /*=============== Cmd Proc Functions.. ===================================*/
@@ -799,8 +798,8 @@ static const struct crystalhd_cmd_tbl	g_crystalhd_cproc_tbl[] = {
  * we pass on the power mangement notification to our plug-in by completing
  * all outstanding requests with BC_STS_IO_USER_ABORT return code.
  */
-enum BC_STATUS crystalhd_suspend(struct crystalhd_cmd *ctx,
-				struct crystalhd_ioctl_data *idata)
+enum BC_STATUS crystalhd_suspend(struct crystalhd_cmd *		ctx,
+				 struct crystalhd_ioctl_data *	idata)
 {
 	enum BC_STATUS sts = BC_STS_SUCCESS;
 
@@ -879,8 +878,8 @@ enum BC_STATUS crystalhd_resume(struct crystalhd_cmd *ctx)
  * application specific resources. HW layer initialization
  * is done for the first open request.
  */
-enum BC_STATUS crystalhd_user_open(struct crystalhd_cmd *ctx,
-			    struct crystalhd_user **user_ctx)
+enum BC_STATUS crystalhd_user_open(struct crystalhd_cmd *	ctx,
+				   struct crystalhd_user **	user_ctx)
 {
 	struct crystalhd_user *uc;
 
@@ -952,8 +951,8 @@ enum BC_STATUS crystalhd_user_close(struct crystalhd_cmd *ctx, struct crystalhd_
  *
  * Called at the time of driver load.
  */
-enum BC_STATUS __devinit crystalhd_setup_cmd_context(struct crystalhd_cmd *ctx,
-				    struct crystalhd_adp *adp)
+enum BC_STATUS __devinit crystalhd_setup_cmd_context(struct crystalhd_cmd *	ctx,
+						     struct crystalhd_adp *	adp)
 {
 	int i = 0;
 
@@ -1010,7 +1009,7 @@ enum BC_STATUS __devexit crystalhd_delete_cmd_context(struct crystalhd_cmd *ctx)
  * from the cproc table.
  */
 crystalhd_cmd_proc crystalhd_get_cmd_proc(struct crystalhd_cmd *ctx, uint32_t cmd,
-				      struct crystalhd_user *uc)
+					  struct crystalhd_user *uc)
 {
 	crystalhd_cmd_proc cproc = NULL;
 	unsigned int i, tbl_sz;

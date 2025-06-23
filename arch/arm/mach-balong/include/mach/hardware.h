@@ -5,7 +5,7 @@
 
 /* macro to get at IO space when running virtually */
 #ifdef CONFIG_MMU
-#define IO_ADDRESS(x)	((((x) & 0xF0000000) >> 4) | ((x) & 0x00FFFFFF) | 0xF0000000)
+#define IO_ADDRESS(x)   ((((x) & 0xF0000000) >> 4) | ((x) & 0x00FFFFFF) | 0xF0000000)
 #else
 #define IO_ADDRESS(x)        (x)
 #endif

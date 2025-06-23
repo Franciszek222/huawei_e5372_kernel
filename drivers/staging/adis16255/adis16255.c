@@ -74,19 +74,19 @@
  * @direction: indicates axis (x, y, z) the sensor is meassuring
  */
 struct spi_adis16255_data {
-	struct device dev;
-	struct spi_device *spi;
-	s16 data;
-	int irq;
-	u8 negative;
-	char direction;
+	struct device		dev;
+	struct spi_device *	spi;
+	s16			data;
+	int			irq;
+	u8			negative;
+	char			direction;
 };
 
 /*-------------------------------------------------------------------------*/
 
-static int spi_adis16255_read_data(struct spi_adis16255_data *spiadis,
-					u8 adr,
-					u8 *rbuf)
+static int spi_adis16255_read_data(struct spi_adis16255_data *	spiadis,
+				   u8				adr,
+				   u8 *				rbuf)
 {
 	struct spi_device *spi = spiadis->spi;
 	struct spi_message msg;
@@ -135,16 +135,16 @@ err_buf:
 	return ret;
 }
 
-static int spi_adis16255_write_data(struct spi_adis16255_data *spiadis,
-					u8 adr1,
-					u8 adr2,
-					u8 *wbuf)
+static int spi_adis16255_write_data(struct spi_adis16255_data * spiadis,
+				    u8				adr1,
+				    u8				adr2,
+				    u8 *			wbuf)
 {
 	struct spi_device *spi = spiadis->spi;
-	struct spi_message   msg;
-	struct spi_transfer  xfer1, xfer2;
-	u8       *buf, *rx;
-	int         ret;
+	struct spi_message msg;
+	struct spi_transfer xfer1, xfer2;
+	u8 *buf, *rx;
+	int ret;
 
 	buf = kmalloc(4, GFP_KERNEL);
 	if (buf == NULL)
@@ -171,8 +171,8 @@ static int spi_adis16255_write_data(struct spi_adis16255_data *spiadis,
 	xfer1.len = 2;
 	xfer1.delay_usecs = 9;
 
-	xfer2.tx_buf = buf+2;
-	xfer2.rx_buf = rx+2;
+	xfer2.tx_buf = buf + 2;
+	xfer2.rx_buf = rx + 2;
 	xfer2.len = 2;
 
 	spi_message_add_tail(&xfer1, &msg);
@@ -181,7 +181,7 @@ static int spi_adis16255_write_data(struct spi_adis16255_data *spiadis,
 	ret = spi_sync(spi, &msg);
 	if (ret != 0)
 		dev_warn(&spi->dev, "write data to %#x %#x failed\n",
-				buf[0], buf[2]);
+			 buf[0], buf[2]);
 
 	kfree(rx);
 err_buf:
@@ -197,7 +197,7 @@ static irqreturn_t adis_irq_thread(int irq, void *dev_id)
 	int status;
 	u16 value = 0;
 
-	status =  spi_adis16255_read_data(spiadis, ADIS_GYRO_OUT, (u8 *)&value);
+	status = spi_adis16255_read_data(spiadis, ADIS_GYRO_OUT, (u8 *)&value);
 	if (status != 0) {
 		dev_warn(&spiadis->spi->dev, "SPI FAILED\n");
 		goto exit;
@@ -214,7 +214,7 @@ static irqreturn_t adis_irq_thread(int irq, void *dev_id)
 		if (likely(spiadis->negative))
 			value = -value;
 
-		spiadis->data = (s16) value;
+		spiadis->data = (s16)value;
 	}
 
 exit:
@@ -223,27 +223,29 @@ exit:
 
 /*-------------------------------------------------------------------------*/
 
-ssize_t adis16255_show_data(struct device *device,
-		struct device_attribute *da,
-		char *buf)
+ssize_t adis16255_show_data(struct device *		device,
+			    struct device_attribute *	da,
+			    char *			buf)
 {
 	struct spi_adis16255_data *spiadis = dev_get_drvdata(device);
+
 	return snprintf(buf, PAGE_SIZE, "%d\n", spiadis->data);
 }
-DEVICE_ATTR(data, S_IRUGO , adis16255_show_data, NULL);
+DEVICE_ATTR(data, S_IRUGO, adis16255_show_data, NULL);
 
-ssize_t adis16255_show_direction(struct device *device,
-		struct device_attribute *da,
-		char *buf)
+ssize_t adis16255_show_direction(struct device *		device,
+				 struct device_attribute *	da,
+				 char *				buf)
 {
 	struct spi_adis16255_data *spiadis = dev_get_drvdata(device);
+
 	return snprintf(buf, PAGE_SIZE, "%c\n", spiadis->direction);
 }
-DEVICE_ATTR(direction, S_IRUGO , adis16255_show_direction, NULL);
+DEVICE_ATTR(direction, S_IRUGO, adis16255_show_direction, NULL);
 
-ssize_t adis16255_show_sample_rate(struct device *device,
-		struct device_attribute *da,
-		char *buf)
+ssize_t adis16255_show_sample_rate(struct device *		device,
+				   struct device_attribute *	da,
+				   char *			buf)
 {
 	struct spi_adis16255_data *spiadis = dev_get_drvdata(device);
 	int status = 0;
@@ -251,21 +253,20 @@ ssize_t adis16255_show_sample_rate(struct device *device,
 	int ts = 0;
 
 	status = spi_adis16255_read_data(spiadis, ADIS_SMPL_PRD_MSB,
-				(u8 *)&value);
+					 (u8 *)&value);
 	if (status != 0)
 		return -EINVAL;
 
-	if (value & 0x80) {
+	if (value & 0x80)
 		/* timebase = 60.54 ms */
 		ts = 60540 * ((0x7f & value) + 1);
-	} else {
+	else
 		/* timebase = 1.953 ms */
 		ts = 1953 * ((0x7f & value) + 1);
-	}
 
-	return snprintf(buf, PAGE_SIZE, "%d\n", (1000*1000)/ts);
+	return snprintf(buf, PAGE_SIZE, "%d\n", (1000 * 1000) / ts);
 }
-DEVICE_ATTR(sample_rate, S_IRUGO , adis16255_show_sample_rate, NULL);
+DEVICE_ATTR(sample_rate, S_IRUGO, adis16255_show_sample_rate, NULL);
 
 static struct attribute *adis16255_attributes[] = {
 	&dev_attr_data.attr,
@@ -275,7 +276,7 @@ static struct attribute *adis16255_attributes[] = {
 };
 
 static const struct attribute_group adis16255_attr_group = {
-	.attrs = adis16255_attributes,
+	.attrs	= adis16255_attributes,
 };
 
 /*-------------------------------------------------------------------------*/
@@ -283,13 +284,14 @@ static const struct attribute_group adis16255_attr_group = {
 static int spi_adis16255_shutdown(struct spi_adis16255_data *spiadis)
 {
 	u16 value = 0;
+
 	/* turn sensor off */
 	spi_adis16255_write_data(spiadis,
-			ADIS_SMPL_PRD_MSB, ADIS_SMPL_PRD_LSB,
-			(u8 *)&value);
+				 ADIS_SMPL_PRD_MSB, ADIS_SMPL_PRD_LSB,
+				 (u8 *)&value);
 	spi_adis16255_write_data(spiadis,
-			ADIS_MSC_CTRL_MSB, ADIS_MSC_CTRL_LSB,
-			(u8 *)&value);
+				 ADIS_MSC_CTRL_MSB, ADIS_MSC_CTRL_LSB,
+				 (u8 *)&value);
 	return 0;
 }
 
@@ -299,27 +301,26 @@ static int spi_adis16255_bringup(struct spi_adis16255_data *spiadis)
 	u16 value = 0;
 
 	status = spi_adis16255_read_data(spiadis, ADIS_GYRO_SCALE,
-				(u8 *)&value);
+					 (u8 *)&value);
 	if (status != 0)
 		goto err;
-	if (value != 0x0800) {
+	if (value != 0x0800)
 		dev_warn(&spiadis->spi->dev, "Scale factor is none default"
-				"value (%.4x)\n", value);
-	}
+			 "value (%.4x)\n", value);
 
 	/* timebase = 1.953 ms, Ns = 0 -> 512 Hz sample rate */
-	value =  0x0001;
+	value = 0x0001;
 	status = spi_adis16255_write_data(spiadis,
-				ADIS_SMPL_PRD_MSB, ADIS_SMPL_PRD_LSB,
-				(u8 *)&value);
+					  ADIS_SMPL_PRD_MSB, ADIS_SMPL_PRD_LSB,
+					  (u8 *)&value);
 	if (status != 0)
 		goto err;
 
 	/* start internal self-test */
 	value = 0x0400;
 	status = spi_adis16255_write_data(spiadis,
-				ADIS_MSC_CTRL_MSB, ADIS_MSC_CTRL_LSB,
-				(u8 *)&value);
+					  ADIS_MSC_CTRL_MSB, ADIS_MSC_CTRL_LSB,
+					  (u8 *)&value);
 	if (status != 0)
 		goto err;
 
@@ -328,7 +329,7 @@ static int spi_adis16255_bringup(struct spi_adis16255_data *spiadis)
 
 	value = 0x0000;
 	status = spi_adis16255_read_data(spiadis, ADIS_STATUS,
-				(u8 *)&value);
+					 (u8 *)&value);
 	if (status != 0)
 		goto err;
 
@@ -337,9 +338,9 @@ static int spi_adis16255_bringup(struct spi_adis16255_data *spiadis)
 			dev_warn(&spiadis->spi->dev, "self-test error\n");
 			status = -ENODEV;
 			goto err;
-		} else if (value & 0x3)	{
+		} else if (value & 0x3) {
 			dev_warn(&spiadis->spi->dev, "Sensor voltage"
-						"out of range.\n");
+				 "out of range.\n");
 			status = -ENODEV;
 			goto err;
 		}
@@ -348,8 +349,8 @@ static int spi_adis16255_bringup(struct spi_adis16255_data *spiadis)
 	/* set interrupt to active high on DIO0 when data ready */
 	value = 0x0006;
 	status = spi_adis16255_write_data(spiadis,
-				ADIS_MSC_CTRL_MSB, ADIS_MSC_CTRL_LSB,
-				(u8 *)&value);
+					  ADIS_MSC_CTRL_MSB, ADIS_MSC_CTRL_LSB,
+					  (u8 *)&value);
 	if (status != 0)
 		goto err;
 	return status;
@@ -363,9 +364,8 @@ err:
 
 static int __devinit spi_adis16255_probe(struct spi_device *spi)
 {
-
 	struct adis16255_init_data *init_data = spi->dev.platform_data;
-	struct spi_adis16255_data  *spiadis;
+	struct spi_adis16255_data *spiadis;
 	int status = 0;
 
 	spiadis = kzalloc(sizeof(*spiadis), GFP_KERNEL);
@@ -389,8 +389,8 @@ static int __devinit spi_adis16255_probe(struct spi_device *spi)
 	spiadis->irq = gpio_to_irq(init_data->irq);
 
 	status = request_threaded_irq(spiadis->irq,
-			NULL, adis_irq_thread,
-			IRQF_DISABLED, "adis-driver", spiadis);
+				      NULL, adis_irq_thread,
+				      IRQF_DISABLED, "adis-driver", spiadis);
 
 	if (status != 0) {
 		dev_err(&spi->dev, "IRQ request failed\n");
@@ -423,7 +423,7 @@ err:
 
 static int __devexit spi_adis16255_remove(struct spi_device *spi)
 {
-	struct spi_adis16255_data  *spiadis    = dev_get_drvdata(&spi->dev);
+	struct spi_adis16255_data *spiadis = dev_get_drvdata(&spi->dev);
 
 	spi_adis16255_shutdown(spiadis);
 
@@ -439,12 +439,12 @@ static int __devexit spi_adis16255_remove(struct spi_device *spi)
 }
 
 static struct spi_driver spi_adis16255_drv = {
-	.driver = {
-		.name =  "spi_adis16255",
-		.owner = THIS_MODULE,
+	.driver		={
+		.name	= "spi_adis16255",
+		.owner	= THIS_MODULE,
 	},
-	.probe = spi_adis16255_probe,
-	.remove =   __devexit_p(spi_adis16255_remove),
+	.probe		= spi_adis16255_probe,
+	.remove		= __devexit_p(spi_adis16255_remove),
 };
 
 /*-------------------------------------------------------------------------*/

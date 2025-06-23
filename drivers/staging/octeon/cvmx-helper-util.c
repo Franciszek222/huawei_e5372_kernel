@@ -111,8 +111,8 @@ int cvmx_helper_dump_packet(cvmx_wqe_t *work)
 			union cvmx_pip_ip_offset pip_ip_offset;
 			pip_ip_offset.u64 = cvmx_read_csr(CVMX_PIP_IP_OFFSET);
 			buffer_ptr.s.addr +=
-			    (pip_ip_offset.s.offset << 3) -
-			    work->word2.s.ip_offset;
+				(pip_ip_offset.s.offset << 3) -
+				work->word2.s.ip_offset;
 			buffer_ptr.s.addr += (work->word2.s.is_v6 ^ 1) << 2;
 		} else {
 			/*
@@ -125,13 +125,14 @@ int cvmx_helper_dump_packet(cvmx_wqe_t *work)
 			pip_gbl_cfg.u64 = cvmx_read_csr(CVMX_PIP_GBL_CFG);
 			buffer_ptr.s.addr += pip_gbl_cfg.s.nip_shf;
 		}
-	} else
+	} else {
 		buffer_ptr = work->packet_ptr;
+	}
 	remaining_bytes = work->len;
 
 	while (remaining_bytes) {
 		start_of_buffer =
-		    ((buffer_ptr.s.addr >> 7) - buffer_ptr.s.back) << 7;
+			((buffer_ptr.s.addr >> 7) - buffer_ptr.s.back) << 7;
 		cvmx_dprintf("    Buffer Start:%llx\n",
 			     (unsigned long long)start_of_buffer);
 		cvmx_dprintf("    Buffer I   : %u\n", buffer_ptr.s.i);
@@ -142,7 +143,7 @@ int cvmx_helper_dump_packet(cvmx_wqe_t *work)
 		cvmx_dprintf("    Buffer Size: %u\n", buffer_ptr.s.size);
 
 		cvmx_dprintf("\t\t");
-		data_address = (uint8_t *) cvmx_phys_to_ptr(buffer_ptr.s.addr);
+		data_address = (uint8_t *)cvmx_phys_to_ptr(buffer_ptr.s.addr);
 		end_of_data = data_address + buffer_ptr.s.size;
 		count = 0;
 		while (data_address < end_of_data) {
@@ -155,14 +156,15 @@ int cvmx_helper_dump_packet(cvmx_wqe_t *work)
 			if (remaining_bytes && (count == 7)) {
 				cvmx_dprintf("\n\t\t");
 				count = 0;
-			} else
+			} else {
 				count++;
+			}
 		}
 		cvmx_dprintf("\n");
 
 		if (remaining_bytes)
 			buffer_ptr = *(union cvmx_buf_ptr *)
-				cvmx_phys_to_ptr(buffer_ptr.s.addr - 8);
+				     cvmx_phys_to_ptr(buffer_ptr.s.addr - 8);
 	}
 	return 0;
 }
@@ -185,8 +187,8 @@ int cvmx_helper_setup_red_queue(int queue, int pass_thresh, int drop_thresh)
 	union cvmx_ipd_red_quex_param red_param;
 
 	/* Set RED to begin dropping packets when there are pass_thresh buffers
-	   left. It will linearly drop more packets until reaching drop_thresh
-	   buffers */
+	 * left. It will linearly drop more packets until reaching drop_thresh
+	 * buffers */
 	red_marks.u64 = 0;
 	red_marks.s.drop = drop_thresh;
 	red_marks.s.pass = pass_thresh;
@@ -195,7 +197,7 @@ int cvmx_helper_setup_red_queue(int queue, int pass_thresh, int drop_thresh)
 	/* Use the actual queue 0 counter, not the average */
 	red_param.u64 = 0;
 	red_param.s.prb_con =
-	    (255ul << 24) / (red_marks.s.pass - red_marks.s.drop);
+		(255ul << 24) / (red_marks.s.pass - red_marks.s.drop);
 	red_param.s.avg_con = 1;
 	red_param.s.new_con = 255;
 	red_param.s.use_pcnt = 1;
@@ -238,7 +240,7 @@ int cvmx_helper_setup_red(int pass_thresh, int drop_thresh)
 		cvmx_helper_setup_red_queue(queue, pass_thresh, drop_thresh);
 
 	/* Shutoff the dropping based on the per port page count. SW isn't
-	   decrementing it right now */
+	 * decrementing it right now */
 	ipd_bp_prt_red_end.u64 = 0;
 	ipd_bp_prt_red_end.s.prt_enb = 0;
 	cvmx_write_csr(CVMX_IPD_BP_PRT_RED_END, ipd_bp_prt_red_end.u64);
@@ -276,7 +278,7 @@ int __cvmx_helper_setup_gmx(int interface, int num_ports)
 	cvmx_write_csr(CVMX_GMXX_TX_PRTS(interface), gmx_tx_prts.u64);
 
 	/* Tell GMX the number of RX ports on this interface.  This only
-	 ** applies to *GMII and XAUI ports */
+	** applies to *GMII and XAUI ports */
 	if (cvmx_helper_interface_get_mode(interface) ==
 	    CVMX_HELPER_INTERFACE_MODE_RGMII
 	    || cvmx_helper_interface_get_mode(interface) ==

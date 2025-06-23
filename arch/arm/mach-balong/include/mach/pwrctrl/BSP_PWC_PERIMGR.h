@@ -4,7 +4,7 @@
 * File name:
 *                pwcPeriMgr.h
 * Description:
-*                
+*
 *
 * Author:        ¡ı”¿∏ª
 * Date:          2011-09-20
@@ -22,7 +22,7 @@
 #ifndef PWRCTRL_ACPU_PERI_MGR
 #define PWRCTRL_ACPU_PERI_MGR
 
-#if(FEATURE_HSIC_SLAVE == FEATURE_ON)
+#if (FEATURE_HSIC_SLAVE == FEATURE_ON)
 
 /*****************************************************************************/
 /*include headfile */
@@ -34,8 +34,8 @@
 #define OK 0
 #define ERROR -1
 
-#define GPIO_LOW                                    0    /*GPIO?a|??®¨???°ß?a|??®¨????*/
-#define GPIO_HIGH                                   1    /*GPIO?a??|??®¨????*/
+#define GPIO_LOW                                    0           /*GPIO?a|??®¨???°ß?a|??®¨????*/
+#define GPIO_HIGH                                   1           /*GPIO?a??|??®¨????*/
 #define GPIO_INVALID                              0xFF
 #if defined(CHIP_BB_6920ES)
 /*HSIC |??®¨???°ß?a1|o????°ß???°Ï?°Ï1?GPIOo??°ß?o????°Ï???°ß????*/
@@ -94,30 +94,28 @@
 #error "hsic feature not to be supported on this kind of chip"
 #endif
 
-typedef  enum
-{
-    HSIC_INIT_STATE = 0,
-    HSIC_L0_STATE,/*HSIC|°ß??°Ïa1|o?|°ß??L0 L2 L3 ?°Ï?°Ïy????°Ï?°Ï?°Ï??*/
-    HSIC_L2_STATE,
-    HSIC_L3_STATE,
-    HSIC_L02_STATE=4,/*HSIC|°ß??°Ïa1|o?|°ß???Y?°Ï??*/
-    HSIC_L23_STATE,
-    HSIC_L30_STATE,
-    HSIC_L20_STATE,
-    HSIC_MAX_STATE,
+typedef  enum {
+	HSIC_INIT_STATE = 0,
+	HSIC_L0_STATE,/*HSIC|°ß??°Ïa1|o?|°ß??L0 L2 L3 ?°Ï?°Ïy????°Ï?°Ï?°Ï??*/
+	HSIC_L2_STATE,
+	HSIC_L3_STATE,
+	HSIC_L02_STATE	=4,/*HSIC|°ß??°Ïa1|o?|°ß???Y?°Ï??*/
+	HSIC_L23_STATE,
+	HSIC_L30_STATE,
+	HSIC_L20_STATE,
+	HSIC_MAX_STATE,
 }HSIC_STATE_TYPE;
 
-typedef struct
-{
-    s8 state_switch_enable;
-    HSIC_STATE_TYPE old_state;
-    HSIC_STATE_TYPE current_state;
+typedef struct {
+	s8		state_switch_enable;
+	HSIC_STATE_TYPE old_state;
+	HSIC_STATE_TYPE current_state;
 } HSIC_PWC_STATE;
 
 
 
-s8 hsic_pwc_state_set (HSIC_STATE_TYPE new_state);
-HSIC_STATE_TYPE hsic_pwc_state_get (void);
+s8 hsic_pwc_state_set(HSIC_STATE_TYPE new_state);
+HSIC_STATE_TYPE hsic_pwc_state_get(void);
 
 void host_active_pwc_isr(void);
 s8 host_active_pwc_int_handler(void);

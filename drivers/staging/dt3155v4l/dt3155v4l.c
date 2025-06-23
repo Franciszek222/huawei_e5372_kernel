@@ -1,22 +1,22 @@
 /***************************************************************************
- *   Copyright (C) 2006-2010 by Marin Mitov                                *
- *   mitov@issp.bas.bg                                                     *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+*   Copyright (C) 2006-2010 by Marin Mitov                                *
+*   mitov@issp.bas.bg                                                     *
+*                                                                         *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation; either version 2 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+*   This program is distributed in the hope that it will be useful,       *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU General Public License     *
+*   along with this program; if not, write to the                         *
+*   Free Software Foundation, Inc.,                                       *
+*   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+***************************************************************************/
 
 #include <linux/version.h>
 #include <linux/stringify.h>
@@ -47,11 +47,11 @@ static const unsigned int img_height = 576;
 static const unsigned int frames_per_sec = 25;
 static const struct v4l2_fmtdesc frame_std[] = {
 	{
-	.index = 0,
-	.type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
-	.flags = 0,
-	.description = "CCIR/50Hz 8 bits gray",
-	.pixelformat = V4L2_PIX_FMT_GREY,
+		.index = 0,
+		.type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
+		.flags = 0,
+		.description = "CCIR/50Hz 8 bits gray",
+		.pixelformat = V4L2_PIX_FMT_GREY,
 	},
 };
 #else
@@ -62,11 +62,11 @@ static const unsigned int img_height = 480;
 static const unsigned int frames_per_sec = 30;
 static const struct v4l2_fmtdesc frame_std[] = {
 	{
-	.index = 0,
-	.type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
-	.flags = 0,
-	.description = "RS-170/60Hz 8 bits gray",
-	.pixelformat = V4L2_PIX_FMT_GREY,
+		.index = 0,
+		.type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
+		.flags = 0,
+		.description = "RS-170/60Hz 8 bits gray",
+		.pixelformat = V4L2_PIX_FMT_GREY,
 	},
 };
 #endif
@@ -93,7 +93,7 @@ read_i2c_reg(void __iomem *addr, u8 index, u8 *data)
 {
 	u32 tmp = index;
 
-	iowrite32((tmp<<17) | IIC_READ, addr + IIC_CSR2);
+	iowrite32((tmp << 17) | IIC_READ, addr + IIC_CSR2);
 	mmiowb();
 	udelay(45); /* wait at least 43 usec for NEW_CYCLE to clear */
 	if (ioread32(addr + IIC_CSR2) & NEW_CYCLE) {
@@ -109,7 +109,7 @@ read_i2c_reg(void __iomem *addr, u8 index, u8 *data)
 		iowrite32(DIRECT_ABORT, addr + IIC_CSR1);
 		return -EIO;
 	}
-	*data = tmp>>24;
+	*data = tmp >> 24;
 	return 0;
 }
 
@@ -130,7 +130,7 @@ write_i2c_reg(void __iomem *addr, u8 index, u8 data)
 {
 	u32 tmp = index;
 
-	iowrite32((tmp<<17) | IIC_WRITE | data, addr + IIC_CSR2);
+	iowrite32((tmp << 17) | IIC_WRITE | data, addr + IIC_CSR2);
 	mmiowb();
 	udelay(65); /* wait at least 63 usec for NEW_CYCLE to clear */
 	if (ioread32(addr + IIC_CSR2) & NEW_CYCLE) {
@@ -162,7 +162,7 @@ static void write_i2c_reg_nowait(void __iomem *addr, u8 index, u8 data)
 {
 	u32 tmp = index;
 
-	iowrite32((tmp<<17) | IIC_WRITE | data, addr + IIC_CSR2);
+	iowrite32((tmp << 17) | IIC_WRITE | data, addr + IIC_CSR2);
 	mmiowb();
 }
 
@@ -207,10 +207,10 @@ dt3155_start_acq(struct dt3155_priv *pd)
 	iowrite32(vb->width, pd->regs + ODD_DMA_STRIDE);
 	/* enable interrupts, clear all irq flags */
 	iowrite32(FLD_START_EN | FLD_END_ODD_EN | FLD_START |
-			FLD_END_EVEN | FLD_END_ODD, pd->regs + INT_CSR);
+		  FLD_END_EVEN | FLD_END_ODD, pd->regs + INT_CSR);
 	iowrite32(FIFO_EN | SRST | FLD_CRPT_ODD | FLD_CRPT_EVEN |
 		  FLD_DN_ODD | FLD_DN_EVEN | CAP_CONT_EVEN | CAP_CONT_ODD,
-							pd->regs + CSR1);
+		  pd->regs + CSR1);
 	wait_i2c_reg(pd->regs);
 	write_i2c_reg(pd->regs, CONFIG, pd->config);
 	write_i2c_reg(pd->regs, EVEN_CSR, CSR_ERROR | CSR_DONE);
@@ -239,14 +239,14 @@ dt3155_stop_acq(struct dt3155_priv *pd)
 		printk(KERN_ERR "dt3155: corrupted field %u\n", tmp);
 	iowrite32(FIFO_EN | SRST | FLD_CRPT_ODD | FLD_CRPT_EVEN |
 		  FLD_DN_ODD | FLD_DN_EVEN | CAP_CONT_EVEN | CAP_CONT_ODD,
-							pd->regs + CSR1);
+		  pd->regs + CSR1);
 	return 0;
 }
 
 /* Locking: Caller holds q->vb_lock */
 static int
 dt3155_buf_setup(struct videobuf_queue *q, unsigned int *count,
-							unsigned int *size)
+		 unsigned int *size)
 {
 	*size = img_width * img_height;
 	return 0;
@@ -255,7 +255,7 @@ dt3155_buf_setup(struct videobuf_queue *q, unsigned int *count,
 /* Locking: Caller holds q->vb_lock */
 static int
 dt3155_buf_prepare(struct videobuf_queue *q, struct videobuf_buffer *vb,
-							enum v4l2_field field)
+		   enum v4l2_field field)
 {
 	int ret = 0;
 
@@ -269,8 +269,9 @@ dt3155_buf_prepare(struct videobuf_queue *q, struct videobuf_buffer *vb,
 		vb->state = VIDEOBUF_ERROR;
 		printk(KERN_ERR "ERROR: videobuf_iolock() failed\n");
 		videobuf_dma_contig_free(q, vb); /* FIXME: needed? */
-	} else
+	} else {
 		vb->state = VIDEOBUF_PREPARED;
+	}
 	return ret;
 }
 
@@ -284,8 +285,9 @@ dt3155_buf_queue(struct videobuf_queue *q, struct videobuf_buffer *vb)
 		vb->state = VIDEOBUF_QUEUED;
 		list_add_tail(&vb->queue, &pd->dmaq);
 		wake_up_interruptible_sync(&pd->do_dma);
-	} else
+	} else {
 		vb->state = VIDEOBUF_ERROR;
+	}
 }
 
 /* Locking: Caller holds q->vb_lock */
@@ -299,10 +301,10 @@ dt3155_buf_release(struct videobuf_queue *q, struct videobuf_buffer *vb)
 }
 
 static struct videobuf_queue_ops vbq_ops = {
-	.buf_setup = dt3155_buf_setup,
-	.buf_prepare = dt3155_buf_prepare,
-	.buf_queue = dt3155_buf_queue,
-	.buf_release = dt3155_buf_release,
+	.buf_setup	= dt3155_buf_setup,
+	.buf_prepare	= dt3155_buf_prepare,
+	.buf_queue	= dt3155_buf_queue,
+	.buf_release	= dt3155_buf_release,
 };
 
 static irqreturn_t
@@ -318,14 +320,13 @@ dt3155_irq_handler_even(int irq, void *dev_id)
 		return IRQ_NONE;  /* not our irq */
 	if ((tmp & FLD_START) && !(tmp & FLD_END_ODD)) {
 		iowrite32(FLD_START_EN | FLD_END_ODD_EN | FLD_START,
-							ipd->regs + INT_CSR);
+			  ipd->regs + INT_CSR);
 		ipd->field_count++;
 		return IRQ_HANDLED; /* start of field irq */
 	}
-	if ((tmp & FLD_START) && (tmp & FLD_END_ODD)) {
+	if ((tmp & FLD_START) && (tmp & FLD_END_ODD))
 		if (!ipd->stats.start_before_end++)
 			printk(KERN_ERR "dt3155: irq: START before END\n");
-	}
 	/*	check for corrupted fields     */
 /*	write_i2c_reg(ipd->regs, EVEN_CSR, CSR_ERROR | CSR_DONE);	*/
 /*	write_i2c_reg(ipd->regs, ODD_CSR, CSR_ERROR | CSR_DONE);	*/
@@ -334,9 +335,9 @@ dt3155_irq_handler_even(int irq, void *dev_id)
 		if (!ipd->stats.corrupted_fields++)
 			printk(KERN_ERR "dt3155: corrupted field %u\n", tmp);
 		iowrite32(FIFO_EN | SRST | FLD_CRPT_ODD | FLD_CRPT_EVEN |
-						FLD_DN_ODD | FLD_DN_EVEN |
-						CAP_CONT_EVEN | CAP_CONT_ODD,
-							ipd->regs + CSR1);
+			  FLD_DN_ODD | FLD_DN_EVEN |
+			  CAP_CONT_EVEN | CAP_CONT_ODD,
+			  ipd->regs + CSR1);
 		mmiowb();
 	}
 
@@ -351,8 +352,9 @@ dt3155_irq_handler_even(int irq, void *dev_id)
 			ivb = ipd->curr_buf;
 			goto load_dma;
 		}
-	} else
+	} else {
 		goto stop_dma;
+	}
 	if (list_empty(&ipd->dmaq))
 		goto stop_dma;
 	ivb = list_first_entry(&ipd->dmaq, typeof(*ivb), queue);
@@ -360,8 +362,9 @@ dt3155_irq_handler_even(int irq, void *dev_id)
 	if (ivb->state == VIDEOBUF_QUEUED) {
 		ivb->state = VIDEOBUF_ACTIVE;
 		ipd->curr_buf = ivb;
-	} else
+	} else {
 		goto stop_dma;
+	}
 load_dma:
 	dma_addr = videobuf_to_dma_contig(ivb);
 	iowrite32(dma_addr, ipd->regs + EVEN_DMA_START);
@@ -371,7 +374,7 @@ load_dma:
 	mmiowb();
 	/* enable interrupts, clear all irq flags */
 	iowrite32(FLD_START_EN | FLD_END_ODD_EN | FLD_START |
-			FLD_END_EVEN | FLD_END_ODD, ipd->regs + INT_CSR);
+		  FLD_END_EVEN | FLD_END_ODD, ipd->regs + INT_CSR);
 	spin_unlock(&ipd->lock);
 	return IRQ_HANDLED;
 
@@ -394,14 +397,14 @@ dt3155_threadfn(void *arg)
 
 	while (1) {
 		wait_event_interruptible(pd->do_dma,
-			kthread_should_stop() || !list_empty(&pd->dmaq));
+					 kthread_should_stop() || !list_empty(&pd->dmaq));
 		if (kthread_should_stop())
 			break;
 
 		spin_lock_irqsave(&pd->lock, flags);
-		if (pd->curr_buf) /* dma is active */
+		if (pd->curr_buf)               /* dma is active */
 			goto done;
-		if (list_empty(&pd->dmaq)) /* no empty biffers */
+		if (list_empty(&pd->dmaq))      /* no empty biffers */
 			goto done;
 		vb = list_first_entry(&pd->dmaq, typeof(*vb), queue);
 		list_del(&vb->queue);
@@ -412,8 +415,9 @@ dt3155_threadfn(void *arg)
 			/* start dma */
 			dt3155_start_acq(pd);
 			continue;
-		} else
+		} else {
 			printk(KERN_DEBUG "%s(): This is a BUG\n", __func__);
+		}
 done:
 		spin_unlock_irqrestore(&pd->lock, flags);
 	}
@@ -438,22 +442,22 @@ dt3155_open(struct file *filp)
 			goto err_alloc_queue;
 		}
 		videobuf_queue_dma_contig_init(pd->vidq, &vbq_ops,
-				&pd->pdev->dev, &pd->lock,
-				V4L2_BUF_TYPE_VIDEO_CAPTURE, V4L2_FIELD_NONE,
-				sizeof(struct videobuf_buffer), pd);
+					       &pd->pdev->dev, &pd->lock,
+					       V4L2_BUF_TYPE_VIDEO_CAPTURE, V4L2_FIELD_NONE,
+					       sizeof(struct videobuf_buffer), pd);
 		/* disable all irqs, clear all irq flags */
 		iowrite32(FLD_START | FLD_END_EVEN | FLD_END_ODD,
-						pd->regs + INT_CSR);
+			  pd->regs + INT_CSR);
 		pd->irq_handler = dt3155_irq_handler_even;
 		ret = request_irq(pd->pdev->irq, pd->irq_handler,
-						IRQF_SHARED, DT3155_NAME, pd);
+				  IRQF_SHARED, DT3155_NAME, pd);
 		if (ret) {
 			printk(KERN_ERR "dt3155: error: request_irq\n");
 			goto err_request_irq;
 		}
 		pd->curr_buf = NULL;
 		pd->thread = kthread_run(dt3155_threadfn, pd,
-					"dt3155_thread_%i", pd->vdev->minor);
+					 "dt3155_thread_%i", pd->vdev->minor);
 		if (IS_ERR(pd->thread)) {
 			printk(KERN_ERR "dt3155: kthread_run() failed\n");
 			ret = PTR_ERR(pd->thread);
@@ -529,7 +533,7 @@ dt3155_read(struct file *filp, char __user *user, size_t size, loff_t *loff)
 		goto done;
 	}
 	ret = videobuf_read_stream(pd->vidq, user, size, loff, 0,
-						filp->f_flags & O_NONBLOCK);
+				   filp->f_flags & O_NONBLOCK);
 done:
 	mutex_unlock(&pd->mux);
 	return ret;
@@ -552,13 +556,13 @@ dt3155_mmap(struct file *filp, struct vm_area_struct *vma)
 }
 
 static const struct v4l2_file_operations dt3155_fops = {
-	.owner = THIS_MODULE,
-	.open = dt3155_open,
-	.release = dt3155_release,
-	.read = dt3155_read,
-	.poll = dt3155_poll,
+	.owner		= THIS_MODULE,
+	.open		= dt3155_open,
+	.release	= dt3155_release,
+	.read		= dt3155_read,
+	.poll		= dt3155_poll,
 	.unlocked_ioctl = video_ioctl2, /* V4L2 ioctl handler */
-	.mmap = dt3155_mmap,
+	.mmap		= dt3155_mmap,
 };
 
 static int
@@ -581,8 +585,9 @@ dt3155_ioc_streamon(struct file *filp, void *p, enum v4l2_buf_type type)
 		ret = videobuf_streamon(pd->vidq);
 		if (!ret)
 			wake_up_interruptible_sync(&pd->do_dma);
-	} else
+	} else {
 		ret = -EBUSY;
+	}
 unlock:
 	mutex_unlock(&pd->mux);
 	return ret;
@@ -616,10 +621,10 @@ dt3155_ioc_querycap(struct file *filp, void *p, struct v4l2_capability *cap)
 	strcpy(cap->card, DT3155_NAME " frame grabber");
 	sprintf(cap->bus_info, "PCI:%s", pci_name(pd->pdev));
 	cap->version =
-	       KERNEL_VERSION(DT3155_VER_MAJ, DT3155_VER_MIN, DT3155_VER_EXT);
+		KERNEL_VERSION(DT3155_VER_MAJ, DT3155_VER_MIN, DT3155_VER_EXT);
 	cap->capabilities = V4L2_CAP_VIDEO_CAPTURE |
-				V4L2_CAP_STREAMING |
-				V4L2_CAP_READWRITE;
+			    V4L2_CAP_STREAMING |
+			    V4L2_CAP_READWRITE;
 	return 0;
 }
 
@@ -654,12 +659,12 @@ dt3155_ioc_try_fmt_vid_cap(struct file *filp, void *p, struct v4l2_format *f)
 	if (f->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
 	if (f->fmt.pix.width == img_width &&
-		f->fmt.pix.height == img_height &&
-		f->fmt.pix.pixelformat == V4L2_PIX_FMT_GREY &&
-		f->fmt.pix.field == V4L2_FIELD_NONE &&
-		f->fmt.pix.bytesperline == f->fmt.pix.width &&
-		f->fmt.pix.sizeimage == f->fmt.pix.width * f->fmt.pix.height)
-			return 0;
+	    f->fmt.pix.height == img_height &&
+	    f->fmt.pix.pixelformat == V4L2_PIX_FMT_GREY &&
+	    f->fmt.pix.field == V4L2_FIELD_NONE &&
+	    f->fmt.pix.bytesperline == f->fmt.pix.width &&
+	    f->fmt.pix.sizeimage == f->fmt.pix.width * f->fmt.pix.height)
+		return 0;
 	else
 		return -EINVAL;
 }
@@ -668,7 +673,7 @@ static int
 dt3155_ioc_s_fmt_vid_cap(struct file *filp, void *p, struct v4l2_format *f)
 {
 	struct dt3155_priv *pd = video_drvdata(filp);
-	int ret =  -ERESTARTSYS;
+	int ret = -ERESTARTSYS;
 
 	if (mutex_lock_interruptible(&pd->mux) == -EINTR)
 		return ret;
@@ -680,11 +685,11 @@ dt3155_ioc_s_fmt_vid_cap(struct file *filp, void *p, struct v4l2_format *f)
 		goto done;
 	}
 /*	FIXME: we don't change the format for now
-	if (pd->vidq->streaming || pd->vidq->reading || pd->curr_buff) {
-		ret = -EBUSY;
-		goto done;
-	}
-*/
+ *      if (pd->vidq->streaming || pd->vidq->reading || pd->curr_buff) {
+ *              ret = -EBUSY;
+ *              goto done;
+ *      }
+ */
 	ret = dt3155_ioc_g_fmt_vid_cap(filp, p, f);
 done:
 	mutex_unlock(&pd->mux);
@@ -702,9 +707,9 @@ dt3155_ioc_reqbufs(struct file *filp, void *p, struct v4l2_requestbuffers *b)
 		return -EINVAL;
 	if (mutex_lock_interruptible(&pd->mux) == -EINTR)
 		return ret;
-	if (!pd->acq_fp)
+	if (!pd->acq_fp) {
 		pd->acq_fp = filp;
-	else if (pd->acq_fp != filp) {
+	} else if (pd->acq_fp != filp) {
 		ret = -EBUSY;
 		goto done;
 	}
@@ -714,13 +719,13 @@ done:
 	mutex_unlock(&pd->mux);
 	if (ret)
 		return ret;
-	if (b->count)
+	if (b->count) {
 		ret = videobuf_reqbufs(q, b);
-	else { /* FIXME: is it necessary? */
+	} else { /* FIXME: is it necessary? */
 		printk(KERN_DEBUG "dt3155: request to free buffers\n");
 		/* ret = videobuf_mmap_free(q); */
 		ret = dt3155_ioc_streamoff(filp, p,
-						V4L2_BUF_TYPE_VIDEO_CAPTURE);
+					   V4L2_BUF_TYPE_VIDEO_CAPTURE);
 	}
 	return ret;
 }
@@ -839,47 +844,47 @@ dt3155_ioc_s_parm(struct file *filp, void *p, struct v4l2_streamparm *parms)
 }
 
 static const struct v4l2_ioctl_ops dt3155_ioctl_ops = {
-	.vidioc_streamon = dt3155_ioc_streamon,
-	.vidioc_streamoff = dt3155_ioc_streamoff,
-	.vidioc_querycap = dt3155_ioc_querycap,
+	.vidioc_streamon		= dt3155_ioc_streamon,
+	.vidioc_streamoff		= dt3155_ioc_streamoff,
+	.vidioc_querycap		= dt3155_ioc_querycap,
 /*
-	.vidioc_g_priority = dt3155_ioc_g_priority,
-	.vidioc_s_priority = dt3155_ioc_s_priority,
-*/
-	.vidioc_enum_fmt_vid_cap = dt3155_ioc_enum_fmt_vid_cap,
-	.vidioc_try_fmt_vid_cap = dt3155_ioc_try_fmt_vid_cap,
-	.vidioc_g_fmt_vid_cap = dt3155_ioc_g_fmt_vid_cap,
-	.vidioc_s_fmt_vid_cap = dt3155_ioc_s_fmt_vid_cap,
-	.vidioc_reqbufs = dt3155_ioc_reqbufs,
-	.vidioc_querybuf = dt3155_ioc_querybuf,
-	.vidioc_qbuf = dt3155_ioc_qbuf,
-	.vidioc_dqbuf = dt3155_ioc_dqbuf,
-	.vidioc_querystd = dt3155_ioc_querystd,
-	.vidioc_g_std = dt3155_ioc_g_std,
-	.vidioc_s_std = dt3155_ioc_s_std,
-	.vidioc_enum_input = dt3155_ioc_enum_input,
-	.vidioc_g_input = dt3155_ioc_g_input,
-	.vidioc_s_input = dt3155_ioc_s_input,
+ *      .vidioc_g_priority = dt3155_ioc_g_priority,
+ *      .vidioc_s_priority = dt3155_ioc_s_priority,
+ */
+	.vidioc_enum_fmt_vid_cap	= dt3155_ioc_enum_fmt_vid_cap,
+	.vidioc_try_fmt_vid_cap		= dt3155_ioc_try_fmt_vid_cap,
+	.vidioc_g_fmt_vid_cap		= dt3155_ioc_g_fmt_vid_cap,
+	.vidioc_s_fmt_vid_cap		= dt3155_ioc_s_fmt_vid_cap,
+	.vidioc_reqbufs			= dt3155_ioc_reqbufs,
+	.vidioc_querybuf		= dt3155_ioc_querybuf,
+	.vidioc_qbuf			= dt3155_ioc_qbuf,
+	.vidioc_dqbuf			= dt3155_ioc_dqbuf,
+	.vidioc_querystd		= dt3155_ioc_querystd,
+	.vidioc_g_std			= dt3155_ioc_g_std,
+	.vidioc_s_std			= dt3155_ioc_s_std,
+	.vidioc_enum_input		= dt3155_ioc_enum_input,
+	.vidioc_g_input			= dt3155_ioc_g_input,
+	.vidioc_s_input			= dt3155_ioc_s_input,
 /*
-	.vidioc_queryctrl = dt3155_ioc_queryctrl,
-	.vidioc_g_ctrl = dt3155_ioc_g_ctrl,
-	.vidioc_s_ctrl = dt3155_ioc_s_ctrl,
-	.vidioc_querymenu = dt3155_ioc_querymenu,
-	.vidioc_g_ext_ctrls = dt3155_ioc_g_ext_ctrls,
-	.vidioc_s_ext_ctrls = dt3155_ioc_s_ext_ctrls,
-*/
-	.vidioc_g_parm = dt3155_ioc_g_parm,
-	.vidioc_s_parm = dt3155_ioc_s_parm,
+ *      .vidioc_queryctrl = dt3155_ioc_queryctrl,
+ *      .vidioc_g_ctrl = dt3155_ioc_g_ctrl,
+ *      .vidioc_s_ctrl = dt3155_ioc_s_ctrl,
+ *      .vidioc_querymenu = dt3155_ioc_querymenu,
+ *      .vidioc_g_ext_ctrls = dt3155_ioc_g_ext_ctrls,
+ *      .vidioc_s_ext_ctrls = dt3155_ioc_s_ext_ctrls,
+ */
+	.vidioc_g_parm			= dt3155_ioc_g_parm,
+	.vidioc_s_parm			= dt3155_ioc_s_parm,
 /*
-	.vidioc_cropcap = dt3155_ioc_cropcap,
-	.vidioc_g_crop = dt3155_ioc_g_crop,
-	.vidioc_s_crop = dt3155_ioc_s_crop,
-	.vidioc_enum_framesizes = dt3155_ioc_enum_framesizes,
-	.vidioc_enum_frameintervals = dt3155_ioc_enum_frameintervals,
-#ifdef CONFIG_VIDEO_V4L1_COMPAT
-	.vidiocgmbuf = iocgmbuf,
-#endif
-*/
+ *      .vidioc_cropcap = dt3155_ioc_cropcap,
+ *      .vidioc_g_crop = dt3155_ioc_g_crop,
+ *      .vidioc_s_crop = dt3155_ioc_s_crop,
+ *      .vidioc_enum_framesizes = dt3155_ioc_enum_framesizes,
+ *      .vidioc_enum_frameintervals = dt3155_ioc_enum_frameintervals,
+ #ifdef CONFIG_VIDEO_V4L1_COMPAT
+ *      .vidiocgmbuf = iocgmbuf,
+ #endif
+ */
 };
 
 static int __devinit
@@ -895,7 +900,7 @@ dt3155_init_board(struct pci_dev *dev)
 
 	/*  resetting the adapter  */
 	iowrite32(FLD_CRPT_ODD | FLD_CRPT_EVEN | FLD_DN_ODD | FLD_DN_EVEN,
-							pd->regs + CSR1);
+		  pd->regs + CSR1);
 	mmiowb();
 	msleep(10);
 
@@ -953,10 +958,10 @@ dt3155_init_board(struct pci_dev *dev)
 
 	/* allocate memory, and initialize the DMA machine */
 	buf_cpu = dma_alloc_coherent(&dev->dev, DT3155_BUF_SIZE, &buf_dma,
-								GFP_KERNEL);
+				     GFP_KERNEL);
 	if (!buf_cpu) {
 		printk(KERN_ERR "dt3155: dma_alloc_coherent "
-					"(in dt3155_init_board) failed\n");
+		       "(in dt3155_init_board) failed\n");
 		return -ENOMEM;
 	}
 	iowrite32(buf_dma, pd->regs + EVEN_DMA_START);
@@ -987,22 +992,22 @@ dt3155_init_board(struct pci_dev *dev)
 }
 
 static struct video_device dt3155_vdev = {
-	.name = DT3155_NAME,
-	.fops = &dt3155_fops,
-	.ioctl_ops = &dt3155_ioctl_ops,
-	.minor = -1,
-	.release = video_device_release,
-	.tvnorms = DT3155_CURRENT_NORM,
-	.current_norm = DT3155_CURRENT_NORM,
+	.name		= DT3155_NAME,
+	.fops		= &dt3155_fops,
+	.ioctl_ops	= &dt3155_ioctl_ops,
+	.minor		= -1,
+	.release	= video_device_release,
+	.tvnorms	= DT3155_CURRENT_NORM,
+	.current_norm	= DT3155_CURRENT_NORM,
 };
 
 /* same as in drivers/base/dma-coherent.c */
 struct dma_coherent_mem {
-	void		*virt_base;
+	void *		virt_base;
 	u32		device_base;
 	int		size;
 	int		flags;
-	unsigned long	*bitmap;
+	unsigned long * bitmap;
 };
 
 static int __devinit
@@ -1026,7 +1031,7 @@ dt3155_alloc_coherent(struct device *dev, size_t size, int flags)
 		goto err_bitmap;
 
 	dev->dma_mem->virt_base = dma_alloc_coherent(dev, size,
-				&dev->dma_mem->device_base, DT3155_COH_FLAGS);
+						     &dev->dma_mem->device_base, DT3155_COH_FLAGS);
 	if (!dev->dma_mem->virt_base)
 		goto err_coherent;
 	dev->dma_mem->size = pages;
@@ -1050,7 +1055,7 @@ dt3155_free_coherent(struct device *dev)
 		return;
 	dev->dma_mem = NULL;
 	dma_free_coherent(dev, mem->size << PAGE_SHIFT,
-					mem->virt_base, mem->device_base);
+			  mem->virt_base, mem->device_base);
 	kfree(mem->bitmap);
 	kfree(mem);
 }
@@ -1083,8 +1088,8 @@ dt3155_probe(struct pci_dev *dev, const struct pci_device_id *id)
 		goto err_video_device_alloc;
 	}
 	*pd->vdev = dt3155_vdev;
-	pci_set_drvdata(dev, pd);    /* for use in dt3155_remove() */
-	video_set_drvdata(pd->vdev, pd);  /* for use in video_fops */
+	pci_set_drvdata(dev, pd);               /* for use in dt3155_remove() */
+	video_set_drvdata(pd->vdev, pd);        /* for use in video_fops */
 	pd->users = 0;
 	pd->acq_fp = NULL;
 	pd->pdev = dev;
@@ -1118,7 +1123,7 @@ dt3155_probe(struct pci_dev *dev, const struct pci_device_id *id)
 		goto err_init_board;
 	}
 	err = dt3155_alloc_coherent(&dev->dev, DT3155_CHUNK_SIZE,
-							DMA_MEMORY_MAP);
+				    DMA_MEMORY_MAP);
 	if (err)
 		printk(KERN_INFO "dt3155: preallocated 8 buffers\n");
 	printk(KERN_INFO "dt3155: /dev/video%i is ready\n", pd->vdev->minor);
@@ -1157,15 +1162,15 @@ dt3155_remove(struct pci_dev *dev)
 
 static DEFINE_PCI_DEVICE_TABLE(pci_ids) = {
 	{ PCI_DEVICE(DT3155_VENDOR_ID, DT3155_DEVICE_ID) },
-	{ 0, /* zero marks the end */ },
+	{ 0,                           /* zero marks the end */},
 };
 MODULE_DEVICE_TABLE(pci, pci_ids);
 
 static struct pci_driver pci_driver = {
-	.name = DT3155_NAME,
-	.id_table = pci_ids,
-	.probe = dt3155_probe,
-	.remove = __devexit_p(dt3155_remove),
+	.name		= DT3155_NAME,
+	.id_table	= pci_ids,
+	.probe		= dt3155_probe,
+	.remove		= __devexit_p(dt3155_remove),
 };
 
 static int __init

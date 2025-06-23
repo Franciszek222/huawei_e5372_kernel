@@ -4,9 +4,9 @@
 #include <linux/types.h>
 
 struct adis16255_init_data {
-	char direction;
-	u8   negative;
-	int  irq;
+	char	direction;
+	u8	negative;
+	int	irq;
 };
 
 #endif

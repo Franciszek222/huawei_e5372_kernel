@@ -29,10 +29,10 @@
 #include <mach/msm_rpcrouter.h>
 
 struct snd_ctxt {
-	struct mutex lock;
-	int opened;
-	struct msm_rpc_endpoint *ept;
-	struct msm_snd_endpoints *snd_epts;
+	struct mutex			lock;
+	int				opened;
+	struct msm_rpc_endpoint *	ept;
+	struct msm_snd_endpoints *	snd_epts;
 };
 
 static struct snd_ctxt the_snd;
@@ -40,43 +40,43 @@ static struct snd_ctxt the_snd;
 #define RPC_SND_PROG    0x30000002
 #define RPC_SND_CB_PROG 0x31000002
 #if CONFIG_MSM_AMSS_VERSION == 6210
-#define RPC_SND_VERS	0x94756085 /* 2490720389 */
+#define RPC_SND_VERS    0x94756085 /* 2490720389 */
 #elif (CONFIG_MSM_AMSS_VERSION == 6220) || \
-      (CONFIG_MSM_AMSS_VERSION == 6225)
-#define RPC_SND_VERS	0xaa2b1a44 /* 2854951492 */
+	(CONFIG_MSM_AMSS_VERSION == 6225)
+#define RPC_SND_VERS    0xaa2b1a44 /* 2854951492 */
 #elif CONFIG_MSM_AMSS_VERSION == 6350
-#define RPC_SND_VERS 	MSM_RPC_VERS(1,0)
+#define RPC_SND_VERS    MSM_RPC_VERS(1, 0)
 #endif
 
 #define SND_SET_DEVICE_PROC 2
 #define SND_SET_VOLUME_PROC 3
 
 struct rpc_snd_set_device_args {
-	uint32_t device;
-	uint32_t ear_mute;
-	uint32_t mic_mute;
+	uint32_t	device;
+	uint32_t	ear_mute;
+	uint32_t	mic_mute;
 
-	uint32_t cb_func;
-	uint32_t client_data;
+	uint32_t	cb_func;
+	uint32_t	client_data;
 };
 
 struct rpc_snd_set_volume_args {
-	uint32_t device;
-	uint32_t method;
-	uint32_t volume;
+	uint32_t	device;
+	uint32_t	method;
+	uint32_t	volume;
 
-	uint32_t cb_func;
-	uint32_t client_data;
+	uint32_t	cb_func;
+	uint32_t	client_data;
 };
 
 struct snd_set_device_msg {
-	struct rpc_request_hdr hdr;
-	struct rpc_snd_set_device_args args;
+	struct rpc_request_hdr		hdr;
+	struct rpc_snd_set_device_args	args;
 };
 
 struct snd_set_volume_msg {
-	struct rpc_request_hdr hdr;
-	struct rpc_snd_set_volume_args args;
+	struct rpc_request_hdr		hdr;
+	struct rpc_snd_set_volume_args	args;
 };
 
 struct snd_endpoint *get_snd_endpoints(int *size);
@@ -128,7 +128,7 @@ static long snd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	mutex_lock(&snd->lock);
 	switch (cmd) {
 	case SND_SET_DEVICE:
-		if (copy_from_user(&dev, (void __user *) arg, sizeof(dev))) {
+		if (copy_from_user(&dev, (void __user *)arg, sizeof(dev))) {
 			pr_err("snd_ioctl set device: invalid pointer.\n");
 			rc = -EFAULT;
 			break;
@@ -138,7 +138,7 @@ static long snd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		dmsg.args.ear_mute = cpu_to_be32(dev.ear_mute);
 		dmsg.args.mic_mute = cpu_to_be32(dev.mic_mute);
 		if (check_mute(dev.ear_mute) < 0 ||
-				check_mute(dev.mic_mute) < 0) {
+		    check_mute(dev.mic_mute) < 0) {
 			pr_err("snd_ioctl set device: invalid mute status.\n");
 			rc = -EINVAL;
 			break;
@@ -147,15 +147,15 @@ static long snd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		dmsg.args.client_data = 0;
 
 		pr_info("snd_set_device %d %d %d\n", dev.device,
-						 dev.ear_mute, dev.mic_mute);
+			dev.ear_mute, dev.mic_mute);
 
 		rc = msm_rpc_call(snd->ept,
-			SND_SET_DEVICE_PROC,
-			&dmsg, sizeof(dmsg), 5 * HZ);
+				  SND_SET_DEVICE_PROC,
+				  &dmsg, sizeof(dmsg), 5 * HZ);
 		break;
 
 	case SND_SET_VOLUME:
-		if (copy_from_user(&vol, (void __user *) arg, sizeof(vol))) {
+		if (copy_from_user(&vol, (void __user *)arg, sizeof(vol))) {
 			pr_err("snd_ioctl set volume: invalid pointer.\n");
 			rc = -EFAULT;
 			break;
@@ -174,16 +174,16 @@ static long snd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		vmsg.args.client_data = 0;
 
 		pr_info("snd_set_volume %d %d %d\n", vol.device,
-						vol.method, vol.volume);
+			vol.method, vol.volume);
 
 		rc = msm_rpc_call(snd->ept,
-			SND_SET_VOLUME_PROC,
-			&vmsg, sizeof(vmsg), 5 * HZ);
+				  SND_SET_VOLUME_PROC,
+				  &vmsg, sizeof(vmsg), 5 * HZ);
 		break;
 
 	case SND_GET_NUM_ENDPOINTS:
 		if (copy_to_user((void __user *)arg,
-				&snd->snd_epts->num, sizeof(unsigned))) {
+				 &snd->snd_epts->num, sizeof(unsigned))) {
 			pr_err("snd_ioctl get endpoint: invalid pointer.\n");
 			rc = -EFAULT;
 		}
@@ -222,7 +222,7 @@ static int snd_open(struct inode *inode, struct file *file)
 	if (snd->opened == 0) {
 		if (snd->ept == NULL) {
 			snd->ept = msm_rpc_connect(RPC_SND_PROG, RPC_SND_VERS,
-					MSM_RPC_UNINTERRUPTIBLE);
+						   MSM_RPC_UNINTERRUPTIBLE);
 			if (IS_ERR(snd->ept)) {
 				rc = PTR_ERR(snd->ept);
 				snd->ept = NULL;
@@ -246,7 +246,7 @@ static struct file_operations snd_fops = {
 	.owner		= THIS_MODULE,
 	.open		= snd_open,
 	.release	= snd_release,
-	.unlocked_ioctl	= snd_ioctl,
+	.unlocked_ioctl = snd_ioctl,
 };
 
 struct miscdevice snd_misc = {
@@ -258,16 +258,17 @@ struct miscdevice snd_misc = {
 static int snd_probe(struct platform_device *pdev)
 {
 	struct snd_ctxt *snd = &the_snd;
+
 	mutex_init(&snd->lock);
 	snd->snd_epts = (struct msm_snd_endpoints *)pdev->dev.platform_data;
 	return misc_register(&snd_misc);
 }
 
 static struct platform_driver snd_plat_driver = {
-	.probe = snd_probe,
-	.driver = {
-		.name = "msm_snd",
-		.owner = THIS_MODULE,
+	.probe		= snd_probe,
+	.driver		= {
+		.name	= "msm_snd",
+		.owner	= THIS_MODULE,
 	},
 };
 

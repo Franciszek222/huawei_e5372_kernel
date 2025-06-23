@@ -37,14 +37,14 @@
  * mutex 'mutex'.
  */
 struct logger_log {
-	unsigned char 		*buffer;/* the ring buffer itself */
-	struct miscdevice	misc;	/* misc device representing the log */
-	wait_queue_head_t	wq;	/* wait queue for readers */
-	struct list_head	readers; /* this log's readers */
-	struct mutex		mutex;	/* mutex protecting buffer */
-	size_t			w_off;	/* current write head offset */
-	size_t			head;	/* new readers start here */
-	size_t			size;	/* size of the log */
+	unsigned char *		buffer;         /* the ring buffer itself */
+	struct miscdevice	misc;           /* misc device representing the log */
+	wait_queue_head_t	wq;             /* wait queue for readers */
+	struct list_head	readers;        /* this log's readers */
+	struct mutex		mutex;          /* mutex protecting buffer */
+	size_t			w_off;          /* current write head offset */
+	size_t			head;           /* new readers start here */
+	size_t			size;           /* size of the log */
 };
 
 /*
@@ -54,13 +54,13 @@ struct logger_log {
  * reference counting. The structure is protected by log->mutex.
  */
 struct logger_reader {
-	struct logger_log	*log;	/* associated log */
-	struct list_head	list;	/* entry in logger_log's list */
-	size_t			r_off;	/* current read head offset */
+	struct logger_log *	log;    /* associated log */
+	struct list_head	list;   /* entry in logger_log's list */
+	size_t			r_off;  /* current read head offset */
 };
 
 /* logger_offset - returns index 'n' into the log via (optimized) modulus */
-#define logger_offset(n)	((n) & (log->size - 1))
+#define logger_offset(n)        ((n) & (log->size - 1))
 
 /*
  * file_get_log - Given a file structure, return the associated log
@@ -81,8 +81,9 @@ static inline struct logger_log *file_get_log(struct file *file)
 	if (file->f_mode & FMODE_READ) {
 		struct logger_reader *reader = file->private_data;
 		return reader->log;
-	} else
+	} else {
 		return file->private_data;
+	}
 }
 
 /*
@@ -98,7 +99,7 @@ static __u32 get_entry_len(struct logger_log *log, size_t off)
 	switch (log->size - off) {
 	case 1:
 		memcpy(&val, log->buffer + off, 1);
-		memcpy(((char *) &val) + 1, log->buffer, 1);
+		memcpy(((char *)&val) + 1, log->buffer, 1);
 		break;
 	default:
 		memcpy(&val, log->buffer + off, 2);
@@ -113,10 +114,10 @@ static __u32 get_entry_len(struct logger_log *log, size_t off)
  *
  * Caller must hold log->mutex.
  */
-static ssize_t do_read_log_to_user(struct logger_log *log,
-				   struct logger_reader *reader,
-				   char __user *buf,
-				   size_t count)
+static ssize_t do_read_log_to_user(struct logger_log *		log,
+				   struct logger_reader *	reader,
+				   char __user *		buf,
+				   size_t			count)
 {
 	size_t len;
 
@@ -160,6 +161,7 @@ static ssize_t logger_read(struct file *file, char __user *buf,
 	struct logger_reader *reader = file->private_data;
 	struct logger_log *log = reader->log;
 	ssize_t ret;
+
 	DEFINE_WAIT(wait);
 
 start:
@@ -267,8 +269,8 @@ static void fix_up_readers(struct logger_log *log, size_t len)
 		log->head = get_next_entry(log, log->head, len);
 
 	list_for_each_entry(reader, &log->readers, list)
-		if (clock_interval(old, new, reader->r_off))
-			reader->r_off = get_next_entry(log, reader->r_off, len);
+	if (clock_interval(old, new, reader->r_off))
+		reader->r_off = get_next_entry(log, reader->r_off, len);
 }
 
 /*
@@ -287,7 +289,6 @@ static void do_write_log(struct logger_log *log, const void *buf, size_t count)
 		memcpy(log->buffer, buf + len, count - len);
 
 	log->w_off = logger_offset(log->w_off + count);
-
 }
 
 /*
@@ -417,8 +418,9 @@ static int logger_open(struct inode *inode, struct file *file)
 		mutex_unlock(&log->mutex);
 
 		file->private_data = reader;
-	} else
+	} else {
 		file->private_data = log;
+	}
 
 	return 0;
 }
@@ -510,7 +512,7 @@ static long logger_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			break;
 		}
 		list_for_each_entry(reader, &log->readers, list)
-			reader->r_off = log->w_off;
+		reader->r_off = log->w_off;
 		log->head = log->w_off;
 		ret = 0;
 		break;
@@ -522,14 +524,14 @@ static long logger_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 }
 
 static const struct file_operations logger_fops = {
-	.owner = THIS_MODULE,
-	.read = logger_read,
-	.aio_write = logger_aio_write,
-	.poll = logger_poll,
+	.owner		= THIS_MODULE,
+	.read		= logger_read,
+	.aio_write	= logger_aio_write,
+	.poll		= logger_poll,
 	.unlocked_ioctl = logger_ioctl,
-	.compat_ioctl = logger_ioctl,
-	.open = logger_open,
-	.release = logger_release,
+	.compat_ioctl	= logger_ioctl,
+	.open		= logger_open,
+	.release	= logger_release,
 };
 
 /*
@@ -538,27 +540,27 @@ static const struct file_operations logger_fops = {
  * LONG_MAX minus LOGGER_ENTRY_MAX_LEN.
  */
 #define DEFINE_LOGGER_DEVICE(VAR, NAME, SIZE) \
-static unsigned char _buf_ ## VAR[SIZE]; \
-static struct logger_log VAR = { \
-	.buffer = _buf_ ## VAR, \
-	.misc = { \
-		.minor = MISC_DYNAMIC_MINOR, \
-		.name = NAME, \
-		.fops = &logger_fops, \
-		.parent = NULL, \
-	}, \
-	.wq = __WAIT_QUEUE_HEAD_INITIALIZER(VAR .wq), \
-	.readers = LIST_HEAD_INIT(VAR .readers), \
-	.mutex = __MUTEX_INITIALIZER(VAR .mutex), \
-	.w_off = 0, \
-	.head = 0, \
-	.size = SIZE, \
-};
+	static unsigned char _buf_ ## VAR[SIZE]; \
+	static struct logger_log VAR = { \
+		.buffer		= _buf_ ## VAR, \
+		.misc		= { \
+			.minor	= MISC_DYNAMIC_MINOR, \
+			.name	= NAME, \
+			.fops	= &logger_fops, \
+			.parent = NULL, \
+		}, \
+		.wq		= __WAIT_QUEUE_HEAD_INITIALIZER(VAR.wq), \
+		.readers	= LIST_HEAD_INIT(VAR.readers), \
+		.mutex		= __MUTEX_INITIALIZER(VAR.mutex), \
+		.w_off		= 0, \
+		.head		= 0, \
+		.size		= SIZE, \
+	};
 
-DEFINE_LOGGER_DEVICE(log_main, LOGGER_LOG_MAIN, 64*1024)
-DEFINE_LOGGER_DEVICE(log_events, LOGGER_LOG_EVENTS, 256*1024)
-DEFINE_LOGGER_DEVICE(log_radio, LOGGER_LOG_RADIO, 64*1024)
-DEFINE_LOGGER_DEVICE(log_system, LOGGER_LOG_SYSTEM, 64*1024)
+DEFINE_LOGGER_DEVICE(log_main, LOGGER_LOG_MAIN, 64 * 1024)
+DEFINE_LOGGER_DEVICE(log_events, LOGGER_LOG_EVENTS, 256 * 1024)
+DEFINE_LOGGER_DEVICE(log_radio, LOGGER_LOG_RADIO, 64 * 1024)
+DEFINE_LOGGER_DEVICE(log_system, LOGGER_LOG_SYSTEM, 64 * 1024)
 
 static struct logger_log *get_log_from_minor(int minor)
 {
@@ -585,7 +587,7 @@ static int __init init_log(struct logger_log *log)
 	}
 
 	printk(KERN_INFO "logger: created %luK log '%s'\n",
-	       (unsigned long) log->size >> 10, log->misc.name);
+	       (unsigned long)log->size >> 10, log->misc.name);
 
 	return 0;
 }

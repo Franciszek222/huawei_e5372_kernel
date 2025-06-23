@@ -50,10 +50,10 @@ static const struct pci_device_id ca91cx42_ids[] = {
 };
 
 static struct pci_driver ca91cx42_driver = {
-	.name = driver_name,
-	.id_table = ca91cx42_ids,
-	.probe = ca91cx42_probe,
-	.remove = ca91cx42_remove,
+	.name		= driver_name,
+	.id_table	= ca91cx42_ids,
+	.probe		= ca91cx42_probe,
+	.remove		= ca91cx42_remove,
 };
 
 static u32 ca91cx42_DMA_irqhandler(struct ca91cx42_driver *bridge)
@@ -103,10 +103,9 @@ static u32 ca91cx42_VERR_irqhandler(struct vme_bridge *ca91cx42_bridge)
 
 	val = ioread32(bridge->base + DGCS);
 
-	if (!(val & 0x00000800)) {
+	if (!(val & 0x00000800))
 		dev_err(ca91cx42_bridge->parent, "ca91cx42_VERR_irqhandler DMA "
 			"Read Error DGCS=%08X\n", val);
-	}
 
 	return CA91CX42_LINT_VERR;
 }
@@ -128,8 +127,8 @@ static u32 ca91cx42_LERR_irqhandler(struct vme_bridge *ca91cx42_bridge)
 }
 
 
-static u32 ca91cx42_VIRQ_irqhandler(struct vme_bridge *ca91cx42_bridge,
-	int stat)
+static u32 ca91cx42_VIRQ_irqhandler(struct vme_bridge * ca91cx42_bridge,
+				    int			stat)
 {
 	int vec, i, serviced = 0;
 	struct ca91cx42_driver *bridge;
@@ -140,7 +139,7 @@ static u32 ca91cx42_VIRQ_irqhandler(struct vme_bridge *ca91cx42_bridge,
 	for (i = 7; i > 0; i--) {
 		if (stat & (1 << i)) {
 			vec = ioread32(bridge->base +
-				CA91CX42_V_STATID[i]) & 0xff;
+				       CA91CX42_V_STATID[i]) & 0xff;
 
 			vme_irq_handler(ca91cx42_bridge, i, vec);
 
@@ -173,7 +172,7 @@ static irqreturn_t ca91cx42_irqhandler(int irq, void *ptr)
 	if (stat & CA91CX42_LINT_DMA)
 		serviced |= ca91cx42_DMA_irqhandler(bridge);
 	if (stat & (CA91CX42_LINT_LM0 | CA91CX42_LINT_LM1 | CA91CX42_LINT_LM2 |
-			CA91CX42_LINT_LM3))
+		    CA91CX42_LINT_LM3))
 		serviced |= ca91cx42_LM_irqhandler(bridge, stat);
 	if (stat & CA91CX42_LINT_MBOX)
 		serviced |= ca91cx42_MB_irqhandler(bridge, stat);
@@ -184,9 +183,9 @@ static irqreturn_t ca91cx42_irqhandler(int irq, void *ptr)
 	if (stat & CA91CX42_LINT_LERR)
 		serviced |= ca91cx42_LERR_irqhandler(ca91cx42_bridge);
 	if (stat & (CA91CX42_LINT_VIRQ1 | CA91CX42_LINT_VIRQ2 |
-			CA91CX42_LINT_VIRQ3 | CA91CX42_LINT_VIRQ4 |
-			CA91CX42_LINT_VIRQ5 | CA91CX42_LINT_VIRQ6 |
-			CA91CX42_LINT_VIRQ7))
+		    CA91CX42_LINT_VIRQ3 | CA91CX42_LINT_VIRQ4 |
+		    CA91CX42_LINT_VIRQ5 | CA91CX42_LINT_VIRQ6 |
+		    CA91CX42_LINT_VIRQ7))
 		serviced |= ca91cx42_VIRQ_irqhandler(ca91cx42_bridge, stat);
 
 	/* Clear serviced interrupts */
@@ -220,10 +219,10 @@ static int ca91cx42_irq_init(struct vme_bridge *ca91cx42_bridge)
 	iowrite32(0x00FFFFFF, bridge->base + LINT_STAT);
 
 	result = request_irq(pdev->irq, ca91cx42_irqhandler, IRQF_SHARED,
-			driver_name, ca91cx42_bridge);
+			     driver_name, ca91cx42_bridge);
 	if (result) {
 		dev_err(&pdev->dev, "Can't get assigned pci irq vector %02X\n",
-		       pdev->irq);
+			pdev->irq);
 		return result;
 	}
 
@@ -234,16 +233,16 @@ static int ca91cx42_irq_init(struct vme_bridge *ca91cx42_bridge)
 
 	/* Enable DMA, mailbox & LM Interrupts */
 	tmp = CA91CX42_LINT_MBOX3 | CA91CX42_LINT_MBOX2 | CA91CX42_LINT_MBOX1 |
-		CA91CX42_LINT_MBOX0 | CA91CX42_LINT_SW_IACK |
-		CA91CX42_LINT_VERR | CA91CX42_LINT_LERR | CA91CX42_LINT_DMA;
+	      CA91CX42_LINT_MBOX0 | CA91CX42_LINT_SW_IACK |
+	      CA91CX42_LINT_VERR | CA91CX42_LINT_LERR | CA91CX42_LINT_DMA;
 
 	iowrite32(tmp, bridge->base + LINT_EN);
 
 	return 0;
 }
 
-static void ca91cx42_irq_exit(struct ca91cx42_driver *bridge,
-	struct pci_dev *pdev)
+static void ca91cx42_irq_exit(struct ca91cx42_driver *	bridge,
+			      struct pci_dev *		pdev)
 {
 	/* Disable interrupts from PCI to VME */
 	iowrite32(0, bridge->base + VINT_EN);
@@ -260,7 +259,7 @@ static void ca91cx42_irq_exit(struct ca91cx42_driver *bridge,
  * Set up an VME interrupt
  */
 void ca91cx42_irq_set(struct vme_bridge *ca91cx42_bridge, int level, int state,
-	int sync)
+		      int sync)
 
 {
 	struct pci_dev *pdev;
@@ -281,14 +280,14 @@ void ca91cx42_irq_set(struct vme_bridge *ca91cx42_bridge, int level, int state,
 
 	if ((state == 0) && (sync != 0)) {
 		pdev = container_of(ca91cx42_bridge->parent, struct pci_dev,
-			dev);
+				    dev);
 
 		synchronize_irq(pdev->irq);
 	}
 }
 
 int ca91cx42_irq_generate(struct vme_bridge *ca91cx42_bridge, int level,
-	int statid)
+			  int statid)
 {
 	u32 tmp;
 	struct ca91cx42_driver *bridge;
@@ -324,8 +323,8 @@ int ca91cx42_irq_generate(struct vme_bridge *ca91cx42_bridge, int level,
 }
 
 int ca91cx42_slave_set(struct vme_slave_resource *image, int enabled,
-	unsigned long long vme_base, unsigned long long size,
-	dma_addr_t pci_base, vme_address_t aspace, vme_cycle_t cycle)
+		       unsigned long long vme_base, unsigned long long size,
+		       dma_addr_t pci_base, vme_address_t aspace, vme_cycle_t cycle)
 {
 	unsigned int i, addr = 0, granularity;
 	unsigned int temp_ctl = 0;
@@ -430,8 +429,8 @@ int ca91cx42_slave_set(struct vme_slave_resource *image, int enabled,
 }
 
 int ca91cx42_slave_get(struct vme_slave_resource *image, int *enabled,
-	unsigned long long *vme_base, unsigned long long *size,
-	dma_addr_t *pci_base, vme_address_t *aspace, vme_cycle_t *cycle)
+		       unsigned long long *vme_base, unsigned long long *size,
+		       dma_addr_t *pci_base, vme_address_t *aspace, vme_cycle_t *cycle)
 {
 	unsigned int i, granularity = 0, ctl = 0;
 	unsigned long long vme_bound, pci_offset;
@@ -489,8 +488,8 @@ int ca91cx42_slave_get(struct vme_slave_resource *image, int *enabled,
 /*
  * Allocate and map PCI Resource
  */
-static int ca91cx42_alloc_resource(struct vme_master_resource *image,
-	unsigned long long size)
+static int ca91cx42_alloc_resource(struct vme_master_resource * image,
+				   unsigned long long		size)
 {
 	unsigned long long existing_size;
 	int retval = 0;
@@ -507,7 +506,7 @@ static int ca91cx42_alloc_resource(struct vme_master_resource *image,
 	pdev = container_of(ca91cx42_bridge->parent, struct pci_dev, dev);
 
 	existing_size = (unsigned long long)(image->bus_resource.end -
-		image->bus_resource.start);
+					     image->bus_resource.start);
 
 	/* If the existing size is OK, return */
 	if (existing_size == (size - 1))
@@ -523,7 +522,7 @@ static int ca91cx42_alloc_resource(struct vme_master_resource *image,
 	}
 
 	if (image->bus_resource.name == NULL) {
-		image->bus_resource.name = kmalloc(VMENAMSIZ+3, GFP_ATOMIC);
+		image->bus_resource.name = kmalloc(VMENAMSIZ + 3, GFP_ATOMIC);
 		if (image->bus_resource.name == NULL) {
 			dev_err(ca91cx42_bridge->parent, "Unable to allocate "
 				"memory for resource name\n");
@@ -540,8 +539,8 @@ static int ca91cx42_alloc_resource(struct vme_master_resource *image,
 	image->bus_resource.flags = IORESOURCE_MEM;
 
 	retval = pci_bus_alloc_resource(pdev->bus,
-		&(image->bus_resource), size, size, PCIBIOS_MIN_MEM,
-		0, NULL, NULL);
+					&(image->bus_resource), size, size, PCIBIOS_MIN_MEM,
+					0, NULL, NULL);
 	if (retval) {
 		dev_err(ca91cx42_bridge->parent, "Failed to allocate mem "
 			"resource for window %d size 0x%lx start 0x%lx\n",
@@ -585,8 +584,8 @@ static void ca91cx42_free_resource(struct vme_master_resource *image)
 
 
 int ca91cx42_master_set(struct vme_master_resource *image, int enabled,
-	unsigned long long vme_base, unsigned long long size,
-	vme_address_t aspace, vme_cycle_t cycle, vme_width_t dwidth)
+			unsigned long long vme_base, unsigned long long size,
+			vme_address_t aspace, vme_cycle_t cycle, vme_width_t dwidth)
 {
 	int retval = 0;
 	unsigned int i, granularity = 0;
@@ -742,8 +741,8 @@ err_window:
 }
 
 int __ca91cx42_master_get(struct vme_master_resource *image, int *enabled,
-	unsigned long long *vme_base, unsigned long long *size,
-	vme_address_t *aspace, vme_cycle_t *cycle, vme_width_t *dwidth)
+			  unsigned long long *vme_base, unsigned long long *size,
+			  vme_address_t *aspace, vme_cycle_t *cycle, vme_width_t *dwidth)
 {
 	unsigned int i, ctl;
 	unsigned long long pci_base, pci_bound, vme_offset;
@@ -829,15 +828,15 @@ int __ca91cx42_master_get(struct vme_master_resource *image, int *enabled,
 }
 
 int ca91cx42_master_get(struct vme_master_resource *image, int *enabled,
-	unsigned long long *vme_base, unsigned long long *size,
-	vme_address_t *aspace, vme_cycle_t *cycle, vme_width_t *dwidth)
+			unsigned long long *vme_base, unsigned long long *size,
+			vme_address_t *aspace, vme_cycle_t *cycle, vme_width_t *dwidth)
 {
 	int retval;
 
 	spin_lock(&(image->lock));
 
 	retval = __ca91cx42_master_get(image, enabled, vme_base, size, aspace,
-		cycle, dwidth);
+				       cycle, dwidth);
 
 	spin_unlock(&(image->lock));
 
@@ -845,7 +844,7 @@ int ca91cx42_master_get(struct vme_master_resource *image, int *enabled,
 }
 
 ssize_t ca91cx42_master_read(struct vme_master_resource *image, void *buf,
-	size_t count, loff_t offset)
+			     size_t count, loff_t offset)
 {
 	ssize_t retval;
 
@@ -860,7 +859,7 @@ ssize_t ca91cx42_master_read(struct vme_master_resource *image, void *buf,
 }
 
 ssize_t ca91cx42_master_write(struct vme_master_resource *image, void *buf,
-	size_t count, loff_t offset)
+			      size_t count, loff_t offset)
 {
 	int retval = 0;
 
@@ -875,8 +874,8 @@ ssize_t ca91cx42_master_write(struct vme_master_resource *image, void *buf,
 }
 
 unsigned int ca91cx42_master_rmw(struct vme_master_resource *image,
-	unsigned int mask, unsigned int compare, unsigned int swap,
-	loff_t offset)
+				 unsigned int mask, unsigned int compare, unsigned int swap,
+				 loff_t offset)
 {
 	u32 pci_addr, result;
 	int i;
@@ -929,7 +928,7 @@ unsigned int ca91cx42_master_rmw(struct vme_master_resource *image,
 }
 
 int ca91cx42_dma_list_add(struct vme_dma_list *list, struct vme_dma_attr *src,
-	struct vme_dma_attr *dest, size_t count)
+			  struct vme_dma_attr *dest, size_t count)
 {
 	struct ca91cx42_dma_entry *entry, *prev;
 	struct vme_dma_pci *pci_attr;
@@ -970,16 +969,14 @@ int ca91cx42_dma_list_add(struct vme_dma_list *list, struct vme_dma_attr *src,
 
 	/* Check we can do fullfill required attributes */
 	if ((vme_attr->aspace & ~(VME_A16 | VME_A24 | VME_A32 | VME_USER1 |
-		VME_USER2)) != 0) {
-
+				  VME_USER2)) != 0) {
 		dev_err(dev, "Unsupported cycle type\n");
 		retval = -EINVAL;
 		goto err_aspace;
 	}
 
 	if ((vme_attr->cycle & ~(VME_SCT | VME_BLT | VME_SUPER | VME_USER |
-		VME_PROG | VME_DATA)) != 0) {
-
+				 VME_PROG | VME_DATA)) != 0) {
 		dev_err(dev, "Unsupported cycle type\n");
 		retval = -EINVAL;
 		goto err_cycle;
@@ -987,8 +984,7 @@ int ca91cx42_dma_list_add(struct vme_dma_list *list, struct vme_dma_attr *src,
 
 	/* Check to see if we can fullfill source and destination */
 	if (!(((src->type == VME_DMA_PCI) && (dest->type == VME_DMA_VME)) ||
-		((src->type == VME_DMA_VME) && (dest->type == VME_DMA_PCI)))) {
-
+	      ((src->type == VME_DMA_VME) && (dest->type == VME_DMA_PCI)))) {
 		dev_err(dev, "Cannot perform transfer with this "
 			"source-destination combination\n");
 		retval = -EINVAL;
@@ -1057,7 +1053,7 @@ int ca91cx42_dma_list_add(struct vme_dma_list *list, struct vme_dma_attr *src,
 	/* Fill out previous descriptors "Next Address" */
 	if (entry->list.prev != &(list->entries)) {
 		prev = list_entry(entry->list.prev, struct ca91cx42_dma_entry,
-			list);
+				  list);
 		/* We need the bus address for the pointer */
 		desc_ptr = virt_to_bus(&(entry->descriptor));
 		prev->descriptor.dcpp = desc_ptr & ~CA91CX42_DCPP_M;
@@ -1121,7 +1117,7 @@ int ca91cx42_dma_list_exec(struct vme_dma_list *list)
 
 	/* Get first bus address and write into registers */
 	entry = list_first_entry(&(list->entries), struct ca91cx42_dma_entry,
-		list);
+				 list);
 
 	bus_addr = virt_to_bus(&(entry->descriptor));
 
@@ -1147,7 +1143,7 @@ int ca91cx42_dma_list_exec(struct vme_dma_list *list)
 	iowrite32(val, bridge->base + DGCS);
 
 	wait_event_interruptible(bridge->dma_queue,
-		ca91cx42_dma_busy(ctrlr->parent));
+				 ca91cx42_dma_busy(ctrlr->parent));
 
 	/*
 	 * Read status register, this register is valid until we kick off a
@@ -1156,8 +1152,7 @@ int ca91cx42_dma_list_exec(struct vme_dma_list *list)
 	val = ioread32(bridge->base + DGCS);
 
 	if (val & (CA91CX42_DGCS_LERR | CA91CX42_DGCS_VERR |
-		CA91CX42_DGCS_PERR)) {
-
+		   CA91CX42_DGCS_PERR)) {
 		dev_err(dev, "ca91c042: DMA Error. DGCS=%08X\n", val);
 		val = ioread32(bridge->base + DCTL);
 	}
@@ -1168,7 +1163,6 @@ int ca91cx42_dma_list_exec(struct vme_dma_list *list)
 	mutex_unlock(&(ctrlr->mtx));
 
 	return retval;
-
 }
 
 int ca91cx42_dma_list_empty(struct vme_dma_list *list)
@@ -1194,7 +1188,7 @@ int ca91cx42_dma_list_empty(struct vme_dma_list *list)
  * callback is attached and disabled when the last callback is removed.
  */
 int ca91cx42_lm_set(struct vme_lm_resource *lm, unsigned long long lm_base,
-	vme_address_t aspace, vme_cycle_t cycle)
+		    vme_address_t aspace, vme_cycle_t cycle)
 {
 	u32 temp_base, lm_ctl = 0;
 	int i;
@@ -1262,7 +1256,7 @@ int ca91cx42_lm_set(struct vme_lm_resource *lm, unsigned long long lm_base,
  * or disabled.
  */
 int ca91cx42_lm_get(struct vme_lm_resource *lm, unsigned long long *lm_base,
-	vme_address_t *aspace, vme_cycle_t *cycle)
+		    vme_address_t *aspace, vme_cycle_t *cycle)
 {
 	u32 lm_ctl, enabled = 0;
 	struct ca91cx42_driver *bridge;
@@ -1305,7 +1299,7 @@ int ca91cx42_lm_get(struct vme_lm_resource *lm, unsigned long long *lm_base,
  * Callback will be passed the monitor triggered.
  */
 int ca91cx42_lm_attach(struct vme_lm_resource *lm, int monitor,
-	void (*callback)(int))
+		       void (*callback)(int))
 {
 	u32 lm_ctl, tmp;
 	struct ca91cx42_driver *bridge;
@@ -1368,14 +1362,14 @@ int ca91cx42_lm_detach(struct vme_lm_resource *lm, int monitor)
 	iowrite32(tmp, bridge->base + LINT_EN);
 
 	iowrite32(CA91CX42_LINT_LM[monitor],
-		 bridge->base + LINT_STAT);
+		  bridge->base + LINT_STAT);
 
 	/* Detach callback */
 	bridge->lm_callback[monitor] = NULL;
 
 	/* If all location monitors disabled, disable global Location Monitor */
 	if ((tmp & (CA91CX42_LINT_LM0 | CA91CX42_LINT_LM1 | CA91CX42_LINT_LM2 |
-			CA91CX42_LINT_LM3)) == 0) {
+		    CA91CX42_LINT_LM3)) == 0) {
 		tmp = ioread32(bridge->base + LM_CTL);
 		tmp &= ~CA91CX42_LM_CTL_EN;
 		iowrite32(tmp, bridge->base + LM_CTL);
@@ -1396,11 +1390,11 @@ int ca91cx42_slot_get(struct vme_bridge *ca91cx42_bridge)
 	if (!geoid) {
 		slot = ioread32(bridge->base + VCSR_BS);
 		slot = ((slot & CA91CX42_VCSR_BS_SLOT_M) >> 27);
-	} else
+	} else {
 		slot = geoid;
+	}
 
 	return (int)slot;
-
 }
 
 static int __init ca91cx42_init(void)
@@ -1416,8 +1410,8 @@ static int __init ca91cx42_init(void)
  * Auto-ID or Geographic address. This function ensures that the window is
  * enabled at an offset consistent with the boards geopgraphic address.
  */
-static int ca91cx42_crcsr_init(struct vme_bridge *ca91cx42_bridge,
-	struct pci_dev *pdev)
+static int ca91cx42_crcsr_init(struct vme_bridge *	ca91cx42_bridge,
+			       struct pci_dev *		pdev)
 {
 	unsigned int crcsr_addr;
 	int tmp, slot;
@@ -1440,7 +1434,7 @@ static int ca91cx42_crcsr_init(struct vme_bridge *ca91cx42_bridge,
 
 	/* Allocate mem for CR/CSR image */
 	bridge->crcsr_kernel = pci_alloc_consistent(pdev, VME_CRCSR_BUF_SIZE,
-		&(bridge->crcsr_bus));
+						    &(bridge->crcsr_bus));
 	if (bridge->crcsr_kernel == NULL) {
 		dev_err(&pdev->dev, "Failed to allocate memory for CR/CSR "
 			"image\n");
@@ -1459,8 +1453,8 @@ static int ca91cx42_crcsr_init(struct vme_bridge *ca91cx42_bridge,
 	return 0;
 }
 
-static void ca91cx42_crcsr_exit(struct vme_bridge *ca91cx42_bridge,
-	struct pci_dev *pdev)
+static void ca91cx42_crcsr_exit(struct vme_bridge *	ca91cx42_bridge,
+				struct pci_dev *	pdev)
 {
 	u32 tmp;
 	struct ca91cx42_driver *bridge;
@@ -1476,7 +1470,7 @@ static void ca91cx42_crcsr_exit(struct vme_bridge *ca91cx42_bridge,
 	iowrite32(0, bridge->base + VCSR_TO);
 
 	pci_free_consistent(pdev, VME_CRCSR_BUF_SIZE, bridge->crcsr_kernel,
-		bridge->crcsr_bus);
+			    bridge->crcsr_bus);
 }
 
 static int ca91cx42_probe(struct pci_dev *pdev, const struct pci_device_id *id)
@@ -1530,7 +1524,7 @@ static int ca91cx42_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 
 	/* map registers in BAR 0 */
 	ca91cx42_device->base = ioremap_nocache(pci_resource_start(pdev, 0),
-		4096);
+						4096);
 	if (!ca91cx42_device->base) {
 		dev_err(&pdev->dev, "Unable to remap CRG region\n");
 		retval = -EIO;
@@ -1565,10 +1559,10 @@ static int ca91cx42_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	INIT_LIST_HEAD(&(ca91cx42_bridge->master_resources));
 	for (i = 0; i < CA91C142_MAX_MASTER; i++) {
 		master_image = kmalloc(sizeof(struct vme_master_resource),
-			GFP_KERNEL);
+				       GFP_KERNEL);
 		if (master_image == NULL) {
 			dev_err(&pdev->dev, "Failed to allocate memory for "
-			"master resource structure\n");
+				"master resource structure\n");
 			retval = -ENOMEM;
 			goto err_master;
 		}
@@ -1577,25 +1571,25 @@ static int ca91cx42_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		master_image->locked = 0;
 		master_image->number = i;
 		master_image->address_attr = VME_A16 | VME_A24 | VME_A32 |
-			VME_CRCSR | VME_USER1 | VME_USER2;
+					     VME_CRCSR | VME_USER1 | VME_USER2;
 		master_image->cycle_attr = VME_SCT | VME_BLT | VME_MBLT |
-			VME_SUPER | VME_USER | VME_PROG | VME_DATA;
+					   VME_SUPER | VME_USER | VME_PROG | VME_DATA;
 		master_image->width_attr = VME_D8 | VME_D16 | VME_D32 | VME_D64;
 		memset(&(master_image->bus_resource), 0,
-			sizeof(struct resource));
-		master_image->kern_base  = NULL;
+		       sizeof(struct resource));
+		master_image->kern_base = NULL;
 		list_add_tail(&(master_image->list),
-			&(ca91cx42_bridge->master_resources));
+			      &(ca91cx42_bridge->master_resources));
 	}
 
 	/* Add slave windows to list */
 	INIT_LIST_HEAD(&(ca91cx42_bridge->slave_resources));
 	for (i = 0; i < CA91C142_MAX_SLAVE; i++) {
 		slave_image = kmalloc(sizeof(struct vme_slave_resource),
-			GFP_KERNEL);
+				      GFP_KERNEL);
 		if (slave_image == NULL) {
 			dev_err(&pdev->dev, "Failed to allocate memory for "
-			"slave resource structure\n");
+				"slave resource structure\n");
 			retval = -ENOMEM;
 			goto err_slave;
 		}
@@ -1604,26 +1598,26 @@ static int ca91cx42_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		slave_image->locked = 0;
 		slave_image->number = i;
 		slave_image->address_attr = VME_A24 | VME_A32 | VME_USER1 |
-			VME_USER2;
+					    VME_USER2;
 
 		/* Only windows 0 and 4 support A16 */
 		if (i == 0 || i == 4)
 			slave_image->address_attr |= VME_A16;
 
 		slave_image->cycle_attr = VME_SCT | VME_BLT | VME_MBLT |
-			VME_SUPER | VME_USER | VME_PROG | VME_DATA;
+					  VME_SUPER | VME_USER | VME_PROG | VME_DATA;
 		list_add_tail(&(slave_image->list),
-			&(ca91cx42_bridge->slave_resources));
+			      &(ca91cx42_bridge->slave_resources));
 	}
 
 	/* Add dma engines to list */
 	INIT_LIST_HEAD(&(ca91cx42_bridge->dma_resources));
 	for (i = 0; i < CA91C142_MAX_DMA; i++) {
 		dma_ctrlr = kmalloc(sizeof(struct vme_dma_resource),
-			GFP_KERNEL);
+				    GFP_KERNEL);
 		if (dma_ctrlr == NULL) {
 			dev_err(&pdev->dev, "Failed to allocate memory for "
-			"dma resource structure\n");
+				"dma resource structure\n");
 			retval = -ENOMEM;
 			goto err_dma;
 		}
@@ -1632,11 +1626,11 @@ static int ca91cx42_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		dma_ctrlr->locked = 0;
 		dma_ctrlr->number = i;
 		dma_ctrlr->route_attr = VME_DMA_VME_TO_MEM |
-			VME_DMA_MEM_TO_VME;
+					VME_DMA_MEM_TO_VME;
 		INIT_LIST_HEAD(&(dma_ctrlr->pending));
 		INIT_LIST_HEAD(&(dma_ctrlr->running));
 		list_add_tail(&(dma_ctrlr->list),
-			&(ca91cx42_bridge->dma_resources));
+			      &(ca91cx42_bridge->dma_resources));
 	}
 
 	/* Add location monitor to list */
@@ -1644,7 +1638,7 @@ static int ca91cx42_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	lm = kmalloc(sizeof(struct vme_lm_resource), GFP_KERNEL);
 	if (lm == NULL) {
 		dev_err(&pdev->dev, "Failed to allocate memory for "
-		"location monitor resource structure\n");
+			"location monitor resource structure\n");
 		retval = -ENOMEM;
 		goto err_lm;
 	}
@@ -1675,9 +1669,9 @@ static int ca91cx42_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 
 	data = ioread32(ca91cx42_device->base + MISC_CTL);
 	dev_info(&pdev->dev, "Board is%s the VME system controller\n",
-		(data & CA91CX42_MISC_CTL_SYSCON) ? "" : " not");
+		 (data & CA91CX42_MISC_CTL_SYSCON) ? "" : " not");
 	dev_info(&pdev->dev, "Slot ID is %d\n",
-		ca91cx42_slot_get(ca91cx42_bridge));
+		 ca91cx42_slot_get(ca91cx42_bridge));
 
 	if (ca91cx42_crcsr_init(ca91cx42_bridge, pdev))
 		dev_err(&pdev->dev, "CR/CSR configuration failed.\n");
@@ -1723,7 +1717,7 @@ err_master:
 	/* resources are stored in link list */
 	list_for_each(pos, &(ca91cx42_bridge->master_resources)) {
 		master_image = list_entry(pos, struct vme_master_resource,
-			list);
+					  list);
 		list_del(pos);
 		kfree(master_image);
 	}
@@ -1742,7 +1736,6 @@ err_driver:
 	kfree(ca91cx42_bridge);
 err_struct:
 	return retval;
-
 }
 
 void ca91cx42_remove(struct pci_dev *pdev)
@@ -1807,7 +1800,7 @@ void ca91cx42_remove(struct pci_dev *pdev)
 	/* resources are stored in link list */
 	list_for_each(pos, &(ca91cx42_bridge->master_resources)) {
 		master_image = list_entry(pos, struct vme_master_resource,
-			list);
+					  list);
 		list_del(pos);
 		kfree(master_image);
 	}

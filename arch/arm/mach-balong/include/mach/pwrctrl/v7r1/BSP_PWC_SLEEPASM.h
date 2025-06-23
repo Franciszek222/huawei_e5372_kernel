@@ -24,7 +24,7 @@
 /*****************************************************************************/
 //#include <mach/DrvInterface.h>
 
-#if (defined(CHIP_BB_6920ES)||defined (CHIP_BB_6920CS))
+#if (defined(CHIP_BB_6920ES) || defined (CHIP_BB_6920CS))
 #include <mach/pwrctrl/v7r1/BSP_PWC_SOCREG.h>
 #else
 #include <mach/pwrctrl/v3r2/BSP_PWC_SOCREG.h>
@@ -33,10 +33,10 @@
 /*macro define*/
 /*****************************************************************************/
 #define _ARM_FUNCTION_CALLED_FROM_C(a) \
-    .globl a    ;\
-    .code   32  ;\
-    .balign 4   ;\
-a:
+	.globl a; \
+	.code   32; \
+	.balign 4; \
+	a :
 
 
 /*****************************************************************************/
@@ -77,20 +77,20 @@ a:
 #define PWRCTRL_DRX_TCM_ON              (0xDEB9)
 #define PWRCTRL_DEEPSLEEP_DEAD_LOOP     (0xDEB)
 
-#define PWR_BOOT_NORMAL_ADDR    (PRODUCT_CFG_MCORE_RAM_LOW_ADDR)        
+#define PWR_BOOT_NORMAL_ADDR    (PRODUCT_CFG_MCORE_RAM_LOW_ADDR)
 
 /*define end flag for code-stable*/
 #define PWRCTRL_ASM_LINK_FLAG1 (0xAABBCCDD)
 #define PWRCTRL_ASM_LINK_FLAG2 (0xDDCCBBAA)
 
 /*双核唤醒源，暂做成互斥，后续修改*/
-#define CARM_AWAKE_INT_ENABLE0  (0x80000050)          
-#define CARM_AWAKE_INT_ENABLE1  (0x1020000)  
-#define CARM_AWAKE_INT_ENABLE2  (0x3f0000)  
-#define CARM_AWAKE_INT_ENABLE3  (0x1001008) 
-#define AARM_AWAKE_INT_ENABLE0  (0x50)          
-#define AARM_AWAKE_INT_ENABLE2  (0x3f0000)  
-#define AARM_AWAKE_INT_ENABLE3  (0x8) 
+#define CARM_AWAKE_INT_ENABLE0  (0x80000050)
+#define CARM_AWAKE_INT_ENABLE1  (0x1020000)
+#define CARM_AWAKE_INT_ENABLE2  (0x3f0000)
+#define CARM_AWAKE_INT_ENABLE3  (0x1001008)
+#define AARM_AWAKE_INT_ENABLE0  (0x50)
+#define AARM_AWAKE_INT_ENABLE2  (0x3f0000)
+#define AARM_AWAKE_INT_ENABLE3  (0x8)
 
 /*DEBUG标志位*/
 #define PWRCTRL_BAK_GIC_REG        0x1
@@ -114,8 +114,8 @@ a:
 
 /* cpsr control bits */
 #define CTRL_MMU_BIT            (0x01)
-#define CTRL_ICACHE_BIT         (1<<12)
-#define CTRL_DCACHE_BIT         (1<<2)
+#define CTRL_ICACHE_BIT         (1 << 12)
+#define CTRL_DCACHE_BIT         (1 << 2)
 #define CTRL_CACHE_BIT          CTRL_DCACHE_BIT | CTRL_ICACHE_BIT
 #define CTRL_MMU_CACHE          CTRL_MMU_BIT | CTRL_CACHE_BIT
 
@@ -123,8 +123,8 @@ a:
 #define SEC_ADDR_MASK           (0xFFF00000)     /*bit 31 ~ 20 mask*/
 
 /*modefied by zsc */
-#define PMD_SECT_ARMA9        	PMD_TYPE_SECT | PMD_SECT_BUFFERABLE \
-								| PMD_SECT_CACHEABLE|PMD_SECT_AP_WRITE| PMD_SECT_AP_READ
+#define PMD_SECT_ARMA9          PMD_TYPE_SECT | PMD_SECT_BUFFERABLE \
+	| PMD_SECT_CACHEABLE | PMD_SECT_AP_WRITE | PMD_SECT_AP_READ
 
 /*TTB register transfer bit0~13 MASK*/
 #define TRANS_BASE_MASK         (0x3FFF)

@@ -1,77 +1,77 @@
 /*
-    comedi/drivers/pcl726.c
-
-    hardware driver for Advantech cards:
-     card:   PCL-726, PCL-727, PCL-728
-     driver: pcl726,  pcl727,  pcl728
-    and for ADLink cards:
-     card:   ACL-6126, ACL-6128
-     driver: acl6126,  acl6128
-
-    COMEDI - Linux Control and Measurement Device Interface
-    Copyright (C) 1998 David A. Schleef <ds@schleef.org>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
-*/
+ *  comedi/drivers/pcl726.c
+ *
+ *  hardware driver for Advantech cards:
+ *   card:   PCL-726, PCL-727, PCL-728
+ *   driver: pcl726,  pcl727,  pcl728
+ *  and for ADLink cards:
+ *   card:   ACL-6126, ACL-6128
+ *   driver: acl6126,  acl6128
+ *
+ *  COMEDI - Linux Control and Measurement Device Interface
+ *  Copyright (C) 1998 David A. Schleef <ds@schleef.org>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ */
 /*
-Driver: pcl726
-Description: Advantech PCL-726 & compatibles
-Author: ds
-Status: untested
-Devices: [Advantech] PCL-726 (pcl726), PCL-727 (pcl727), PCL-728 (pcl728),
-  [ADLink] ACL-6126 (acl6126), ACL-6128 (acl6128)
-
-Interrupts are not supported.
-
-    Options for PCL-726:
-     [0] - IO Base
-     [2]...[7] - D/A output range for channel 1-6:
-		0: 0-5V, 1: 0-10V, 2: +/-5V, 3: +/-10V,
-		4: 4-20mA, 5: unknown (external reference)
-
-    Options for PCL-727:
-     [0] - IO Base
-     [2]...[13] - D/A output range for channel 1-12:
-		0: 0-5V, 1: 0-10V, 2: +/-5V,
-		3: 4-20mA
-
-    Options for PCL-728 and ACL-6128:
-     [0] - IO Base
-     [2], [3] - D/A output range for channel 1 and 2:
-		0: 0-5V, 1: 0-10V, 2: +/-5V, 3: +/-10V,
-		4: 4-20mA, 5: 0-20mA
-
-    Options for ACL-6126:
-     [0] - IO Base
-     [1] - IRQ (0=disable, 3, 5, 6, 7, 9, 10, 11, 12, 15) (currently ignored)
-     [2]...[7] - D/A output range for channel 1-6:
-		0: 0-5V, 1: 0-10V, 2: +/-5V, 3: +/-10V,
-		4: 4-20mA
-*/
+ * Driver: pcl726
+ * Description: Advantech PCL-726 & compatibles
+ * Author: ds
+ * Status: untested
+ * Devices: [Advantech] PCL-726 (pcl726), PCL-727 (pcl727), PCL-728 (pcl728),
+ * [ADLink] ACL-6126 (acl6126), ACL-6128 (acl6128)
+ *
+ * Interrupts are not supported.
+ *
+ *  Options for PCL-726:
+ *   [0] - IO Base
+ *   [2]...[7] - D/A output range for channel 1-6:
+ *              0: 0-5V, 1: 0-10V, 2: +/-5V, 3: +/-10V,
+ *              4: 4-20mA, 5: unknown (external reference)
+ *
+ *  Options for PCL-727:
+ *   [0] - IO Base
+ *   [2]...[13] - D/A output range for channel 1-12:
+ *              0: 0-5V, 1: 0-10V, 2: +/-5V,
+ *              3: 4-20mA
+ *
+ *  Options for PCL-728 and ACL-6128:
+ *   [0] - IO Base
+ *   [2], [3] - D/A output range for channel 1 and 2:
+ *              0: 0-5V, 1: 0-10V, 2: +/-5V, 3: +/-10V,
+ *              4: 4-20mA, 5: 0-20mA
+ *
+ *  Options for ACL-6126:
+ *   [0] - IO Base
+ *   [1] - IRQ (0=disable, 3, 5, 6, 7, 9, 10, 11, 12, 15) (currently ignored)
+ *   [2]...[7] - D/A output range for channel 1-6:
+ *              0: 0-5V, 1: 0-10V, 2: +/-5V, 3: +/-10V,
+ *              4: 4-20mA
+ */
 
 /*
-    Thanks to Circuit Specialists for having programming info (!) on
-    their web page.  (http://www.cir.com/)
-*/
+ *  Thanks to Circuit Specialists for having programming info (!) on
+ *  their web page.  (http://www.cir.com/)
+ */
 
 #include "../comedidev.h"
 
 #include <linux/ioport.h>
 
-#undef ACL6126_IRQ		/* no interrupt support (yet) */
+#undef ACL6126_IRQ              /* no interrupt support (yet) */
 
 #define PCL726_SIZE 16
 #define PCL727_SIZE 32
@@ -90,13 +90,13 @@ Interrupts are not supported.
 #define PCL727_DI_HI  0
 #define PCL727_DI_LO  1
 
-static const struct comedi_lrange range_4_20mA = { 1, {RANGE_mA(4, 20)} };
-static const struct comedi_lrange range_0_20mA = { 1, {RANGE_mA(0, 20)} };
+static const struct comedi_lrange range_4_20mA = { 1, { RANGE_mA(4, 20) } };
+static const struct comedi_lrange range_0_20mA = { 1, { RANGE_mA(0, 20) } };
 
 static const struct comedi_lrange *const rangelist_726[] = {
 	&range_unipolar5, &range_unipolar10,
-	&range_bipolar5, &range_bipolar10,
-	&range_4_20mA, &range_unknown
+	&range_bipolar5,  &range_bipolar10,
+	&range_4_20mA,	  &range_unknown
 };
 
 static const struct comedi_lrange *const rangelist_727[] = {
@@ -107,68 +107,65 @@ static const struct comedi_lrange *const rangelist_727[] = {
 
 static const struct comedi_lrange *const rangelist_728[] = {
 	&range_unipolar5, &range_unipolar10,
-	&range_bipolar5, &range_bipolar10,
-	&range_4_20mA, &range_0_20mA
+	&range_bipolar5,  &range_bipolar10,
+	&range_4_20mA,	  &range_0_20mA
 };
 
-static int pcl726_attach(struct comedi_device *dev,
-			 struct comedi_devconfig *it);
+static int pcl726_attach(struct comedi_device *dev, struct comedi_devconfig *it);
 static int pcl726_detach(struct comedi_device *dev);
 
 struct pcl726_board {
-
-	const char *name;	/*  driver name */
-	int n_aochan;		/*  num of D/A chans */
-	int num_of_ranges;	/*  num of ranges */
-	unsigned int IRQbits;	/*  allowed interrupts */
-	unsigned int io_range;	/*  len of IO space */
-	char have_dio;		/*  1=card have DI/DO ports */
-	int di_hi;		/*  ports for DI/DO operations */
-	int di_lo;
-	int do_hi;
-	int do_lo;
-	const struct comedi_lrange *const *range_type_list;
+	const char *				name;           /*  driver name */
+	int					n_aochan;       /*  num of D/A chans */
+	int					num_of_ranges;  /*  num of ranges */
+	unsigned int				IRQbits;        /*  allowed interrupts */
+	unsigned int				io_range;       /*  len of IO space */
+	char					have_dio;       /*  1=card have DI/DO ports */
+	int					di_hi;          /*  ports for DI/DO operations */
+	int					di_lo;
+	int					do_hi;
+	int					do_lo;
+	const struct comedi_lrange *const *	range_type_list;
 	/*  list of supported ranges */
 };
 
 static const struct pcl726_board boardtypes[] = {
-	{"pcl726", 6, 6, 0x0000, PCL726_SIZE, 1,
-	 PCL726_DI_HI, PCL726_DI_LO, PCL726_DO_HI, PCL726_DO_LO,
-	 &rangelist_726[0],},
-	{"pcl727", 12, 4, 0x0000, PCL727_SIZE, 1,
-	 PCL727_DI_HI, PCL727_DI_LO, PCL727_DO_HI, PCL727_DO_LO,
-	 &rangelist_727[0],},
-	{"pcl728", 2, 6, 0x0000, PCL728_SIZE, 0,
-	 0, 0, 0, 0,
-	 &rangelist_728[0],},
-	{"acl6126", 6, 5, 0x96e8, PCL726_SIZE, 1,
-	 PCL726_DI_HI, PCL726_DI_LO, PCL726_DO_HI, PCL726_DO_LO,
-	 &rangelist_726[0],},
-	{"acl6128", 2, 6, 0x0000, PCL728_SIZE, 0,
-	 0, 0, 0, 0,
-	 &rangelist_728[0],},
+	{ "pcl726",  6,	 6, 0x0000, PCL726_SIZE, 1,
+	  PCL726_DI_HI, PCL726_DI_LO, PCL726_DO_HI, PCL726_DO_LO,
+	  &rangelist_726[0], },
+	{ "pcl727",  12, 4, 0x0000, PCL727_SIZE, 1,
+	  PCL727_DI_HI, PCL727_DI_LO, PCL727_DO_HI, PCL727_DO_LO,
+	  &rangelist_727[0], },
+	{ "pcl728",  2,	 6, 0x0000, PCL728_SIZE, 0,
+	  0, 0, 0, 0,
+	  &rangelist_728[0], },
+	{ "acl6126", 6,	 5, 0x96e8, PCL726_SIZE, 1,
+	  PCL726_DI_HI, PCL726_DI_LO, PCL726_DO_HI, PCL726_DO_LO,
+	  &rangelist_726[0], },
+	{ "acl6128", 2,	 6, 0x0000, PCL728_SIZE, 0,
+	  0, 0, 0, 0,
+	  &rangelist_728[0], },
 };
 
-#define n_boardtypes (sizeof(boardtypes)/sizeof(struct pcl726_board))
+#define n_boardtypes (sizeof(boardtypes) / sizeof(struct pcl726_board))
 #define this_board ((const struct pcl726_board *)dev->board_ptr)
 
 static struct comedi_driver driver_pcl726 = {
-	.driver_name = "pcl726",
-	.module = THIS_MODULE,
-	.attach = pcl726_attach,
-	.detach = pcl726_detach,
-	.board_name = &boardtypes[0].name,
-	.num_names = n_boardtypes,
-	.offset = sizeof(struct pcl726_board),
+	.driver_name	= "pcl726",
+	.module		= THIS_MODULE,
+	.attach		= pcl726_attach,
+	.detach		= pcl726_detach,
+	.board_name	= &boardtypes[0].name,
+	.num_names	= n_boardtypes,
+	.offset		= sizeof(struct pcl726_board),
 };
 
 COMEDI_INITCLEANUP(driver_pcl726);
 
 struct pcl726_private {
-
-	int bipolar[12];
-	const struct comedi_lrange *rangelist[12];
-	unsigned int ao_readback[12];
+	int				bipolar[12];
+	const struct comedi_lrange *	rangelist[12];
+	unsigned int			ao_readback[12];
 };
 
 #define devpriv ((struct pcl726_private *)dev->private)
@@ -218,7 +215,7 @@ static int pcl726_di_insn_bits(struct comedi_device *dev,
 		return -EINVAL;
 
 	data[1] = inb(dev->iobase + this_board->di_lo) |
-	    (inb(dev->iobase + this_board->di_hi) << 8);
+		  (inb(dev->iobase + this_board->di_hi) << 8);
 
 	return 2;
 }
@@ -250,6 +247,7 @@ static int pcl726_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 	unsigned long iobase;
 	unsigned int iorange;
 	int ret, i;
+
 #ifdef ACL6126_IRQ
 	unsigned int irq;
 #endif
@@ -278,22 +276,22 @@ static int pcl726_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 
 #ifdef ACL6126_IRQ
 	irq = 0;
-	if (boardtypes[board].IRQbits != 0) {	/* board support IRQ */
+	if (boardtypes[board].IRQbits != 0) {   /* board support IRQ */
 		irq = it->options[1];
 		devpriv->first_chan = 2;
-		if (irq) {	/* we want to use IRQ */
+		if (irq) {      /* we want to use IRQ */
 			if (((1 << irq) & boardtypes[board].IRQbits) == 0) {
 				printk(KERN_WARNING
-					", IRQ %d is out of allowed range,"
-					" DISABLING IT", irq);
-				irq = 0;	/* Bad IRQ */
+				       ", IRQ %d is out of allowed range,"
+				       " DISABLING IT", irq);
+				irq = 0;        /* Bad IRQ */
 			} else {
 				if (request_irq(irq, interrupt_pcl818, 0,
 						"pcl726", dev)) {
 					printk(KERN_WARNING
-						", unable to allocate IRQ %d,"
-						" DISABLING IT", irq);
-					irq = 0;	/* Can't use IRQ */
+					       ", unable to allocate IRQ %d,"
+					       " DISABLING IT", irq);
+					irq = 0;        /* Can't use IRQ */
 				} else {
 					printk(", irq=%d", irq);
 				}
@@ -326,14 +324,14 @@ static int pcl726_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 		j = it->options[2 + 1];
 		if ((j < 0) || (j >= this_board->num_of_ranges)) {
 			printk
-			    ("Invalid range for channel %d! Must be 0<=%d<%d\n",
-			     i, j, this_board->num_of_ranges - 1);
+				("Invalid range for channel %d! Must be 0<=%d<%d\n",
+				i, j, this_board->num_of_ranges - 1);
 			j = 0;
 		}
 		devpriv->rangelist[i] = this_board->range_type_list[j];
 		if (devpriv->rangelist[i]->range[0].min ==
 		    -devpriv->rangelist[i]->range[0].max)
-			devpriv->bipolar[i] = 1;	/* bipolar range */
+			devpriv->bipolar[i] = 1;        /* bipolar range */
 	}
 
 	s = dev->subdevices + 1;

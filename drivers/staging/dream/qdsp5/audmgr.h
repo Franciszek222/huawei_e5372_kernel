@@ -17,7 +17,7 @@
 #ifndef _ARCH_ARM_MACH_MSM_AUDMGR_H
 #define _ARCH_ARM_MACH_MSM_AUDMGR_H
 
-#if CONFIG_MSM_AMSS_VERSION==6350
+#if CONFIG_MSM_AMSS_VERSION == 6350
 #include "audmgr_new.h"
 #else
 
@@ -121,26 +121,26 @@ enum rpc_audmgr_status_type {
 };
 
 struct rpc_audmgr_enable_client_args {
-	uint32_t set_to_one;
-	uint32_t tx_sample_rate;
-	uint32_t rx_sample_rate;
-	uint32_t def_method;
-	uint32_t codec_type;
-	uint32_t snd_method;
+	uint32_t	set_to_one;
+	uint32_t	tx_sample_rate;
+	uint32_t	rx_sample_rate;
+	uint32_t	def_method;
+	uint32_t	codec_type;
+	uint32_t	snd_method;
 
-	uint32_t cb_func;
-	uint32_t client_data;
+	uint32_t	cb_func;
+	uint32_t	client_data;
 };
 
-#define AUDMGR_ENABLE_CLIENT			2
-#define AUDMGR_DISABLE_CLIENT			3
-#define AUDMGR_SUSPEND_EVENT_RSP		4
-#define AUDMGR_REGISTER_OPERATION_LISTENER	5
-#define AUDMGR_UNREGISTER_OPERATION_LISTENER	6
-#define AUDMGR_REGISTER_CODEC_LISTENER		7
-#define AUDMGR_GET_RX_SAMPLE_RATE		8
-#define AUDMGR_GET_TX_SAMPLE_RATE		9
-#define AUDMGR_SET_DEVICE_MODE			10
+#define AUDMGR_ENABLE_CLIENT                    2
+#define AUDMGR_DISABLE_CLIENT                   3
+#define AUDMGR_SUSPEND_EVENT_RSP                4
+#define AUDMGR_REGISTER_OPERATION_LISTENER      5
+#define AUDMGR_UNREGISTER_OPERATION_LISTENER    6
+#define AUDMGR_REGISTER_CODEC_LISTENER          7
+#define AUDMGR_GET_RX_SAMPLE_RATE               8
+#define AUDMGR_GET_TX_SAMPLE_RATE               9
+#define AUDMGR_SET_DEVICE_MODE                  10
 
 #if CONFIG_MSM_AMSS_VERSION < 6220
 #define AUDMGR_PROG_VERS "rs30000013:46255756"
@@ -153,19 +153,18 @@ struct rpc_audmgr_enable_client_args {
 #endif
 
 struct rpc_audmgr_cb_func_ptr {
-	uint32_t cb_id;
-	uint32_t set_to_one;
-	uint32_t status;
+	uint32_t	cb_id;
+	uint32_t	set_to_one;
+	uint32_t	status;
 	union {
-		uint32_t handle;
-		uint32_t volume;
-
+		uint32_t	handle;
+		uint32_t	volume;
 	} u;
 };
 
-#define AUDMGR_CB_FUNC_PTR			1
-#define AUDMGR_OPR_LSTNR_CB_FUNC_PTR		2
-#define AUDMGR_CODEC_LSTR_FUNC_PTR		3
+#define AUDMGR_CB_FUNC_PTR                      1
+#define AUDMGR_OPR_LSTNR_CB_FUNC_PTR            2
+#define AUDMGR_CODEC_LSTR_FUNC_PTR              3
 
 #if CONFIG_MSM_AMSS_VERSION < 6220
 #define AUDMGR_CB_PROG 0x31000013
@@ -176,19 +175,19 @@ struct rpc_audmgr_cb_func_ptr {
 #endif
 
 struct audmgr {
-	wait_queue_head_t wait;
-	uint32_t handle;
-	struct msm_rpc_endpoint *ept;
-	struct task_struct *task;
-	int state;
+	wait_queue_head_t		wait;
+	uint32_t			handle;
+	struct msm_rpc_endpoint *	ept;
+	struct task_struct *		task;
+	int				state;
 };
 
 struct audmgr_config {
-	uint32_t tx_rate;
-	uint32_t rx_rate;
-	uint32_t def_method;
-	uint32_t codec;
-	uint32_t snd_method;
+	uint32_t	tx_rate;
+	uint32_t	rx_rate;
+	uint32_t	def_method;
+	uint32_t	codec;
+	uint32_t	snd_method;
 };
 
 int audmgr_open(struct audmgr *am);

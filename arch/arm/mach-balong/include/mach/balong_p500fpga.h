@@ -16,7 +16,7 @@
 #define NANDF_BUFFER_ADDR                   0x90000000
 #define NANDF_BUFFER_SIZE                   SZ_256M
 
-/*timer 4~7*/            
+/*timer 4~7*/
 #define PV500V1_TIMER_BASE                  0x20003000
 #define PV500V1_CLK_REGS_SIZE               SZ_4K
 
@@ -58,7 +58,7 @@
 
 /*AXI*/
 #define AXI_MEM_BASE_ADDR                   0x30000000
-#define AXI_MEM_ADDR                    	IO_ADDRESS(0x30000000)
+#define AXI_MEM_ADDR                            IO_ADDRESS(0x30000000)
 #define AXI_MEM_SIZE                        (0x20000)
 
 //#define PBXA9_DRAM_SHARE_PHYS               (0xc8000000)
@@ -68,12 +68,12 @@
 /*WDT*/
 #define PBXA9_WDT_BASE                      0x20001000
 #define PBXA9_WDT_SIZE                      SZ_4K
-#define PBXA9_WDT_VA_BASE                   IO_ADDRESS(PBXA9_WDT_BASE) 
+#define PBXA9_WDT_VA_BASE                   IO_ADDRESS(PBXA9_WDT_BASE)
 
 /*系统控制器*/
 #define V3R2_SC_BASE                        0x80000000
-#define V3R2_SC_SIZE			            SZ_4K
-#define V3R2_SC_VA_BASE                     IO_ADDRESS(V3R2_SC_BASE) 
+#define V3R2_SC_SIZE                                SZ_4K
+#define V3R2_SC_VA_BASE                     IO_ADDRESS(V3R2_SC_BASE)
 
 /*FPGA soc reset*/
 #define FPGA_SOC_RESET_BASE                 0x5f050000
@@ -81,7 +81,7 @@
 #define FPGA_SOC_RESET_VA_BASE              IO_ADDRESS(0x5f050000)
 
 /* 96 is the maximum interrupt number. It covers SGI, PPI and SPI */
-#define SYS_INT_LEVELS_MAX          (96+32)
+#define SYS_INT_LEVELS_MAX          (96 + 32)
 
 /* interrupt distributor */
 #define PBXA9_GIC_DIST_CONTROL      (PBXA9_PERIPHBASE + 0x1000)
@@ -95,46 +95,46 @@
 #define SYS_INT_LEVELS_MAX          INT_LVL_MAX
 #define SUBVIC_NUM                  21
 
-#define INT_LVL_WDT                 (A9_GLOBAL_INTS+0)
+#define INT_LVL_WDT                 (A9_GLOBAL_INTS + 0)
 /* 1保留 */
 /* 2-3为ARM11中断,BSP暂不定义 */
-#define INT_LVL_TIMER_0             (A9_GLOBAL_INTS+4)
-#define INT_LVL_TIMER_1             (A9_GLOBAL_INTS+5)
-#define INT_LVL_TIMER_23            (A9_GLOBAL_INTS+6)
-#define INT_LVL_TIMER_4567          (A9_GLOBAL_INTS+7)
+#define INT_LVL_TIMER_0             (A9_GLOBAL_INTS + 4)
+#define INT_LVL_TIMER_1             (A9_GLOBAL_INTS + 5)
+#define INT_LVL_TIMER_23            (A9_GLOBAL_INTS + 6)
+#define INT_LVL_TIMER_4567          (A9_GLOBAL_INTS + 7)
 //TODO:#define INT_LVL_TIMER_2_3     (37) /* 2 or 3 Timers */
 //TODO:#define INT_LVL_TIMER_0_1     (36) /* 0 or 1 Timers */
 /* 8保留 */
-#define INT_LVL_SCI                 (A9_GLOBAL_INTS+9)
-#define INT_LVL_DMA                 (A9_GLOBAL_INTS+10)
-#define INT_LVL_CIPHER              (A9_GLOBAL_INTS+11)
-#define INT_LVL_USB                 (A9_GLOBAL_INTS+12)
-#define INT_LVL_UART_0              (A9_GLOBAL_INTS+26) /* UART0 */
-#define INT_LVL_UART_1              (A9_GLOBAL_INTS+27) /* UART1 */
-#define INT_LVL_UART_2              (A9_GLOBAL_INTS+28) /* UART2 */
-#define INT_LVL_RTC                 (A9_GLOBAL_INTS+29)
-#define INT_LVL_NANDC               (A9_GLOBAL_INTS+30)
-#define INT_LVL_SD_MMC              (A9_GLOBAL_INTS+31)
-#define INT_LVL_I2C                 (A9_GLOBAL_INTS+32)
-#define INT_LVL_GMAC                (A9_GLOBAL_INTS+33)
-#define INT_LVL_GPIO_0              (A9_GLOBAL_INTS+34)
-#define INT_LVL_DESRSASHA           (A9_GLOBAL_INTS+35)
-#define INT_LVL_IPCM2ARM            (A9_GLOBAL_INTS+36)
+#define INT_LVL_SCI                 (A9_GLOBAL_INTS + 9)
+#define INT_LVL_DMA                 (A9_GLOBAL_INTS + 10)
+#define INT_LVL_CIPHER              (A9_GLOBAL_INTS + 11)
+#define INT_LVL_USB                 (A9_GLOBAL_INTS + 12)
+#define INT_LVL_UART_0              (A9_GLOBAL_INTS + 26)       /* UART0 */
+#define INT_LVL_UART_1              (A9_GLOBAL_INTS + 27)       /* UART1 */
+#define INT_LVL_UART_2              (A9_GLOBAL_INTS + 28)       /* UART2 */
+#define INT_LVL_RTC                 (A9_GLOBAL_INTS + 29)
+#define INT_LVL_NANDC               (A9_GLOBAL_INTS + 30)
+#define INT_LVL_SD_MMC              (A9_GLOBAL_INTS + 31)
+#define INT_LVL_I2C                 (A9_GLOBAL_INTS + 32)
+#define INT_LVL_GMAC                (A9_GLOBAL_INTS + 33)
+#define INT_LVL_GPIO_0              (A9_GLOBAL_INTS + 34)
+#define INT_LVL_DESRSASHA           (A9_GLOBAL_INTS + 35)
+#define INT_LVL_IPCM2ARM            (A9_GLOBAL_INTS + 36)
 /* 37-40为CEVA中断,BSP不定义 */
-#define INT_LVL_PMU                 (A9_GLOBAL_INTS+41) /* PMU组合中断*/
-#define INT_LVL_AXIMONITOR          (A9_GLOBAL_INTS+42) /* PMU组合中断*/
+#define INT_LVL_PMU                 (A9_GLOBAL_INTS + 41)       /* PMU组合中断*/
+#define INT_LVL_AXIMONITOR          (A9_GLOBAL_INTS + 42)       /* PMU组合中断*/
 /* 43-44为CEVA中断,BSP不定义 */
-#define INT_LVL_GPIO_1              (A9_GLOBAL_INTS+45)
+#define INT_LVL_GPIO_1              (A9_GLOBAL_INTS + 45)
 /* 46-47保留 */
 /* 48-63为PAD_INTX,BSP暂不定义 */
 #ifdef PRODUCT_CFG_CORE_TYPE_MODEM
-#define INT_LVL_SUBVIC              (A9_GLOBAL_INTS+62)
+#define INT_LVL_SUBVIC              (A9_GLOBAL_INTS + 62)
 #else
-#define INT_LVL_SUBVIC              (A9_GLOBAL_INTS+63)
+#define INT_LVL_SUBVIC              (A9_GLOBAL_INTS + 63)
 #endif
 #define INT_LVL_FPGA                INT_LVL_SUBVIC      /* FPGA_AXI中断*/
 
-/* 64-85保留 */   
+/* 64-85保留 */
 /* 88-95保留 */
 
 /* SUB VIC */
@@ -170,7 +170,7 @@
 
 /*address transfer */
 #define IO_TYPE(var) ((ICC_SUB_CHAN_S *)IO_ADDRESS((unsigned int)(var)))
-#define PHY_TO_VIRT(var)  ((BSP_U8*)IO_ADDRESS((unsigned int)(var)))
+#define PHY_TO_VIRT(var)  ((BSP_U8 *)IO_ADDRESS((unsigned int)(var)))
 #define VIRT_TO_PHY(var)  (((var) - AXI_MEM_ADDR) + AXI_MEM_BASE_ADDR)
 
 /* MEM Rserved For GU */
@@ -189,7 +189,7 @@
 #define PBXA9_VX_RAM_HIGH_ADRS              GLOBAL_MEM_MCORE_USER_RESERVED_ADDR    /* 和C核保持一致 */
 #define PBXA9_VX_RAM_BOOTLOAD_VER_LEN       MEMORY_RAM_BOOTLOAD_VER_LEN
 #define PBXA9_VX_RAM_TRACE_SIZE             MEMORY_RAM_TRACE_SIZE
-#define PBXA9_VX_RAM_EXC_ALIGN_SIZE         (4*1024-PBXA9_VX_RAM_BOOTLOAD_VER_LEN-PBXA9_VX_RAM_TRACE_SIZE)
+#define PBXA9_VX_RAM_EXC_ALIGN_SIZE         (4 * 1024 - PBXA9_VX_RAM_BOOTLOAD_VER_LEN - PBXA9_VX_RAM_TRACE_SIZE)
 /* added by w54542 in 2011-12-06 end */
 
 /*EXC，同时地址需要和C核一致*/

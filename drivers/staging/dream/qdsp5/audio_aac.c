@@ -43,90 +43,90 @@
 #include "adsp.h"
 
 #ifdef DEBUG
-#define dprintk(format, arg...) \
-printk(KERN_DEBUG format, ## arg)
+#define dprintk(format, arg ...) \
+	printk(KERN_DEBUG format, ## arg)
 #else
-#define dprintk(format, arg...) do {} while (0)
+#define dprintk(format, arg ...) do {} while (0)
 #endif
 
 #define BUFSZ 32768
 #define DMASZ (BUFSZ * 2)
 
-#define AUDPLAY_INVALID_READ_PTR_OFFSET	0xFFFF
+#define AUDPLAY_INVALID_READ_PTR_OFFSET 0xFFFF
 #define AUDDEC_DEC_AAC 5
 
-#define PCM_BUFSZ_MIN 9600	/* Hold one stereo AAC frame */
-#define PCM_BUF_MAX_COUNT 5	/* DSP only accepts 5 buffers at most
-				   but support 2 buffers currently */
+#define PCM_BUFSZ_MIN 9600      /* Hold one stereo AAC frame */
+#define PCM_BUF_MAX_COUNT 5     /* DSP only accepts 5 buffers at most
+	                         * but support 2 buffers currently */
 #define ROUTING_MODE_FTRT 1
 #define ROUTING_MODE_RT 2
 /* Decoder status received from AUDPPTASK */
-#define  AUDPP_DEC_STATUS_SLEEP	0
-#define	 AUDPP_DEC_STATUS_INIT  1
+#define  AUDPP_DEC_STATUS_SLEEP 0
+#define  AUDPP_DEC_STATUS_INIT  1
 #define  AUDPP_DEC_STATUS_CFG   2
 #define  AUDPP_DEC_STATUS_PLAY  3
 
 struct buffer {
-	void *data;
-	unsigned size;
-	unsigned used;		/* Input usage actual DSP produced PCM size  */
-	unsigned addr;
+	void *		data;
+	unsigned	size;
+	unsigned	used;   /* Input usage actual DSP produced PCM size  */
+	unsigned	addr;
 };
 
 struct audio {
-	struct buffer out[2];
+	struct buffer			out[2];
 
-	spinlock_t dsp_lock;
+	spinlock_t			dsp_lock;
 
-	uint8_t out_head;
-	uint8_t out_tail;
-	uint8_t out_needed;	/* number of buffers the dsp is waiting for */
+	uint8_t				out_head;
+	uint8_t				out_tail;
+	uint8_t				out_needed; /* number of buffers the dsp is waiting for */
 
-	atomic_t out_bytes;
+	atomic_t			out_bytes;
 
-	struct mutex lock;
-	struct mutex write_lock;
-	wait_queue_head_t write_wait;
+	struct mutex			lock;
+	struct mutex			write_lock;
+	wait_queue_head_t		write_wait;
 
 	/* Host PCM section */
-	struct buffer in[PCM_BUF_MAX_COUNT];
-	struct mutex read_lock;
-	wait_queue_head_t read_wait;	/* Wait queue for read */
-	char *read_data;	/* pointer to reader buffer */
-	dma_addr_t read_phys;	/* physical address of reader buffer */
-	uint8_t read_next;	/* index to input buffers to be read next */
-	uint8_t fill_next;	/* index to buffer that DSP should be filling */
-	uint8_t pcm_buf_count;	/* number of pcm buffer allocated */
+	struct buffer			in[PCM_BUF_MAX_COUNT];
+	struct mutex			read_lock;
+	wait_queue_head_t		read_wait;      /* Wait queue for read */
+	char *				read_data;      /* pointer to reader buffer */
+	dma_addr_t			read_phys;      /* physical address of reader buffer */
+	uint8_t				read_next;      /* index to input buffers to be read next */
+	uint8_t				fill_next;      /* index to buffer that DSP should be filling */
+	uint8_t				pcm_buf_count;  /* number of pcm buffer allocated */
 	/* ---- End of Host PCM section */
 
-	struct msm_adsp_module *audplay;
+	struct msm_adsp_module *	audplay;
 
 	/* configuration to use on next enable */
-	uint32_t out_sample_rate;
-	uint32_t out_channel_mode;
-	struct msm_audio_aac_config aac_config;
-	struct audmgr audmgr;
+	uint32_t			out_sample_rate;
+	uint32_t			out_channel_mode;
+	struct msm_audio_aac_config	aac_config;
+	struct audmgr			audmgr;
 
 	/* data allocated for various buffers */
-	char *data;
-	dma_addr_t phys;
+	char *				data;
+	dma_addr_t			phys;
 
-	int rflush; /* Read  flush */
-	int wflush; /* Write flush */
-	int opened;
-	int enabled;
-	int running;
-	int stopped;	/* set when stopped, cleared on flush */
-	int pcm_feedback;
-	int buf_refresh;
+	int				rflush; /* Read  flush */
+	int				wflush; /* Write flush */
+	int				opened;
+	int				enabled;
+	int				running;
+	int				stopped; /* set when stopped, cleared on flush */
+	int				pcm_feedback;
+	int				buf_refresh;
 
-	int reserved; /* A byte is being reserved */
-	char rsv_byte; /* Handle odd length user data */
+	int				reserved;       /* A byte is being reserved */
+	char				rsv_byte;       /* Handle odd length user data */
 
-	unsigned volume;
+	unsigned			volume;
 
-	uint16_t dec_id;
-	uint32_t read_ptr_offset;
+	uint16_t			dec_id;
+	uint32_t			read_ptr_offset;
 };
 
 static int auddec_dsp_config(struct audio *audio, int enable);
@@ -169,7 +169,7 @@ static int audio_enable(struct audio *audio)
 
 	if (audpp_enable(audio->dec_id, audio_dsp_event, audio)) {
 		pr_err("audio: audpp_enable() failed\n");
-    msm_adsp_disable(audio->audplay);
+		msm_adsp_disable(audio->audplay);
 		audmgr_disable(&audio->audmgr);
 		return -ENODEV;
 	}
@@ -213,12 +213,11 @@ static void audio_update_pcm_buf_entry(struct audio *audio, uint32_t *payload)
 				payload[3 + index * 2];
 			if ((++audio->fill_next) == audio->pcm_buf_count)
 				audio->fill_next = 0;
-
 		} else {
 			pr_err
-			    ("audio_update_pcm_buf_entry: expected=%x ret=%x\n"
-			     , audio->in[audio->fill_next].addr,
-			     payload[1 + index * 2]);
+				("audio_update_pcm_buf_entry: expected=%x ret=%x\n"
+				, audio->in[audio->fill_next].addr,
+				payload[1 + index * 2]);
 			break;
 		}
 	}
@@ -230,7 +229,6 @@ static void audio_update_pcm_buf_entry(struct audio *audio, uint32_t *payload)
 	}
 	wake_up(&audio->read_wait);
 	spin_unlock_irqrestore(&audio->dsp_lock, flags);
-
 }
 
 static void audplay_dsp_event(void *data, unsigned id, size_t len,
@@ -238,6 +236,7 @@ static void audplay_dsp_event(void *data, unsigned id, size_t len,
 {
 	struct audio *audio = data;
 	uint32_t msg[28];
+
 	getevent(msg, sizeof(msg));
 
 	dprintk("audplay_dsp_event: msg_id=%x\n", id);
@@ -261,34 +260,34 @@ static void audio_dsp_event(void *private, unsigned id, uint16_t *msg)
 	struct audio *audio = private;
 
 	switch (id) {
-	case AUDPP_MSG_STATUS_MSG:{
-			unsigned status = msg[1];
+	case AUDPP_MSG_STATUS_MSG: {
+		unsigned status = msg[1];
 
-			switch (status) {
-			case AUDPP_DEC_STATUS_SLEEP:
-				dprintk("decoder status: sleep \n");
-				break;
+		switch (status) {
+		case AUDPP_DEC_STATUS_SLEEP:
+			dprintk("decoder status: sleep \n");
+			break;
 
-			case AUDPP_DEC_STATUS_INIT:
-				dprintk("decoder status: init \n");
-				audpp_cmd_cfg_routing_mode(audio);
-				break;
+		case AUDPP_DEC_STATUS_INIT:
+			dprintk("decoder status: init \n");
+			audpp_cmd_cfg_routing_mode(audio);
+			break;
 
-			case AUDPP_DEC_STATUS_CFG:
-				dprintk("decoder status: cfg \n");
-				break;
-			case AUDPP_DEC_STATUS_PLAY:
-				dprintk("decoder status: play \n");
-				if (audio->pcm_feedback) {
-					audplay_config_hostpcm(audio);
-					audplay_buffer_refresh(audio);
-				}
-				break;
-			default:
-				pr_err("unknown decoder status \n");
+		case AUDPP_DEC_STATUS_CFG:
+			dprintk("decoder status: cfg \n");
+			break;
+		case AUDPP_DEC_STATUS_PLAY:
+			dprintk("decoder status: play \n");
+			if (audio->pcm_feedback) {
+				audplay_config_hostpcm(audio);
+				audplay_buffer_refresh(audio);
 			}
 			break;
+		default:
+			pr_err("unknown decoder status \n");
 		}
+		break;
+	}
 	case AUDPP_MSG_CFG_MSG:
 		if (msg[0] == AUDPP_MSG_ENA_ENA) {
 			dprintk("audio_dsp_event: CFG_MSG ENABLE\n");
@@ -322,11 +321,10 @@ static void audio_dsp_event(void *private, unsigned id, uint16_t *msg)
 	default:
 		pr_err("audio_dsp_event: UNKNOWN (%d)\n", id);
 	}
-
 }
 
 struct msm_adsp_ops audplay_adsp_ops_aac = {
-	.event = audplay_dsp_event,
+	.event	= audplay_dsp_event,
 };
 
 #define audplay_send_queue0(audio, cmd, len) \
@@ -341,7 +339,7 @@ static int auddec_dsp_config(struct audio *audio, int enable)
 	cmd.cmd_id = AUDPP_CMD_CFG_DEC_TYPE;
 	if (enable)
 		cmd.dec0_cfg = AUDPP_CMD_UPDATDE_CFG_DEC |
-		    AUDPP_CMD_ENA_DEC_V | AUDDEC_DEC_AAC;
+			       AUDPP_CMD_ENA_DEC_V | AUDDEC_DEC_AAC;
 	else
 		cmd.dec0_cfg = AUDPP_CMD_UPDATDE_CFG_DEC | AUDPP_CMD_DIS_DEC_V;
 
@@ -376,6 +374,7 @@ static void audpp_cmd_cfg_adec_params(struct audio *audio)
 static void audpp_cmd_cfg_routing_mode(struct audio *audio)
 {
 	struct audpp_cmd_routing_mode cmd;
+
 	dprintk("audpp_cmd_cfg_routing_mode()\n");
 	memset(&cmd, 0, sizeof(cmd));
 	cmd.cmd_id = AUDPP_CMD_ROUTING_MODE;
@@ -409,7 +408,7 @@ static void audplay_buffer_refresh(struct audio *audio)
 	refresh_cmd.num_buffers = 1;
 	refresh_cmd.buf0_address = audio->in[audio->fill_next].addr;
 	refresh_cmd.buf0_length = audio->in[audio->fill_next].size -
-		(audio->in[audio->fill_next].size % 1024); /* AAC frame size */
+				  (audio->in[audio->fill_next].size % 1024); /* AAC frame size */
 	refresh_cmd.buf_read_count = 0;
 	dprintk("audplay_buffer_fresh: buf0_addr=%x buf0_len=%d\n",
 		refresh_cmd.buf0_address, refresh_cmd.buf0_length);
@@ -428,7 +427,6 @@ static void audplay_config_hostpcm(struct audio *audio)
 	cfg_cmd.feedback_frequency = 1;
 	cfg_cmd.partition_number = 0;
 	(void)audplay_send_queue0(audio, &cfg_cmd, sizeof(cfg_cmd));
-
 }
 
 static void audplay_send_data(struct audio *audio, unsigned needed)
@@ -475,7 +473,7 @@ static void audplay_send_data(struct audio *audio, unsigned needed)
 			audio->out_needed = 0;
 		}
 	}
- done:
+done:
 	spin_unlock_irqrestore(&audio->dsp_lock, flags);
 }
 
@@ -508,33 +506,33 @@ static int audaac_validate_usr_config(struct msm_audio_aac_config *config)
 	int ret_val = -1;
 
 	if (config->format != AUDIO_AAC_FORMAT_ADTS &&
-		config->format != AUDIO_AAC_FORMAT_RAW &&
-		config->format != AUDIO_AAC_FORMAT_PSUEDO_RAW &&
-		config->format != AUDIO_AAC_FORMAT_LOAS)
+	    config->format != AUDIO_AAC_FORMAT_RAW &&
+	    config->format != AUDIO_AAC_FORMAT_PSUEDO_RAW &&
+	    config->format != AUDIO_AAC_FORMAT_LOAS)
 		goto done;
 
 	if (config->audio_object != AUDIO_AAC_OBJECT_LC &&
-		config->audio_object != AUDIO_AAC_OBJECT_LTP &&
-		config->audio_object != AUDIO_AAC_OBJECT_ERLC)
+	    config->audio_object != AUDIO_AAC_OBJECT_LTP &&
+	    config->audio_object != AUDIO_AAC_OBJECT_ERLC)
 		goto done;
 
 	if (config->audio_object == AUDIO_AAC_OBJECT_ERLC) {
 		if (config->ep_config > 3)
 			goto done;
 		if (config->aac_scalefactor_data_resilience_flag !=
-			AUDIO_AAC_SCA_DATA_RES_OFF &&
-			config->aac_scalefactor_data_resilience_flag !=
-			AUDIO_AAC_SCA_DATA_RES_ON)
+		    AUDIO_AAC_SCA_DATA_RES_OFF &&
+		    config->aac_scalefactor_data_resilience_flag !=
+		    AUDIO_AAC_SCA_DATA_RES_ON)
 			goto done;
 		if (config->aac_section_data_resilience_flag !=
-			AUDIO_AAC_SEC_DATA_RES_OFF &&
-			config->aac_section_data_resilience_flag !=
-			AUDIO_AAC_SEC_DATA_RES_ON)
+		    AUDIO_AAC_SEC_DATA_RES_OFF &&
+		    config->aac_section_data_resilience_flag !=
+		    AUDIO_AAC_SEC_DATA_RES_ON)
 			goto done;
 		if (config->aac_spectral_data_resilience_flag !=
-			AUDIO_AAC_SPEC_DATA_RES_OFF &&
-			config->aac_spectral_data_resilience_flag !=
-			AUDIO_AAC_SPEC_DATA_RES_ON)
+		    AUDIO_AAC_SPEC_DATA_RES_OFF &&
+		    config->aac_spectral_data_resilience_flag !=
+		    AUDIO_AAC_SPEC_DATA_RES_ON)
 			goto done;
 	} else {
 		config->aac_section_data_resilience_flag =
@@ -546,11 +544,11 @@ static int audaac_validate_usr_config(struct msm_audio_aac_config *config)
 	}
 
 	if (config->sbr_on_flag != AUDIO_AAC_SBR_ON_FLAG_OFF &&
-		config->sbr_on_flag != AUDIO_AAC_SBR_ON_FLAG_ON)
+	    config->sbr_on_flag != AUDIO_AAC_SBR_ON_FLAG_ON)
 		goto done;
 
 	if (config->sbr_ps_on_flag != AUDIO_AAC_SBR_PS_ON_FLAG_OFF &&
-		config->sbr_ps_on_flag != AUDIO_AAC_SBR_PS_ON_FLAG_ON)
+	    config->sbr_ps_on_flag != AUDIO_AAC_SBR_PS_ON_FLAG_ON)
 		goto done;
 
 	if (config->dual_mono_mode > AUDIO_AAC_DUAL_MONO_PL_SR)
@@ -560,7 +558,7 @@ static int audaac_validate_usr_config(struct msm_audio_aac_config *config)
 		goto done;
 
 	ret_val = 0;
- done:
+done:
 	return ret_val;
 }
 
@@ -620,160 +618,160 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		audio->rflush = 1;
 		audio->wflush = 1;
 		audio_ioport_reset(audio);
-		if (audio->running)
+		if (audio->running) {
 			audpp_flush(audio->dec_id);
-		else {
+		} else {
 			audio->rflush = 0;
 			audio->wflush = 0;
 		}
 		break;
 
-	case AUDIO_SET_CONFIG:{
-			struct msm_audio_config config;
+	case AUDIO_SET_CONFIG: {
+		struct msm_audio_config config;
 
-			if (copy_from_user
+		if (copy_from_user
 			    (&config, (void *)arg, sizeof(config))) {
-				rc = -EFAULT;
-				break;
-			}
+			rc = -EFAULT;
+			break;
+		}
 
-			if (config.channel_count == 1) {
-				config.channel_count =
-				    AUDPP_CMD_PCM_INTF_MONO_V;
-			} else if (config.channel_count == 2) {
-				config.channel_count =
-				    AUDPP_CMD_PCM_INTF_STEREO_V;
-			} else {
-				rc = -EINVAL;
-				break;
-			}
+		if (config.channel_count == 1) {
+			config.channel_count =
+				AUDPP_CMD_PCM_INTF_MONO_V;
+		} else if (config.channel_count == 2) {
+			config.channel_count =
+				AUDPP_CMD_PCM_INTF_STEREO_V;
+		} else {
+			rc = -EINVAL;
+			break;
+		}
 
-			audio->out_sample_rate = config.sample_rate;
-			audio->out_channel_mode = config.channel_count;
+		audio->out_sample_rate = config.sample_rate;
+		audio->out_channel_mode = config.channel_count;
+		rc = 0;
+		break;
+	}
+	case AUDIO_GET_CONFIG: {
+		struct msm_audio_config config;
+		config.buffer_size = BUFSZ;
+		config.buffer_count = 2;
+		config.sample_rate = audio->out_sample_rate;
+		if (audio->out_channel_mode ==
+		    AUDPP_CMD_PCM_INTF_MONO_V)
+			config.channel_count = 1;
+		else
+			config.channel_count = 2;
+		config.unused[0] = 0;
+		config.unused[1] = 0;
+		config.unused[2] = 0;
+		config.unused[3] = 0;
+		if (copy_to_user((void *)arg, &config,
+				 sizeof(config)))
+			rc = -EFAULT;
+		else
 			rc = 0;
-			break;
-		}
-	case AUDIO_GET_CONFIG:{
-			struct msm_audio_config config;
-			config.buffer_size = BUFSZ;
-			config.buffer_count = 2;
-			config.sample_rate = audio->out_sample_rate;
-			if (audio->out_channel_mode ==
-			    AUDPP_CMD_PCM_INTF_MONO_V) {
-				config.channel_count = 1;
-			} else {
-				config.channel_count = 2;
-			}
-			config.unused[0] = 0;
-			config.unused[1] = 0;
-			config.unused[2] = 0;
-			config.unused[3] = 0;
-			if (copy_to_user((void *)arg, &config,
-					 sizeof(config)))
-				rc = -EFAULT;
-			else
-				rc = 0;
 
-			break;
-		}
-	case AUDIO_GET_AAC_CONFIG:{
-			if (copy_to_user((void *)arg, &audio->aac_config,
-				sizeof(audio->aac_config)))
-				rc = -EFAULT;
-			else
-				rc = 0;
-			break;
-		}
-	case AUDIO_SET_AAC_CONFIG:{
-			struct msm_audio_aac_config usr_config;
+		break;
+	}
+	case AUDIO_GET_AAC_CONFIG: {
+		if (copy_to_user((void *)arg, &audio->aac_config,
+				 sizeof(audio->aac_config)))
+			rc = -EFAULT;
+		else
+			rc = 0;
+		break;
+	}
+	case AUDIO_SET_AAC_CONFIG: {
+		struct msm_audio_aac_config usr_config;
 
-			if (copy_from_user
-				(&usr_config, (void *)arg,
-					sizeof(usr_config))) {
-				rc = -EFAULT;
-				break;
-			}
-
-			if (audaac_validate_usr_config(&usr_config) == 0) {
-				audio->aac_config = usr_config;
-				rc = 0;
-			} else
-				rc = -EINVAL;
-
+		if (copy_from_user
+			    (&usr_config, (void *)arg,
+			    sizeof(usr_config))) {
+			rc = -EFAULT;
 			break;
 		}
-	case AUDIO_GET_PCM_CONFIG:{
-			struct msm_audio_pcm_config config;
-			config.pcm_feedback = 0;
-			config.buffer_count = PCM_BUF_MAX_COUNT;
-			config.buffer_size = PCM_BUFSZ_MIN;
-			if (copy_to_user((void *)arg, &config,
-					 sizeof(config)))
-				rc = -EFAULT;
-			else
-				rc = 0;
-			break;
+
+		if (audaac_validate_usr_config(&usr_config) == 0) {
+			audio->aac_config = usr_config;
+			rc = 0;
+		} else {
+			rc = -EINVAL;
 		}
-	case AUDIO_SET_PCM_CONFIG:{
-			struct msm_audio_pcm_config config;
-			if (copy_from_user
+
+		break;
+	}
+	case AUDIO_GET_PCM_CONFIG: {
+		struct msm_audio_pcm_config config;
+		config.pcm_feedback = 0;
+		config.buffer_count = PCM_BUF_MAX_COUNT;
+		config.buffer_size = PCM_BUFSZ_MIN;
+		if (copy_to_user((void *)arg, &config,
+				 sizeof(config)))
+			rc = -EFAULT;
+		else
+			rc = 0;
+		break;
+	}
+	case AUDIO_SET_PCM_CONFIG: {
+		struct msm_audio_pcm_config config;
+		if (copy_from_user
 			    (&config, (void *)arg, sizeof(config))) {
-				rc = -EFAULT;
-				break;
-			}
-			if ((config.buffer_count > PCM_BUF_MAX_COUNT) ||
-			    (config.buffer_count == 1))
-				config.buffer_count = PCM_BUF_MAX_COUNT;
-
-			if (config.buffer_size < PCM_BUFSZ_MIN)
-				config.buffer_size = PCM_BUFSZ_MIN;
-
-			/* Check if pcm feedback is required */
-			if ((config.pcm_feedback) && (!audio->read_data)) {
-				dprintk("ioctl: allocate PCM buffer %d\n",
-					config.buffer_count *
-					config.buffer_size);
-				audio->read_data =
-				    dma_alloc_coherent(NULL,
-						       config.buffer_size *
-						       config.buffer_count,
-						       &audio->read_phys,
-						       GFP_KERNEL);
-				if (!audio->read_data) {
-					pr_err("audio_aac: buf alloc fail\n");
-					rc = -1;
-				} else {
-					uint8_t index;
-					uint32_t offset = 0;
-					audio->pcm_feedback = 1;
-					audio->buf_refresh = 0;
-					audio->pcm_buf_count =
-					    config.buffer_count;
-					audio->read_next = 0;
-					audio->fill_next = 0;
-
-					for (index = 0;
-					     index < config.buffer_count;
-					     index++) {
-						audio->in[index].data =
-						    audio->read_data + offset;
-						audio->in[index].addr =
-						    audio->read_phys + offset;
-						audio->in[index].size =
-						    config.buffer_size;
-						audio->in[index].used = 0;
-						offset += config.buffer_size;
-					}
-					rc = 0;
-				}
-			} else {
-				rc = 0;
-			}
+			rc = -EFAULT;
 			break;
 		}
+		if ((config.buffer_count > PCM_BUF_MAX_COUNT) ||
+		    (config.buffer_count == 1))
+			config.buffer_count = PCM_BUF_MAX_COUNT;
+
+		if (config.buffer_size < PCM_BUFSZ_MIN)
+			config.buffer_size = PCM_BUFSZ_MIN;
+
+		/* Check if pcm feedback is required */
+		if ((config.pcm_feedback) && (!audio->read_data)) {
+			dprintk("ioctl: allocate PCM buffer %d\n",
+				config.buffer_count *
+				config.buffer_size);
+			audio->read_data =
+				dma_alloc_coherent(NULL,
+						   config.buffer_size *
+						   config.buffer_count,
+						   &audio->read_phys,
+						   GFP_KERNEL);
+			if (!audio->read_data) {
+				pr_err("audio_aac: buf alloc fail\n");
+				rc = -1;
+			} else {
+				uint8_t index;
+				uint32_t offset = 0;
+				audio->pcm_feedback = 1;
+				audio->buf_refresh = 0;
+				audio->pcm_buf_count =
+					config.buffer_count;
+				audio->read_next = 0;
+				audio->fill_next = 0;
+
+				for (index = 0;
+				     index < config.buffer_count;
+				     index++) {
+					audio->in[index].data =
+						audio->read_data + offset;
+					audio->in[index].addr =
+						audio->read_phys + offset;
+					audio->in[index].size =
+						config.buffer_size;
+					audio->in[index].used = 0;
+					offset += config.buffer_size;
+				}
+				rc = 0;
+			}
+		} else {
+			rc = 0;
+		}
+		break;
+	}
 	case AUDIO_PAUSE:
 		dprintk("%s: AUDIO_PAUSE %ld\n", __func__, arg);
-		rc = audpp_pause(audio->dec_id, (int) arg);
+		rc = audpp_pause(audio->dec_id, (int)arg);
 		break;
 	default:
 		rc = -EINVAL;
@@ -797,8 +795,8 @@ static ssize_t audio_read(struct file *file, char __user *buf, size_t count,
 	while (count > 0) {
 		rc = wait_event_interruptible(audio->read_wait,
 					      (audio->in[audio->read_next].
-						used > 0) || (audio->stopped)
-						|| (audio->rflush));
+					       used > 0) || (audio->stopped)
+					      || (audio->rflush));
 
 		if (rc < 0)
 			break;
@@ -810,16 +808,16 @@ static ssize_t audio_read(struct file *file, char __user *buf, size_t count,
 
 		if (count < audio->in[audio->read_next].used) {
 			/* Read must happen in frame boundary. Since driver
-			   does not know frame size, read count must be greater
-			   or equal to size of PCM samples */
+			 * does not know frame size, read count must be greater
+			 * or equal to size of PCM samples */
 			dprintk("audio_read: no partial frame done reading\n");
 			break;
 		} else {
 			dprintk("audio_read: read from in[%d]\n",
 				audio->read_next);
 			if (copy_to_user
-			    (buf, audio->in[audio->read_next].data,
-			     audio->in[audio->read_next].used)) {
+				    (buf, audio->in[audio->read_next].data,
+				    audio->in[audio->read_next].used)) {
 				pr_err("audio_read: invalid addr %x \n",
 				       (unsigned int)buf);
 				rc = -EFAULT;
@@ -832,9 +830,9 @@ static ssize_t audio_read(struct file *file, char __user *buf, size_t count,
 				audio->read_next = 0;
 			if (audio->in[audio->read_next].used == 0)
 				break; /* No data ready at this moment
-					* Exit while loop to prevent
-					* output thread sleep too long
-					*/
+			                * Exit while loop to prevent
+			                * output thread sleep too long
+			                */
 		}
 	}
 
@@ -875,8 +873,8 @@ static ssize_t audio_write(struct file *file, const char __user *buf,
 		dsize = 0;
 		rc = wait_event_interruptible(audio->write_wait,
 					      (frame->used == 0)
-						|| (audio->stopped)
-						|| (audio->wflush));
+					      || (audio->stopped)
+					      || (audio->wflush));
 		if (rc < 0)
 			break;
 		if (audio->stopped || audio->wflush) {
@@ -889,12 +887,13 @@ static ssize_t audio_write(struct file *file, const char __user *buf,
 				__func__, audio->rsv_byte);
 			*cpy_ptr = audio->rsv_byte;
 			xfer = (count > (frame->size - 1)) ?
-				frame->size - 1 : count;
+			       frame->size - 1 : count;
 			cpy_ptr++;
 			dsize = 1;
 			audio->reserved = 0;
-		} else
+		} else {
 			xfer = (count > frame->size) ? frame->size : count;
+		}
 
 		if (copy_from_user(cpy_ptr, buf, xfer)) {
 			rc = -EFAULT;
@@ -903,7 +902,7 @@ static ssize_t audio_write(struct file *file, const char __user *buf,
 
 		dsize += xfer;
 		if (dsize & 1) {
-			audio->rsv_byte = ((char *) frame->data)[dsize - 1];
+			audio->rsv_byte = ((char *)frame->data)[dsize - 1];
 			dprintk("%s: odd length buf reserve last byte %x\n",
 				__func__, audio->rsv_byte);
 			audio->reserved = 1;
@@ -1011,7 +1010,7 @@ static int audio_open(struct inode *inode, struct file *file)
 	audio->out[1].addr = audio->phys + BUFSZ;
 	audio->out[1].size = BUFSZ;
 
-	audio->volume = 0x2000;	/* Q13 1.0 */
+	audio->volume = 0x2000; /* Q13 1.0 */
 
 	audio_flush(audio);
 
@@ -1024,18 +1023,18 @@ done:
 }
 
 static struct file_operations audio_aac_fops = {
-	.owner = THIS_MODULE,
-	.open = audio_open,
-	.release = audio_release,
-	.read = audio_read,
-	.write = audio_write,
+	.owner		= THIS_MODULE,
+	.open		= audio_open,
+	.release	= audio_release,
+	.read		= audio_read,
+	.write		= audio_write,
 	.unlocked_ioctl = audio_ioctl,
 };
 
 struct miscdevice audio_aac_misc = {
-	.minor = MISC_DYNAMIC_MINOR,
-	.name = "msm_aac",
-	.fops = &audio_aac_fops,
+	.minor	= MISC_DYNAMIC_MINOR,
+	.name	= "msm_aac",
+	.fops	= &audio_aac_fops,
 };
 
 static int __init audio_init(void)

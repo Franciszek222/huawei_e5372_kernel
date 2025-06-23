@@ -1,46 +1,46 @@
 /***************************************************************************
- *                                                                         *
- *  comedi/drivers/unioxx5.c                                               *
- *  Driver for Fastwel UNIOxx-5 (analog and digital i/o) boards.           *
- *                                                                         *
- *  Copyright (C) 2006 Kruchinin Daniil (asgard) [asgard@etersoft.ru]      *
- *                                                                         *
- *  COMEDI - Linux Control and Measurement Device Interface                *
- *  Copyright (C) 1998,2000 David A. Schleef <ds@schleef.org>              *
- *                                                                         *
- *  This program is free software; you can redistribute it and/or modify   *
- *  it under the terms of the GNU General Public License as published by   *
- *  the Free Software Foundation; either version 2 of the License, or      *
- *  (at your option) any later version.                                    *
- *                                                                         *
- *  This program is distributed in the hope that it will be useful,        *
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
- *  GNU General Public License for more details.                           *
- *                                                                         *
- *  You should have received a copy of the GNU General Public License      *
- *  along with this program; if not, write to the Free Software            *
- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.              *
- *                                                                         *
- ***************************************************************************/
+*                                                                         *
+*  comedi/drivers/unioxx5.c                                               *
+*  Driver for Fastwel UNIOxx-5 (analog and digital i/o) boards.           *
+*                                                                         *
+*  Copyright (C) 2006 Kruchinin Daniil (asgard) [asgard@etersoft.ru]      *
+*                                                                         *
+*  COMEDI - Linux Control and Measurement Device Interface                *
+*  Copyright (C) 1998,2000 David A. Schleef <ds@schleef.org>              *
+*                                                                         *
+*  This program is free software; you can redistribute it and/or modify   *
+*  it under the terms of the GNU General Public License as published by   *
+*  the Free Software Foundation; either version 2 of the License, or      *
+*  (at your option) any later version.                                    *
+*                                                                         *
+*  This program is distributed in the hope that it will be useful,        *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
+*  GNU General Public License for more details.                           *
+*                                                                         *
+*  You should have received a copy of the GNU General Public License      *
+*  along with this program; if not, write to the Free Software            *
+*  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.              *
+*                                                                         *
+***************************************************************************/
 /*
-
-Driver: unioxx5
-Description: Driver for Fastwel UNIOxx-5 (analog and digital i/o) boards.
-Author: Kruchinin Daniil (asgard) <asgard@etersoft.ru>
-Status: unknown
-Updated: 2006-10-09
-Devices: [Fastwel] UNIOxx-5 (unioxx5),
-
- This card supports digital and analog I/O. It written for g01
- subdevices only.
- channels range: 0 .. 23 dio channels
- and 0 .. 11 analog modules range
- During attaching unioxx5 module displays modules identifiers
- (see dmesg after comedi_config) in format:
+ *
+ * Driver: unioxx5
+ * Description: Driver for Fastwel UNIOxx-5 (analog and digital i/o) boards.
+ * Author: Kruchinin Daniil (asgard) <asgard@etersoft.ru>
+ * Status: unknown
+ * Updated: 2006-10-09
+ * Devices: [Fastwel] UNIOxx-5 (unioxx5),
+ *
+ * This card supports digital and analog I/O. It written for g01
+ * subdevices only.
+ * channels range: 0 .. 23 dio channels
+ * and 0 .. 11 analog modules range
+ * During attaching unioxx5 module displays modules identifiers
+ * (see dmesg after comedi_config) in format:
  | [module_number] module_id |
-
-*/
+ |
+ */
 
 #include "../comedidev.h"
 #include <linux/ioport.h>
@@ -48,76 +48,64 @@ Devices: [Fastwel] UNIOxx-5 (unioxx5),
 
 #define DRIVER_NAME "unioxx5"
 #define UNIOXX5_SIZE 0x10
-#define UNIOXX5_SUBDEV_BASE 0xA000	/* base addr of first subdev */
+#define UNIOXX5_SUBDEV_BASE 0xA000      /* base addr of first subdev */
 #define UNIOXX5_SUBDEV_ODDS 0x400
 
 /* modules types */
 #define MODULE_DIGITAL 0
-#define MODULE_OUTPUT_MASK 0x80	/* analog input/output */
+#define MODULE_OUTPUT_MASK 0x80 /* analog input/output */
 
 /* constants for digital i/o */
 #define UNIOXX5_NUM_OF_CHANS 24
 
 /* constants for analog i/o */
-#define TxBE  0x10		/* transmit buffer enable */
-#define RxCA  0x20		/* 1 receive character available */
-#define Rx2CA 0x40		/* 2 receive character available */
-#define Rx4CA 0x80		/* 4 receive character available */
+#define TxBE  0x10              /* transmit buffer enable */
+#define RxCA  0x20              /* 1 receive character available */
+#define Rx2CA 0x40              /* 2 receive character available */
+#define Rx4CA 0x80              /* 4 receive character available */
 
 /* bytes mask errors */
-#define Rx2CA_ERR_MASK 0x04	/* 2 bytes receiving error */
-#define Rx4CA_ERR_MASK 0x08	/* 4 bytes receiving error */
+#define Rx2CA_ERR_MASK 0x04     /* 2 bytes receiving error */
+#define Rx4CA_ERR_MASK 0x08     /* 4 bytes receiving error */
 
 /* channel modes */
-#define ALL_2_INPUT  0		/* config all digital channels to input */
-#define ALL_2_OUTPUT 1		/* config all digital channels to output */
+#define ALL_2_INPUT  0          /* config all digital channels to input */
+#define ALL_2_OUTPUT 1          /* config all digital channels to output */
 
 /* 'private' structure for each subdevice */
 struct unioxx5_subd_priv {
-	int usp_iobase;
-	unsigned char usp_module_type[12];	/* 12 modules. each can be 70L or 73L */
-	unsigned char usp_extra_data[12][4];	/* for saving previous written value for analog modules */
-	unsigned char usp_prev_wr_val[3];	/* previous written value */
-	unsigned char usp_prev_cn_val[3];	/* previous channel value */
+	int		usp_iobase;
+	unsigned char	usp_module_type[12];    /* 12 modules. each can be 70L or 73L */
+	unsigned char	usp_extra_data[12][4];  /* for saving previous written value for analog modules */
+	unsigned char	usp_prev_wr_val[3];     /* previous written value */
+	unsigned char	usp_prev_cn_val[3];     /* previous channel value */
 };
 
-static int unioxx5_attach(struct comedi_device *dev,
-			  struct comedi_devconfig *it);
-static int unioxx5_subdev_write(struct comedi_device *dev,
-				struct comedi_subdevice *subdev,
-				struct comedi_insn *insn, unsigned int *data);
-static int unioxx5_subdev_read(struct comedi_device *dev,
-			       struct comedi_subdevice *subdev,
-			       struct comedi_insn *insn, unsigned int *data);
-static int unioxx5_insn_config(struct comedi_device *dev,
-			       struct comedi_subdevice *subdev,
-			       struct comedi_insn *insn, unsigned int *data);
+static int unioxx5_attach(struct comedi_device *dev, struct comedi_devconfig *it);
+static int unioxx5_subdev_write(struct comedi_device *dev, struct comedi_subdevice *subdev, struct comedi_insn *insn, unsigned int *data);
+static int unioxx5_subdev_read(struct comedi_device *dev, struct comedi_subdevice *subdev, struct comedi_insn *insn, unsigned int *data);
+static int unioxx5_insn_config(struct comedi_device *dev, struct comedi_subdevice *subdev, struct comedi_insn *insn, unsigned int *data);
 static int unioxx5_detach(struct comedi_device *dev);
-static int __unioxx5_subdev_init(struct comedi_subdevice *subdev,
-				 int subdev_iobase, int minor);
-static int __unioxx5_digital_write(struct unioxx5_subd_priv *usp,
-				   unsigned int *data, int channel, int minor);
-static int __unioxx5_digital_read(struct unioxx5_subd_priv *usp,
-				  unsigned int *data, int channel, int minor);
+static int __unioxx5_subdev_init(struct comedi_subdevice *subdev, int subdev_iobase, int minor);
+static int __unioxx5_digital_write(struct unioxx5_subd_priv *usp, unsigned int *data, int channel, int minor);
+static int __unioxx5_digital_read(struct unioxx5_subd_priv *usp, unsigned int *data, int channel, int minor);
 /* static void __unioxx5_digital_config(struct unioxx5_subd_priv* usp, int mode); */
-static int __unioxx5_analog_write(struct unioxx5_subd_priv *usp,
-				  unsigned int *data, int channel, int minor);
-static int __unioxx5_analog_read(struct unioxx5_subd_priv *usp,
-				 unsigned int *data, int channel, int minor);
+static int __unioxx5_analog_write(struct unioxx5_subd_priv *usp, unsigned int *data, int channel, int minor);
+static int __unioxx5_analog_read(struct unioxx5_subd_priv *usp, unsigned int *data, int channel, int minor);
 static int __unioxx5_define_chan_offset(int chan_num);
 static void __unioxx5_analog_config(struct unioxx5_subd_priv *usp, int channel);
 
 static struct comedi_driver unioxx5_driver = {
-	.driver_name = DRIVER_NAME,
-	.module = THIS_MODULE,
-	.attach = unioxx5_attach,
-	.detach = unioxx5_detach
+	.driver_name	= DRIVER_NAME,
+	.module		= THIS_MODULE,
+	.attach		= unioxx5_attach,
+	.detach		= unioxx5_detach
 };
 
 COMEDI_INITCLEANUP(unioxx5_driver);
 
-static int unioxx5_attach(struct comedi_device *dev,
-			  struct comedi_devconfig *it)
+static int unioxx5_attach(struct comedi_device *	dev,
+			  struct comedi_devconfig *	it)
 {
 	int iobase, i, n_subd;
 	int id, num, ba;
@@ -170,7 +158,7 @@ static int unioxx5_subdev_read(struct comedi_device *dev,
 	int channel, type;
 
 	channel = CR_CHAN(insn->chanspec);
-	type = usp->usp_module_type[channel / 2];	/* defining module type(analog or digital) */
+	type = usp->usp_module_type[channel / 2];       /* defining module type(analog or digital) */
 
 	if (type == MODULE_DIGITAL) {
 		if (!__unioxx5_digital_read(usp, data, channel, dev->minor))
@@ -191,7 +179,7 @@ static int unioxx5_subdev_write(struct comedi_device *dev,
 	int channel, type;
 
 	channel = CR_CHAN(insn->chanspec);
-	type = usp->usp_module_type[channel / 2];	/* defining module type(analog or digital) */
+	type = usp->usp_module_type[channel / 2];       /* defining module type(analog or digital) */
 
 	if (type == MODULE_DIGITAL) {
 		if (!__unioxx5_digital_write(usp, data, channel, dev->minor))
@@ -246,13 +234,13 @@ static int unioxx5_insn_config(struct comedi_device *dev,
 	}
 
 	/*                                                        *\
-	 * sets channels buffer to 1(after this we are allowed to *
-	 * change channel type on input or output)                *
-	 \*                                                        */
+	* sets channels buffer to 1(after this we are allowed to *
+	* change channel type on input or output)                *
+	\*                                                        */
 	outb(1, usp->usp_iobase + 0);
-	outb(flags, usp->usp_iobase + channel_offset);	/* changes type of _one_ channel */
-	outb(0, usp->usp_iobase + 0);	/* sets channels bank to 0(allows directly input/output) */
-	usp->usp_prev_cn_val[channel_offset - 1] = flags;	/* saves written value */
+	outb(flags, usp->usp_iobase + channel_offset);          /* changes type of _one_ channel */
+	outb(0, usp->usp_iobase + 0);                           /* sets channels bank to 0(allows directly input/output) */
+	usp->usp_prev_cn_val[channel_offset - 1] = flags;       /* saves written value */
 
 	return 0;
 }
@@ -300,9 +288,9 @@ static int __unioxx5_subdev_init(struct comedi_subdevice *subdev,
 		to = 10000;
 
 		__unioxx5_analog_config(usp, i * 2);
-		outb(i + 1, subdev_iobase + 5);	/* sends channel number to card */
-		outb('H', subdev_iobase + 6);	/* requests EEPROM world */
-		while (!(inb(subdev_iobase + 0) & TxBE)) ;	/* waits while writting will be allowed */
+		outb(i + 1, subdev_iobase + 5);                 /* sends channel number to card */
+		outb('H', subdev_iobase + 6);                   /* requests EEPROM world */
+		while (!(inb(subdev_iobase + 0) & TxBE)) ;      /* waits while writting will be allowed */
 		outb(0, subdev_iobase + 6);
 
 		/* waits while reading of two bytes will be allowed */
@@ -316,8 +304,9 @@ static int __unioxx5_subdev_init(struct comedi_subdevice *subdev,
 		if (ndef_flag) {
 			usp->usp_module_type[i] = 0;
 			ndef_flag = 0;
-		} else
+		} else {
 			usp->usp_module_type[i] = inb(subdev_iobase + 6);
+		}
 
 		printk(" [%d] 0x%02x |", i, usp->usp_module_type[i]);
 		udelay(1);
@@ -334,7 +323,7 @@ static int __unioxx5_subdev_init(struct comedi_subdevice *subdev,
 	subdev->range_table = &range_digital;
 	subdev->insn_read = unioxx5_subdev_read;
 	subdev->insn_write = unioxx5_subdev_write;
-	subdev->insn_config = unioxx5_insn_config;	/* for digital modules only!!! */
+	subdev->insn_config = unioxx5_insn_config;      /* for digital modules only!!! */
 
 	printk("subdevice configured\n");
 
@@ -355,7 +344,7 @@ static int __unioxx5_digital_write(struct unioxx5_subd_priv *usp,
 		return 0;
 	}
 
-	val = usp->usp_prev_wr_val[channel_offset - 1];	/* getting previous written value */
+	val = usp->usp_prev_wr_val[channel_offset - 1]; /* getting previous written value */
 
 	if (*data)
 		val |= mask;
@@ -363,7 +352,7 @@ static int __unioxx5_digital_write(struct unioxx5_subd_priv *usp,
 		val &= ~mask;
 
 	outb(val, usp->usp_iobase + channel_offset);
-	usp->usp_prev_wr_val[channel_offset - 1] = val;	/* saving new written value */
+	usp->usp_prev_wr_val[channel_offset - 1] = val; /* saving new written value */
 
 	return 1;
 }
@@ -386,13 +375,13 @@ static int __unioxx5_digital_read(struct unioxx5_subd_priv *usp,
 	*data &= mask;
 
 	if (channel_offset > 1)
-		channel -= 2 << channel_offset;	/* this operation is created for correct readed value to 0 or 1 */
+		channel -= 2 << channel_offset; /* this operation is created for correct readed value to 0 or 1 */
 
 	*data >>= channel;
 	return 1;
 }
 
-#if 0				/* not used? */
+#if 0                           /* not used? */
 static void __unioxx5_digital_config(struct unioxx5_subd_priv *usp, int mode)
 {
 	int i, mask;
@@ -414,8 +403,8 @@ static int __unioxx5_analog_write(struct unioxx5_subd_priv *usp,
 {
 	int module, i;
 
-	module = channel / 2;	/* definig module number(0 .. 11) */
-	i = (channel % 2) << 1;	/* depends on type of channel (A or B) */
+	module = channel / 2;   /* definig module number(0 .. 11) */
+	i = (channel % 2) << 1; /* depends on type of channel (A or B) */
 
 	/* defining if given module can work on output */
 	if (!(usp->usp_module_type[module] & MODULE_OUTPUT_MASK)) {
@@ -432,12 +421,12 @@ static int __unioxx5_analog_write(struct unioxx5_subd_priv *usp,
 	usp->usp_extra_data[module][i] = (unsigned char)((*data & 0xFF00) >> 8);
 
 	/* while(!((inb(usp->usp_iobase + 0)) & TxBE)); */
-	outb(module + 1, usp->usp_iobase + 5);	/* sending module number to card(1 .. 12) */
-	outb('W', usp->usp_iobase + 6);	/* sends (W)rite command to module */
+	outb(module + 1, usp->usp_iobase + 5);  /* sending module number to card(1 .. 12) */
+	outb('W', usp->usp_iobase + 6);         /* sends (W)rite command to module */
 
 	/* sending for bytes to module(one byte per cycle iteration) */
 	for (i = 0; i < 4; i++) {
-		while (!((inb(usp->usp_iobase + 0)) & TxBE)) ;	/* waits while writting will be allowed */
+		while (!((inb(usp->usp_iobase + 0)) & TxBE)) ;  /* waits while writting will be allowed */
 		outb(usp->usp_extra_data[module][i], usp->usp_iobase + 6);
 	}
 
@@ -451,7 +440,7 @@ static int __unioxx5_analog_read(struct unioxx5_subd_priv *usp,
 	char control;
 
 	module_no = channel / 2;
-	read_ch = channel % 2;	/* depend on type of channel (A or B) */
+	read_ch = channel % 2;  /* depend on type of channel (A or B) */
 
 	/* defining if given module can work on input */
 	if (usp->usp_module_type[module_no] & MODULE_OUTPUT_MASK) {
@@ -462,9 +451,9 @@ static int __unioxx5_analog_read(struct unioxx5_subd_priv *usp,
 	}
 
 	__unioxx5_analog_config(usp, channel);
-	outb(module_no + 1, usp->usp_iobase + 5);	/* sends module number to card(1 .. 12) */
-	outb('V', usp->usp_iobase + 6);	/* sends to module (V)erify command */
-	control = inb(usp->usp_iobase);	/* get control register byte */
+	outb(module_no + 1, usp->usp_iobase + 5);       /* sends module number to card(1 .. 12) */
+	outb('V', usp->usp_iobase + 6);                 /* sends to module (V)erify command */
+	control = inb(usp->usp_iobase);                 /* get control register byte */
 
 	/* waits while reading four bytes will be allowed */
 	while (!((control = inb(usp->usp_iobase + 0)) & Rx4CA)) ;
@@ -476,9 +465,9 @@ static int __unioxx5_analog_read(struct unioxx5_subd_priv *usp,
 	}
 
 	if (read_ch)
-		*data = inw(usp->usp_iobase + 6);	/* channel B */
+		*data = inw(usp->usp_iobase + 6);       /* channel B */
 	else
-		*data = inw(usp->usp_iobase + 4);	/* channel A */
+		*data = inw(usp->usp_iobase + 4);       /* channel A */
 
 	return 1;
 }
@@ -501,8 +490,8 @@ static void __unioxx5_analog_config(struct unioxx5_subd_priv *usp, int channel)
 		chan_b <<= channel & 0x07;
 	}
 
-	conf |= chan_a;		/* even channel ot output */
-	conf &= ~chan_b;	/* odd channel to input */
+	conf |= chan_a;         /* even channel ot output */
+	conf &= ~chan_b;        /* odd channel to input */
 
 	outb(1, usp->usp_iobase + 0);
 	outb(conf, usp->usp_iobase + channel_offset);
@@ -512,15 +501,13 @@ static void __unioxx5_analog_config(struct unioxx5_subd_priv *usp, int channel)
 }
 
 /*                                                    *\
- * this function defines if the given channel number  *
- * enters in default numeric interspace(from 0 to 23) *
- * and it returns address offset for usage needed     *
- * channel.                                           *
+* this function defines if the given channel number  *
+* enters in default numeric interspace(from 0 to 23) *
+* and it returns address offset for usage needed     *
+* channel.                                           *
 \*                                                    */
-
 static int __unioxx5_define_chan_offset(int chan_num)
 {
-
 	if (chan_num < 0 || chan_num > 23)
 		return -1;
 

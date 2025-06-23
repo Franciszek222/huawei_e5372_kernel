@@ -42,7 +42,7 @@
  * Returns String
  */
 extern const char
-    *cvmx_helper_interface_mode_to_string(cvmx_helper_interface_mode_t mode);
+*cvmx_helper_interface_mode_to_string(cvmx_helper_interface_mode_t mode);
 
 /**
  * Debug routine to dump the packet structure to the console
@@ -64,8 +64,7 @@ extern int cvmx_helper_dump_packet(cvmx_wqe_t *work);
  *               than this many free packet buffers in FPA 0.
  * Returns Zero on success. Negative on failure
  */
-extern int cvmx_helper_setup_red_queue(int queue, int pass_thresh,
-				       int drop_thresh);
+extern int cvmx_helper_setup_red_queue(int queue, int pass_thresh, int drop_thresh);
 
 /**
  * Setup Random Early Drop to automatically begin dropping packets.
@@ -169,7 +168,7 @@ static inline void cvmx_helper_free_packet_data(cvmx_wqe_t *work)
 	start_of_buffer = ((buffer_ptr.s.addr >> 7) - buffer_ptr.s.back) << 7;
 	if (cvmx_ptr_to_phys(work) == start_of_buffer) {
 		next_buffer_ptr =
-		    *(union cvmx_buf_ptr *) cvmx_phys_to_ptr(buffer_ptr.s.addr - 8);
+			*(union cvmx_buf_ptr *)cvmx_phys_to_ptr(buffer_ptr.s.addr - 8);
 		buffer_ptr = next_buffer_ptr;
 		number_buffers--;
 	}
@@ -180,13 +179,13 @@ static inline void cvmx_helper_free_packet_data(cvmx_wqe_t *work)
 		 * 64bit words
 		 */
 		start_of_buffer =
-		    ((buffer_ptr.s.addr >> 7) - buffer_ptr.s.back) << 7;
+			((buffer_ptr.s.addr >> 7) - buffer_ptr.s.back) << 7;
 		/*
 		 * Read pointer to next buffer before we free the
 		 * current buffer.
 		 */
 		next_buffer_ptr =
-		    *(union cvmx_buf_ptr *) cvmx_phys_to_ptr(buffer_ptr.s.addr - 8);
+			*(union cvmx_buf_ptr *)cvmx_phys_to_ptr(buffer_ptr.s.addr - 8);
 		cvmx_fpa_free(cvmx_phys_to_ptr(start_of_buffer),
 			      buffer_ptr.s.pool, 0);
 		buffer_ptr = next_buffer_ptr;

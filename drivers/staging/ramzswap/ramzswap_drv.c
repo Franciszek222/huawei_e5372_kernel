@@ -40,19 +40,19 @@ static struct ramzswap *devices;
 static unsigned int num_devices;
 
 static int rzs_test_flag(struct ramzswap *rzs, u32 index,
-			enum rzs_pageflags flag)
+			 enum rzs_pageflags flag)
 {
 	return rzs->table[index].flags & BIT(flag);
 }
 
 static void rzs_set_flag(struct ramzswap *rzs, u32 index,
-			enum rzs_pageflags flag)
+			 enum rzs_pageflags flag)
 {
 	rzs->table[index].flags |= BIT(flag);
 }
 
 static void rzs_clear_flag(struct ramzswap *rzs, u32 index,
-			enum rzs_pageflags flag)
+			   enum rzs_pageflags flag)
 {
 	rzs->table[index].flags &= ~BIT(flag);
 }
@@ -64,10 +64,9 @@ static int page_zero_filled(void *ptr)
 
 	page = (unsigned long *)ptr;
 
-	for (pos = 0; pos != PAGE_SIZE / sizeof(*page); pos++) {
+	for (pos = 0; pos != PAGE_SIZE / sizeof(*page); pos++)
 		if (page[pos])
 			return 0;
-	}
 
 	return 1;
 }
@@ -76,26 +75,26 @@ static void ramzswap_set_disksize(struct ramzswap *rzs, size_t totalram_bytes)
 {
 	if (!rzs->disksize) {
 		pr_info(
-		"disk size not provided. You can use disksize_kb module "
-		"param to specify size.\nUsing default: (%u%% of RAM).\n",
-		default_disksize_perc_ram
-		);
+			"disk size not provided. You can use disksize_kb module "
+			"param to specify size.\nUsing default: (%u%% of RAM).\n",
+			default_disksize_perc_ram
+			);
 		rzs->disksize = default_disksize_perc_ram *
-					(totalram_bytes / 100);
+				(totalram_bytes / 100);
 	}
 
 	if (rzs->disksize > 2 * (totalram_bytes)) {
 		pr_info(
-		"There is little point creating a ramzswap of greater than "
-		"twice the size of memory since we expect a 2:1 compression "
-		"ratio. Note that ramzswap uses about 0.1%% of the size of "
-		"the swap device when not in use so a huge ramzswap is "
-		"wasteful.\n"
-		"\tMemory Size: %zu kB\n"
-		"\tSize you selected: %zu kB\n"
-		"Continuing anyway ...\n",
-		totalram_bytes >> 10, rzs->disksize
-		);
+			"There is little point creating a ramzswap of greater than "
+			"twice the size of memory since we expect a 2:1 compression "
+			"ratio. Note that ramzswap uses about 0.1%% of the size of "
+			"the swap device when not in use so a huge ramzswap is "
+			"wasteful.\n"
+			"\tMemory Size: %zu kB\n"
+			"\tSize you selected: %zu kB\n"
+			"Continuing anyway ...\n",
+			totalram_bytes >> 10, rzs->disksize
+			);
 	}
 
 	rzs->disksize &= PAGE_MASK;
@@ -115,45 +114,45 @@ static void setup_swap_header(struct ramzswap *rzs, union swap_header *s)
 	memcpy(s->magic.magic, "SWAPSPACE2", 10);
 }
 
-static void ramzswap_ioctl_get_stats(struct ramzswap *rzs,
-			struct ramzswap_ioctl_stats *s)
+static void ramzswap_ioctl_get_stats(struct ramzswap *			rzs,
+				     struct ramzswap_ioctl_stats *	s)
 {
 	s->disksize = rzs->disksize;
 
 #if defined(CONFIG_RAMZSWAP_STATS)
 	{
-	struct ramzswap_stats *rs = &rzs->stats;
-	size_t succ_writes, mem_used;
-	unsigned int good_compress_perc = 0, no_compress_perc = 0;
+		struct ramzswap_stats *rs = &rzs->stats;
+		size_t succ_writes, mem_used;
+		unsigned int good_compress_perc = 0, no_compress_perc = 0;
 
-	mem_used = xv_get_total_size_bytes(rzs->mem_pool)
-			+ (rs->pages_expand << PAGE_SHIFT);
-	succ_writes = rzs_stat64_read(rzs, &rs->num_writes) -
-			rzs_stat64_read(rzs, &rs->failed_writes);
+		mem_used = xv_get_total_size_bytes(rzs->mem_pool)
+			   + (rs->pages_expand << PAGE_SHIFT);
+		succ_writes = rzs_stat64_read(rzs, &rs->num_writes) -
+			      rzs_stat64_read(rzs, &rs->failed_writes);
 
-	if (succ_writes && rs->pages_stored) {
-		good_compress_perc = rs->good_compress * 100
-					/ rs->pages_stored;
-		no_compress_perc = rs->pages_expand * 100
-					/ rs->pages_stored;
-	}
+		if (succ_writes && rs->pages_stored) {
+			good_compress_perc = rs->good_compress * 100
+					     / rs->pages_stored;
+			no_compress_perc = rs->pages_expand * 100
+					   / rs->pages_stored;
+		}
 
-	s->num_reads = rzs_stat64_read(rzs, &rs->num_reads);
-	s->num_writes = rzs_stat64_read(rzs, &rs->num_writes);
-	s->failed_reads = rzs_stat64_read(rzs, &rs->failed_reads);
-	s->failed_writes = rzs_stat64_read(rzs, &rs->failed_writes);
-	s->invalid_io = rzs_stat64_read(rzs, &rs->invalid_io);
-	s->notify_free = rzs_stat64_read(rzs, &rs->notify_free);
-	s->pages_zero = rs->pages_zero;
+		s->num_reads = rzs_stat64_read(rzs, &rs->num_reads);
+		s->num_writes = rzs_stat64_read(rzs, &rs->num_writes);
+		s->failed_reads = rzs_stat64_read(rzs, &rs->failed_reads);
+		s->failed_writes = rzs_stat64_read(rzs, &rs->failed_writes);
+		s->invalid_io = rzs_stat64_read(rzs, &rs->invalid_io);
+		s->notify_free = rzs_stat64_read(rzs, &rs->notify_free);
+		s->pages_zero = rs->pages_zero;
 
-	s->good_compress_pct = good_compress_perc;
-	s->pages_expand_pct = no_compress_perc;
+		s->good_compress_pct = good_compress_perc;
+		s->pages_expand_pct = no_compress_perc;
 
-	s->pages_stored = rs->pages_stored;
-	s->pages_used = mem_used >> PAGE_SHIFT;
-	s->orig_data_size = rs->pages_stored << PAGE_SHIFT;
-	s->compr_data_size = rs->compr_size;
-	s->mem_used_total = mem_used;
+		s->pages_stored = rs->pages_stored;
+		s->pages_used = mem_used >> PAGE_SHIFT;
+		s->orig_data_size = rs->pages_stored << PAGE_SHIFT;
+		s->compr_data_size = rs->compr_size;
+		s->mem_used_total = mem_used;
 	}
 #endif /* CONFIG_RAMZSWAP_STATS */
 }
@@ -229,7 +228,7 @@ static int handle_uncompressed_page(struct ramzswap *rzs, struct bio *bio)
 
 	user_mem = kmap_atomic(page, KM_USER0);
 	cmem = kmap_atomic(rzs->table[index].page, KM_USER1) +
-			rzs->table[index].offset;
+	       rzs->table[index].offset;
 
 	memcpy(user_mem, cmem, PAGE_SIZE);
 	kunmap_atomic(user_mem, KM_USER0);
@@ -251,9 +250,9 @@ static int handle_uncompressed_page(struct ramzswap *rzs, struct bio *bio)
 static int handle_ramzswap_fault(struct ramzswap *rzs, struct bio *bio)
 {
 	pr_debug("Read before write on swap device: "
-		"sector=%lu, size=%u, offset=%u\n",
-		(ulong)(bio->bi_sector), bio->bi_size,
-		bio->bi_io_vec[0].bv_offset);
+		 "sector=%lu, size=%u, offset=%u\n",
+		 (ulong)(bio->bi_sector), bio->bi_size,
+		 bio->bi_io_vec[0].bv_offset);
 
 	/* Do nothing. Just return success */
 	set_bit(BIO_UPTODATE, &bio->bi_flags);
@@ -290,7 +289,7 @@ static int ramzswap_read(struct ramzswap *rzs, struct bio *bio)
 	clen = PAGE_SIZE;
 
 	cmem = kmap_atomic(rzs->table[index].page, KM_USER1) +
-			rzs->table[index].offset;
+	       rzs->table[index].offset;
 
 	ret = lzo1x_decompress_safe(
 		cmem + sizeof(*zheader),
@@ -303,7 +302,7 @@ static int ramzswap_read(struct ramzswap *rzs, struct bio *bio)
 	/* should NEVER happen */
 	if (unlikely(ret != LZO_E_OK)) {
 		pr_err("Decompression failed! err=%d, page=%u\n",
-			ret, index);
+		       ret, index);
 		rzs_stat64_inc(rzs, &rzs->stats.failed_reads);
 		goto out;
 	}
@@ -350,7 +349,7 @@ static int ramzswap_write(struct ramzswap *rzs, struct bio *bio)
 	}
 
 	ret = lzo1x_1_compress(user_mem, PAGE_SIZE, src, &clen,
-				rzs->compress_workmem);
+			       rzs->compress_workmem);
 
 	kunmap_atomic(user_mem, KM_USER0);
 
@@ -386,8 +385,8 @@ static int ramzswap_write(struct ramzswap *rzs, struct bio *bio)
 	}
 
 	if (xv_malloc(rzs->mem_pool, clen + sizeof(*zheader),
-			&rzs->table[index].page, &offset,
-			GFP_NOIO | __GFP_HIGHMEM)) {
+		      &rzs->table[index].page, &offset,
+		      GFP_NOIO | __GFP_HIGHMEM)) {
 		mutex_unlock(&rzs->lock);
 		pr_info("Error allocating memory for compressed "
 			"page: %u, size=%zu\n", index, clen);
@@ -399,7 +398,7 @@ memstore:
 	rzs->table[index].offset = offset;
 
 	cmem = kmap_atomic(rzs->table[index].page, KM_USER1) +
-			rzs->table[index].offset;
+	       rzs->table[index].offset;
 
 #if 0
 	/* Back-reference needed for memory defragmentation */
@@ -439,14 +438,13 @@ out:
 static inline int valid_swap_request(struct ramzswap *rzs, struct bio *bio)
 {
 	if (unlikely(
-		(bio->bi_sector >= (rzs->disksize >> SECTOR_SHIFT)) ||
-		(bio->bi_sector & (SECTORS_PER_PAGE - 1)) ||
-		(bio->bi_vcnt != 1) ||
-		(bio->bi_size != PAGE_SIZE) ||
-		(bio->bi_io_vec[0].bv_offset != 0))) {
+		    (bio->bi_sector >= (rzs->disksize >> SECTOR_SHIFT)) ||
+		    (bio->bi_sector & (SECTORS_PER_PAGE - 1)) ||
+		    (bio->bi_vcnt != 1) ||
+		    (bio->bi_size != PAGE_SIZE) ||
+		    (bio->bi_io_vec[0].bv_offset != 0)))
 
 		return 0;
-	}
 
 	/* swap request is valid */
 	return 1;
@@ -612,7 +610,7 @@ static int ramzswap_ioctl_reset_device(struct ramzswap *rzs)
 }
 
 static int ramzswap_ioctl(struct block_device *bdev, fmode_t mode,
-			unsigned int cmd, unsigned long arg)
+			  unsigned int cmd, unsigned long arg)
 {
 	int ret = 0;
 	size_t disksize_kb;
@@ -626,7 +624,7 @@ static int ramzswap_ioctl(struct block_device *bdev, fmode_t mode,
 			goto out;
 		}
 		if (copy_from_user(&disksize_kb, (void *)arg,
-						_IOC_SIZE(cmd))) {
+				   _IOC_SIZE(cmd))) {
 			ret = -EFAULT;
 			goto out;
 		}
@@ -694,9 +692,9 @@ void ramzswap_slot_free_notify(struct block_device *bdev, unsigned long index)
 }
 
 static struct block_device_operations ramzswap_devops = {
-	.ioctl = ramzswap_ioctl,
-	.swap_slot_free_notify = ramzswap_slot_free_notify,
-	.owner = THIS_MODULE
+	.ioctl			= ramzswap_ioctl,
+	.swap_slot_free_notify	= ramzswap_slot_free_notify,
+	.owner			= THIS_MODULE
 };
 
 static int create_device(struct ramzswap *rzs, int device_id)
@@ -709,7 +707,7 @@ static int create_device(struct ramzswap *rzs, int device_id)
 	rzs->queue = blk_alloc_queue(GFP_KERNEL);
 	if (!rzs->queue) {
 		pr_err("Error allocating disk queue for device %d\n",
-			device_id);
+		       device_id);
 		ret = -ENOMEM;
 		goto out;
 	}
@@ -717,12 +715,12 @@ static int create_device(struct ramzswap *rzs, int device_id)
 	blk_queue_make_request(rzs->queue, ramzswap_make_request);
 	rzs->queue->queuedata = rzs;
 
-	 /* gendisk structure */
+	/* gendisk structure */
 	rzs->disk = alloc_disk(1);
 	if (!rzs->disk) {
 		blk_cleanup_queue(rzs->queue);
 		pr_warning("Error allocating disk structure for device %d\n",
-			device_id);
+			   device_id);
 		ret = -ENOMEM;
 		goto out;
 	}
@@ -765,7 +763,7 @@ static int __init ramzswap_init(void)
 
 	if (num_devices > max_num_devices) {
 		pr_warning("Invalid value for num_devices: %u\n",
-				num_devices);
+			   num_devices);
 		ret = -EINVAL;
 		goto out;
 	}

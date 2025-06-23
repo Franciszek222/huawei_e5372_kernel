@@ -23,32 +23,32 @@ static int debug;
 #define DRIVER_AUTHOR "Tim Gobeli, Quatech, Inc"
 #define DRIVER_DESC "Quatech USB to Serial Driver"
 
-#define	USB_VENDOR_ID_QUATECH			0x061d	/* Quatech VID */
-#define QUATECH_SSU100	0xC020	/* SSU100 */
-#define QUATECH_SSU200	0xC030	/* SSU200 */
-#define QUATECH_DSU100	0xC040	/* DSU100 */
-#define QUATECH_DSU200	0xC050	/* DSU200 */
-#define QUATECH_QSU100	0xC060	/* QSU100 */
-#define QUATECH_QSU200	0xC070	/* QSU200 */
-#define QUATECH_ESU100A	0xC080	/* ESU100A */
-#define QUATECH_ESU100B	0xC081	/* ESU100B */
-#define QUATECH_ESU200A	0xC0A0	/* ESU200A */
-#define QUATECH_ESU200B	0xC0A1	/* ESU200B */
-#define QUATECH_HSU100A	0xC090	/* HSU100A */
-#define QUATECH_HSU100B	0xC091	/* HSU100B */
-#define QUATECH_HSU100C	0xC092	/* HSU100C */
-#define QUATECH_HSU100D	0xC093	/* HSU100D */
-#define QUATECH_HSU200A	0xC0B0	/* HSU200A */
-#define QUATECH_HSU200B	0xC0B1	/* HSU200B */
-#define QUATECH_HSU200C	0xC0B2	/* HSU200C */
-#define QUATECH_HSU200D	0xC0B3	/* HSU200D */
-#define QUATECH_SSU100_2  0xC120	/* SSU100_2 */
-#define QUATECH_DSU100_2  0xC140	/* DSU100_2 */
-#define QUATECH_DSU400_2  0xC150	/* DSU400_2 */
-#define QUATECH_QSU100_2  0xC160	/* QSU100_2 */
-#define QUATECH_QSU400_2  0xC170	/* QSU400_2 */
-#define QUATECH_ESU400_2  0xC180	/* ESU400_2 */
-#define QUATECH_ESU100_2  0xC1A0	/* ESU100_2 */
+#define USB_VENDOR_ID_QUATECH                   0x061d  /* Quatech VID */
+#define QUATECH_SSU100  0xC020                          /* SSU100 */
+#define QUATECH_SSU200  0xC030                          /* SSU200 */
+#define QUATECH_DSU100  0xC040                          /* DSU100 */
+#define QUATECH_DSU200  0xC050                          /* DSU200 */
+#define QUATECH_QSU100  0xC060                          /* QSU100 */
+#define QUATECH_QSU200  0xC070                          /* QSU200 */
+#define QUATECH_ESU100A 0xC080                          /* ESU100A */
+#define QUATECH_ESU100B 0xC081                          /* ESU100B */
+#define QUATECH_ESU200A 0xC0A0                          /* ESU200A */
+#define QUATECH_ESU200B 0xC0A1                          /* ESU200B */
+#define QUATECH_HSU100A 0xC090                          /* HSU100A */
+#define QUATECH_HSU100B 0xC091                          /* HSU100B */
+#define QUATECH_HSU100C 0xC092                          /* HSU100C */
+#define QUATECH_HSU100D 0xC093                          /* HSU100D */
+#define QUATECH_HSU200A 0xC0B0                          /* HSU200A */
+#define QUATECH_HSU200B 0xC0B1                          /* HSU200B */
+#define QUATECH_HSU200C 0xC0B2                          /* HSU200C */
+#define QUATECH_HSU200D 0xC0B3                          /* HSU200D */
+#define QUATECH_SSU100_2  0xC120                        /* SSU100_2 */
+#define QUATECH_DSU100_2  0xC140                        /* DSU100_2 */
+#define QUATECH_DSU400_2  0xC150                        /* DSU400_2 */
+#define QUATECH_QSU100_2  0xC160                        /* QSU100_2 */
+#define QUATECH_QSU400_2  0xC170                        /* QSU400_2 */
+#define QUATECH_ESU400_2  0xC180                        /* ESU400_2 */
+#define QUATECH_ESU100_2  0xC1A0                        /* ESU100_2 */
 
 #define QT_SET_GET_DEVICE           0xc2
 #define QT_OPEN_CLOSE_CHANNEL       0xca
@@ -97,8 +97,8 @@ static int debug;
 #define  SERIAL_TWO_STOPB           0x04
 #define  SERIAL_ONE_STOPB           0x00
 
-#define DEFAULT_DIVISOR  0x30	/* gives 9600 baud rate */
-#define DEFAULT_LCR SERIAL_8_DATA	/* 8, none , 1 */
+#define DEFAULT_DIVISOR  0x30           /* gives 9600 baud rate */
+#define DEFAULT_LCR SERIAL_8_DATA       /* 8, none , 1 */
 
 #define FULLPWRBIT          0x00000080
 #define NEXT_BOARD_POWER_BIT        0x00000004
@@ -117,96 +117,96 @@ static int debug;
 #define PREFUFF_LEVEL_CONSERVATIVE  128
 #define ATC_DISABLED                0x0
 
-#define RR_BITS             0x03	/* for clearing clock bits */
+#define RR_BITS             0x03        /* for clearing clock bits */
 #define DUPMODE_BITS        0xc0
 #define CLKS_X4             0x02
 
-#define LOOPMODE_BITS       0x41	/* LOOP1 = b6, LOOP0 = b0 (PORT B) */
+#define LOOPMODE_BITS       0x41        /* LOOP1 = b6, LOOP0 = b0 (PORT B) */
 #define ALL_LOOPBACK        0x01
 #define MODEM_CTRL          0x40
 #define RS232_MODE          0x00
 
 static const struct usb_device_id serqt_id_table[] = {
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_SSU100)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_SSU200)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU100)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU200)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU100)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU200)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU100A)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU100B)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU200A)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU200B)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU100A)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU100B)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU100C)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU100D)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU200A)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU200B)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU200C)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU200D)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_SSU100_2)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU100_2)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU400_2)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU100_2)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU400_2)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU400_2)},
-	{USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU100_2)},
-	{}			/* Terminating entry */
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_SSU100)   },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_SSU200)   },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU100)   },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU200)   },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU100)   },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU200)   },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU100A)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU100B)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU200A)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU200B)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU100A)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU100B)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU100C)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU100D)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU200A)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU200B)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU200C)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_HSU200D)  },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_SSU100_2) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU100_2) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_DSU400_2) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU100_2) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_QSU400_2) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU400_2) },
+	{ USB_DEVICE(USB_VENDOR_ID_QUATECH, QUATECH_ESU100_2) },
+	{}                      /* Terminating entry */
 };
 
 MODULE_DEVICE_TABLE(usb, serqt_id_table);
 
 struct qt_get_device_data {
-	__u8 porta;
-	__u8 portb;
-	__u8 portc;
+	__u8	porta;
+	__u8	portb;
+	__u8	portc;
 };
 
 struct qt_open_channel_data {
-	__u8 line_status;
-	__u8 modem_status;
+	__u8	line_status;
+	__u8	modem_status;
 };
 
 struct quatech_port {
-	int port_num;		/* number of the port */
-	struct urb *write_urb;	/* write URB for this port */
-	struct urb *read_urb;	/* read URB for this port */
-	struct urb *int_urb;
+	int				port_num;       /* number of the port */
+	struct urb *			write_urb;      /* write URB for this port */
+	struct urb *			read_urb;       /* read URB for this port */
+	struct urb *			int_urb;
 
-	__u8 shadowLCR;		/* last LCR value received */
-	__u8 shadowMCR;		/* last MCR value received */
-	__u8 shadowMSR;		/* last MSR value received */
-	__u8 shadowLSR;		/* last LSR value received */
-	char open_ports;
+	__u8				shadowLCR;      /* last LCR value received */
+	__u8				shadowMCR;      /* last MCR value received */
+	__u8				shadowMSR;      /* last MSR value received */
+	__u8				shadowLSR;      /* last LSR value received */
+	char				open_ports;
 
 	/* Used for TIOCMIWAIT */
-	wait_queue_head_t msr_wait;
-	char prev_status, diff_status;
+	wait_queue_head_t		msr_wait;
+	char				prev_status, diff_status;
 
-	wait_queue_head_t wait;
+	wait_queue_head_t		wait;
 
-	struct async_icount icount;
+	struct async_icount		icount;
 
-	struct usb_serial_port *port;	/* owner of this object */
-	struct qt_get_device_data DeviceData;
-	spinlock_t lock;
-	bool read_urb_busy;
-	int RxHolding;
-	int ReadBulkStopped;
-	char closePending;
+	struct usb_serial_port *	port; /* owner of this object */
+	struct qt_get_device_data	DeviceData;
+	spinlock_t			lock;
+	bool				read_urb_busy;
+	int				RxHolding;
+	int				ReadBulkStopped;
+	char				closePending;
 };
 
 static struct usb_driver serqt_usb_driver = {
-	.name = "quatech-usb-serial",
-	.probe = usb_serial_probe,
-	.disconnect = usb_serial_disconnect,
-	.id_table = serqt_id_table,
-	.no_dynamic_id = 1,
+	.name		= "quatech-usb-serial",
+	.probe		= usb_serial_probe,
+	.disconnect	= usb_serial_disconnect,
+	.id_table	= serqt_id_table,
+	.no_dynamic_id	= 1,
 };
 
-static int port_paranoia_check(struct usb_serial_port *port,
-			       const char *function)
+static int port_paranoia_check(struct usb_serial_port * port,
+			       const char *		function)
 {
 	if (!port) {
 		dbg("%s - port == NULL", function);
@@ -220,8 +220,8 @@ static int port_paranoia_check(struct usb_serial_port *port,
 	return 0;
 }
 
-static int serial_paranoia_check(struct usb_serial *serial,
-				 const char *function)
+static int serial_paranoia_check(struct usb_serial *	serial,
+				 const char *		function)
 {
 	if (!serial) {
 		dbg("%s - serial == NULL\n", function);
@@ -242,52 +242,50 @@ static inline struct quatech_port *qt_get_port_private(struct usb_serial_port
 	return (struct quatech_port *)usb_get_serial_port_data(port);
 }
 
-static inline void qt_set_port_private(struct usb_serial_port *port,
-				       struct quatech_port *data)
+static inline void qt_set_port_private(struct usb_serial_port * port,
+				       struct quatech_port *	data)
 {
 	usb_set_serial_port_data(port, (void *)data);
 }
 
-static struct usb_serial *get_usb_serial(struct usb_serial_port *port,
-					 const char *function)
+static struct usb_serial *get_usb_serial(struct usb_serial_port *	port,
+					 const char *			function)
 {
 	/* if no port was specified, or it fails a paranoia check */
 	if (!port ||
 	    port_paranoia_check(port, function) ||
-	    serial_paranoia_check(port->serial, function)) {
+	    serial_paranoia_check(port->serial, function))
 		/*
 		 * then say that we dont have a valid usb_serial thing,
 		 * which will end up genrating -ENODEV return values
 		 */
 		return NULL;
-	}
 
 	return port->serial;
 }
 
-static void ProcessLineStatus(struct quatech_port *qt_port,
-			      unsigned char line_status)
+static void ProcessLineStatus(struct quatech_port *	qt_port,
+			      unsigned char		line_status)
 {
-
 	qt_port->shadowLSR =
-	    line_status & (SERIAL_LSR_OE | SERIAL_LSR_PE | SERIAL_LSR_FE |
-			   SERIAL_LSR_BI);
+		line_status & (SERIAL_LSR_OE | SERIAL_LSR_PE | SERIAL_LSR_FE |
+			       SERIAL_LSR_BI);
 	return;
 }
 
-static void ProcessModemStatus(struct quatech_port *qt_port,
-			       unsigned char modem_status)
+static void ProcessModemStatus(struct quatech_port *	qt_port,
+			       unsigned char		modem_status)
 {
-
 	qt_port->shadowMSR = modem_status;
 	wake_up_interruptible(&qt_port->wait);
 	return;
 }
 
 static void ProcessRxChar(struct tty_struct *tty, struct usb_serial_port *port,
-						unsigned char data)
+			  unsigned char data)
 {
 	struct urb *urb = port->read_urb;
+
 	if (urb->actual_length)
 		tty_insert_flip_char(tty, data, TTY_NORMAL);
 }
@@ -323,7 +321,6 @@ static void qt_interrupt_callback(struct urb *urb)
 
 static void qt_read_bulk_callback(struct urb *urb)
 {
-
 	struct usb_serial_port *port = urb->context;
 	struct usb_serial *serial = get_usb_serial(port, __func__);
 	struct quatech_port *qt_port = qt_get_port_private(port);
@@ -439,7 +436,6 @@ static void qt_read_bulk_callback(struct urb *urb)
 
 			if (tty && urb->actual_length)
 				tty_insert_flip_char(tty, data[i], TTY_NORMAL);
-
 		}
 		tty_flip_buffer_push(tty);
 	}
@@ -452,10 +448,10 @@ static void qt_read_bulk_callback(struct urb *urb)
 			  port->read_urb->transfer_buffer_length,
 			  qt_read_bulk_callback, port);
 	result = usb_submit_urb(port->read_urb, GFP_ATOMIC);
-	if (result)
+	if (result) {
 		dbg("%s - failed resubmitting read urb, error %d",
 		    __func__, result);
-	else {
+	} else {
 		if (tty && RxCount) {
 			tty_flip_buffer_push(tty);
 			tty_schedule_flip(tty);
@@ -473,15 +469,14 @@ exit:
  *   successful, fills in the qt_get_device_data structure pointed to by
  *   device_data, otherwise return a negative error number of the problem.
  */
-
-static int qt_get_device(struct usb_serial *serial,
-			 struct qt_get_device_data *device_data)
+static int qt_get_device(struct usb_serial *		serial,
+			 struct qt_get_device_data *	device_data)
 {
 	int result;
 	unsigned char *transfer_buffer;
 
 	transfer_buffer =
-	    kmalloc(sizeof(struct qt_get_device_data), GFP_KERNEL);
+		kmalloc(sizeof(struct qt_get_device_data), GFP_KERNEL);
 	if (!transfer_buffer)
 		return -ENOMEM;
 
@@ -498,9 +493,9 @@ static int qt_get_device(struct usb_serial *serial,
 }
 
 /****************************************************************************
- *  BoxSetPrebufferLevel
-   TELLS BOX WHEN TO ASSERT FLOW CONTROL
- ****************************************************************************/
+*  BoxSetPrebufferLevel
+*  TELLS BOX WHEN TO ASSERT FLOW CONTROL
+****************************************************************************/
 static int BoxSetPrebufferLevel(struct usb_serial *serial)
 {
 	int result;
@@ -514,9 +509,9 @@ static int BoxSetPrebufferLevel(struct usb_serial *serial)
 }
 
 /****************************************************************************
- *  BoxSetATC
-   TELLS BOX WHEN TO ASSERT automatic transmitter control
-   ****************************************************************************/
+*  BoxSetATC
+*  TELLS BOX WHEN TO ASSERT automatic transmitter control
+****************************************************************************/
 static int BoxSetATC(struct usb_serial *serial, __u16 n_Mode)
 {
 	int result;
@@ -525,8 +520,8 @@ static int BoxSetATC(struct usb_serial *serial, __u16 n_Mode)
 	buffer_length = PREFUFF_LEVEL_CONSERVATIVE;
 
 	result =
-	    usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			    QT_SET_ATF, 0x40, n_Mode, 0, NULL, 0, 300);
+		usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+				QT_SET_ATF, 0x40, n_Mode, 0, NULL, 0, 300);
 
 	return result;
 }
@@ -537,16 +532,16 @@ static int BoxSetATC(struct usb_serial *serial, __u16 n_Mode)
  *   successful returns the number of bytes written, otherwise it returns a
  *   negative error number of the problem.
  */
-static int qt_set_device(struct usb_serial *serial,
-			 struct qt_get_device_data *device_data)
+static int qt_set_device(struct usb_serial *		serial,
+			 struct qt_get_device_data *	device_data)
 {
 	int result;
 	__u16 length;
 	__u16 PortSettings;
 
-	PortSettings = ((__u16) (device_data->portb));
+	PortSettings = ((__u16)(device_data->portb));
 	PortSettings = (PortSettings << 8);
-	PortSettings += ((__u16) (device_data->porta));
+	PortSettings += ((__u16)(device_data->porta));
 
 	length = sizeof(struct qt_get_device_data);
 	dbg("%s - PortSettings = 0x%x\n", __func__, PortSettings);
@@ -569,7 +564,6 @@ static int qt_open_channel(struct usb_serial *serial, __u16 Uart_Number,
 				 sizeof(struct qt_open_channel_data), 300);
 
 	return result;
-
 }
 
 static int qt_close_channel(struct usb_serial *serial, __u16 Uart_Number)
@@ -582,7 +576,6 @@ static int qt_close_channel(struct usb_serial *serial, __u16 Uart_Number)
 				 NULL, 0, 300);
 
 	return result;
-
 }
 
 /****************************************************************************
@@ -599,9 +592,9 @@ static int BoxGetRegister(struct usb_serial *serial, unsigned short Uart_Number,
 	current_length = sizeof(struct qt_get_device_data);
 
 	result =
-	    usb_control_msg(serial->dev, usb_rcvctrlpipe(serial->dev, 0),
-			    QT_GET_SET_REGISTER, 0xC0, Register_Num,
-			    Uart_Number, (void *)pValue, sizeof(*pValue), 300);
+		usb_control_msg(serial->dev, usb_rcvctrlpipe(serial->dev, 0),
+				QT_GET_SET_REGISTER, 0xC0, Register_Num,
+				Uart_Number, (void *)pValue, sizeof(*pValue), 300);
 
 	return result;
 }
@@ -622,15 +615,15 @@ static int BoxSetRegister(struct usb_serial *serial, unsigned short Uart_Number,
 	RegAndByte = RegAndByte + Register_Num;
 
 /*
-	result = usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-				 QT_GET_SET_REGISTER, 0xC0, Register_Num,
-				 Uart_Number, NULL, 0, 300);
-*/
+ *      result = usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+ *                               QT_GET_SET_REGISTER, 0xC0, Register_Num,
+ *                               Uart_Number, NULL, 0, 300);
+ */
 
 	result =
-	    usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			    QT_GET_SET_REGISTER, 0x40, RegAndByte, Uart_Number,
-			    NULL, 0, 300);
+		usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+				QT_GET_SET_REGISTER, 0x40, RegAndByte, Uart_Number,
+				NULL, 0, 300);
 
 	return result;
 }
@@ -649,9 +642,9 @@ static int qt_setuart(struct usb_serial *serial, unsigned short Uart_Number,
 	UartNumandLCR = (default_LCR << 8) + Uart_Number;
 
 	result =
-	    usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			    QT_GET_SET_UART, 0x40, default_divisor,
-			    UartNumandLCR, NULL, 0, 300);
+		usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+				QT_GET_SET_UART, 0x40, default_divisor,
+				UartNumandLCR, NULL, 0, 300);
 
 	return result;
 }
@@ -670,26 +663,23 @@ static int BoxSetHW_FlowCtrl(struct usb_serial *serial, unsigned int index,
 	else {
 		/* no flow control to remote device */
 		mcr = 0;
-
 	}
 	MOUT_Value = mcr << 8;
 
-	if (bSet == 1) {
+	if (bSet == 1)
 		/* flow control, box will inhibit xmit data if CTS line is
 		 * asserted */
 		msr = SERIAL_MSR_CTS;
-	} else {
+	else
 		/* Box will not inhimbe xmit data due to CTS line */
 		msr = 0;
-	}
 	MOUT_Value |= msr;
 
 	status =
-	    usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			    QT_HW_FLOW_CONTROL_MASK, 0x40, MOUT_Value,
-			    index, NULL, 0, 300);
+		usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+				QT_HW_FLOW_CONTROL_MASK, 0x40, MOUT_Value,
+				index, NULL, 0, 300);
 	return status;
-
 }
 
 static int BoxSetSW_FlowCtrl(struct usb_serial *serial, __u16 index,
@@ -702,11 +692,10 @@ static int BoxSetSW_FlowCtrl(struct usb_serial *serial, __u16 index,
 	nSWflowout = (unsigned short)stop_char;
 
 	result =
-	    usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			    QT_SW_FLOW_CONTROL_MASK, 0x40, nSWflowout,
-			    index, NULL, 0, 300);
+		usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+				QT_SW_FLOW_CONTROL_MASK, 0x40, nSWflowout,
+				index, NULL, 0, 300);
 	return result;
-
 }
 
 static int BoxDisable_SW_FlowCtrl(struct usb_serial *serial, __u16 index)
@@ -714,11 +703,10 @@ static int BoxDisable_SW_FlowCtrl(struct usb_serial *serial, __u16 index)
 	int result;
 
 	result =
-	    usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			    QT_SW_FLOW_CONTROL_DISABLE, 0x40, 0, index,
-			    NULL, 0, 300);
+		usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+				QT_SW_FLOW_CONTROL_DISABLE, 0x40, 0, index,
+				NULL, 0, 300);
 	return result;
-
 }
 
 static int qt_startup(struct usb_serial *serial)
@@ -748,7 +736,6 @@ static int qt_startup(struct usb_serial *serial)
 		spin_lock_init(&qt_port->lock);
 
 		usb_set_serial_port_data(port, qt_port);
-
 	}
 
 	status = qt_get_device(serial, &DeviceData);
@@ -810,10 +797,9 @@ static int qt_startup(struct usb_serial *serial)
 		DeviceData.portb &= ~(LOOPMODE_BITS);
 		DeviceData.portb |= RS232_MODE;
 		break;
-
 	}
 
-	status = BoxSetPrebufferLevel(serial);	/* sets to default value */
+	status = BoxSetPrebufferLevel(serial);  /* sets to default value */
 	if (status < 0) {
 		dbg(__FILE__ "BoxSetPrebufferLevel failed\n");
 		goto startup_error;
@@ -870,11 +856,10 @@ static void qt_release(struct usb_serial *serial)
 		kfree(qt_port);
 		usb_set_serial_port_data(port, NULL);
 	}
-
 }
 
-static int qt_open(struct tty_struct *tty,
-		   struct usb_serial_port *port)
+static int qt_open(struct tty_struct *		tty,
+		   struct usb_serial_port *	port)
 {
 	struct usb_serial *serial;
 	struct quatech_port *quatech_port;
@@ -915,10 +900,10 @@ static int qt_open(struct tty_struct *tty,
 
 /* FIXME: are these needed?  Does it even do anything useful? */
 	quatech_port->shadowLSR = ChannelData.line_status &
-	    (SERIAL_LSR_OE | SERIAL_LSR_PE | SERIAL_LSR_FE | SERIAL_LSR_BI);
+				  (SERIAL_LSR_OE | SERIAL_LSR_PE | SERIAL_LSR_FE | SERIAL_LSR_BI);
 
 	quatech_port->shadowMSR = ChannelData.modem_status &
-	    (SERIAL_MSR_CTS | SERIAL_MSR_DSR | SERIAL_MSR_RI | SERIAL_MSR_CD);
+				  (SERIAL_MSR_CTS | SERIAL_MSR_DSR | SERIAL_MSR_RI | SERIAL_MSR_CD);
 
 	/* Set Baud rate to default and turn off (default)flow control here */
 	result = qt_setuart(serial, port->number, DEFAULT_DIVISOR, DEFAULT_LCR);
@@ -951,16 +936,14 @@ static int qt_open(struct tty_struct *tty,
 					 interrupt_in_urb->interval);
 
 			result =
-			    usb_submit_urb(serial->port[0]->interrupt_in_urb,
-					   GFP_KERNEL);
+				usb_submit_urb(serial->port[0]->interrupt_in_urb,
+					       GFP_KERNEL);
 			if (result) {
 				dev_err(&port->dev,
 					"%s - Error %d submitting "
 					"interrupt urb\n", __func__, result);
 			}
-
 		}
-
 	}
 
 	dbg("port number is %d\n", port->number);
@@ -999,7 +982,6 @@ static int qt_open(struct tty_struct *tty,
 	memset(&(quatech_port->icount), 0x00, sizeof(quatech_port->icount));
 
 	return 0;
-
 }
 
 static int qt_chars_in_buffer(struct tty_struct *tty)
@@ -1012,25 +994,23 @@ static int qt_chars_in_buffer(struct tty_struct *tty)
 
 	dbg("%s - port %d\n", __func__, port->number);
 
-	if (serial->num_bulk_out) {
+	if (serial->num_bulk_out)
 		if (port->write_urb->status == -EINPROGRESS)
 			chars = port->write_urb->transfer_buffer_length;
-	}
 
 	dbg("%s - returns %d\n", __func__, chars);
 
 	return chars;
 }
 
-static void qt_block_until_empty(struct tty_struct *tty,
-				 struct quatech_port *qt_port)
+static void qt_block_until_empty(struct tty_struct *	tty,
+				 struct quatech_port *	qt_port)
 {
 	int timeout = HZ / 10;
 	int wait = 30;
 	int count;
 
 	while (1) {
-
 		count = qt_chars_in_buffer(tty);
 
 		if (count <= 0)
@@ -1056,6 +1036,7 @@ static void qt_close(struct usb_serial_port *port)
 	struct tty_struct *tty;
 	int status;
 	unsigned int index;
+
 	status = 0;
 
 	dbg("%s - port %d\n", __func__, port->number);
@@ -1093,7 +1074,6 @@ static void qt_close(struct usb_serial_port *port)
 			dbg("%s", "Shutdown interrupt_in_urb\n");
 			usb_kill_urb(serial->port[0]->interrupt_in_urb);
 		}
-
 	}
 
 	if (qt_port->write_urb) {
@@ -1102,7 +1082,6 @@ static void qt_close(struct usb_serial_port *port)
 			kfree(qt_port->write_urb->transfer_buffer);
 		usb_free_urb(qt_port->write_urb);
 	}
-
 }
 
 static int qt_write(struct tty_struct *tty, struct usb_serial_port *port,
@@ -1129,7 +1108,7 @@ static int qt_write(struct tty_struct *tty, struct usb_serial_port *port,
 		}
 
 		count =
-		    (count > port->bulk_out_size) ? port->bulk_out_size : count;
+			(count > port->bulk_out_size) ? port->bulk_out_size : count;
 		memcpy(port->write_urb->transfer_buffer, buf, count);
 
 		/* set up our urb */
@@ -1181,14 +1160,12 @@ static int qt_write_room(struct tty_struct *tty)
 
 	dbg("%s - port %d\n", __func__, port->number);
 
-	if (serial->num_bulk_out) {
+	if (serial->num_bulk_out)
 		if (port->write_urb->status != -EINPROGRESS)
 			retval = port->bulk_out_size;
-	}
 
 	spin_unlock_irqrestore(&qt_port->lock, flags);
 	return retval;
-
 }
 
 static int qt_ioctl(struct tty_struct *tty, struct file *file,
@@ -1206,13 +1183,13 @@ static int qt_ioctl(struct tty_struct *tty, struct file *file,
 	if (cmd == TIOCMIWAIT) {
 		while (qt_port != NULL) {
 			interruptible_sleep_on(&qt_port->msr_wait);
-			if (signal_pending(current))
+			if (signal_pending(current)) {
 				return -ERESTARTSYS;
-			else {
+			} else {
 				char diff = qt_port->diff_status;
 
 				if (diff == 0)
-					return -EIO;	/* no change => error */
+					return -EIO;    /* no change => error */
 
 				/* Consume all events */
 				qt_port->diff_status = 0;
@@ -1224,9 +1201,8 @@ static int qt_ioctl(struct tty_struct *tty, struct file *file,
 				    || ((arg & TIOCM_CD)
 					&& (diff & SERIAL_MSR_CD))
 				    || ((arg & TIOCM_CTS)
-					&& (diff & SERIAL_MSR_CTS))) {
+					&& (diff & SERIAL_MSR_CTS)))
 					return 0;
-				}
 			}
 		}
 		return 0;
@@ -1236,9 +1212,9 @@ static int qt_ioctl(struct tty_struct *tty, struct file *file,
 	return -ENOIOCTLCMD;
 }
 
-static void qt_set_termios(struct tty_struct *tty,
-			   struct usb_serial_port *port,
-			   struct ktermios *old_termios)
+static void qt_set_termios(struct tty_struct *		tty,
+			   struct usb_serial_port *	port,
+			   struct ktermios *		old_termios)
 {
 	struct ktermios *termios = tty->termios;
 	unsigned char new_LCR = 0;
@@ -1299,7 +1275,7 @@ static void qt_set_termios(struct tty_struct *tty,
 	 * Set Baud rate to default and turn off (default)flow control here
 	 */
 	status =
-	    qt_setuart(port->serial, index, (unsigned short)divisor, new_LCR);
+		qt_setuart(port->serial, index, (unsigned short)divisor, new_LCR);
 	if (status < 0) {
 		dbg(__FILE__ "qt_setuart failed\n");
 		return;
@@ -1327,7 +1303,6 @@ static void qt_set_termios(struct tty_struct *tty,
 			dbg(__FILE__ "BoxSetHW_FlowCtrl failed\n");
 			return;
 		}
-
 	}
 
 	/* if we are implementing XON/XOFF, set the start and stop character in
@@ -1336,17 +1311,15 @@ static void qt_set_termios(struct tty_struct *tty,
 		unsigned char stop_char = STOP_CHAR(tty);
 		unsigned char start_char = START_CHAR(tty);
 		status =
-		    BoxSetSW_FlowCtrl(port->serial, index, stop_char,
-				      start_char);
+			BoxSetSW_FlowCtrl(port->serial, index, stop_char,
+					  start_char);
 		if (status < 0)
 			dbg(__FILE__ "BoxSetSW_FlowCtrl (enabled) failed\n");
-
 	} else {
 		/* disable SW flow control */
 		status = BoxDisable_SW_FlowCtrl(port->serial, index);
 		if (status < 0)
 			dbg(__FILE__ "BoxSetSW_FlowCtrl (diabling) failed\n");
-
 	}
 	tty->termios->c_cflag &= ~CMSPAR;
 	/* FIXME: Error cases should be returning the actual bits changed only */
@@ -1375,8 +1348,8 @@ static void qt_break(struct tty_struct *tty, int break_state)
 	dbg("%s - port %d\n", __func__, port->number);
 
 	result =
-	    usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
-			    QT_BREAK_CONTROL, 0x40, onoff, index, NULL, 0, 300);
+		usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+				QT_BREAK_CONTROL, 0x40, onoff, index, NULL, 0, 300);
 
 	spin_unlock_irqrestore(&qt_port->lock, flags);
 }
@@ -1385,7 +1358,6 @@ static inline int qt_real_tiocmget(struct tty_struct *tty,
 				   struct usb_serial_port *port,
 				   struct file *file, struct usb_serial *serial)
 {
-
 	u8 mcr;
 	u8 msr;
 	unsigned int result = 0;
@@ -1396,40 +1368,38 @@ static inline int qt_real_tiocmget(struct tty_struct *tty,
 
 	index = tty->index - serial->minor;
 	status =
-	    BoxGetRegister(port->serial, index, MODEM_CONTROL_REGISTER, &mcr);
+		BoxGetRegister(port->serial, index, MODEM_CONTROL_REGISTER, &mcr);
 	if (status >= 0) {
 		status =
-		    BoxGetRegister(port->serial, index,
-				   MODEM_STATUS_REGISTER, &msr);
-
+			BoxGetRegister(port->serial, index,
+				       MODEM_STATUS_REGISTER, &msr);
 	}
 
 	if (status >= 0) {
 		result = ((mcr & SERIAL_MCR_DTR) ? TIOCM_DTR : 0)
-		    /* DTR IS SET */
-		    | ((mcr & SERIAL_MCR_RTS) ? TIOCM_RTS : 0)
-		    /* RTS IS SET */
-		    | ((msr & SERIAL_MSR_CTS) ? TIOCM_CTS : 0)
-		    /* CTS is set */
-		    | ((msr & SERIAL_MSR_CD) ? TIOCM_CAR : 0)
-		    /* Carrier detect is set */
-		    | ((msr & SERIAL_MSR_RI) ? TIOCM_RI : 0)
-		    /* Ring indicator set */
-		    | ((msr & SERIAL_MSR_DSR) ? TIOCM_DSR : 0);
+		                /* DTR IS SET */
+			 | ((mcr & SERIAL_MCR_RTS) ? TIOCM_RTS : 0)
+		                /* RTS IS SET */
+			 | ((msr & SERIAL_MSR_CTS) ? TIOCM_CTS : 0)
+		                /* CTS is set */
+			 | ((msr & SERIAL_MSR_CD) ? TIOCM_CAR : 0)
+		                /* Carrier detect is set */
+			 | ((msr & SERIAL_MSR_RI) ? TIOCM_RI : 0)
+		                /* Ring indicator set */
+			 | ((msr & SERIAL_MSR_DSR) ? TIOCM_DSR : 0);
 		/* DSR is set */
 		return result;
-
-	} else
+	} else {
 		return -ESPIPE;
+	}
 }
 
-static inline int qt_real_tiocmset(struct tty_struct *tty,
-				   struct usb_serial_port *port,
-				   struct file *file,
-				   struct usb_serial *serial,
-				   unsigned int value)
+static inline int qt_real_tiocmset(struct tty_struct *		tty,
+				   struct usb_serial_port *	port,
+				   struct file *		file,
+				   struct usb_serial *		serial,
+				   unsigned int			value)
 {
-
 	u8 mcr;
 	int status;
 	unsigned int index;
@@ -1438,7 +1408,7 @@ static inline int qt_real_tiocmset(struct tty_struct *tty,
 
 	index = tty->index - serial->minor;
 	status =
-	    BoxGetRegister(port->serial, index, MODEM_CONTROL_REGISTER, &mcr);
+		BoxGetRegister(port->serial, index, MODEM_CONTROL_REGISTER, &mcr);
 	if (status < 0)
 		return -ESPIPE;
 
@@ -1455,7 +1425,7 @@ static inline int qt_real_tiocmset(struct tty_struct *tty,
 		mcr |= SERIAL_MCR_LOOP;
 
 	status =
-	    BoxSetRegister(port->serial, index, MODEM_CONTROL_REGISTER, mcr);
+		BoxSetRegister(port->serial, index, MODEM_CONTROL_REGISTER, mcr);
 	if (status < 0)
 		return -ESPIPE;
 	else
@@ -1489,7 +1459,6 @@ static int qt_tiocmget(struct tty_struct *tty, struct file *file)
 static int qt_tiocmset(struct tty_struct *tty, struct file *file,
 		       unsigned int set, unsigned int clear)
 {
-
 	struct usb_serial_port *port = tty->driver_data;
 	struct usb_serial *serial = get_usb_serial(port, __func__);
 	struct quatech_port *qt_port = qt_get_port_private(port);
@@ -1577,7 +1546,6 @@ static void qt_unthrottle(struct tty_struct *tty)
 	}
 	spin_unlock_irqrestore(&qt_port->lock, flags);
 	return;
-
 }
 
 static int qt_calc_num_ports(struct usb_serial *serial)
@@ -1590,35 +1558,35 @@ static int qt_calc_num_ports(struct usb_serial *serial)
 	    (int)serial->interface->altsetting->desc.bNumEndpoints);
 
 	num_ports =
-	    (serial->interface->cur_altsetting->desc.bNumEndpoints - 1) / 2;
+		(serial->interface->cur_altsetting->desc.bNumEndpoints - 1) / 2;
 
 	return num_ports;
 }
 
 static struct usb_serial_driver quatech_device = {
-	.driver = {
-		   .owner = THIS_MODULE,
-		   .name = "serqt",
-		   },
-	.description = DRIVER_DESC,
-	.usb_driver = &serqt_usb_driver,
-	.id_table = serqt_id_table,
-	.num_ports = 8,
-	.open = qt_open,
-	.close = qt_close,
-	.write = qt_write,
-	.write_room = qt_write_room,
-	.chars_in_buffer = qt_chars_in_buffer,
-	.throttle = qt_throttle,
-	.unthrottle = qt_unthrottle,
-	.calc_num_ports = qt_calc_num_ports,
-	.ioctl = qt_ioctl,
-	.set_termios = qt_set_termios,
-	.break_ctl = qt_break,
-	.tiocmget = qt_tiocmget,
-	.tiocmset = qt_tiocmset,
-	.attach = qt_startup,
-	.release = qt_release,
+	.driver			={
+		.owner		= THIS_MODULE,
+		.name		= "serqt",
+	},
+	.description		= DRIVER_DESC,
+	.usb_driver		= &serqt_usb_driver,
+	.id_table		= serqt_id_table,
+	.num_ports		= 8,
+	.open			= qt_open,
+	.close			= qt_close,
+	.write			= qt_write,
+	.write_room		= qt_write_room,
+	.chars_in_buffer	= qt_chars_in_buffer,
+	.throttle		= qt_throttle,
+	.unthrottle		= qt_unthrottle,
+	.calc_num_ports		= qt_calc_num_ports,
+	.ioctl			= qt_ioctl,
+	.set_termios		= qt_set_termios,
+	.break_ctl		= qt_break,
+	.tiocmget		= qt_tiocmget,
+	.tiocmset		= qt_tiocmset,
+	.attach			= qt_startup,
+	.release		= qt_release,
 };
 
 static int __init serqt_usb_init(void)

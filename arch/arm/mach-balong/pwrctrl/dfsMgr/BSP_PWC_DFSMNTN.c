@@ -25,8 +25,5 @@
 
 void    PWRCTRL_DfsMntn(void)
 {
-
-    return ;
-
+	return;
 }
-

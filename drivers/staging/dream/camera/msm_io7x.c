@@ -121,28 +121,28 @@ int msm_camio_enable(struct platform_device *pdev)
 	camio_ext = camdev->ioext;
 
 	appio = request_mem_region(camio_ext.appphy,
-		camio_ext.appsz, pdev->name);
+				   camio_ext.appsz, pdev->name);
 	if (!appio) {
 		rc = -EBUSY;
 		goto enable_fail;
 	}
 
 	appbase = ioremap(camio_ext.appphy,
-		camio_ext.appsz);
+			  camio_ext.appsz);
 	if (!appbase) {
 		rc = -ENOMEM;
 		goto apps_no_mem;
 	}
 
 	mdcio = request_mem_region(camio_ext.mdcphy,
-		camio_ext.mdcsz, pdev->name);
+				   camio_ext.mdcsz, pdev->name);
 	if (!mdcio) {
 		rc = -EBUSY;
 		goto mdc_busy;
 	}
 
 	mdcbase = ioremap(camio_ext.mdcphy,
-		camio_ext.mdcsz);
+			  camio_ext.mdcsz);
 	if (!mdcbase) {
 		rc = -ENOMEM;
 		goto mdc_no_mem;
@@ -193,8 +193,8 @@ void msm_camio_camif_pad_reg_reset(void)
 	reg = (readl(mdcbase)) & CAMIF_CFG_RMSK;
 
 	mask = CAM_SEL_BMSK |
-		CAM_PCLK_SRC_SEL_BMSK |
-		CAM_PCLK_INVERT_BMSK;
+	       CAM_PCLK_SRC_SEL_BMSK |
+	       CAM_PCLK_INVERT_BMSK;
 
 	value = 1 << CAM_SEL_SHFT |
 		3 << CAM_PCLK_SRC_SEL_SHFT |
@@ -278,6 +278,7 @@ int msm_camio_probe_on(struct platform_device *pdev)
 {
 	struct msm_camera_sensor_info *sinfo = pdev->dev.platform_data;
 	struct msm_camera_device_platform_data *camdev = sinfo->pdata;
+
 	camdev->camera_gpio_on();
 	return msm_camio_clk_enable(CAMIO_VFE_CLK);
 }
@@ -286,6 +287,7 @@ int msm_camio_probe_off(struct platform_device *pdev)
 {
 	struct msm_camera_sensor_info *sinfo = pdev->dev.platform_data;
 	struct msm_camera_device_platform_data *camdev = sinfo->pdata;
+
 	camdev->camera_gpio_off();
 	return msm_camio_clk_disable(CAMIO_VFE_CLK);
 }

@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2008-2009 QUALCOMM Incorporated.
-*/
+ * Copyright (C) 2008-2009 QUALCOMM Incorporated.
+ */
 #include <linux/slab.h>
 #include <linux/interrupt.h>
 #include <linux/spinlock.h>
@@ -17,80 +17,80 @@ struct msm_vfe8x_ctrl {
 
 	/* bit 1:0 VIEW_IRQ_MASK= 0x11:
 	 * generate IRQ when both y and cbcr frame is ready. */
-	struct vfe_irq_composite_mask_config vfeIrqCompositeMaskLocal;
-	struct vfe_module_enable vfeModuleEnableLocal;
-	struct vfe_camif_cfg_data   vfeCamifConfigLocal;
-	struct vfe_interrupt_mask   vfeImaskLocal;
-	struct vfe_stats_cmd_data   vfeStatsCmdLocal;
-	struct vfe_bus_cfg_data     vfeBusConfigLocal;
-	struct vfe_cmd_bus_pm_start vfeBusPmConfigLocal;
-	struct vfe_bus_cmd_data     vfeBusCmdLocal;
-	enum vfe_interrupt_name     vfeInterruptNameLocal;
-	uint32_t vfeLaBankSel;
-	struct vfe_gamma_lut_sel  vfeGammaLutSel;
+	struct vfe_irq_composite_mask_config	vfeIrqCompositeMaskLocal;
+	struct vfe_module_enable		vfeModuleEnableLocal;
+	struct vfe_camif_cfg_data		vfeCamifConfigLocal;
+	struct vfe_interrupt_mask		vfeImaskLocal;
+	struct vfe_stats_cmd_data		vfeStatsCmdLocal;
+	struct vfe_bus_cfg_data			vfeBusConfigLocal;
+	struct vfe_cmd_bus_pm_start		vfeBusPmConfigLocal;
+	struct vfe_bus_cmd_data			vfeBusCmdLocal;
+	enum vfe_interrupt_name vfeInterruptNameLocal;
+	uint32_t				vfeLaBankSel;
+	struct vfe_gamma_lut_sel		vfeGammaLutSel;
 
-	boolean vfeStartAckPendingFlag;
-	boolean vfeStopAckPending;
-	boolean vfeResetAckPending;
-	boolean vfeUpdateAckPending;
+	boolean					vfeStartAckPendingFlag;
+	boolean					vfeStopAckPending;
+	boolean					vfeResetAckPending;
+	boolean					vfeUpdateAckPending;
 
-	enum VFE_AXI_OUTPUT_MODE        axiOutputMode;
-	enum VFE_START_OPERATION_MODE   vfeOperationMode;
+	enum VFE_AXI_OUTPUT_MODE axiOutputMode;
+	enum VFE_START_OPERATION_MODE vfeOperationMode;
 
-	uint32_t            vfeSnapShotCount;
-	uint32_t            vfeRequestedSnapShotCount;
-	boolean             vfeStatsPingPongReloadFlag;
-	uint32_t            vfeFrameId;
+	uint32_t				vfeSnapShotCount;
+	uint32_t				vfeRequestedSnapShotCount;
+	boolean					vfeStatsPingPongReloadFlag;
+	uint32_t				vfeFrameId;
 
-	struct vfe_cmd_frame_skip_config vfeFrameSkip;
-	uint32_t vfeFrameSkipPattern;
-	uint8_t  vfeFrameSkipCount;
-	uint8_t  vfeFrameSkipPeriod;
+	struct vfe_cmd_frame_skip_config	vfeFrameSkip;
+	uint32_t				vfeFrameSkipPattern;
+	uint8_t					vfeFrameSkipCount;
+	uint8_t					vfeFrameSkipPeriod;
 
-	boolean  vfeTestGenStartFlag;
-	uint32_t vfeImaskPacked;
-	uint32_t vfeImaskCompositePacked;
-	enum VFE_RAW_PIXEL_DATA_SIZE       axiInputDataSize;
-	struct vfe_irq_thread_msg          vfeIrqThreadMsgLocal;
+	boolean					vfeTestGenStartFlag;
+	uint32_t				vfeImaskPacked;
+	uint32_t				vfeImaskCompositePacked;
+	enum VFE_RAW_PIXEL_DATA_SIZE axiInputDataSize;
+	struct vfe_irq_thread_msg		vfeIrqThreadMsgLocal;
 
-	struct vfe_output_path_combo  viewPath;
-	struct vfe_output_path_combo  encPath;
-	struct vfe_frame_skip_counts vfeDroppedFrameCounts;
-	struct vfe_stats_control afStatsControl;
-	struct vfe_stats_control awbStatsControl;
+	struct vfe_output_path_combo		viewPath;
+	struct vfe_output_path_combo		encPath;
+	struct vfe_frame_skip_counts		vfeDroppedFrameCounts;
+	struct vfe_stats_control		afStatsControl;
+	struct vfe_stats_control		awbStatsControl;
 
-	enum VFE_STATE  vstate;
+	enum VFE_STATE vstate;
 
-	spinlock_t  ack_lock;
-	spinlock_t  state_lock;
-	spinlock_t  io_lock;
+	spinlock_t				ack_lock;
+	spinlock_t				state_lock;
+	spinlock_t				io_lock;
 
-	struct msm_vfe_callback *resp;
-	uint32_t extlen;
-	void *extdata;
+	struct msm_vfe_callback *		resp;
+	uint32_t				extlen;
+	void *					extdata;
 
-	spinlock_t  tasklet_lock;
-	struct list_head tasklet_q;
+	spinlock_t				tasklet_lock;
+	struct list_head			tasklet_q;
 
-	int vfeirq;
-	void __iomem *vfebase;
+	int					vfeirq;
+	void __iomem *				vfebase;
 
-	void *syncdata;
+	void *					syncdata;
 };
 static struct msm_vfe8x_ctrl *ctrl;
 static irqreturn_t vfe_parse_irq(int irq_num, void *data);
 
 struct isr_queue_cmd {
-	struct list_head list;
-	struct vfe_interrupt_status        vfeInterruptStatus;
-	struct vfe_frame_asf_info          vfeAsfFrameInfo;
-	struct vfe_frame_bpc_info          vfeBpcFrameInfo;
-	struct vfe_msg_camif_status        vfeCamifStatusLocal;
-	struct vfe_bus_performance_monitor vfePmData;
+	struct list_head			list;
+	struct vfe_interrupt_status		vfeInterruptStatus;
+	struct vfe_frame_asf_info		vfeAsfFrameInfo;
+	struct vfe_frame_bpc_info		vfeBpcFrameInfo;
+	struct vfe_msg_camif_status		vfeCamifStatusLocal;
+	struct vfe_bus_performance_monitor	vfePmData;
 };
 
 static void vfe_prog_hw(uint8_t *hwreg,
-	uint32_t *inptr, uint32_t regcnt)
+			uint32_t *inptr, uint32_t regcnt)
 {
 	/* unsigned long flags; */
 	uint32_t i;
@@ -102,13 +102,13 @@ static void vfe_prog_hw(uint8_t *hwreg,
 	p = (uint32_t *)(hwreg);
 	for (i = 0; i < (regcnt >> 2); i++)
 		writel(*inptr++, p++);
-		/* *p++ = *inptr++; */
+	/* *p++ = *inptr++; */
 
 	/* spin_unlock_irqrestore(&ctrl->io_lock, flags); */
 }
 
 static void vfe_read_reg_values(uint8_t *hwreg,
-	uint32_t *dest, uint32_t count)
+				uint32_t *dest, uint32_t count)
 {
 	/* unsigned long flags; */
 	uint32_t *temp;
@@ -143,31 +143,31 @@ static struct vfe_irqenable vfe_read_irq_mask(void)
 }
 
 static void
-vfe_set_bus_pipo_addr(struct vfe_output_path_combo *vpath,
-	struct vfe_output_path_combo *epath)
+vfe_set_bus_pipo_addr(struct vfe_output_path_combo *	vpath,
+		      struct vfe_output_path_combo *	epath)
 {
 	vpath->yPath.hwRegPingAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_VIEW_Y_WR_PING_ADDR);
+					(ctrl->vfebase + VFE_BUS_VIEW_Y_WR_PING_ADDR);
 	vpath->yPath.hwRegPongAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_VIEW_Y_WR_PONG_ADDR);
+					(ctrl->vfebase + VFE_BUS_VIEW_Y_WR_PONG_ADDR);
 	vpath->cbcrPath.hwRegPingAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_VIEW_CBCR_WR_PING_ADDR);
+					   (ctrl->vfebase + VFE_BUS_VIEW_CBCR_WR_PING_ADDR);
 	vpath->cbcrPath.hwRegPongAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_VIEW_CBCR_WR_PONG_ADDR);
+					   (ctrl->vfebase + VFE_BUS_VIEW_CBCR_WR_PONG_ADDR);
 
 	epath->yPath.hwRegPingAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_ENC_Y_WR_PING_ADDR);
+					(ctrl->vfebase + VFE_BUS_ENC_Y_WR_PING_ADDR);
 	epath->yPath.hwRegPongAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_ENC_Y_WR_PONG_ADDR);
+					(ctrl->vfebase + VFE_BUS_ENC_Y_WR_PONG_ADDR);
 	epath->cbcrPath.hwRegPingAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_ENC_CBCR_WR_PING_ADDR);
+					   (ctrl->vfebase + VFE_BUS_ENC_CBCR_WR_PING_ADDR);
 	epath->cbcrPath.hwRegPongAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_ENC_CBCR_WR_PONG_ADDR);
+					   (ctrl->vfebase + VFE_BUS_ENC_CBCR_WR_PONG_ADDR);
 }
 
 static void vfe_axi_output(struct vfe_cmd_axi_output_config *in,
-	struct vfe_output_path_combo *out1,
-	struct vfe_output_path_combo *out2, uint16_t out)
+			   struct vfe_output_path_combo *out1,
+			   struct vfe_output_path_combo *out2, uint16_t out)
 {
 	struct vfe_axi_out_cfg cmd;
 
@@ -189,14 +189,14 @@ static void vfe_axi_output(struct vfe_cmd_axi_output_config *in,
 	/* convert the image width and row increment to be in
 	 * unit of 64bit (8 bytes) */
 	temp = (in->output2.outputY.imageWidth + (out - 1)) /
-		out;
+	       out;
 	cmd.out2YImageWidthin64bit = temp;
 
 	/* VFE_BUS_ENC_Y_WR_BUFFER_CFG */
 	cmd.out2YBurstLength = burstLength;
 	cmd.out2YNumRows = in->output2.outputY.outRowCount;
 	temp = (in->output2.outputY.outRowIncrement + (out - 1)) /
-		out;
+	       out;
 	cmd.out2YRowIncrementIn64bit = temp;
 
 	/* AXI Output 2 Cbcr Configuration*/
@@ -209,14 +209,14 @@ static void vfe_axi_output(struct vfe_cmd_axi_output_config *in,
 	/* VFE_BUS_ENC_Cbcr_WR_IMAGE_SIZE */
 	cmd.out2CbcrImageHeight = in->output2.outputCbcr.imageHeight;
 	temp = (in->output2.outputCbcr.imageWidth + (out - 1)) /
-		out;
+	       out;
 	cmd.out2CbcrImageWidthIn64bit = temp;
 
 	/* VFE_BUS_ENC_Cbcr_WR_BUFFER_CFG */
 	cmd.out2CbcrBurstLength = burstLength;
 	cmd.out2CbcrNumRows = in->output2.outputCbcr.outRowCount;
 	temp = (in->output2.outputCbcr.outRowIncrement + (out - 1)) /
-		out;
+	       out;
 	cmd.out2CbcrRowIncrementIn64bit = temp;
 
 	/* AXI Output 1 Y Configuration */
@@ -229,7 +229,7 @@ static void vfe_axi_output(struct vfe_cmd_axi_output_config *in,
 	/* VFE_BUS_VIEW_Y_WR_IMAGE_SIZE */
 	cmd.out1YImageHeight = in->output1.outputY.imageHeight;
 	temp = (in->output1.outputY.imageWidth + (out - 1)) /
-		out;
+	       out;
 	cmd.out1YImageWidthin64bit = temp;
 
 	/* VFE_BUS_VIEW_Y_WR_BUFFER_CFG     */
@@ -263,20 +263,20 @@ static void vfe_axi_output(struct vfe_cmd_axi_output_config *in,
 	cmd.out1CbcrRowIncrementIn64bit = temp;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_BUS_ENC_Y_WR_PING_ADDR,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 static void vfe_reg_bus_cfg(struct vfe_bus_cfg_data *in)
 {
 	struct vfe_axi_bus_cfg cmd;
 
-	cmd.stripeRdPathEn      = in->stripeRdPathEn;
-	cmd.encYWrPathEn        = in->encYWrPathEn;
-	cmd.encCbcrWrPathEn     = in->encCbcrWrPathEn;
-	cmd.viewYWrPathEn       = in->viewYWrPathEn;
-	cmd.viewCbcrWrPathEn    = in->viewCbcrWrPathEn;
-	cmd.rawPixelDataSize    = (uint32_t)in->rawPixelDataSize;
-	cmd.rawWritePathSelect  = (uint32_t)in->rawWritePathSelect;
+	cmd.stripeRdPathEn = in->stripeRdPathEn;
+	cmd.encYWrPathEn = in->encYWrPathEn;
+	cmd.encCbcrWrPathEn = in->encCbcrWrPathEn;
+	cmd.viewYWrPathEn = in->viewYWrPathEn;
+	cmd.viewCbcrWrPathEn = in->viewCbcrWrPathEn;
+	cmd.rawPixelDataSize = (uint32_t)in->rawPixelDataSize;
+	cmd.rawWritePathSelect = (uint32_t)in->rawWritePathSelect;
 
 	/*  program vfe_bus_cfg */
 	writel(*((uint32_t *)&cmd), ctrl->vfebase + VFE_BUS_CFG);
@@ -288,13 +288,13 @@ static void vfe_reg_camif_config(struct vfe_camif_cfg_data *in)
 
 	memset(&cfg, 0, sizeof(cfg));
 
-	cfg.VSyncEdge          =
+	cfg.VSyncEdge =
 		in->camifCfgFromCmd.vSyncEdge;
 
-	cfg.HSyncEdge          =
+	cfg.HSyncEdge =
 		in->camifCfgFromCmd.hSyncEdge;
 
-	cfg.syncMode           =
+	cfg.syncMode =
 		in->camifCfgFromCmd.syncMode;
 
 	cfg.vfeSubsampleEnable =
@@ -303,19 +303,19 @@ static void vfe_reg_camif_config(struct vfe_camif_cfg_data *in)
 	cfg.busSubsampleEnable =
 		in->camifCfgFromCmd.busSubSampleEnable;
 
-	cfg.camif2vfeEnable    =
+	cfg.camif2vfeEnable =
 		in->camif2OutputEnable;
 
-	cfg.camif2busEnable    =
+	cfg.camif2busEnable =
 		in->camif2BusEnable;
 
 	cfg.irqSubsampleEnable =
 		in->camifCfgFromCmd.irqSubSampleEnable;
 
-	cfg.binningEnable      =
+	cfg.binningEnable =
 		in->camifCfgFromCmd.binningEnable;
 
-	cfg.misrEnable         =
+	cfg.misrEnable =
 		in->camifCfgFromCmd.misrEnable;
 
 	/*  program camif_config */
@@ -325,10 +325,11 @@ static void vfe_reg_camif_config(struct vfe_camif_cfg_data *in)
 static void vfe_reg_bus_cmd(struct vfe_bus_cmd_data *in)
 {
 	struct vfe_buscmd cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
-	cmd.stripeReload        = in->stripeReload;
-	cmd.busPingpongReload   = in->busPingpongReload;
+	cmd.stripeReload = in->stripeReload;
+	cmd.busPingpongReload = in->busPingpongReload;
 	cmd.statsPingpongReload = in->statsPingpongReload;
 
 	writel(*((uint32_t *)&cmd), ctrl->vfebase + VFE_BUS_CMD);
@@ -349,25 +350,25 @@ static void vfe_reg_module_cfg(struct vfe_module_enable *in)
 	memset(&ena, 0, sizeof(ena));
 
 	ena.blackLevelCorrectionEnable = in->blackLevelCorrectionEnable;
-	ena.lensRollOffEnable          = in->lensRollOffEnable;
-	ena.demuxEnable                = in->demuxEnable;
-	ena.chromaUpsampleEnable       = in->chromaUpsampleEnable;
-	ena.demosaicEnable             = in->demosaicEnable;
-	ena.statsEnable                = in->statsEnable;
-	ena.cropEnable                 = in->cropEnable;
-	ena.mainScalerEnable           = in->mainScalerEnable;
-	ena.whiteBalanceEnable         = in->whiteBalanceEnable;
-	ena.colorCorrectionEnable      = in->colorCorrectionEnable;
-	ena.yHistEnable                = in->yHistEnable;
-	ena.skinToneEnable             = in->skinToneEnable;
-	ena.lumaAdaptationEnable       = in->lumaAdaptationEnable;
-	ena.rgbLUTEnable               = in->rgbLUTEnable;
-	ena.chromaEnhanEnable          = in->chromaEnhanEnable;
-	ena.asfEnable                  = in->asfEnable;
-	ena.chromaSuppressionEnable    = in->chromaSuppressionEnable;
-	ena.chromaSubsampleEnable      = in->chromaSubsampleEnable;
-	ena.scaler2YEnable             = in->scaler2YEnable;
-	ena.scaler2CbcrEnable          = in->scaler2CbcrEnable;
+	ena.lensRollOffEnable = in->lensRollOffEnable;
+	ena.demuxEnable = in->demuxEnable;
+	ena.chromaUpsampleEnable = in->chromaUpsampleEnable;
+	ena.demosaicEnable = in->demosaicEnable;
+	ena.statsEnable = in->statsEnable;
+	ena.cropEnable = in->cropEnable;
+	ena.mainScalerEnable = in->mainScalerEnable;
+	ena.whiteBalanceEnable = in->whiteBalanceEnable;
+	ena.colorCorrectionEnable = in->colorCorrectionEnable;
+	ena.yHistEnable = in->yHistEnable;
+	ena.skinToneEnable = in->skinToneEnable;
+	ena.lumaAdaptationEnable = in->lumaAdaptationEnable;
+	ena.rgbLUTEnable = in->rgbLUTEnable;
+	ena.chromaEnhanEnable = in->chromaEnhanEnable;
+	ena.asfEnable = in->asfEnable;
+	ena.chromaSuppressionEnable = in->chromaSuppressionEnable;
+	ena.chromaSubsampleEnable = in->chromaSubsampleEnable;
+	ena.scaler2YEnable = in->scaler2YEnable;
+	ena.scaler2CbcrEnable = in->scaler2CbcrEnable;
 
 	writel(*((uint32_t *)&ena), ctrl->vfebase + VFE_MODULE_CFG);
 }
@@ -375,7 +376,7 @@ static void vfe_reg_module_cfg(struct vfe_module_enable *in)
 static void vfe_program_dmi_cfg(enum VFE_DMI_RAM_SEL bankSel)
 {
 	/* set bit 8 for auto increment. */
-	uint32_t value = (uint32_t) ctrl->vfebase + VFE_DMI_CFG_DEFAULT;
+	uint32_t value = (uint32_t)ctrl->vfebase + VFE_DMI_CFG_DEFAULT;
 
 	value += (uint32_t)bankSel;
 	/* CDBG("dmi cfg input bank is  0x%x\n", bankSel); */
@@ -392,27 +393,27 @@ static void vfe_write_lens_roll_off_table(
 
 	uint16_t *initGr = in->initTableGr;
 	uint16_t *initGb = in->initTableGb;
-	uint16_t *initB =  in->initTableB;
-	uint16_t *initR =  in->initTableR;
+	uint16_t *initB = in->initTableB;
+	uint16_t *initR = in->initTableR;
 
 	int16_t *pDeltaGr = in->deltaTableGr;
 	int16_t *pDeltaGb = in->deltaTableGb;
-	int16_t *pDeltaB =  in->deltaTableB;
-	int16_t *pDeltaR =  in->deltaTableR;
+	int16_t *pDeltaB = in->deltaTableB;
+	int16_t *pDeltaR = in->deltaTableR;
 
 	vfe_program_dmi_cfg(ROLLOFF_RAM);
 
 	/* first pack and write init table */
 	for (i = 0; i < VFE_ROLL_OFF_INIT_TABLE_SIZE; i++) {
 		data = (((uint32_t)(*initR)) & 0x0000FFFF) |
-			(((uint32_t)(*initGr)) << 16);
+		       (((uint32_t)(*initGr)) << 16);
 		initR++;
 		initGr++;
 
 		writel(data, ctrl->vfebase + VFE_DMI_DATA_LO);
 
 		data = (((uint32_t)(*initB)) & 0x0000FFFF) |
-			(((uint32_t)(*initGr))<<16);
+		       (((uint32_t)(*initGr)) << 16);
 		initB++;
 		initGb++;
 
@@ -422,19 +423,19 @@ static void vfe_write_lens_roll_off_table(
 	/* there are gaps between the init table and delta table,
 	 * set the offset for delta table. */
 	writel(LENS_ROLL_OFF_DELTA_TABLE_OFFSET,
-		ctrl->vfebase + VFE_DMI_ADDR);
+	       ctrl->vfebase + VFE_DMI_ADDR);
 
 	/* pack and write delta table */
 	for (i = 0; i < VFE_ROLL_OFF_DELTA_TABLE_SIZE; i++) {
 		data = (((int32_t)(*pDeltaR)) & 0x0000FFFF) |
-			(((int32_t)(*pDeltaGr))<<16);
+		       (((int32_t)(*pDeltaGr)) << 16);
 		pDeltaR++;
 		pDeltaGr++;
 
 		writel(data, ctrl->vfebase + VFE_DMI_DATA_LO);
 
 		data = (((int32_t)(*pDeltaB)) & 0x0000FFFF) |
-			(((int32_t)(*pDeltaGb))<<16);
+		       (((int32_t)(*pDeltaGb)) << 16);
 		pDeltaB++;
 		pDeltaGb++;
 
@@ -541,18 +542,18 @@ static uint32_t vfe_read_pm_status_in_raw_capture(void)
 }
 
 static void
-vfe_set_stats_pingpong_address(struct vfe_stats_control *afControl,
-	struct vfe_stats_control *awbControl)
+vfe_set_stats_pingpong_address(struct vfe_stats_control *	afControl,
+			       struct vfe_stats_control *	awbControl)
 {
 	afControl->hwRegPingAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_STATS_AF_WR_PING_ADDR);
+				      (ctrl->vfebase + VFE_BUS_STATS_AF_WR_PING_ADDR);
 	afControl->hwRegPongAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_STATS_AF_WR_PONG_ADDR);
+				      (ctrl->vfebase + VFE_BUS_STATS_AF_WR_PONG_ADDR);
 
 	awbControl->hwRegPingAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_STATS_AWB_WR_PING_ADDR);
+				       (ctrl->vfebase + VFE_BUS_STATS_AWB_WR_PING_ADDR);
 	awbControl->hwRegPongAddress = (uint8_t *)
-		(ctrl->vfebase + VFE_BUS_STATS_AWB_WR_PONG_ADDR);
+				       (ctrl->vfebase + VFE_BUS_STATS_AWB_WR_PONG_ADDR);
 }
 
 static uint32_t vfe_read_camif_status(void)
@@ -571,20 +572,21 @@ static void vfe_program_lut_bank_sel(struct vfe_gamma_lut_sel *in)
 	cmd.ch2BankSelect = in->ch2BankSelect;
 	CDBG("VFE gamma lut bank selection is 0x%x\n", *((uint32_t *)&cmd));
 	vfe_prog_hw(ctrl->vfebase + VFE_LUT_BANK_SEL,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 static void vfe_program_stats_cmd(struct vfe_stats_cmd_data *in)
 {
 	struct VFE_StatsCmdType stats;
+
 	memset(&stats, 0, sizeof(stats));
 
-	stats.autoFocusEnable        = in->autoFocusEnable;
-	stats.axwEnable              = in->axwEnable;
-	stats.histEnable             = in->histEnable;
-	stats.clearHistEnable        = in->clearHistEnable;
-	stats.histAutoClearEnable    = in->histAutoClearEnable;
-	stats.colorConversionEnable  = in->colorConversionEnable;
+	stats.autoFocusEnable = in->autoFocusEnable;
+	stats.axwEnable = in->axwEnable;
+	stats.histEnable = in->histEnable;
+	stats.clearHistEnable = in->clearHistEnable;
+	stats.histAutoClearEnable = in->histAutoClearEnable;
+	stats.colorConversionEnable = in->colorConversionEnable;
 
 	writel(*((uint32_t *)&stats), ctrl->vfebase + VFE_STATS_CMD);
 }
@@ -592,23 +594,24 @@ static void vfe_program_stats_cmd(struct vfe_stats_cmd_data *in)
 static void vfe_pm_start(struct vfe_cmd_bus_pm_start *in)
 {
 	struct VFE_Bus_Pm_ConfigCmdType cmd;
+
 	memset(&cmd, 0, sizeof(struct VFE_Bus_Pm_ConfigCmdType));
 
-	cmd.output2YWrPmEnable     = in->output2YWrPmEnable;
-	cmd.output2CbcrWrPmEnable  = in->output2CbcrWrPmEnable;
-	cmd.output1YWrPmEnable     = in->output1YWrPmEnable;
-	cmd.output1CbcrWrPmEnable  = in->output1CbcrWrPmEnable;
+	cmd.output2YWrPmEnable = in->output2YWrPmEnable;
+	cmd.output2CbcrWrPmEnable = in->output2CbcrWrPmEnable;
+	cmd.output1YWrPmEnable = in->output1YWrPmEnable;
+	cmd.output1CbcrWrPmEnable = in->output1CbcrWrPmEnable;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_BUS_PM_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 static void vfe_8k_pm_start(struct vfe_cmd_bus_pm_start *in)
 {
 	in->output1CbcrWrPmEnable = ctrl->vfeBusConfigLocal.viewCbcrWrPathEn;
-	in->output1YWrPmEnable    = ctrl->vfeBusConfigLocal.viewYWrPathEn;
+	in->output1YWrPmEnable = ctrl->vfeBusConfigLocal.viewYWrPathEn;
 	in->output2CbcrWrPmEnable = ctrl->vfeBusConfigLocal.encCbcrWrPathEn;
-	in->output2YWrPmEnable    = ctrl->vfeBusConfigLocal.encYWrPathEn;
+	in->output2YWrPmEnable = ctrl->vfeBusConfigLocal.encYWrPathEn;
 
 	if (in->output1CbcrWrPmEnable || in->output1YWrPmEnable)
 		ctrl->viewPath.pmEnabled = TRUE;
@@ -627,38 +630,38 @@ static uint32_t vfe_irq_pack(struct vfe_interrupt_mask data)
 
 	memset(&packedData, 0, sizeof(packedData));
 
-	packedData.camifErrorIrq          = data.camifErrorIrq;
-	packedData.camifSofIrq            = data.camifSofIrq;
-	packedData.camifEolIrq            = data.camifEolIrq;
-	packedData.camifEofIrq            = data.camifEofIrq;
-	packedData.camifEpoch1Irq         = data.camifEpoch1Irq;
-	packedData.camifEpoch2Irq         = data.camifEpoch2Irq;
-	packedData.camifOverflowIrq       = data.camifOverflowIrq;
-	packedData.ceIrq                  = data.ceIrq;
-	packedData.regUpdateIrq           = data.regUpdateIrq;
-	packedData.resetAckIrq            = data.resetAckIrq;
-	packedData.encYPingpongIrq        = data.encYPingpongIrq;
-	packedData.encCbcrPingpongIrq     = data.encCbcrPingpongIrq;
-	packedData.viewYPingpongIrq       = data.viewYPingpongIrq;
-	packedData.viewCbcrPingpongIrq    = data.viewCbcrPingpongIrq;
-	packedData.rdPingpongIrq          = data.rdPingpongIrq;
-	packedData.afPingpongIrq          = data.afPingpongIrq;
-	packedData.awbPingpongIrq         = data.awbPingpongIrq;
-	packedData.histPingpongIrq        = data.histPingpongIrq;
-	packedData.encIrq                 = data.encIrq;
-	packedData.viewIrq                = data.viewIrq;
-	packedData.busOverflowIrq         = data.busOverflowIrq;
-	packedData.afOverflowIrq          = data.afOverflowIrq;
-	packedData.awbOverflowIrq         = data.awbOverflowIrq;
-	packedData.syncTimer0Irq          = data.syncTimer0Irq;
-	packedData.syncTimer1Irq          = data.syncTimer1Irq;
-	packedData.syncTimer2Irq          = data.syncTimer2Irq;
-	packedData.asyncTimer0Irq         = data.asyncTimer0Irq;
-	packedData.asyncTimer1Irq         = data.asyncTimer1Irq;
-	packedData.asyncTimer2Irq         = data.asyncTimer2Irq;
-	packedData.asyncTimer3Irq         = data.asyncTimer3Irq;
-	packedData.axiErrorIrq            = data.axiErrorIrq;
-	packedData.violationIrq           = data.violationIrq;
+	packedData.camifErrorIrq = data.camifErrorIrq;
+	packedData.camifSofIrq = data.camifSofIrq;
+	packedData.camifEolIrq = data.camifEolIrq;
+	packedData.camifEofIrq = data.camifEofIrq;
+	packedData.camifEpoch1Irq = data.camifEpoch1Irq;
+	packedData.camifEpoch2Irq = data.camifEpoch2Irq;
+	packedData.camifOverflowIrq = data.camifOverflowIrq;
+	packedData.ceIrq = data.ceIrq;
+	packedData.regUpdateIrq = data.regUpdateIrq;
+	packedData.resetAckIrq = data.resetAckIrq;
+	packedData.encYPingpongIrq = data.encYPingpongIrq;
+	packedData.encCbcrPingpongIrq = data.encCbcrPingpongIrq;
+	packedData.viewYPingpongIrq = data.viewYPingpongIrq;
+	packedData.viewCbcrPingpongIrq = data.viewCbcrPingpongIrq;
+	packedData.rdPingpongIrq = data.rdPingpongIrq;
+	packedData.afPingpongIrq = data.afPingpongIrq;
+	packedData.awbPingpongIrq = data.awbPingpongIrq;
+	packedData.histPingpongIrq = data.histPingpongIrq;
+	packedData.encIrq = data.encIrq;
+	packedData.viewIrq = data.viewIrq;
+	packedData.busOverflowIrq = data.busOverflowIrq;
+	packedData.afOverflowIrq = data.afOverflowIrq;
+	packedData.awbOverflowIrq = data.awbOverflowIrq;
+	packedData.syncTimer0Irq = data.syncTimer0Irq;
+	packedData.syncTimer1Irq = data.syncTimer1Irq;
+	packedData.syncTimer2Irq = data.syncTimer2Irq;
+	packedData.asyncTimer0Irq = data.asyncTimer0Irq;
+	packedData.asyncTimer1Irq = data.asyncTimer1Irq;
+	packedData.asyncTimer2Irq = data.asyncTimer2Irq;
+	packedData.asyncTimer3Irq = data.asyncTimer3Irq;
+	packedData.axiErrorIrq = data.axiErrorIrq;
+	packedData.violationIrq = data.violationIrq;
 
 	return *((uint32_t *)&packedData);
 }
@@ -670,15 +673,15 @@ vfe_irq_composite_pack(struct vfe_irq_composite_mask_config data)
 
 	memset(&packedData, 0, sizeof(packedData));
 
-	packedData.encIrqComMaskBits   = data.encIrqComMask;
-	packedData.viewIrqComMaskBits  = data.viewIrqComMask;
-	packedData.ceDoneSelBits       = data.ceDoneSel;
+	packedData.encIrqComMaskBits = data.encIrqComMask;
+	packedData.viewIrqComMaskBits = data.viewIrqComMask;
+	packedData.ceDoneSelBits = data.ceDoneSel;
 
 	return *((uint32_t *)&packedData);
 }
 
 static void vfe_addr_convert(struct msm_vfe_phy_info *pinfo,
-	enum vfe_resp_msg type, void *data, void **ext, int32_t *elen)
+			     enum vfe_resp_msg type, void *data, void **ext, int32_t *elen)
 {
 	switch (type) {
 	case VFE_MSG_OUTPUT1: {
@@ -688,21 +691,21 @@ static void vfe_addr_convert(struct msm_vfe_phy_info *pinfo,
 			((struct vfe_message *)data)->_u.msgOutput1.cbcrBuffer;
 
 		((struct vfe_frame_extra *)ctrl->extdata)->bpcInfo =
-		((struct vfe_message *)data)->_u.msgOutput1.bpcInfo;
+			((struct vfe_message *)data)->_u.msgOutput1.bpcInfo;
 
 		((struct vfe_frame_extra *)ctrl->extdata)->asfInfo =
-		((struct vfe_message *)data)->_u.msgOutput1.asfInfo;
+			((struct vfe_message *)data)->_u.msgOutput1.asfInfo;
 
 		((struct vfe_frame_extra *)ctrl->extdata)->frameCounter =
-		((struct vfe_message *)data)->_u.msgOutput1.frameCounter;
+			((struct vfe_message *)data)->_u.msgOutput1.frameCounter;
 
 		((struct vfe_frame_extra *)ctrl->extdata)->pmData =
-		((struct vfe_message *)data)->_u.msgOutput1.pmData;
+			((struct vfe_message *)data)->_u.msgOutput1.pmData;
 
-		*ext  = ctrl->extdata;
+		*ext = ctrl->extdata;
 		*elen = ctrl->extlen;
 	}
-		break;
+	break;
 
 	case VFE_MSG_OUTPUT2: {
 		pinfo->y_phy =
@@ -712,33 +715,33 @@ static void vfe_addr_convert(struct msm_vfe_phy_info *pinfo,
 
 		CDBG("vfe_addr_convert, pinfo->y_phy = 0x%x\n", pinfo->y_phy);
 		CDBG("vfe_addr_convert, pinfo->cbcr_phy = 0x%x\n",
-			pinfo->cbcr_phy);
+		     pinfo->cbcr_phy);
 
 		((struct vfe_frame_extra *)ctrl->extdata)->bpcInfo =
-		((struct vfe_message *)data)->_u.msgOutput2.bpcInfo;
+			((struct vfe_message *)data)->_u.msgOutput2.bpcInfo;
 
 		((struct vfe_frame_extra *)ctrl->extdata)->asfInfo =
-		((struct vfe_message *)data)->_u.msgOutput2.asfInfo;
+			((struct vfe_message *)data)->_u.msgOutput2.asfInfo;
 
 		((struct vfe_frame_extra *)ctrl->extdata)->frameCounter =
-		((struct vfe_message *)data)->_u.msgOutput2.frameCounter;
+			((struct vfe_message *)data)->_u.msgOutput2.frameCounter;
 
 		((struct vfe_frame_extra *)ctrl->extdata)->pmData =
-		((struct vfe_message *)data)->_u.msgOutput2.pmData;
+			((struct vfe_message *)data)->_u.msgOutput2.pmData;
 
-		*ext  = ctrl->extdata;
+		*ext = ctrl->extdata;
 		*elen = ctrl->extlen;
 	}
-		break;
+	break;
 
 	case VFE_MSG_STATS_AF:
 		pinfo->sbuf_phy =
-		((struct vfe_message *)data)->_u.msgStatsAf.afBuffer;
+			((struct vfe_message *)data)->_u.msgStatsAf.afBuffer;
 		break;
 
 	case VFE_MSG_STATS_WE:
 		pinfo->sbuf_phy =
-		((struct vfe_message *)data)->_u.msgStatsWbExp.awbBuffer;
+			((struct vfe_message *)data)->_u.msgStatsWbExp.awbBuffer;
 		break;
 
 	default:
@@ -755,12 +758,11 @@ vfe_proc_ops(enum VFE_MESSAGE_ID id, void *msg, size_t len)
 	 * SNAPSHOT_DONE. We don't send such messages to user */
 
 	CDBG("ctrl->vfeOperationMode = %d, msgId = %d\n",
-		ctrl->vfeOperationMode, id);
+	     ctrl->vfeOperationMode, id);
 
 	if ((ctrl->vfeOperationMode == VFE_START_OPERATION_MODE_SNAPSHOT) &&
-		(id == VFE_MSG_ID_OUTPUT1 || id == VFE_MSG_ID_OUTPUT2)) {
+	    (id == VFE_MSG_ID_OUTPUT1 || id == VFE_MSG_ID_OUTPUT2))
 		return;
-	}
 
 	rp = ctrl->resp->vfe_alloc(sizeof(struct msm_vfe_resp), ctrl->syncdata);
 	if (!rp) {
@@ -770,10 +772,10 @@ vfe_proc_ops(enum VFE_MESSAGE_ID id, void *msg, size_t len)
 
 	CDBG("vfe_proc_ops, msgId = %d\n", id);
 
-	rp->evt_msg.type   = MSM_CAMERA_MSG;
+	rp->evt_msg.type = MSM_CAMERA_MSG;
 	rp->evt_msg.msg_id = id;
-	rp->evt_msg.len    = len;
-	rp->evt_msg.data   = msg;
+	rp->evt_msg.len = len;
+	rp->evt_msg.data = msg;
 
 	switch (rp->evt_msg.msg_id) {
 	case VFE_MSG_ID_SNAPSHOT_DONE:
@@ -783,27 +785,27 @@ vfe_proc_ops(enum VFE_MESSAGE_ID id, void *msg, size_t len)
 	case VFE_MSG_ID_OUTPUT1:
 		rp->type = VFE_MSG_OUTPUT1;
 		vfe_addr_convert(&(rp->phy), VFE_MSG_OUTPUT1,
-			rp->evt_msg.data, &(rp->extdata),
-			&(rp->extlen));
+				 rp->evt_msg.data, &(rp->extdata),
+				 &(rp->extlen));
 		break;
 
 	case VFE_MSG_ID_OUTPUT2:
 		rp->type = VFE_MSG_OUTPUT2;
 		vfe_addr_convert(&(rp->phy), VFE_MSG_OUTPUT2,
-				rp->evt_msg.data, &(rp->extdata),
-				&(rp->extlen));
+				 rp->evt_msg.data, &(rp->extdata),
+				 &(rp->extlen));
 		break;
 
 	case VFE_MSG_ID_STATS_AUTOFOCUS:
 		rp->type = VFE_MSG_STATS_AF;
 		vfe_addr_convert(&(rp->phy), VFE_MSG_STATS_AF,
-				rp->evt_msg.data, NULL, NULL);
+				 rp->evt_msg.data, NULL, NULL);
 		break;
 
 	case VFE_MSG_ID_STATS_WB_EXP:
 		rp->type = VFE_MSG_STATS_WE;
 		vfe_addr_convert(&(rp->phy), VFE_MSG_STATS_WE,
-				rp->evt_msg.data, NULL, NULL);
+				 rp->evt_msg.data, NULL, NULL);
 		break;
 
 	default:
@@ -829,6 +831,7 @@ static void vfe_send_msg_no_payload(enum VFE_MESSAGE_ID id)
 static void vfe_send_bus_overflow_msg(void)
 {
 	struct vfe_message *msg;
+
 	msg =
 		kzalloc(sizeof(struct vfe_message), GFP_ATOMIC);
 	if (!msg)
@@ -837,11 +840,11 @@ static void vfe_send_bus_overflow_msg(void)
 	msg->_d = VFE_MSG_ID_BUS_OVERFLOW;
 #if 0
 	memcpy(&(msg->_u.msgBusOverflow),
-		&ctrl->vfePmData, sizeof(ctrl->vfePmData));
+	       &ctrl->vfePmData, sizeof(ctrl->vfePmData));
 #endif
 
 	vfe_proc_ops(VFE_MSG_ID_BUS_OVERFLOW,
-		msg, sizeof(struct vfe_message));
+		     msg, sizeof(struct vfe_message));
 }
 
 static void vfe_send_camif_error_msg(void)
@@ -855,10 +858,10 @@ static void vfe_send_camif_error_msg(void)
 
 	msg->_d = VFE_MSG_ID_CAMIF_ERROR;
 	memcpy(&(msg->_u.msgCamifError),
-		&ctrl->vfeCamifStatusLocal, sizeof(ctrl->vfeCamifStatusLocal));
+	       &ctrl->vfeCamifStatusLocal, sizeof(ctrl->vfeCamifStatusLocal));
 
 	vfe_proc_ops(VFE_MSG_ID_CAMIF_ERROR,
-		msg, sizeof(struct vfe_message));
+		     msg, sizeof(struct vfe_message));
 #endif
 }
 
@@ -895,30 +898,29 @@ static void vfe_process_camif_sof_irq(void)
 	ctrl->vfeFrameId++;
 
 	CDBG("camif_sof_irq, frameId = %d\n",
-		ctrl->vfeFrameId);
+	     ctrl->vfeFrameId);
 
 	/* In snapshot mode, if frame skip is programmed,
-	* need to check it accordingly to stop camif at
-	* correct frame boundary. For the dropped frames,
-	* there won't be any output path irqs, but there is
-	* still SOF irq, which can help us determine when
-	* to stop the camif.
-	*/
+	 * need to check it accordingly to stop camif at
+	 * correct frame boundary. For the dropped frames,
+	 * there won't be any output path irqs, but there is
+	 * still SOF irq, which can help us determine when
+	 * to stop the camif.
+	 */
 	if (ctrl->vfeOperationMode) {
 		if ((1 << ctrl->vfeFrameSkipCount) &
-				ctrl->vfeFrameSkipPattern) {
-
+		    ctrl->vfeFrameSkipPattern) {
 			ctrl->vfeSnapShotCount--;
 			if (ctrl->vfeSnapShotCount == 0)
 				/* terminate vfe pipeline at frame boundary. */
 				writel(CAMIF_COMMAND_STOP_AT_FRAME_BOUNDARY,
-					ctrl->vfebase + CAMIF_COMMAND);
+				       ctrl->vfebase + CAMIF_COMMAND);
 		}
 
 		/* update frame skip counter for bit checking. */
 		ctrl->vfeFrameSkipCount++;
 		if (ctrl->vfeFrameSkipCount ==
-				(ctrl->vfeFrameSkipPeriod + 1))
+		    (ctrl->vfeFrameSkipPeriod + 1))
 			ctrl->vfeFrameSkipCount = 0;
 	}
 }
@@ -959,6 +961,7 @@ vfe_send_af_stats_msg(uint32_t afBufAddress)
 {
 	/* unsigned long flags; */
 	struct vfe_message *msg;
+
 	msg =
 		kzalloc(sizeof(struct vfe_message), GFP_ATOMIC);
 	if (!msg)
@@ -977,7 +980,7 @@ vfe_send_af_stats_msg(uint32_t afBufAddress)
 	msg->_u.msgStatsAf.frameCounter = ctrl->vfeFrameId;
 
 	vfe_proc_ops(VFE_MSG_ID_STATS_AUTOFOCUS,
-		msg, sizeof(struct vfe_message));
+		     msg, sizeof(struct vfe_message));
 
 	ctrl->afStatsControl.ackPending = TRUE;
 
@@ -991,7 +994,6 @@ static void vfe_process_stats_af_irq(void)
 	boolean bufferAvailable;
 
 	if (!(ctrl->afStatsControl.ackPending)) {
-
 		/* read hardware status. */
 		ctrl->afStatsControl.pingPongStatus =
 			vfe_get_af_pingpong_status();
@@ -1004,11 +1006,12 @@ static void vfe_process_stats_af_irq(void)
 
 		/* update the same buffer address (ping or pong) */
 		vfe_update_af_buf_addr(bufferAvailable,
-			ctrl->afStatsControl.nextFrameAddrBuf);
+				       ctrl->afStatsControl.nextFrameAddrBuf);
 
 		vfe_send_af_stats_msg(ctrl->afStatsControl.bufToRender);
-	} else
+	} else {
 		ctrl->afStatsControl.droppedStatsFrameCount++;
+	}
 }
 
 static boolean vfe_get_awb_pingpong_status(void)
@@ -1045,7 +1048,7 @@ static void vfe_update_awb_buf_addr(
 static void vfe_send_awb_stats_msg(uint32_t awbBufAddress)
 {
 	/* unsigned long flags; */
-	struct vfe_message   *msg;
+	struct vfe_message *msg;
 
 	msg =
 		kzalloc(sizeof(struct vfe_message), GFP_ATOMIC);
@@ -1065,7 +1068,7 @@ static void vfe_send_awb_stats_msg(uint32_t awbBufAddress)
 	msg->_u.msgStatsWbExp.frameCounter = ctrl->vfeFrameId;
 
 	vfe_proc_ops(VFE_MSG_ID_STATS_WB_EXP,
-		msg, sizeof(struct vfe_message));
+		     msg, sizeof(struct vfe_message));
 
 	ctrl->awbStatsControl.ackPending = TRUE;
 
@@ -1079,7 +1082,6 @@ static void vfe_process_stats_awb_irq(void)
 	boolean bufferAvailable;
 
 	if (!(ctrl->awbStatsControl.ackPending)) {
-
 		ctrl->awbStatsControl.pingPongStatus =
 			vfe_get_awb_pingpong_status();
 
@@ -1089,12 +1091,12 @@ static void vfe_process_stats_awb_irq(void)
 			vfe_read_awb_buf_addr(bufferAvailable);
 
 		vfe_update_awb_buf_addr(bufferAvailable,
-			ctrl->awbStatsControl.nextFrameAddrBuf);
+					ctrl->awbStatsControl.nextFrameAddrBuf);
 
 		vfe_send_awb_stats_msg(ctrl->awbStatsControl.bufToRender);
-
-	} else
+	} else {
 		ctrl->awbStatsControl.droppedStatsFrameCount++;
+	}
 }
 
 static void vfe_process_sync_timer_irq(
@@ -1113,7 +1115,6 @@ static void vfe_process_sync_timer_irq(
 static void vfe_process_async_timer_irq(
 	struct vfe_interrupt_status *irqstatus)
 {
-
 	if (irqstatus->asyncTimer0Irq)
 		vfe_send_msg_no_payload(VFE_MSG_ID_ASYNC_TIMER0_DONE);
 
@@ -1138,7 +1139,7 @@ static void vfe_send_async_timer_msg(void)
 }
 
 static void vfe_write_gamma_table(uint8_t channel,
-	boolean bank, int16_t *pTable)
+				  boolean bank, int16_t *pTable)
 {
 	uint16_t i;
 
@@ -1178,7 +1179,7 @@ static void vfe_write_gamma_table(uint8_t channel,
 	}
 
 	/* After DMI transfer, need to set the DMI_CFG to unselect any SRAM
-	unselect the SRAM Bank. */
+	 * unselect the SRAM Bank. */
 	writel(VFE_DMI_CFG_DEFAULT, ctrl->vfebase + VFE_DMI_CFG);
 }
 
@@ -1203,24 +1204,24 @@ static inline void vfe_read_irq_status(struct vfe_irq_thread_msg *out)
 	CDBG("camifStatus  = 0x%x\n", out->camifStatus);
 
 /*
-	temp = (uint32_t *)(ctrl->vfebase + VFE_DEMOSAIC_STATUS);
-	out->demosaicStatus = readl(temp);
-
-	temp = (uint32_t *)(ctrl->vfebase + VFE_ASF_MAX_EDGE);
-	out->asfMaxEdge = readl(temp);
-
-	temp = (uint32_t *)(ctrl->vfebase + VFE_BUS_ENC_Y_WR_PM_STATS_0);
-*/
+ *      temp = (uint32_t *)(ctrl->vfebase + VFE_DEMOSAIC_STATUS);
+ *      out->demosaicStatus = readl(temp);
+ *
+ *      temp = (uint32_t *)(ctrl->vfebase + VFE_ASF_MAX_EDGE);
+ *      out->asfMaxEdge = readl(temp);
+ *
+ *      temp = (uint32_t *)(ctrl->vfebase + VFE_BUS_ENC_Y_WR_PM_STATS_0);
+ */
 
 #if 0
-	out->pmInfo.encPathPmInfo.yWrPmStats0      = readl(temp++);
-	out->pmInfo.encPathPmInfo.yWrPmStats1      = readl(temp++);
-	out->pmInfo.encPathPmInfo.cbcrWrPmStats0   = readl(temp++);
-	out->pmInfo.encPathPmInfo.cbcrWrPmStats1   = readl(temp++);
-	out->pmInfo.viewPathPmInfo.yWrPmStats0     = readl(temp++);
-	out->pmInfo.viewPathPmInfo.yWrPmStats1     = readl(temp++);
-	out->pmInfo.viewPathPmInfo.cbcrWrPmStats0  = readl(temp++);
-	out->pmInfo.viewPathPmInfo.cbcrWrPmStats1  = readl(temp);
+	out->pmInfo.encPathPmInfo.yWrPmStats0 = readl(temp++);
+	out->pmInfo.encPathPmInfo.yWrPmStats1 = readl(temp++);
+	out->pmInfo.encPathPmInfo.cbcrWrPmStats0 = readl(temp++);
+	out->pmInfo.encPathPmInfo.cbcrWrPmStats1 = readl(temp++);
+	out->pmInfo.viewPathPmInfo.yWrPmStats0 = readl(temp++);
+	out->pmInfo.viewPathPmInfo.yWrPmStats1 = readl(temp++);
+	out->pmInfo.viewPathPmInfo.cbcrWrPmStats0 = readl(temp++);
+	out->pmInfo.viewPathPmInfo.cbcrWrPmStats1 = readl(temp);
 #endif /* if 0 Jeff */
 }
 
@@ -1236,64 +1237,64 @@ vfe_parse_interrupt_status(uint32_t irqStatusIn)
 
 	hwstat = *((struct vfe_irqenable *)(&irqStatusIn));
 
-	ret.camifErrorIrq       = hwstat.camifErrorIrq;
-	ret.camifSofIrq         = hwstat.camifSofIrq;
-	ret.camifEolIrq         = hwstat.camifEolIrq;
-	ret.camifEofIrq         = hwstat.camifEofIrq;
-	ret.camifEpoch1Irq      = hwstat.camifEpoch1Irq;
-	ret.camifEpoch2Irq      = hwstat.camifEpoch2Irq;
-	ret.camifOverflowIrq    = hwstat.camifOverflowIrq;
-	ret.ceIrq               = hwstat.ceIrq;
-	ret.regUpdateIrq        = hwstat.regUpdateIrq;
-	ret.resetAckIrq         = hwstat.resetAckIrq;
-	ret.encYPingpongIrq     = hwstat.encYPingpongIrq;
-	ret.encCbcrPingpongIrq  = hwstat.encCbcrPingpongIrq;
-	ret.viewYPingpongIrq    = hwstat.viewYPingpongIrq;
+	ret.camifErrorIrq = hwstat.camifErrorIrq;
+	ret.camifSofIrq = hwstat.camifSofIrq;
+	ret.camifEolIrq = hwstat.camifEolIrq;
+	ret.camifEofIrq = hwstat.camifEofIrq;
+	ret.camifEpoch1Irq = hwstat.camifEpoch1Irq;
+	ret.camifEpoch2Irq = hwstat.camifEpoch2Irq;
+	ret.camifOverflowIrq = hwstat.camifOverflowIrq;
+	ret.ceIrq = hwstat.ceIrq;
+	ret.regUpdateIrq = hwstat.regUpdateIrq;
+	ret.resetAckIrq = hwstat.resetAckIrq;
+	ret.encYPingpongIrq = hwstat.encYPingpongIrq;
+	ret.encCbcrPingpongIrq = hwstat.encCbcrPingpongIrq;
+	ret.viewYPingpongIrq = hwstat.viewYPingpongIrq;
 	ret.viewCbcrPingpongIrq = hwstat.viewCbcrPingpongIrq;
-	ret.rdPingpongIrq       = hwstat.rdPingpongIrq;
-	ret.afPingpongIrq       = hwstat.afPingpongIrq;
-	ret.awbPingpongIrq      = hwstat.awbPingpongIrq;
-	ret.histPingpongIrq     = hwstat.histPingpongIrq;
-	ret.encIrq              = hwstat.encIrq;
-	ret.viewIrq             = hwstat.viewIrq;
-	ret.busOverflowIrq      = hwstat.busOverflowIrq;
-	ret.afOverflowIrq       = hwstat.afOverflowIrq;
-	ret.awbOverflowIrq      = hwstat.awbOverflowIrq;
-	ret.syncTimer0Irq       = hwstat.syncTimer0Irq;
-	ret.syncTimer1Irq       = hwstat.syncTimer1Irq;
-	ret.syncTimer2Irq       = hwstat.syncTimer2Irq;
-	ret.asyncTimer0Irq      = hwstat.asyncTimer0Irq;
-	ret.asyncTimer1Irq      = hwstat.asyncTimer1Irq;
-	ret.asyncTimer2Irq      = hwstat.asyncTimer2Irq;
-	ret.asyncTimer3Irq      = hwstat.asyncTimer3Irq;
-	ret.axiErrorIrq         = hwstat.axiErrorIrq;
-	ret.violationIrq        = hwstat.violationIrq;
+	ret.rdPingpongIrq = hwstat.rdPingpongIrq;
+	ret.afPingpongIrq = hwstat.afPingpongIrq;
+	ret.awbPingpongIrq = hwstat.awbPingpongIrq;
+	ret.histPingpongIrq = hwstat.histPingpongIrq;
+	ret.encIrq = hwstat.encIrq;
+	ret.viewIrq = hwstat.viewIrq;
+	ret.busOverflowIrq = hwstat.busOverflowIrq;
+	ret.afOverflowIrq = hwstat.afOverflowIrq;
+	ret.awbOverflowIrq = hwstat.awbOverflowIrq;
+	ret.syncTimer0Irq = hwstat.syncTimer0Irq;
+	ret.syncTimer1Irq = hwstat.syncTimer1Irq;
+	ret.syncTimer2Irq = hwstat.syncTimer2Irq;
+	ret.asyncTimer0Irq = hwstat.asyncTimer0Irq;
+	ret.asyncTimer1Irq = hwstat.asyncTimer1Irq;
+	ret.asyncTimer2Irq = hwstat.asyncTimer2Irq;
+	ret.asyncTimer3Irq = hwstat.asyncTimer3Irq;
+	ret.axiErrorIrq = hwstat.axiErrorIrq;
+	ret.violationIrq = hwstat.violationIrq;
 
 	/* logic OR of any error bits
 	 * although each irq corresponds to a bit, the data type here is a
 	 * boolean already. hence use logic operation.
 	 */
 	temp =
-		ret.camifErrorIrq    ||
+		ret.camifErrorIrq ||
 		ret.camifOverflowIrq ||
-		ret.afOverflowIrq    ||
-		ret.awbPingpongIrq   ||
-		ret.busOverflowIrq   ||
-		ret.axiErrorIrq      ||
+		ret.afOverflowIrq ||
+		ret.awbPingpongIrq ||
+		ret.busOverflowIrq ||
+		ret.axiErrorIrq ||
 		ret.violationIrq;
 
 	ret.anyErrorIrqs = temp;
 
 	/* logic OR of any output path bits*/
 	temp =
-		ret.encYPingpongIrq    ||
+		ret.encYPingpongIrq ||
 		ret.encCbcrPingpongIrq ||
 		ret.encIrq;
 
 	ret.anyOutput2PathIrqs = temp;
 
 	temp =
-		ret.viewYPingpongIrq    ||
+		ret.viewYPingpongIrq ||
 		ret.viewCbcrPingpongIrq ||
 		ret.viewIrq;
 
@@ -1322,14 +1323,14 @@ vfe_parse_interrupt_status(uint32_t irqStatusIn)
 
 	/* bool for all interrupts that are not allowed in idle state */
 	temp =
-		ret.anyErrorIrqs      ||
+		ret.anyErrorIrqs ||
 		ret.anyOutputPathIrqs ||
-		ret.anySyncTimerIrqs  ||
-		ret.regUpdateIrq      ||
-		ret.awbPingpongIrq    ||
-		ret.afPingpongIrq     ||
-		ret.camifSofIrq       ||
-		ret.camifEpoch2Irq    ||
+		ret.anySyncTimerIrqs ||
+		ret.regUpdateIrq ||
+		ret.awbPingpongIrq ||
+		ret.afPingpongIrq ||
+		ret.camifSofIrq ||
+		ret.camifEpoch2Irq ||
 		ret.camifEpoch1Irq;
 
 	ret.anyIrqForActiveStatesOnly =
@@ -1341,7 +1342,7 @@ vfe_parse_interrupt_status(uint32_t irqStatusIn)
 static struct vfe_frame_asf_info
 vfe_get_asf_frame_info(struct vfe_irq_thread_msg *in)
 {
-	struct vfe_asf_info     asfInfoTemp;
+	struct vfe_asf_info asfInfoTemp;
 	struct vfe_frame_asf_info rc;
 
 	memset(&rc, 0, sizeof(rc));
@@ -1351,7 +1352,7 @@ vfe_get_asf_frame_info(struct vfe_irq_thread_msg *in)
 		*((struct vfe_asf_info *)(&(in->asfMaxEdge)));
 
 	rc.asfHbiCount = asfInfoTemp.HBICount;
-	rc.asfMaxEdge  = asfInfoTemp.maxEdge;
+	rc.asfMaxEdge = asfInfoTemp.maxEdge;
 
 	return rc;
 }
@@ -1359,7 +1360,7 @@ vfe_get_asf_frame_info(struct vfe_irq_thread_msg *in)
 static struct vfe_frame_bpc_info
 vfe_get_demosaic_frame_info(struct vfe_irq_thread_msg *in)
 {
-	struct vfe_bps_info     bpcInfoTemp;
+	struct vfe_bps_info bpcInfoTemp;
 	struct vfe_frame_bpc_info rc;
 
 	memset(&rc, 0, sizeof(rc));
@@ -1368,10 +1369,10 @@ vfe_get_demosaic_frame_info(struct vfe_irq_thread_msg *in)
 	bpcInfoTemp =
 		*((struct vfe_bps_info *)(&(in->demosaicStatus)));
 
-	rc.greenDefectPixelCount    =
+	rc.greenDefectPixelCount =
 		bpcInfoTemp.greenBadPixelCount;
 
-	rc.redBlueDefectPixelCount  =
+	rc.redBlueDefectPixelCount =
 		bpcInfoTemp.RedBlueBadPixelCount;
 
 	return rc;
@@ -1390,7 +1391,7 @@ vfe_get_camif_status(struct vfe_irq_thread_msg *in)
 		*((struct vfe_camif_stats *)(&(in->camifStatus)));
 
 	rc.camifState = (boolean)camifStatusTemp.camifHalt;
-	rc.lineCount  = camifStatusTemp.lineCount;
+	rc.lineCount = camifStatusTemp.lineCount;
 	rc.pixelCount = camifStatusTemp.pixelCount;
 
 	return rc;
@@ -1400,19 +1401,20 @@ static struct vfe_bus_performance_monitor
 vfe_get_performance_monitor_data(struct vfe_irq_thread_msg *in)
 {
 	struct vfe_bus_performance_monitor rc;
+
 	memset(&rc, 0, sizeof(rc));
 
-	rc.encPathPmInfo.yWrPmStats0     =
+	rc.encPathPmInfo.yWrPmStats0 =
 		in->pmInfo.encPathPmInfo.yWrPmStats0;
-	rc.encPathPmInfo.yWrPmStats1     =
+	rc.encPathPmInfo.yWrPmStats1 =
 		in->pmInfo.encPathPmInfo.yWrPmStats1;
-	rc.encPathPmInfo.cbcrWrPmStats0  =
+	rc.encPathPmInfo.cbcrWrPmStats0 =
 		in->pmInfo.encPathPmInfo.cbcrWrPmStats0;
-	rc.encPathPmInfo.cbcrWrPmStats1  =
+	rc.encPathPmInfo.cbcrWrPmStats1 =
 		in->pmInfo.encPathPmInfo.cbcrWrPmStats1;
-	rc.viewPathPmInfo.yWrPmStats0    =
+	rc.viewPathPmInfo.yWrPmStats0 =
 		in->pmInfo.viewPathPmInfo.yWrPmStats0;
-	rc.viewPathPmInfo.yWrPmStats1    =
+	rc.viewPathPmInfo.yWrPmStats1 =
 		in->pmInfo.viewPathPmInfo.yWrPmStats1;
 	rc.viewPathPmInfo.cbcrWrPmStats0 =
 		in->pmInfo.viewPathPmInfo.cbcrWrPmStats0;
@@ -1425,12 +1427,13 @@ vfe_get_performance_monitor_data(struct vfe_irq_thread_msg *in)
 static void vfe_process_reg_update_irq(void)
 {
 	CDBG("vfe_process_reg_update_irq: ackPendingFlag is %d\n",
-	ctrl->vfeStartAckPendingFlag);
+	     ctrl->vfeStartAckPendingFlag);
 	if (ctrl->vfeStartAckPendingFlag == TRUE) {
 		vfe_send_msg_no_payload(VFE_MSG_ID_START_ACK);
 		ctrl->vfeStartAckPendingFlag = FALSE;
-	} else
+	} else {
 		vfe_send_msg_no_payload(VFE_MSG_ID_UPDATE_ACK);
+	}
 }
 
 static void vfe_process_reset_irq(void)
@@ -1451,14 +1454,14 @@ static void vfe_process_reset_irq(void)
 	}
 }
 
-static void vfe_process_pingpong_irq(struct vfe_output_path *in,
-	uint8_t fragmentCount)
+static void vfe_process_pingpong_irq(struct vfe_output_path *	in,
+				     uint8_t			fragmentCount)
 {
 	uint16_t circularIndex;
 	uint32_t nextFragmentAddr;
 
 	/* get next fragment address from circular buffer */
-	circularIndex    = (in->fragIndex) % (2 * fragmentCount);
+	circularIndex = (in->fragIndex) % (2 * fragmentCount);
 	nextFragmentAddr = in->addressBuffer[circularIndex];
 
 	in->fragIndex = circularIndex + 1;
@@ -1467,7 +1470,6 @@ static void vfe_process_pingpong_irq(struct vfe_output_path *in,
 	if (in->hwCurrentFlag == ping) {
 		writel(nextFragmentAddr, in->hwRegPingAddress);
 		in->hwCurrentFlag = pong;
-
 	} else {
 		writel(nextFragmentAddr, in->hwRegPongAddress);
 		in->hwCurrentFlag = ping;
@@ -1495,16 +1497,16 @@ static void vfe_send_output2_msg(
 	msg->_d = VFE_MSG_ID_OUTPUT2;
 
 	memcpy(&(msg->_u.msgOutput2),
-		(void *)pPayload, sizeof(struct vfe_msg_output));
+	       (void *)pPayload, sizeof(struct vfe_msg_output));
 
 	vfe_proc_ops(VFE_MSG_ID_OUTPUT2,
-		msg, sizeof(struct vfe_message));
+		     msg, sizeof(struct vfe_message));
 
 	ctrl->encPath.ackPending = TRUE;
 
 	if (!(ctrl->vfeRequestedSnapShotCount <= 3) &&
-			(ctrl->vfeOperationMode ==
-			 VFE_START_OPERATION_MODE_SNAPSHOT))
+	    (ctrl->vfeOperationMode ==
+	     VFE_START_OPERATION_MODE_SNAPSHOT))
 		ctrl->encPath.ackPending = TRUE;
 
 output2_msg_done:
@@ -1534,13 +1536,13 @@ static void vfe_send_output1_msg(
 		(void *)pPayload, sizeof(struct vfe_msg_output));
 
 	vfe_proc_ops(VFE_MSG_ID_OUTPUT1,
-		msg, sizeof(struct vfe_message));
+		     msg, sizeof(struct vfe_message));
 
 	ctrl->viewPath.ackPending = TRUE;
 
 	if (!(ctrl->vfeRequestedSnapShotCount <= 3) &&
-			(ctrl->vfeOperationMode ==
-			 VFE_START_OPERATION_MODE_SNAPSHOT))
+	    (ctrl->vfeOperationMode ==
+	     VFE_START_OPERATION_MODE_SNAPSHOT))
 		ctrl->viewPath.ackPending = TRUE;
 
 output1_msg_done:
@@ -1549,7 +1551,7 @@ output1_msg_done:
 }
 
 static void vfe_send_output_msg(boolean whichOutputPath,
-	uint32_t yPathAddr, uint32_t cbcrPathAddr)
+				uint32_t yPathAddr, uint32_t cbcrPathAddr)
 {
 	struct vfe_msg_output msgPayload;
 
@@ -1571,13 +1573,12 @@ static void vfe_send_output_msg(boolean whichOutputPath,
 	/* frame ID is common for both paths. */
 	msgPayload.frameCounter = ctrl->vfeFrameId;
 
-	if (whichOutputPath) {
+	if (whichOutputPath)
 		/* msgPayload.pmData = ctrl->vfePmData.encPathPmInfo; */
 		vfe_send_output2_msg(&msgPayload);
-	} else {
+	else
 		/* msgPayload.pmData = ctrl->vfePmData.viewPathPmInfo; */
 		vfe_send_output1_msg(&msgPayload);
-	}
 }
 
 static void vfe_process_frame_done_irq_multi_frag(
@@ -1591,7 +1592,6 @@ static void vfe_process_frame_done_irq_multi_frag(
 	uint8_t i;
 
 	if (!in->ackPending) {
-
 		idx = (in->currentFrame) * (in->fragCount);
 
 		/* Send output message. */
@@ -1599,8 +1599,8 @@ static void vfe_process_frame_done_irq_multi_frag(
 		cbcrAddress = in->cbcrPath.addressBuffer[idx];
 
 		/* copy next frame to current frame. */
-		ptrSrc  = in->nextFrameAddrBuf;
-		ptrY    = (uint32_t *)&(in->yPath.addressBuffer[idx]);
+		ptrSrc = in->nextFrameAddrBuf;
+		ptrY = (uint32_t *)&(in->yPath.addressBuffer[idx]);
 		ptrCbcr = (uint32_t *)&(in->cbcrPath.addressBuffer[idx]);
 
 		/* Copy Y address */
@@ -1612,7 +1612,6 @@ static void vfe_process_frame_done_irq_multi_frag(
 			*ptrCbcr++ = *ptrSrc++;
 
 		vfe_send_output_msg(in->whichOutputPath, yAddress, cbcrAddress);
-
 	} else {
 		if (in->whichOutputPath == 0)
 			ctrl->vfeDroppedFrameCounts.output1Count++;
@@ -1622,7 +1621,7 @@ static void vfe_process_frame_done_irq_multi_frag(
 	}
 
 	/* toggle current frame. */
-	in->currentFrame = in->currentFrame^1;
+	in->currentFrame = in->currentFrame ^ 1;
 
 	if (ctrl->vfeOperationMode)
 		in->snapshotPendingCount--;
@@ -1643,7 +1642,7 @@ static void vfe_process_frame_done_irq_no_frag_io(
 
 	/* 2. determine ping or pong */
 	/* use cbcr status */
-	busPingPongStatus = busPingPongStatus & (1<<(in->cbcrStatusBit));
+	busPingPongStatus = busPingPongStatus & (1 << (in->cbcrStatusBit));
 
 	/* 3. read out address and update address */
 	if (busPingPongStatus == 0) {
@@ -1693,12 +1692,11 @@ static void vfe_process_frame_done_irq_no_frag(
 
 	if (!in->ackPending) {
 		vfe_process_frame_done_irq_no_frag_io(in,
-			in->nextFrameAddrBuf, addressToRender);
+						      in->nextFrameAddrBuf, addressToRender);
 
 		/* use addressToRender to send out message. */
 		vfe_send_output_msg(in->whichOutputPath,
-				addressToRender[0], addressToRender[1]);
-
+				    addressToRender[0], addressToRender[1]);
 	} else {
 		/* ackPending is still there, accumulate dropped frame count.
 		 * These count can be read through ioctrl command. */
@@ -1729,7 +1727,6 @@ static void vfe_process_output_path_irq(
 	/* process the view path interrupts */
 	if (irqstatus->anyOutput1PathIrqs) {
 		if (ctrl->viewPath.multiFrag) {
-
 			if (irqstatus->viewCbcrPingpongIrq)
 				vfe_process_pingpong_irq(
 					&(ctrl->viewPath.cbcrPath),
@@ -1743,10 +1740,9 @@ static void vfe_process_output_path_irq(
 			if (irqstatus->viewIrq)
 				vfe_process_frame_done_irq_multi_frag(
 					&ctrl->viewPath);
-
 		} else {
 			/* typical case for no fragment,
-			 only frame done irq is enabled. */
+			 * only frame done irq is enabled. */
 			if (irqstatus->viewIrq)
 				vfe_process_frame_done_irq_no_frag(
 					&ctrl->viewPath);
@@ -1763,12 +1759,11 @@ static void vfe_process_output_path_irq(
 
 			if (irqstatus->encYPingpongIrq)
 				vfe_process_pingpong_irq(&(ctrl->encPath.yPath),
-				ctrl->encPath.fragCount);
+							 ctrl->encPath.fragCount);
 
 			if (irqstatus->encIrq)
 				vfe_process_frame_done_irq_multi_frag(
 					&ctrl->encPath);
-
 		} else {
 			if (irqstatus->encIrq)
 				vfe_process_frame_done_irq_no_frag(
@@ -1778,8 +1773,7 @@ static void vfe_process_output_path_irq(
 
 	if (ctrl->vfeOperationMode) {
 		if ((ctrl->encPath.snapshotPendingCount == 0) &&
-				(ctrl->viewPath.snapshotPendingCount == 0)) {
-
+		    (ctrl->viewPath.snapshotPendingCount == 0)) {
 			/* @todo This is causing issues, further investigate */
 			/* spin_lock_irqsave(&ctrl->state_lock, flags); */
 			ctrl->vstate = VFE_STATE_IDLE;
@@ -1802,7 +1796,7 @@ static void vfe_do_tasklet(unsigned long data)
 
 	spin_lock_irqsave(&ctrl->tasklet_lock, flags);
 	qcmd = list_first_entry(&ctrl->tasklet_q,
-			struct isr_queue_cmd, list);
+				struct isr_queue_cmd, list);
 
 	if (!qcmd) {
 		spin_unlock_irqrestore(&ctrl->tasklet_lock, flags);
@@ -1889,7 +1883,7 @@ static irqreturn_t vfe_parse_irq(int irq_num, void *data)
 	}
 
 	qcmd = kzalloc(sizeof(struct isr_queue_cmd),
-		GFP_ATOMIC);
+		       GFP_ATOMIC);
 	if (!qcmd) {
 		CDBG("vfe_parse_irq: qcmd malloc failed!\n");
 		return IRQ_HANDLED;
@@ -1903,7 +1897,7 @@ static irqreturn_t vfe_parse_irq(int irq_num, void *data)
 	else
 		irqStatusLocal =
 			((ctrl->vfeImaskPacked | VFE_IMASK_ERROR_ONLY) &
-				irq.vfeIrqStatus);
+			 irq.vfeIrqStatus);
 
 	spin_unlock_irqrestore(&ctrl->ack_lock, flags);
 
@@ -1926,9 +1920,9 @@ static irqreturn_t vfe_parse_irq(int irq_num, void *data)
 }
 
 int vfe_cmd_init(struct msm_vfe_callback *presp,
-	struct platform_device *pdev, void *sdata)
+		 struct platform_device *pdev, void *sdata)
 {
-	struct resource	*vfemem, *vfeirq, *vfeio;
+	struct resource *vfemem, *vfeirq, *vfeio;
 	int rc;
 
 	vfemem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
@@ -1944,20 +1938,20 @@ int vfe_cmd_init(struct msm_vfe_callback *presp,
 	}
 
 	vfeio = request_mem_region(vfemem->start,
-		resource_size(vfemem), pdev->name);
+				   resource_size(vfemem), pdev->name);
 	if (!vfeio) {
 		CDBG("VFE region already claimed\n");
 		return -EBUSY;
 	}
 
 	ctrl =
-	kzalloc(sizeof(struct msm_vfe8x_ctrl), GFP_KERNEL);
+		kzalloc(sizeof(struct msm_vfe8x_ctrl), GFP_KERNEL);
 	if (!ctrl) {
 		rc = -ENOMEM;
 		goto cmd_init_failed1;
 	}
 
-	ctrl->vfeirq  = vfeirq->start;
+	ctrl->vfeirq = vfeirq->start;
 
 	ctrl->vfebase =
 		ioremap(vfemem->start, (vfemem->end - vfemem->start) + 1);
@@ -1967,13 +1961,13 @@ int vfe_cmd_init(struct msm_vfe_callback *presp,
 	}
 
 	rc = request_irq(ctrl->vfeirq, vfe_parse_irq,
-		IRQF_TRIGGER_RISING, "vfe", 0);
+			 IRQF_TRIGGER_RISING, "vfe", 0);
 	if (rc < 0)
 		goto cmd_init_failed2;
 
-	if (presp && presp->vfe_resp)
+	if (presp && presp->vfe_resp) {
 		ctrl->resp = presp;
-	else {
+	} else {
 		rc = -EINVAL;
 		goto cmd_init_failed3;
 	}
@@ -2010,7 +2004,7 @@ cmd_init_failed1:
 
 void vfe_cmd_release(struct platform_device *dev)
 {
-	struct resource	*mem;
+	struct resource *mem;
 
 	disable_irq(ctrl->vfeirq);
 	free_irq(ctrl->vfeirq, 0);
@@ -2087,7 +2081,7 @@ void vfe_update(void)
 	vfe_program_irq_mask(ctrl->vfeImaskPacked);
 
 	if ((ctrl->vfeModuleEnableLocal.statsEnable == TRUE) &&
-			(ctrl->vfeStatsPingPongReloadFlag == FALSE)) {
+	    (ctrl->vfeStatsPingPongReloadFlag == FALSE)) {
 		ctrl->vfeStatsPingPongReloadFlag = TRUE;
 
 		ctrl->vfeBusCmdLocal.statsPingpongReload = TRUE;
@@ -2107,46 +2101,46 @@ int vfe_rgb_gamma_update(struct vfe_cmd_rgb_gamma_config *in)
 	case RGB_GAMMA_CH0_SELECTED:
 		ctrl->vfeGammaLutSel.ch0BankSelect ^= 1;
 		vfe_write_gamma_table(0,
-			ctrl->vfeGammaLutSel.ch0BankSelect, in->table);
+				      ctrl->vfeGammaLutSel.ch0BankSelect, in->table);
 		break;
 
 	case RGB_GAMMA_CH1_SELECTED:
 		ctrl->vfeGammaLutSel.ch1BankSelect ^= 1;
 		vfe_write_gamma_table(1,
-			ctrl->vfeGammaLutSel.ch1BankSelect, in->table);
+				      ctrl->vfeGammaLutSel.ch1BankSelect, in->table);
 		break;
 
 	case RGB_GAMMA_CH2_SELECTED:
 		ctrl->vfeGammaLutSel.ch2BankSelect ^= 1;
 		vfe_write_gamma_table(2,
-			ctrl->vfeGammaLutSel.ch2BankSelect, in->table);
+				      ctrl->vfeGammaLutSel.ch2BankSelect, in->table);
 		break;
 
 	case RGB_GAMMA_CH0_CH1_SELECTED:
 		ctrl->vfeGammaLutSel.ch0BankSelect ^= 1;
 		ctrl->vfeGammaLutSel.ch1BankSelect ^= 1;
 		vfe_write_gamma_table(0, ctrl->vfeGammaLutSel.ch0BankSelect,
-			in->table);
+				      in->table);
 		vfe_write_gamma_table(1, ctrl->vfeGammaLutSel.ch1BankSelect,
-			in->table);
+				      in->table);
 		break;
 
 	case RGB_GAMMA_CH0_CH2_SELECTED:
 		ctrl->vfeGammaLutSel.ch0BankSelect ^= 1;
 		ctrl->vfeGammaLutSel.ch2BankSelect ^= 1;
 		vfe_write_gamma_table(0, ctrl->vfeGammaLutSel.ch0BankSelect,
-			in->table);
+				      in->table);
 		vfe_write_gamma_table(2, ctrl->vfeGammaLutSel.ch2BankSelect,
-			in->table);
+				      in->table);
 		break;
 
 	case RGB_GAMMA_CH1_CH2_SELECTED:
 		ctrl->vfeGammaLutSel.ch1BankSelect ^= 1;
 		ctrl->vfeGammaLutSel.ch2BankSelect ^= 1;
 		vfe_write_gamma_table(1, ctrl->vfeGammaLutSel.ch1BankSelect,
-			in->table);
+				      in->table);
 		vfe_write_gamma_table(2, ctrl->vfeGammaLutSel.ch2BankSelect,
-			in->table);
+				      in->table);
 		break;
 
 	case RGB_GAMMA_CH0_CH1_CH2_SELECTED:
@@ -2154,11 +2148,11 @@ int vfe_rgb_gamma_update(struct vfe_cmd_rgb_gamma_config *in)
 		ctrl->vfeGammaLutSel.ch1BankSelect ^= 1;
 		ctrl->vfeGammaLutSel.ch2BankSelect ^= 1;
 		vfe_write_gamma_table(0, ctrl->vfeGammaLutSel.ch0BankSelect,
-			in->table);
+				      in->table);
 		vfe_write_gamma_table(1, ctrl->vfeGammaLutSel.ch1BankSelect,
-			in->table);
+				      in->table);
 		vfe_write_gamma_table(2, ctrl->vfeGammaLutSel.ch2BankSelect,
-			in->table);
+				      in->table);
 		break;
 
 	default:
@@ -2179,8 +2173,8 @@ int vfe_rgb_gamma_config(struct vfe_cmd_rgb_gamma_config *in)
 
 	switch (in->channelSelect) {
 	case RGB_GAMMA_CH0_SELECTED:
-vfe_write_gamma_table(0, 0, in->table);
-break;
+		vfe_write_gamma_table(0, 0, in->table);
+		break;
 
 	case RGB_GAMMA_CH1_SELECTED:
 		vfe_write_gamma_table(1, 0, in->table);
@@ -2274,15 +2268,15 @@ void vfe_output1_ack(struct vfe_cmd_output_ack *in)
 void vfe_start(struct vfe_cmd_start *in)
 {
 	unsigned long flags;
-	uint32_t  pmstatus = 0;
+	uint32_t pmstatus = 0;
 	boolean rawmode;
-	uint32_t  demperiod = 0;
-	uint32_t  demeven = 0;
-	uint32_t  demodd = 0;
+	uint32_t demperiod = 0;
+	uint32_t demeven = 0;
+	uint32_t demodd = 0;
 
 	/* derived from other commands.  (camif config, axi output config,
 	 * etc)
-	*/
+	 */
 	struct vfe_cfg hwcfg;
 	struct vfe_upsample_cfg chromupcfg;
 
@@ -2351,18 +2345,18 @@ void vfe_start(struct vfe_cmd_start *in)
 	/* save variables to local. */
 	ctrl->vfeOperationMode = in->operationMode;
 	if (ctrl->vfeOperationMode ==
-			VFE_START_OPERATION_MODE_SNAPSHOT) {
+	    VFE_START_OPERATION_MODE_SNAPSHOT) {
 		/* in snapshot mode, initialize snapshot count*/
 		ctrl->vfeSnapShotCount = in->snapshotCount;
 
 		/* save the requested count, this is temporarily done, to
-		help with HJR / multishot. */
+		 * help with HJR / multishot. */
 		ctrl->vfeRequestedSnapShotCount = ctrl->vfeSnapShotCount;
 
 		CDBG("requested snapshot count = %d\n", ctrl->vfeSnapShotCount);
 
 		/* Assumption is to have the same pattern and period for both
-		paths, if both paths are used. */
+		 * paths, if both paths are used. */
 		if (ctrl->viewPath.pathEnabled) {
 			ctrl->viewPath.snapshotPendingCount =
 				in->snapshotCount;
@@ -2385,7 +2379,7 @@ void vfe_start(struct vfe_cmd_start *in)
 	}
 
 	/* enable color conversion for bayer sensor
-	if stats enabled, need to do color conversion. */
+	 * if stats enabled, need to do color conversion. */
 	if (in->pixel <= VFE_BAYER_GBGBGB)
 		ctrl->vfeStatsCmdLocal.colorConversionEnable = TRUE;
 
@@ -2430,7 +2424,7 @@ void vfe_start(struct vfe_cmd_start *in)
 		in->yuvInputCositingMode;
 
 	writel(*(uint32_t *)&(chromupcfg),
-		ctrl->vfebase + VFE_CHROMA_UPSAMPLE_CFG);
+	       ctrl->vfebase + VFE_CHROMA_UPSAMPLE_CFG);
 
 	/* MISR to monitor the axi read. */
 	writel(0xd8, ctrl->vfebase + VFE_BUS_MISR_MAST_CFG_0);
@@ -2445,9 +2439,9 @@ void vfe_start(struct vfe_cmd_start *in)
 	vfe_program_irq_composite_mask(ctrl->vfeImaskCompositePacked);
 
 	/*  enable all necessary interrupts.      */
-	ctrl->vfeImaskLocal.camifSofIrq  = TRUE;
+	ctrl->vfeImaskLocal.camifSofIrq = TRUE;
 	ctrl->vfeImaskLocal.regUpdateIrq = TRUE;
-	ctrl->vfeImaskLocal.resetAckIrq  = TRUE;
+	ctrl->vfeImaskLocal.resetAckIrq = TRUE;
 
 	ctrl->vfeImaskPacked = vfe_irq_pack(ctrl->vfeImaskLocal);
 	vfe_program_irq_mask(ctrl->vfeImaskPacked);
@@ -2467,15 +2461,15 @@ void vfe_start(struct vfe_cmd_start *in)
 	}
 
 	writel(VFE_REG_UPDATE_TRIGGER,
-		ctrl->vfebase + VFE_REG_UPDATE_CMD);
+	       ctrl->vfebase + VFE_REG_UPDATE_CMD);
 
 	/* program later than the reg update. */
 	vfe_reg_bus_cmd(&ctrl->vfeBusCmdLocal);
 
 	if ((in->inputSource ==
-			 VFE_START_INPUT_SOURCE_CAMIF) ||
-			(in->inputSource ==
-			 VFE_START_INPUT_SOURCE_TESTGEN))
+	     VFE_START_INPUT_SOURCE_CAMIF) ||
+	    (in->inputSource ==
+	     VFE_START_INPUT_SOURCE_TESTGEN))
 		writel(CAMIF_COMMAND_START, ctrl->vfebase + CAMIF_COMMAND);
 
 	/* start test gen if it is enabled */
@@ -2492,7 +2486,7 @@ void vfe_start(struct vfe_cmd_start *in)
 		while (rawmode) {
 			pmstatus =
 				readl(ctrl->vfebase +
-					VFE_BUS_ENC_CBCR_WR_PM_STATS_1);
+				      VFE_BUS_ENC_CBCR_WR_PM_STATS_1);
 
 			if ((pmstatus & VFE_PM_BUF_MAX_CNT_MASK) != 0)
 				rawmode = FALSE;
@@ -2541,7 +2535,7 @@ void vfe_la_update(struct vfe_cmd_la_config *in)
 void vfe_la_config(struct vfe_cmd_la_config *in)
 {
 	uint16_t i;
-	int16_t  *pTable;
+	int16_t *pTable;
 	enum VFE_DMI_RAM_SEL dmiRamSel;
 
 	pTable = in->table;
@@ -2567,7 +2561,7 @@ void vfe_la_config(struct vfe_cmd_la_config *in)
 	/* can only be bank 0 or bank 1 for now. */
 	writel(ctrl->vfeLaBankSel, ctrl->vfebase + VFE_LA_CFG);
 	CDBG("VFE Luma adaptation bank selection is 0x%x\n",
-			 *(uint32_t *)&ctrl->vfeLaBankSel);
+	     *(uint32_t *)&ctrl->vfeLaBankSel);
 }
 
 void vfe_test_gen_start(struct vfe_cmd_test_gen_start *in)
@@ -2576,84 +2570,86 @@ void vfe_test_gen_start(struct vfe_cmd_test_gen_start *in)
 
 	memset(&cmd, 0, sizeof(cmd));
 
-	cmd.numFrame              = in->numFrame;
-	cmd.pixelDataSelect       = in->pixelDataSelect;
-	cmd.systematicDataSelect  = in->systematicDataSelect;
-	cmd.pixelDataSize         = (uint32_t)in->pixelDataSize;
-	cmd.hsyncEdge             = (uint32_t)in->hsyncEdge;
-	cmd.vsyncEdge             = (uint32_t)in->vsyncEdge;
-	cmd.imageWidth            = in->imageWidth;
-	cmd.imageHeight           = in->imageHeight;
-	cmd.sofOffset             = in->startOfFrameOffset;
-	cmd.eofNOffset            = in->endOfFrameNOffset;
-	cmd.solOffset             = in->startOfLineOffset;
-	cmd.eolNOffset            = in->endOfLineNOffset;
-	cmd.hBlankInterval        = in->hbi;
-	cmd.vBlankInterval        = in->vbl;
-	cmd.vBlankIntervalEnable  = in->vblEnable;
-	cmd.sofDummy              = in->startOfFrameDummyLine;
-	cmd.eofDummy              = in->endOfFrameDummyLine;
-	cmd.unicolorBarSelect     = in->unicolorBarSelect;
-	cmd.unicolorBarEnable     = in->unicolorBarEnable;
-	cmd.splitEnable           = in->colorBarsSplitEnable;
-	cmd.pixelPattern          = (uint32_t)in->colorBarsPixelPattern;
-	cmd.rotatePeriod          = in->colorBarsRotatePeriod;
-	cmd.randomSeed            = in->testGenRandomSeed;
+	cmd.numFrame = in->numFrame;
+	cmd.pixelDataSelect = in->pixelDataSelect;
+	cmd.systematicDataSelect = in->systematicDataSelect;
+	cmd.pixelDataSize = (uint32_t)in->pixelDataSize;
+	cmd.hsyncEdge = (uint32_t)in->hsyncEdge;
+	cmd.vsyncEdge = (uint32_t)in->vsyncEdge;
+	cmd.imageWidth = in->imageWidth;
+	cmd.imageHeight = in->imageHeight;
+	cmd.sofOffset = in->startOfFrameOffset;
+	cmd.eofNOffset = in->endOfFrameNOffset;
+	cmd.solOffset = in->startOfLineOffset;
+	cmd.eolNOffset = in->endOfLineNOffset;
+	cmd.hBlankInterval = in->hbi;
+	cmd.vBlankInterval = in->vbl;
+	cmd.vBlankIntervalEnable = in->vblEnable;
+	cmd.sofDummy = in->startOfFrameDummyLine;
+	cmd.eofDummy = in->endOfFrameDummyLine;
+	cmd.unicolorBarSelect = in->unicolorBarSelect;
+	cmd.unicolorBarEnable = in->unicolorBarEnable;
+	cmd.splitEnable = in->colorBarsSplitEnable;
+	cmd.pixelPattern = (uint32_t)in->colorBarsPixelPattern;
+	cmd.rotatePeriod = in->colorBarsRotatePeriod;
+	cmd.randomSeed = in->testGenRandomSeed;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_HW_TESTGEN_CFG,
-		(uint32_t *) &cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_frame_skip_update(struct vfe_cmd_frame_skip_update *in)
 {
 	struct VFE_FRAME_SKIP_UpdateCmdType cmd;
 
-	cmd.yPattern    = in->output1Pattern;
+	cmd.yPattern = in->output1Pattern;
 	cmd.cbcrPattern = in->output1Pattern;
 	vfe_prog_hw(ctrl->vfebase + VFE_FRAMEDROP_VIEW_Y_PATTERN,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 
-	cmd.yPattern    = in->output2Pattern;
+	cmd.yPattern = in->output2Pattern;
 	cmd.cbcrPattern = in->output2Pattern;
 	vfe_prog_hw(ctrl->vfebase + VFE_FRAMEDROP_ENC_Y_PATTERN,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_frame_skip_config(struct vfe_cmd_frame_skip_config *in)
 {
 	struct vfe_frame_skip_cfg cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
 	ctrl->vfeFrameSkip = *in;
 
-	cmd.output2YPeriod     = in->output2Period;
-	cmd.output2CbCrPeriod  = in->output2Period;
-	cmd.output2YPattern    = in->output2Pattern;
+	cmd.output2YPeriod = in->output2Period;
+	cmd.output2CbCrPeriod = in->output2Period;
+	cmd.output2YPattern = in->output2Pattern;
 	cmd.output2CbCrPattern = in->output2Pattern;
-	cmd.output1YPeriod     = in->output1Period;
-	cmd.output1CbCrPeriod  = in->output1Period;
-	cmd.output1YPattern    = in->output1Pattern;
+	cmd.output1YPeriod = in->output1Period;
+	cmd.output1CbCrPeriod = in->output1Period;
+	cmd.output1YPattern = in->output1Pattern;
 	cmd.output1CbCrPattern = in->output1Pattern;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_FRAMEDROP_ENC_Y_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_output_clamp_config(struct vfe_cmd_output_clamp_config *in)
 {
 	struct vfe_output_clamp_cfg cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
-	cmd.yChanMax  = in->maxCh0;
+	cmd.yChanMax = in->maxCh0;
 	cmd.cbChanMax = in->maxCh1;
 	cmd.crChanMax = in->maxCh2;
 
-	cmd.yChanMin  = in->minCh0;
+	cmd.yChanMin = in->minCh0;
 	cmd.cbChanMin = in->minCh1;
 	cmd.crChanMin = in->minCh2;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_CLAMP_MAX_CFG, (uint32_t *)&cmd,
-		sizeof(cmd));
+		    sizeof(cmd));
 }
 
 void vfe_camif_frame_update(struct vfe_cmds_camif_frame *in)
@@ -2666,7 +2662,7 @@ void vfe_camif_frame_update(struct vfe_cmds_camif_frame *in)
 	cmd.linesPerFrame = in->linesPerFrame;
 
 	vfe_prog_hw(ctrl->vfebase + CAMIF_FRAME_CONFIG, (uint32_t *)&cmd,
-		sizeof(cmd));
+		    sizeof(cmd));
 }
 
 void vfe_color_correction_config(
@@ -2694,12 +2690,12 @@ void vfe_color_correction_config(
 	cmd.coefQFactor = in->coefQFactor;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_COLOR_CORRECT_COEFF_0,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_demosaic_abf_update(struct vfe_cmd_demosaic_abf_update *in)
 {
-struct vfe_demosaic_cfg cmd;
+	struct vfe_demosaic_cfg cmd;
 	struct vfe_demosaic_abf_cfg cmdabf;
 	uint32_t temp;
 
@@ -2707,18 +2703,18 @@ struct vfe_demosaic_cfg cmd;
 	temp = readl(ctrl->vfebase + VFE_DEMOSAIC_CFG);
 
 	cmd = *((struct vfe_demosaic_cfg *)(&temp));
-	cmd.abfEnable       = in->abfUpdate.enable;
-	cmd.forceAbfOn      = in->abfUpdate.forceOn;
-	cmd.abfShift        = in->abfUpdate.shift;
+	cmd.abfEnable = in->abfUpdate.enable;
+	cmd.forceAbfOn = in->abfUpdate.forceOn;
+	cmd.abfShift = in->abfUpdate.shift;
 	vfe_prog_hw(ctrl->vfebase + VFE_DEMOSAIC_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 
-	cmdabf.lpThreshold  = in->abfUpdate.lpThreshold;
-	cmdabf.ratio        = in->abfUpdate.ratio;
-	cmdabf.minValue     = in->abfUpdate.min;
-	cmdabf.maxValue     = in->abfUpdate.max;
+	cmdabf.lpThreshold = in->abfUpdate.lpThreshold;
+	cmdabf.ratio = in->abfUpdate.ratio;
+	cmdabf.minValue = in->abfUpdate.min;
+	cmdabf.maxValue = in->abfUpdate.max;
 	vfe_prog_hw(ctrl->vfebase + VFE_DEMOSAIC_ABF_CFG_0,
-		(uint32_t *)&cmdabf, sizeof(cmdabf));
+		    (uint32_t *)&cmdabf, sizeof(cmdabf));
 }
 
 void vfe_demosaic_bpc_update(struct vfe_cmd_demosaic_bpc_update *in)
@@ -2733,18 +2729,18 @@ void vfe_demosaic_bpc_update(struct vfe_cmd_demosaic_bpc_update *in)
 
 	cmd = *((struct vfe_demosaic_cfg *)(&temp));
 	cmd.badPixelCorrEnable = in->bpcUpdate.enable;
-	cmd.fminThreshold      = in->bpcUpdate.fminThreshold;
-	cmd.fmaxThreshold      = in->bpcUpdate.fmaxThreshold;
+	cmd.fminThreshold = in->bpcUpdate.fminThreshold;
+	cmd.fmaxThreshold = in->bpcUpdate.fmaxThreshold;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_DEMOSAIC_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 
-	cmdbpc.blueDiffThreshold  = in->bpcUpdate.blueDiffThreshold;
-	cmdbpc.redDiffThreshold   = in->bpcUpdate.redDiffThreshold;
+	cmdbpc.blueDiffThreshold = in->bpcUpdate.blueDiffThreshold;
+	cmdbpc.redDiffThreshold = in->bpcUpdate.redDiffThreshold;
 	cmdbpc.greenDiffThreshold = in->bpcUpdate.greenDiffThreshold;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_DEMOSAIC_BPC_CFG_0,
-		(uint32_t *)&cmdbpc, sizeof(cmdbpc));
+		    (uint32_t *)&cmdbpc, sizeof(cmdbpc));
 }
 
 void vfe_demosaic_config(struct vfe_cmd_demosaic_config *in)
@@ -2759,31 +2755,31 @@ void vfe_demosaic_config(struct vfe_cmd_demosaic_config *in)
 
 	ctrl->vfeModuleEnableLocal.demosaicEnable = in->enable;
 
-	cmd.abfEnable          = in->abfConfig.enable;
+	cmd.abfEnable = in->abfConfig.enable;
 	cmd.badPixelCorrEnable = in->bpcConfig.enable;
-	cmd.forceAbfOn         = in->abfConfig.forceOn;
-	cmd.abfShift           = in->abfConfig.shift;
-	cmd.fminThreshold      = in->bpcConfig.fminThreshold;
-	cmd.fmaxThreshold      = in->bpcConfig.fmaxThreshold;
-	cmd.slopeShift         = in->slopeShift;
+	cmd.forceAbfOn = in->abfConfig.forceOn;
+	cmd.abfShift = in->abfConfig.shift;
+	cmd.fminThreshold = in->bpcConfig.fminThreshold;
+	cmd.fmaxThreshold = in->bpcConfig.fmaxThreshold;
+	cmd.slopeShift = in->slopeShift;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_DEMOSAIC_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 
 	cmd_abf.lpThreshold = in->abfConfig.lpThreshold;
-	cmd_abf.ratio       = in->abfConfig.ratio;
-	cmd_abf.minValue    = in->abfConfig.min;
-	cmd_abf.maxValue    = in->abfConfig.max;
+	cmd_abf.ratio = in->abfConfig.ratio;
+	cmd_abf.minValue = in->abfConfig.min;
+	cmd_abf.maxValue = in->abfConfig.max;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_DEMOSAIC_ABF_CFG_0,
-		(uint32_t *)&cmd_abf, sizeof(cmd_abf));
+		    (uint32_t *)&cmd_abf, sizeof(cmd_abf));
 
-	cmd_bpc.blueDiffThreshold   = in->bpcConfig.blueDiffThreshold;
-	cmd_bpc.redDiffThreshold    = in->bpcConfig.redDiffThreshold;
-	cmd_bpc.greenDiffThreshold  = in->bpcConfig.greenDiffThreshold;
+	cmd_bpc.blueDiffThreshold = in->bpcConfig.blueDiffThreshold;
+	cmd_bpc.redDiffThreshold = in->bpcConfig.redDiffThreshold;
+	cmd_bpc.greenDiffThreshold = in->bpcConfig.greenDiffThreshold;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_DEMOSAIC_BPC_CFG_0,
-		(uint32_t *)&cmd_bpc, sizeof(cmd_bpc));
+		    (uint32_t *)&cmd_bpc, sizeof(cmd_bpc));
 }
 
 void vfe_demux_channel_gain_update(
@@ -2793,13 +2789,13 @@ void vfe_demux_channel_gain_update(
 
 	memset(&cmd, 0, sizeof(cmd));
 
-	cmd.ch0EvenGain  = in->ch0EvenGain;
-	cmd.ch0OddGain   = in->ch0OddGain;
-	cmd.ch1Gain      = in->ch1Gain;
-	cmd.ch2Gain      = in->ch2Gain;
+	cmd.ch0EvenGain = in->ch0EvenGain;
+	cmd.ch0OddGain = in->ch0OddGain;
+	cmd.ch1Gain = in->ch1Gain;
+	cmd.ch2Gain = in->ch2Gain;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_DEMUX_GAIN_0,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_demux_channel_gain_config(
@@ -2810,12 +2806,12 @@ void vfe_demux_channel_gain_config(
 	memset(&cmd, 0, sizeof(cmd));
 
 	cmd.ch0EvenGain = in->ch0EvenGain;
-	cmd.ch0OddGain  = in->ch0OddGain;
-	cmd.ch1Gain     = in->ch1Gain;
-	cmd.ch2Gain     = in->ch2Gain;
+	cmd.ch0OddGain = in->ch0OddGain;
+	cmd.ch1Gain = in->ch1Gain;
+	cmd.ch2Gain = in->ch2Gain;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_DEMUX_GAIN_0,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_black_level_update(struct vfe_cmd_black_level_config *in)
@@ -2826,76 +2822,78 @@ void vfe_black_level_update(struct vfe_cmd_black_level_config *in)
 	ctrl->vfeModuleEnableLocal.blackLevelCorrectionEnable = in->enable;
 
 	cmd.evenEvenAdjustment = in->evenEvenAdjustment;
-	cmd.evenOddAdjustment  = in->evenOddAdjustment;
-	cmd.oddEvenAdjustment  = in->oddEvenAdjustment;
-	cmd.oddOddAdjustment   = in->oddOddAdjustment;
+	cmd.evenOddAdjustment = in->evenOddAdjustment;
+	cmd.oddEvenAdjustment = in->oddEvenAdjustment;
+	cmd.oddOddAdjustment = in->oddOddAdjustment;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_BLACK_EVEN_EVEN_VALUE,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_black_level_config(struct vfe_cmd_black_level_config *in)
 {
 	struct vfe_blacklevel_cfg cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
 	ctrl->vfeModuleEnableLocal.blackLevelCorrectionEnable = in->enable;
 
 	cmd.evenEvenAdjustment = in->evenEvenAdjustment;
-	cmd.evenOddAdjustment  = in->evenOddAdjustment;
-	cmd.oddEvenAdjustment  = in->oddEvenAdjustment;
-	cmd.oddOddAdjustment   = in->oddOddAdjustment;
+	cmd.evenOddAdjustment = in->evenOddAdjustment;
+	cmd.oddEvenAdjustment = in->oddEvenAdjustment;
+	cmd.oddOddAdjustment = in->oddOddAdjustment;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_BLACK_EVEN_EVEN_VALUE,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_asf_update(struct vfe_cmd_asf_update *in)
 {
 	struct vfe_asf_update cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
 	ctrl->vfeModuleEnableLocal.asfEnable = in->enable;
 
-	cmd.smoothEnable     = in->smoothFilterEnabled;
-	cmd.sharpMode        = in->sharpMode;
-	cmd.smoothCoeff1     = in->smoothCoefCenter;
-	cmd.smoothCoeff0     = in->smoothCoefSurr;
-	cmd.cropEnable       = in->cropEnable;
+	cmd.smoothEnable = in->smoothFilterEnabled;
+	cmd.sharpMode = in->sharpMode;
+	cmd.smoothCoeff1 = in->smoothCoefCenter;
+	cmd.smoothCoeff0 = in->smoothCoefSurr;
+	cmd.cropEnable = in->cropEnable;
 	cmd.sharpThresholdE1 = in->sharpThreshE1;
-	cmd.sharpDegreeK1    = in->sharpK1;
-	cmd.sharpDegreeK2    = in->sharpK2;
-	cmd.normalizeFactor  = in->normalizeFactor;
+	cmd.sharpDegreeK1 = in->sharpK1;
+	cmd.sharpDegreeK2 = in->sharpK2;
+	cmd.normalizeFactor = in->normalizeFactor;
 	cmd.sharpThresholdE2 = in->sharpThreshE2;
 	cmd.sharpThresholdE3 = in->sharpThreshE3;
 	cmd.sharpThresholdE4 = in->sharpThreshE4;
 	cmd.sharpThresholdE5 = in->sharpThreshE5;
-	cmd.F1Coeff0         = in->filter1Coefficients[0];
-	cmd.F1Coeff1         = in->filter1Coefficients[1];
-	cmd.F1Coeff2         = in->filter1Coefficients[2];
-	cmd.F1Coeff3         = in->filter1Coefficients[3];
-	cmd.F1Coeff4         = in->filter1Coefficients[4];
-	cmd.F1Coeff5         = in->filter1Coefficients[5];
-	cmd.F1Coeff6         = in->filter1Coefficients[6];
-	cmd.F1Coeff7         = in->filter1Coefficients[7];
-	cmd.F1Coeff8         = in->filter1Coefficients[8];
-	cmd.F2Coeff0         = in->filter2Coefficients[0];
-	cmd.F2Coeff1         = in->filter2Coefficients[1];
-	cmd.F2Coeff2         = in->filter2Coefficients[2];
-	cmd.F2Coeff3         = in->filter2Coefficients[3];
-	cmd.F2Coeff4         = in->filter2Coefficients[4];
-	cmd.F2Coeff5         = in->filter2Coefficients[5];
-	cmd.F2Coeff6         = in->filter2Coefficients[6];
-	cmd.F2Coeff7         = in->filter2Coefficients[7];
-	cmd.F2Coeff8         = in->filter2Coefficients[8];
+	cmd.F1Coeff0 = in->filter1Coefficients[0];
+	cmd.F1Coeff1 = in->filter1Coefficients[1];
+	cmd.F1Coeff2 = in->filter1Coefficients[2];
+	cmd.F1Coeff3 = in->filter1Coefficients[3];
+	cmd.F1Coeff4 = in->filter1Coefficients[4];
+	cmd.F1Coeff5 = in->filter1Coefficients[5];
+	cmd.F1Coeff6 = in->filter1Coefficients[6];
+	cmd.F1Coeff7 = in->filter1Coefficients[7];
+	cmd.F1Coeff8 = in->filter1Coefficients[8];
+	cmd.F2Coeff0 = in->filter2Coefficients[0];
+	cmd.F2Coeff1 = in->filter2Coefficients[1];
+	cmd.F2Coeff2 = in->filter2Coefficients[2];
+	cmd.F2Coeff3 = in->filter2Coefficients[3];
+	cmd.F2Coeff4 = in->filter2Coefficients[4];
+	cmd.F2Coeff5 = in->filter2Coefficients[5];
+	cmd.F2Coeff6 = in->filter2Coefficients[6];
+	cmd.F2Coeff7 = in->filter2Coefficients[7];
+	cmd.F2Coeff8 = in->filter2Coefficients[8];
 
 	vfe_prog_hw(ctrl->vfebase + VFE_ASF_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_asf_config(struct vfe_cmd_asf_config *in)
 {
-	struct vfe_asf_update     cmd;
+	struct vfe_asf_update cmd;
 	struct vfe_asfcrop_cfg cmd2;
 
 	memset(&cmd, 0, sizeof(cmd));
@@ -2903,53 +2901,54 @@ void vfe_asf_config(struct vfe_cmd_asf_config *in)
 
 	ctrl->vfeModuleEnableLocal.asfEnable = in->enable;
 
-	cmd.smoothEnable       = in->smoothFilterEnabled;
-	cmd.sharpMode          = in->sharpMode;
-	cmd.smoothCoeff0       = in->smoothCoefCenter;
-	cmd.smoothCoeff1       = in->smoothCoefSurr;
-	cmd.cropEnable         = in->cropEnable;
-	cmd.sharpThresholdE1   = in->sharpThreshE1;
-	cmd.sharpDegreeK1      = in->sharpK1;
-	cmd.sharpDegreeK2      = in->sharpK2;
-	cmd.normalizeFactor    = in->normalizeFactor;
-	cmd.sharpThresholdE2   = in->sharpThreshE2;
-	cmd.sharpThresholdE3   = in->sharpThreshE3;
-	cmd.sharpThresholdE4   = in->sharpThreshE4;
-	cmd.sharpThresholdE5   = in->sharpThreshE5;
-	cmd.F1Coeff0           = in->filter1Coefficients[0];
-	cmd.F1Coeff1           = in->filter1Coefficients[1];
-	cmd.F1Coeff2           = in->filter1Coefficients[2];
-	cmd.F1Coeff3           = in->filter1Coefficients[3];
-	cmd.F1Coeff4           = in->filter1Coefficients[4];
-	cmd.F1Coeff5           = in->filter1Coefficients[5];
-	cmd.F1Coeff6           = in->filter1Coefficients[6];
-	cmd.F1Coeff7           = in->filter1Coefficients[7];
-	cmd.F1Coeff8           = in->filter1Coefficients[8];
-	cmd.F2Coeff0           = in->filter2Coefficients[0];
-	cmd.F2Coeff1           = in->filter2Coefficients[1];
-	cmd.F2Coeff2           = in->filter2Coefficients[2];
-	cmd.F2Coeff3           = in->filter2Coefficients[3];
-	cmd.F2Coeff4           = in->filter2Coefficients[4];
-	cmd.F2Coeff5           = in->filter2Coefficients[5];
-	cmd.F2Coeff6           = in->filter2Coefficients[6];
-	cmd.F2Coeff7           = in->filter2Coefficients[7];
-	cmd.F2Coeff8           = in->filter2Coefficients[8];
+	cmd.smoothEnable = in->smoothFilterEnabled;
+	cmd.sharpMode = in->sharpMode;
+	cmd.smoothCoeff0 = in->smoothCoefCenter;
+	cmd.smoothCoeff1 = in->smoothCoefSurr;
+	cmd.cropEnable = in->cropEnable;
+	cmd.sharpThresholdE1 = in->sharpThreshE1;
+	cmd.sharpDegreeK1 = in->sharpK1;
+	cmd.sharpDegreeK2 = in->sharpK2;
+	cmd.normalizeFactor = in->normalizeFactor;
+	cmd.sharpThresholdE2 = in->sharpThreshE2;
+	cmd.sharpThresholdE3 = in->sharpThreshE3;
+	cmd.sharpThresholdE4 = in->sharpThreshE4;
+	cmd.sharpThresholdE5 = in->sharpThreshE5;
+	cmd.F1Coeff0 = in->filter1Coefficients[0];
+	cmd.F1Coeff1 = in->filter1Coefficients[1];
+	cmd.F1Coeff2 = in->filter1Coefficients[2];
+	cmd.F1Coeff3 = in->filter1Coefficients[3];
+	cmd.F1Coeff4 = in->filter1Coefficients[4];
+	cmd.F1Coeff5 = in->filter1Coefficients[5];
+	cmd.F1Coeff6 = in->filter1Coefficients[6];
+	cmd.F1Coeff7 = in->filter1Coefficients[7];
+	cmd.F1Coeff8 = in->filter1Coefficients[8];
+	cmd.F2Coeff0 = in->filter2Coefficients[0];
+	cmd.F2Coeff1 = in->filter2Coefficients[1];
+	cmd.F2Coeff2 = in->filter2Coefficients[2];
+	cmd.F2Coeff3 = in->filter2Coefficients[3];
+	cmd.F2Coeff4 = in->filter2Coefficients[4];
+	cmd.F2Coeff5 = in->filter2Coefficients[5];
+	cmd.F2Coeff6 = in->filter2Coefficients[6];
+	cmd.F2Coeff7 = in->filter2Coefficients[7];
+	cmd.F2Coeff8 = in->filter2Coefficients[8];
 
 	vfe_prog_hw(ctrl->vfebase + VFE_ASF_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 
-	cmd2.firstLine  = in->cropFirstLine;
-	cmd2.lastLine   = in->cropLastLine;
+	cmd2.firstLine = in->cropFirstLine;
+	cmd2.lastLine = in->cropLastLine;
 	cmd2.firstPixel = in->cropFirstPixel;
-	cmd2.lastPixel  = in->cropLastPixel;
+	cmd2.lastPixel = in->cropLastPixel;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_ASF_CROP_WIDTH_CFG,
-		(uint32_t *)&cmd2, sizeof(cmd2));
+		    (uint32_t *)&cmd2, sizeof(cmd2));
 }
 
 void vfe_white_balance_config(struct vfe_cmd_white_balance_config *in)
 {
 	struct vfe_wb_cfg cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
 	ctrl->vfeModuleEnableLocal.whiteBalanceEnable =
@@ -2960,45 +2959,47 @@ void vfe_white_balance_config(struct vfe_cmd_white_balance_config *in)
 	cmd.ch2Gain = in->ch2Gain;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_WB_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_chroma_sup_config(struct vfe_cmd_chroma_suppression_config *in)
 {
 	struct vfe_chroma_suppress_cfg cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
 	ctrl->vfeModuleEnableLocal.chromaSuppressionEnable = in->enable;
 
-	cmd.m1  = in->m1;
-	cmd.m3  = in->m3;
-	cmd.n1  = in->n1;
-	cmd.n3  = in->n3;
+	cmd.m1 = in->m1;
+	cmd.m3 = in->m3;
+	cmd.n1 = in->n1;
+	cmd.n3 = in->n3;
 	cmd.mm1 = in->mm1;
 	cmd.nn1 = in->nn1;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_CHROMA_SUPPRESS_CFG_0,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_roll_off_config(struct vfe_cmd_roll_off_config *in)
 {
 	struct vfe_rolloff_cfg cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
 	ctrl->vfeModuleEnableLocal.lensRollOffEnable = in->enable;
 
-	cmd.gridWidth   = in->gridWidth;
-	cmd.gridHeight  = in->gridHeight;
-	cmd.yDelta      = in->yDelta;
-	cmd.gridX       = in->gridXIndex;
-	cmd.gridY       = in->gridYIndex;
-	cmd.pixelX      = in->gridPixelXIndex;
-	cmd.pixelY      = in->gridPixelYIndex;
+	cmd.gridWidth = in->gridWidth;
+	cmd.gridHeight = in->gridHeight;
+	cmd.yDelta = in->yDelta;
+	cmd.gridX = in->gridXIndex;
+	cmd.gridY = in->gridYIndex;
+	cmd.pixelX = in->gridPixelXIndex;
+	cmd.pixelY = in->gridPixelYIndex;
 	cmd.yDeltaAccum = in->yDeltaAccum;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_ROLLOFF_CFG_0,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 
 	vfe_write_lens_roll_off_table(in);
 }
@@ -3007,24 +3008,25 @@ void vfe_chroma_subsample_config(
 	struct vfe_cmd_chroma_subsample_config *in)
 {
 	struct vfe_chromasubsample_cfg cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
 	ctrl->vfeModuleEnableLocal.chromaSubsampleEnable = in->enable;
 
-	cmd.hCositedPhase       = in->hCositedPhase;
-	cmd.vCositedPhase       = in->vCositedPhase;
-	cmd.hCosited            = in->hCosited;
-	cmd.vCosited            = in->vCosited;
-	cmd.hsubSampleEnable    = in->hsubSampleEnable;
-	cmd.vsubSampleEnable    = in->vsubSampleEnable;
-	cmd.cropEnable          = in->cropEnable;
-	cmd.cropWidthLastPixel  = in->cropWidthLastPixel;
+	cmd.hCositedPhase = in->hCositedPhase;
+	cmd.vCositedPhase = in->vCositedPhase;
+	cmd.hCosited = in->hCosited;
+	cmd.vCosited = in->vCosited;
+	cmd.hsubSampleEnable = in->hsubSampleEnable;
+	cmd.vsubSampleEnable = in->vsubSampleEnable;
+	cmd.cropEnable = in->cropEnable;
+	cmd.cropWidthLastPixel = in->cropWidthLastPixel;
 	cmd.cropWidthFirstPixel = in->cropWidthFirstPixel;
-	cmd.cropHeightLastLine  = in->cropHeightLastLine;
+	cmd.cropHeightLastLine = in->cropHeightLastLine;
 	cmd.cropHeightFirstLine = in->cropHeightFirstLine;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_CHROMA_SUBSAMPLE_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_chroma_enhan_config(struct vfe_cmd_chroma_enhan_config *in)
@@ -3037,27 +3039,27 @@ void vfe_chroma_enhan_config(struct vfe_cmd_chroma_enhan_config *in)
 
 	ctrl->vfeModuleEnableLocal.chromaEnhanEnable = in->enable;
 
-	cmd.ap             = in->ap;
-	cmd.am             = in->am;
-	cmd.bp             = in->bp;
-	cmd.bm             = in->bm;
-	cmd.cp             = in->cp;
-	cmd.cm             = in->cm;
-	cmd.dp             = in->dp;
-	cmd.dm             = in->dm;
-	cmd.kcb            = in->kcb;
-	cmd.kcr            = in->kcr;
+	cmd.ap = in->ap;
+	cmd.am = in->am;
+	cmd.bp = in->bp;
+	cmd.bm = in->bm;
+	cmd.cp = in->cp;
+	cmd.cm = in->cm;
+	cmd.dp = in->dp;
+	cmd.dm = in->dm;
+	cmd.kcb = in->kcb;
+	cmd.kcr = in->kcr;
 
-	cmd2.v0            = in->RGBtoYConversionV0;
-	cmd2.v1            = in->RGBtoYConversionV1;
-	cmd2.v2            = in->RGBtoYConversionV2;
+	cmd2.v0 = in->RGBtoYConversionV0;
+	cmd2.v1 = in->RGBtoYConversionV1;
+	cmd2.v2 = in->RGBtoYConversionV2;
 	cmd2.ConvertOffset = in->RGBtoYConversionOffset;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_CHROMA_ENHAN_A,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 
 	vfe_prog_hw(ctrl->vfebase + VFE_COLOR_CONVERT_COEFF_0,
-		(uint32_t *)&cmd2, sizeof(cmd2));
+		    (uint32_t *)&cmd2, sizeof(cmd2));
 }
 
 void vfe_scaler2cbcr_config(struct vfe_cmd_scaler2_config *in)
@@ -3068,19 +3070,19 @@ void vfe_scaler2cbcr_config(struct vfe_cmd_scaler2_config *in)
 
 	ctrl->vfeModuleEnableLocal.scaler2CbcrEnable = in->enable;
 
-	cmd.hEnable              = in->hconfig.enable;
-	cmd.vEnable              = in->vconfig.enable;
-	cmd.inWidth              = in->hconfig.inputSize;
-	cmd.outWidth             = in->hconfig.outputSize;
-	cmd.horizPhaseMult       = in->hconfig.phaseMultiplicationFactor;
+	cmd.hEnable = in->hconfig.enable;
+	cmd.vEnable = in->vconfig.enable;
+	cmd.inWidth = in->hconfig.inputSize;
+	cmd.outWidth = in->hconfig.outputSize;
+	cmd.horizPhaseMult = in->hconfig.phaseMultiplicationFactor;
 	cmd.horizInterResolution = in->hconfig.interpolationResolution;
-	cmd.inHeight             = in->vconfig.inputSize;
-	cmd.outHeight            = in->vconfig.outputSize;
-	cmd.vertPhaseMult        = in->vconfig.phaseMultiplicationFactor;
-	cmd.vertInterResolution  = in->vconfig.interpolationResolution;
+	cmd.inHeight = in->vconfig.inputSize;
+	cmd.outHeight = in->vconfig.outputSize;
+	cmd.vertPhaseMult = in->vconfig.phaseMultiplicationFactor;
+	cmd.vertInterResolution = in->vconfig.interpolationResolution;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_SCALE_CBCR_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_scaler2y_config(struct vfe_cmd_scaler2_config *in)
@@ -3091,19 +3093,19 @@ void vfe_scaler2y_config(struct vfe_cmd_scaler2_config *in)
 
 	ctrl->vfeModuleEnableLocal.scaler2YEnable = in->enable;
 
-	cmd.hEnable               = in->hconfig.enable;
-	cmd.vEnable               = in->vconfig.enable;
-	cmd.inWidth               = in->hconfig.inputSize;
-	cmd.outWidth              = in->hconfig.outputSize;
-	cmd.horizPhaseMult        = in->hconfig.phaseMultiplicationFactor;
-	cmd.horizInterResolution  = in->hconfig.interpolationResolution;
-	cmd.inHeight              = in->vconfig.inputSize;
-	cmd.outHeight             = in->vconfig.outputSize;
-	cmd.vertPhaseMult         = in->vconfig.phaseMultiplicationFactor;
-	cmd.vertInterResolution   = in->vconfig.interpolationResolution;
+	cmd.hEnable = in->hconfig.enable;
+	cmd.vEnable = in->vconfig.enable;
+	cmd.inWidth = in->hconfig.inputSize;
+	cmd.outWidth = in->hconfig.outputSize;
+	cmd.horizPhaseMult = in->hconfig.phaseMultiplicationFactor;
+	cmd.horizInterResolution = in->hconfig.interpolationResolution;
+	cmd.inHeight = in->vconfig.inputSize;
+	cmd.outHeight = in->vconfig.outputSize;
+	cmd.vertPhaseMult = in->vconfig.phaseMultiplicationFactor;
+	cmd.vertInterResolution = in->vconfig.interpolationResolution;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_SCALE_Y_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_main_scaler_config(struct vfe_cmd_main_scaler_config *in)
@@ -3114,23 +3116,23 @@ void vfe_main_scaler_config(struct vfe_cmd_main_scaler_config *in)
 
 	ctrl->vfeModuleEnableLocal.mainScalerEnable = in->enable;
 
-	cmd.hEnable              = in->hconfig.enable;
-	cmd.vEnable              = in->vconfig.enable;
-	cmd.inWidth              = in->hconfig.inputSize;
-	cmd.outWidth             = in->hconfig.outputSize;
-	cmd.horizPhaseMult       = in->hconfig.phaseMultiplicationFactor;
+	cmd.hEnable = in->hconfig.enable;
+	cmd.vEnable = in->vconfig.enable;
+	cmd.inWidth = in->hconfig.inputSize;
+	cmd.outWidth = in->hconfig.outputSize;
+	cmd.horizPhaseMult = in->hconfig.phaseMultiplicationFactor;
 	cmd.horizInterResolution = in->hconfig.interpolationResolution;
-	cmd.horizMNInit          = in->MNInitH.MNCounterInit;
-	cmd.horizPhaseInit       = in->MNInitH.phaseInit;
-	cmd.inHeight             = in->vconfig.inputSize;
-	cmd.outHeight            = in->vconfig.outputSize;
-	cmd.vertPhaseMult        = in->vconfig.phaseMultiplicationFactor;
-	cmd.vertInterResolution  = in->vconfig.interpolationResolution;
-	cmd.vertMNInit           = in->MNInitV.MNCounterInit;
-	cmd.vertPhaseInit        = in->MNInitV.phaseInit;
+	cmd.horizMNInit = in->MNInitH.MNCounterInit;
+	cmd.horizPhaseInit = in->MNInitH.phaseInit;
+	cmd.inHeight = in->vconfig.inputSize;
+	cmd.outHeight = in->vconfig.outputSize;
+	cmd.vertPhaseMult = in->vconfig.phaseMultiplicationFactor;
+	cmd.vertInterResolution = in->vconfig.interpolationResolution;
+	cmd.vertMNInit = in->MNInitV.MNCounterInit;
+	cmd.vertPhaseInit = in->MNInitV.phaseInit;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_SCALE_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_stats_wb_exp_stop(void)
@@ -3141,131 +3143,132 @@ void vfe_stats_wb_exp_stop(void)
 
 void vfe_stats_update_wb_exp(struct vfe_cmd_stats_wb_exp_update *in)
 {
-	struct vfe_statsawb_update   cmd;
+	struct vfe_statsawb_update cmd;
 	struct vfe_statsawbae_update cmd2;
 
 	memset(&cmd, 0, sizeof(cmd));
 	memset(&cmd2, 0, sizeof(cmd2));
 
-	cmd.m1  = in->awbMCFG[0];
-	cmd.m2  = in->awbMCFG[1];
-	cmd.m3  = in->awbMCFG[2];
-	cmd.m4  = in->awbMCFG[3];
-	cmd.c1  = in->awbCCFG[0];
-	cmd.c2  = in->awbCCFG[1];
-	cmd.c3  = in->awbCCFG[2];
-	cmd.c4  = in->awbCCFG[3];
+	cmd.m1 = in->awbMCFG[0];
+	cmd.m2 = in->awbMCFG[1];
+	cmd.m3 = in->awbMCFG[2];
+	cmd.m4 = in->awbMCFG[3];
+	cmd.c1 = in->awbCCFG[0];
+	cmd.c2 = in->awbCCFG[1];
+	cmd.c3 = in->awbCCFG[2];
+	cmd.c4 = in->awbCCFG[3];
 	vfe_prog_hw(ctrl->vfebase + VFE_STATS_AWB_MCFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 
-	cmd2.aeRegionCfg    = in->wbExpRegions;
+	cmd2.aeRegionCfg = in->wbExpRegions;
 	cmd2.aeSubregionCfg = in->wbExpSubRegion;
-	cmd2.awbYMin        = in->awbYMin;
-	cmd2.awbYMax        = in->awbYMax;
+	cmd2.awbYMin = in->awbYMin;
+	cmd2.awbYMax = in->awbYMax;
 	vfe_prog_hw(ctrl->vfebase + VFE_STATS_AWBAE_CFG,
-		(uint32_t *)&cmd2, sizeof(cmd2));
+		    (uint32_t *)&cmd2, sizeof(cmd2));
 }
 
 void vfe_stats_update_af(struct vfe_cmd_stats_af_update *in)
 {
 	struct vfe_statsaf_update cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
 	cmd.windowVOffset = in->windowVOffset;
 	cmd.windowHOffset = in->windowHOffset;
-	cmd.windowMode    = in->windowMode;
-	cmd.windowHeight  = in->windowHeight;
-	cmd.windowWidth   = in->windowWidth;
+	cmd.windowMode = in->windowMode;
+	cmd.windowHeight = in->windowHeight;
+	cmd.windowWidth = in->windowWidth;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_STATS_AF_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_stats_start_wb_exp(struct vfe_cmd_stats_wb_exp_start *in)
 {
-	struct vfe_statsawb_update   cmd;
+	struct vfe_statsawb_update cmd;
 	struct vfe_statsawbae_update cmd2;
-	struct vfe_statsaxw_hdr_cfg  cmd3;
+	struct vfe_statsaxw_hdr_cfg cmd3;
 
-	ctrl->vfeStatsCmdLocal.axwEnable   =  in->enable;
+	ctrl->vfeStatsCmdLocal.axwEnable = in->enable;
 	ctrl->vfeImaskLocal.awbPingpongIrq = TRUE;
 
 	memset(&cmd, 0, sizeof(cmd));
 	memset(&cmd2, 0, sizeof(cmd2));
 	memset(&cmd3, 0, sizeof(cmd3));
 
-	cmd.m1  = in->awbMCFG[0];
-	cmd.m2  = in->awbMCFG[1];
-	cmd.m3  = in->awbMCFG[2];
-	cmd.m4  = in->awbMCFG[3];
-	cmd.c1  = in->awbCCFG[0];
-	cmd.c2  = in->awbCCFG[1];
-	cmd.c3  = in->awbCCFG[2];
-	cmd.c4  = in->awbCCFG[3];
+	cmd.m1 = in->awbMCFG[0];
+	cmd.m2 = in->awbMCFG[1];
+	cmd.m3 = in->awbMCFG[2];
+	cmd.m4 = in->awbMCFG[3];
+	cmd.c1 = in->awbCCFG[0];
+	cmd.c2 = in->awbCCFG[1];
+	cmd.c3 = in->awbCCFG[2];
+	cmd.c4 = in->awbCCFG[3];
 	vfe_prog_hw(ctrl->vfebase + VFE_STATS_AWB_MCFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 
-	cmd2.aeRegionCfg     = in->wbExpRegions;
-	cmd2.aeSubregionCfg  = in->wbExpSubRegion;
-	cmd2.awbYMin         = in->awbYMin;
-	cmd2.awbYMax         = in->awbYMax;
+	cmd2.aeRegionCfg = in->wbExpRegions;
+	cmd2.aeSubregionCfg = in->wbExpSubRegion;
+	cmd2.awbYMin = in->awbYMin;
+	cmd2.awbYMax = in->awbYMax;
 	vfe_prog_hw(ctrl->vfebase + VFE_STATS_AWBAE_CFG,
-		(uint32_t *)&cmd2, sizeof(cmd2));
+		    (uint32_t *)&cmd2, sizeof(cmd2));
 
-	cmd3.axwHeader       = in->axwHeader;
+	cmd3.axwHeader = in->axwHeader;
 	vfe_prog_hw(ctrl->vfebase + VFE_STATS_AXW_HEADER,
-		(uint32_t *)&cmd3, sizeof(cmd3));
+		    (uint32_t *)&cmd3, sizeof(cmd3));
 }
 
 void vfe_stats_start_af(struct vfe_cmd_stats_af_start *in)
 {
 	struct vfe_statsaf_update cmd;
-	struct vfe_statsaf_cfg    cmd2;
+	struct vfe_statsaf_cfg cmd2;
 
 	memset(&cmd, 0, sizeof(cmd));
 	memset(&cmd2, 0, sizeof(cmd2));
 
-ctrl->vfeStatsCmdLocal.autoFocusEnable = in->enable;
-ctrl->vfeImaskLocal.afPingpongIrq = TRUE;
+	ctrl->vfeStatsCmdLocal.autoFocusEnable = in->enable;
+	ctrl->vfeImaskLocal.afPingpongIrq = TRUE;
 
 	cmd.windowVOffset = in->windowVOffset;
 	cmd.windowHOffset = in->windowHOffset;
-	cmd.windowMode    = in->windowMode;
-	cmd.windowHeight  = in->windowHeight;
-	cmd.windowWidth   = in->windowWidth;
+	cmd.windowMode = in->windowMode;
+	cmd.windowHeight = in->windowHeight;
+	cmd.windowWidth = in->windowWidth;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_STATS_AF_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 
-	cmd2.a00       = in->highPassCoef[0];
-	cmd2.a04       = in->highPassCoef[1];
-	cmd2.a20       = in->highPassCoef[2];
-	cmd2.a21       = in->highPassCoef[3];
-	cmd2.a22       = in->highPassCoef[4];
-	cmd2.a23       = in->highPassCoef[5];
-	cmd2.a24       = in->highPassCoef[6];
-	cmd2.fvMax     = in->metricMax;
-	cmd2.fvMetric  = in->metricSelection;
-	cmd2.afHeader  = in->bufferHeader;
-	cmd2.entry00   = in->gridForMultiWindows[0];
-	cmd2.entry01   = in->gridForMultiWindows[1];
-	cmd2.entry02   = in->gridForMultiWindows[2];
-	cmd2.entry03   = in->gridForMultiWindows[3];
-	cmd2.entry10   = in->gridForMultiWindows[4];
-	cmd2.entry11   = in->gridForMultiWindows[5];
-	cmd2.entry12   = in->gridForMultiWindows[6];
-	cmd2.entry13   = in->gridForMultiWindows[7];
-	cmd2.entry20   = in->gridForMultiWindows[8];
-	cmd2.entry21   = in->gridForMultiWindows[9];
-	cmd2.entry22   = in->gridForMultiWindows[10];
-	cmd2.entry23   = in->gridForMultiWindows[11];
-	cmd2.entry30   = in->gridForMultiWindows[12];
-	cmd2.entry31   = in->gridForMultiWindows[13];
-	cmd2.entry32   = in->gridForMultiWindows[14];
-	cmd2.entry33   = in->gridForMultiWindows[15];
+	cmd2.a00 = in->highPassCoef[0];
+	cmd2.a04 = in->highPassCoef[1];
+	cmd2.a20 = in->highPassCoef[2];
+	cmd2.a21 = in->highPassCoef[3];
+	cmd2.a22 = in->highPassCoef[4];
+	cmd2.a23 = in->highPassCoef[5];
+	cmd2.a24 = in->highPassCoef[6];
+	cmd2.fvMax = in->metricMax;
+	cmd2.fvMetric = in->metricSelection;
+	cmd2.afHeader = in->bufferHeader;
+	cmd2.entry00 = in->gridForMultiWindows[0];
+	cmd2.entry01 = in->gridForMultiWindows[1];
+	cmd2.entry02 = in->gridForMultiWindows[2];
+	cmd2.entry03 = in->gridForMultiWindows[3];
+	cmd2.entry10 = in->gridForMultiWindows[4];
+	cmd2.entry11 = in->gridForMultiWindows[5];
+	cmd2.entry12 = in->gridForMultiWindows[6];
+	cmd2.entry13 = in->gridForMultiWindows[7];
+	cmd2.entry20 = in->gridForMultiWindows[8];
+	cmd2.entry21 = in->gridForMultiWindows[9];
+	cmd2.entry22 = in->gridForMultiWindows[10];
+	cmd2.entry23 = in->gridForMultiWindows[11];
+	cmd2.entry30 = in->gridForMultiWindows[12];
+	cmd2.entry31 = in->gridForMultiWindows[13];
+	cmd2.entry32 = in->gridForMultiWindows[14];
+	cmd2.entry33 = in->gridForMultiWindows[15];
 
 	vfe_prog_hw(ctrl->vfebase + VFE_STATS_AF_GRID_0,
-		(uint32_t *)&cmd2, sizeof(cmd2));
+		    (uint32_t *)&cmd2, sizeof(cmd2));
 }
 
 void vfe_stats_setting(struct vfe_cmd_stats_setting *in)
@@ -3285,38 +3288,38 @@ void vfe_stats_setting(struct vfe_cmd_stats_setting *in)
 	ctrl->awbStatsControl.nextFrameAddrBuf = in->awbBuffer[2];
 
 	cmd1.lastPixel = in->frameHDimension;
-	cmd1.lastLine  = in->frameVDimension;
+	cmd1.lastLine = in->frameVDimension;
 	vfe_prog_hw(ctrl->vfebase + VFE_STATS_FRAME_SIZE,
-		(uint32_t *)&cmd1, sizeof(cmd1));
+		    (uint32_t *)&cmd1, sizeof(cmd1));
 
-	cmd2.afBusPriority    = in->afBusPriority;
-	cmd2.awbBusPriority   = in->awbBusPriority;
-	cmd2.histBusPriority  = in->histBusPriority;
-	cmd2.afBusPriorityEn  = in->afBusPrioritySelection;
+	cmd2.afBusPriority = in->afBusPriority;
+	cmd2.awbBusPriority = in->awbBusPriority;
+	cmd2.histBusPriority = in->histBusPriority;
+	cmd2.afBusPriorityEn = in->afBusPrioritySelection;
 	cmd2.awbBusPriorityEn = in->awbBusPrioritySelection;
 	cmd2.histBusPriorityEn = in->histBusPrioritySelection;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_BUS_STATS_WR_PRIORITY,
-		(uint32_t *)&cmd2, sizeof(cmd2));
+		    (uint32_t *)&cmd2, sizeof(cmd2));
 
 	/* Program the bus ping pong address for statistics modules. */
 	writel(in->afBuffer[0], ctrl->vfebase + VFE_BUS_STATS_AF_WR_PING_ADDR);
 	writel(in->afBuffer[1], ctrl->vfebase + VFE_BUS_STATS_AF_WR_PONG_ADDR);
 	writel(in->awbBuffer[0],
-		ctrl->vfebase + VFE_BUS_STATS_AWB_WR_PING_ADDR);
+	       ctrl->vfebase + VFE_BUS_STATS_AWB_WR_PING_ADDR);
 	writel(in->awbBuffer[1],
-		ctrl->vfebase + VFE_BUS_STATS_AWB_WR_PONG_ADDR);
+	       ctrl->vfebase + VFE_BUS_STATS_AWB_WR_PONG_ADDR);
 	writel(in->histBuffer[0],
-		ctrl->vfebase + VFE_BUS_STATS_HIST_WR_PING_ADDR);
+	       ctrl->vfebase + VFE_BUS_STATS_HIST_WR_PING_ADDR);
 	writel(in->histBuffer[1],
-		ctrl->vfebase + VFE_BUS_STATS_HIST_WR_PONG_ADDR);
+	       ctrl->vfebase + VFE_BUS_STATS_HIST_WR_PONG_ADDR);
 }
 
 void vfe_axi_input_config(struct vfe_cmd_axi_input_config *in)
 {
 	struct VFE_AxiInputCmdType cmd;
 	uint32_t xSizeWord, axiRdUnpackPattern;
-	uint8_t  axiInputPpw;
+	uint8_t axiInputPpw;
 	uint32_t busPingpongRdIrqEnable;
 
 	ctrl->vfeImaskLocal.rdPingpongIrq = TRUE;
@@ -3358,56 +3361,56 @@ void vfe_axi_input_config(struct vfe_cmd_axi_input_config *in)
 
 	xSizeWord =
 		((((in->xOffset % axiInputPpw) + in->xSize) +
-			(axiInputPpw-1)) / axiInputPpw) - 1;
+		  (axiInputPpw - 1)) / axiInputPpw) - 1;
 
-	cmd.stripeStartAddr0  = in->fragAddr[0];
-	cmd.stripeStartAddr1  = in->fragAddr[1];
-	cmd.stripeStartAddr2  = in->fragAddr[2];
-	cmd.stripeStartAddr3  = in->fragAddr[3];
-	cmd.ySize             = in->ySize;
-	cmd.yOffsetDelta      = 0;
-	cmd.xSizeWord         = xSizeWord;
-	cmd.burstLength       = 1;
-	cmd.NumOfRows         = in->numOfRows;
-	cmd.RowIncrement      =
-		(in->rowIncrement + (axiInputPpw-1))/axiInputPpw;
-	cmd.mainUnpackHeight  = in->ySize;
-	cmd.mainUnpackWidth   = in->xSize - 1;
-	cmd.mainUnpackHbiSel  = (uint32_t)in->unpackHbi;
-	cmd.mainUnpackPhase   = in->unpackPhase;
-	cmd.unpackPattern     = axiRdUnpackPattern;
-	cmd.padLeft           = in->padRepeatCountLeft;
-	cmd.padRight          = in->padRepeatCountRight;
-	cmd.padTop            = in->padRepeatCountTop;
-	cmd.padBottom         = in->padRepeatCountBottom;
-	cmd.leftUnpackPattern0   = in->padLeftComponentSelectCycle0;
-	cmd.leftUnpackPattern1   = in->padLeftComponentSelectCycle1;
-	cmd.leftUnpackPattern2   = in->padLeftComponentSelectCycle2;
-	cmd.leftUnpackPattern3   = in->padLeftComponentSelectCycle3;
-	cmd.leftUnpackStop0      = in->padLeftStopCycle0;
-	cmd.leftUnpackStop1      = in->padLeftStopCycle1;
-	cmd.leftUnpackStop2      = in->padLeftStopCycle2;
-	cmd.leftUnpackStop3      = in->padLeftStopCycle3;
-	cmd.rightUnpackPattern0  = in->padRightComponentSelectCycle0;
-	cmd.rightUnpackPattern1  = in->padRightComponentSelectCycle1;
-	cmd.rightUnpackPattern2  = in->padRightComponentSelectCycle2;
-	cmd.rightUnpackPattern3  = in->padRightComponentSelectCycle3;
-	cmd.rightUnpackStop0     = in->padRightStopCycle0;
-	cmd.rightUnpackStop1     = in->padRightStopCycle1;
-	cmd.rightUnpackStop2     = in->padRightStopCycle2;
-	cmd.rightUnpackStop3     = in->padRightStopCycle3;
-	cmd.topUnapckPattern     = in->padTopLineCount;
-	cmd.bottomUnapckPattern  = in->padBottomLineCount;
+	cmd.stripeStartAddr0 = in->fragAddr[0];
+	cmd.stripeStartAddr1 = in->fragAddr[1];
+	cmd.stripeStartAddr2 = in->fragAddr[2];
+	cmd.stripeStartAddr3 = in->fragAddr[3];
+	cmd.ySize = in->ySize;
+	cmd.yOffsetDelta = 0;
+	cmd.xSizeWord = xSizeWord;
+	cmd.burstLength = 1;
+	cmd.NumOfRows = in->numOfRows;
+	cmd.RowIncrement =
+		(in->rowIncrement + (axiInputPpw - 1)) / axiInputPpw;
+	cmd.mainUnpackHeight = in->ySize;
+	cmd.mainUnpackWidth = in->xSize - 1;
+	cmd.mainUnpackHbiSel = (uint32_t)in->unpackHbi;
+	cmd.mainUnpackPhase = in->unpackPhase;
+	cmd.unpackPattern = axiRdUnpackPattern;
+	cmd.padLeft = in->padRepeatCountLeft;
+	cmd.padRight = in->padRepeatCountRight;
+	cmd.padTop = in->padRepeatCountTop;
+	cmd.padBottom = in->padRepeatCountBottom;
+	cmd.leftUnpackPattern0 = in->padLeftComponentSelectCycle0;
+	cmd.leftUnpackPattern1 = in->padLeftComponentSelectCycle1;
+	cmd.leftUnpackPattern2 = in->padLeftComponentSelectCycle2;
+	cmd.leftUnpackPattern3 = in->padLeftComponentSelectCycle3;
+	cmd.leftUnpackStop0 = in->padLeftStopCycle0;
+	cmd.leftUnpackStop1 = in->padLeftStopCycle1;
+	cmd.leftUnpackStop2 = in->padLeftStopCycle2;
+	cmd.leftUnpackStop3 = in->padLeftStopCycle3;
+	cmd.rightUnpackPattern0 = in->padRightComponentSelectCycle0;
+	cmd.rightUnpackPattern1 = in->padRightComponentSelectCycle1;
+	cmd.rightUnpackPattern2 = in->padRightComponentSelectCycle2;
+	cmd.rightUnpackPattern3 = in->padRightComponentSelectCycle3;
+	cmd.rightUnpackStop0 = in->padRightStopCycle0;
+	cmd.rightUnpackStop1 = in->padRightStopCycle1;
+	cmd.rightUnpackStop2 = in->padRightStopCycle2;
+	cmd.rightUnpackStop3 = in->padRightStopCycle3;
+	cmd.topUnapckPattern = in->padTopLineCount;
+	cmd.bottomUnapckPattern = in->padBottomLineCount;
 
 	/*  program vfe_bus_cfg */
 	vfe_prog_hw(ctrl->vfebase + VFE_BUS_STRIPE_RD_ADDR_0,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 
 	/* hacking code, put it to default value */
 	busPingpongRdIrqEnable = 0xf;
 
 	writel(busPingpongRdIrqEnable,
-		ctrl->vfebase + VFE_BUS_PINGPONG_IRQ_EN);
+	       ctrl->vfebase + VFE_BUS_PINGPONG_IRQ_EN);
 }
 
 void vfe_stats_config(struct vfe_cmd_stats_setting *in)
@@ -3430,8 +3433,8 @@ void vfe_axi_output_config(
 	uint32_t *pcircle;
 	uint32_t *pdest;
 	uint32_t *psrc;
-	uint8_t  i;
-	uint8_t  fcnt;
+	uint8_t i;
+	uint8_t fcnt;
 	uint16_t axioutpw = 8;
 
 	/* parameters check, condition and usage mode check */
@@ -3466,122 +3469,122 @@ void vfe_axi_output_config(
 
 	switch (ctrl->axiOutputMode) {
 	case VFE_AXI_OUTPUT_MODE_Output1: {
-		ctrl->vfeCamifConfigLocal.camif2BusEnable   = FALSE;
+		ctrl->vfeCamifConfigLocal.camif2BusEnable = FALSE;
 		ctrl->vfeCamifConfigLocal.camif2OutputEnable = TRUE;
-		ctrl->vfeBusConfigLocal.rawWritePathSelect  =
+		ctrl->vfeBusConfigLocal.rawWritePathSelect =
 			VFE_RAW_OUTPUT_DISABLED;
 
-		ctrl->encPath.pathEnabled                   = FALSE;
-		ctrl->vfeImaskLocal.encIrq                  = FALSE;
+		ctrl->encPath.pathEnabled = FALSE;
+		ctrl->vfeImaskLocal.encIrq = FALSE;
 		ctrl->vfeIrqCompositeMaskLocal.encIrqComMask =
 			VFE_COMP_IRQ_BOTH_Y_CBCR;
 
-		ctrl->vfeBusConfigLocal.encYWrPathEn          = FALSE;
-		ctrl->vfeBusConfigLocal.encCbcrWrPathEn       = FALSE;
-		ctrl->viewPath.pathEnabled                    = TRUE;
-		ctrl->vfeImaskLocal.viewIrq                   = TRUE;
+		ctrl->vfeBusConfigLocal.encYWrPathEn = FALSE;
+		ctrl->vfeBusConfigLocal.encCbcrWrPathEn = FALSE;
+		ctrl->viewPath.pathEnabled = TRUE;
+		ctrl->vfeImaskLocal.viewIrq = TRUE;
 		ctrl->vfeIrqCompositeMaskLocal.viewIrqComMask =
 			VFE_COMP_IRQ_BOTH_Y_CBCR;
 
-		ctrl->vfeBusConfigLocal.viewYWrPathEn    = TRUE;
+		ctrl->vfeBusConfigLocal.viewYWrPathEn = TRUE;
 		ctrl->vfeBusConfigLocal.viewCbcrWrPathEn = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.encYWrPathEn &&
-				ctrl->encPath.multiFrag)
-			ctrl->vfeImaskLocal.encYPingpongIrq    = TRUE;
+		    ctrl->encPath.multiFrag)
+			ctrl->vfeImaskLocal.encYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.encCbcrWrPathEn &&
-				ctrl->encPath.multiFrag)
+		    ctrl->encPath.multiFrag)
 			ctrl->vfeImaskLocal.encCbcrPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewYWrPathEn &&
-				ctrl->viewPath.multiFrag)
-			ctrl->vfeImaskLocal.viewYPingpongIrq   = TRUE;
+		    ctrl->viewPath.multiFrag)
+			ctrl->vfeImaskLocal.viewYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
-				ctrl->viewPath.multiFrag)
+		    ctrl->viewPath.multiFrag)
 			ctrl->vfeImaskLocal.viewCbcrPingpongIrq = TRUE;
 	} /* VFE_AXI_OUTPUT_MODE_Output1 */
-		break;
+	break;
 
 	case VFE_AXI_OUTPUT_MODE_Output2: {
-		ctrl->vfeCamifConfigLocal.camif2BusEnable   = FALSE;
+		ctrl->vfeCamifConfigLocal.camif2BusEnable = FALSE;
 		ctrl->vfeCamifConfigLocal.camif2OutputEnable = TRUE;
-		ctrl->vfeBusConfigLocal.rawWritePathSelect  =
+		ctrl->vfeBusConfigLocal.rawWritePathSelect =
 			VFE_RAW_OUTPUT_DISABLED;
 
-		ctrl->encPath.pathEnabled                   = TRUE;
-		ctrl->vfeImaskLocal.encIrq                  = TRUE;
+		ctrl->encPath.pathEnabled = TRUE;
+		ctrl->vfeImaskLocal.encIrq = TRUE;
 		ctrl->vfeIrqCompositeMaskLocal.encIrqComMask =
 			VFE_COMP_IRQ_BOTH_Y_CBCR;
 
-		ctrl->vfeBusConfigLocal.encYWrPathEn        = TRUE;
-		ctrl->vfeBusConfigLocal.encCbcrWrPathEn     = TRUE;
+		ctrl->vfeBusConfigLocal.encYWrPathEn = TRUE;
+		ctrl->vfeBusConfigLocal.encCbcrWrPathEn = TRUE;
 
-		ctrl->viewPath.pathEnabled                   = FALSE;
-		ctrl->vfeImaskLocal.viewIrq                  = FALSE;
+		ctrl->viewPath.pathEnabled = FALSE;
+		ctrl->vfeImaskLocal.viewIrq = FALSE;
 		ctrl->vfeIrqCompositeMaskLocal.viewIrqComMask =
 			VFE_COMP_IRQ_BOTH_Y_CBCR;
 
-		ctrl->vfeBusConfigLocal.viewYWrPathEn        = FALSE;
-		ctrl->vfeBusConfigLocal.viewCbcrWrPathEn     = FALSE;
+		ctrl->vfeBusConfigLocal.viewYWrPathEn = FALSE;
+		ctrl->vfeBusConfigLocal.viewCbcrWrPathEn = FALSE;
 
 		if (ctrl->vfeBusConfigLocal.encYWrPathEn &&
-				ctrl->encPath.multiFrag)
-			ctrl->vfeImaskLocal.encYPingpongIrq    = TRUE;
+		    ctrl->encPath.multiFrag)
+			ctrl->vfeImaskLocal.encYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.encCbcrWrPathEn &&
-				ctrl->encPath.multiFrag)
+		    ctrl->encPath.multiFrag)
 			ctrl->vfeImaskLocal.encCbcrPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewYWrPathEn &&
-				ctrl->viewPath.multiFrag)
-			ctrl->vfeImaskLocal.viewYPingpongIrq   = TRUE;
+		    ctrl->viewPath.multiFrag)
+			ctrl->vfeImaskLocal.viewYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
-				ctrl->viewPath.multiFrag)
+		    ctrl->viewPath.multiFrag)
 			ctrl->vfeImaskLocal.viewCbcrPingpongIrq = TRUE;
 	} /* VFE_AXI_OUTPUT_MODE_Output2 */
-			break;
+	break;
 
 	case VFE_AXI_OUTPUT_MODE_Output1AndOutput2: {
-		ctrl->vfeCamifConfigLocal.camif2BusEnable    = FALSE;
+		ctrl->vfeCamifConfigLocal.camif2BusEnable = FALSE;
 		ctrl->vfeCamifConfigLocal.camif2OutputEnable = TRUE;
-		ctrl->vfeBusConfigLocal.rawWritePathSelect   =
+		ctrl->vfeBusConfigLocal.rawWritePathSelect =
 			VFE_RAW_OUTPUT_DISABLED;
 
-		ctrl->encPath.pathEnabled                    = TRUE;
-		ctrl->vfeImaskLocal.encIrq                   = TRUE;
+		ctrl->encPath.pathEnabled = TRUE;
+		ctrl->vfeImaskLocal.encIrq = TRUE;
 		ctrl->vfeIrqCompositeMaskLocal.encIrqComMask =
 			VFE_COMP_IRQ_BOTH_Y_CBCR;
 
-		ctrl->vfeBusConfigLocal.encYWrPathEn         = TRUE;
-		ctrl->vfeBusConfigLocal.encCbcrWrPathEn      = TRUE;
-		ctrl->viewPath.pathEnabled                   = TRUE;
-		ctrl->vfeImaskLocal.viewIrq                  = TRUE;
+		ctrl->vfeBusConfigLocal.encYWrPathEn = TRUE;
+		ctrl->vfeBusConfigLocal.encCbcrWrPathEn = TRUE;
+		ctrl->viewPath.pathEnabled = TRUE;
+		ctrl->vfeImaskLocal.viewIrq = TRUE;
 		ctrl->vfeIrqCompositeMaskLocal.viewIrqComMask =
 			VFE_COMP_IRQ_BOTH_Y_CBCR;
 
-		ctrl->vfeBusConfigLocal.viewYWrPathEn        = TRUE;
-		ctrl->vfeBusConfigLocal.viewCbcrWrPathEn     = TRUE;
+		ctrl->vfeBusConfigLocal.viewYWrPathEn = TRUE;
+		ctrl->vfeBusConfigLocal.viewCbcrWrPathEn = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.encYWrPathEn &&
-				ctrl->encPath.multiFrag)
-			ctrl->vfeImaskLocal.encYPingpongIrq    = TRUE;
+		    ctrl->encPath.multiFrag)
+			ctrl->vfeImaskLocal.encYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.encCbcrWrPathEn &&
-				ctrl->encPath.multiFrag)
+		    ctrl->encPath.multiFrag)
 			ctrl->vfeImaskLocal.encCbcrPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewYWrPathEn &&
-				ctrl->viewPath.multiFrag)
-			ctrl->vfeImaskLocal.viewYPingpongIrq   = TRUE;
+		    ctrl->viewPath.multiFrag)
+			ctrl->vfeImaskLocal.viewYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
-				ctrl->viewPath.multiFrag)
+		    ctrl->viewPath.multiFrag)
 			ctrl->vfeImaskLocal.viewCbcrPingpongIrq = TRUE;
 	} /* VFE_AXI_OUTPUT_MODE_Output1AndOutput2 */
-		break;
+	break;
 
 	case VFE_AXI_OUTPUT_MODE_CAMIFToAXIViaOutput2: {
 		/* For raw snapshot, we need both ping and pong buffer
@@ -3589,130 +3592,129 @@ void vfe_axi_output_config(
 		 * leave the pong buffer to NULL, there will be axi_error.
 		 * Note that ideally we should deal with this at upper layer,
 		 * which is in msm_vfe8x.c */
-		if (!in->output2.outputCbcr.outFragments[1][0]) {
+		if (!in->output2.outputCbcr.outFragments[1][0])
 			in->output2.outputCbcr.outFragments[1][0] =
 				in->output2.outputCbcr.outFragments[0][0];
-		}
 
-		ctrl->vfeCamifConfigLocal.camif2BusEnable   = TRUE;
+		ctrl->vfeCamifConfigLocal.camif2BusEnable = TRUE;
 		ctrl->vfeCamifConfigLocal.camif2OutputEnable = FALSE;
-		ctrl->vfeBusConfigLocal.rawWritePathSelect  =
+		ctrl->vfeBusConfigLocal.rawWritePathSelect =
 			VFE_RAW_OUTPUT_ENC_CBCR_PATH;
 
-		ctrl->encPath.pathEnabled                   = TRUE;
-		ctrl->vfeImaskLocal.encIrq                  = TRUE;
+		ctrl->encPath.pathEnabled = TRUE;
+		ctrl->vfeImaskLocal.encIrq = TRUE;
 		ctrl->vfeIrqCompositeMaskLocal.encIrqComMask =
 			VFE_COMP_IRQ_CBCR_ONLY;
 
-		ctrl->vfeBusConfigLocal.encYWrPathEn        = FALSE;
-		ctrl->vfeBusConfigLocal.encCbcrWrPathEn     = TRUE;
+		ctrl->vfeBusConfigLocal.encYWrPathEn = FALSE;
+		ctrl->vfeBusConfigLocal.encCbcrWrPathEn = TRUE;
 
-		ctrl->viewPath.pathEnabled                   = FALSE;
-		ctrl->vfeImaskLocal.viewIrq                  = FALSE;
+		ctrl->viewPath.pathEnabled = FALSE;
+		ctrl->vfeImaskLocal.viewIrq = FALSE;
 		ctrl->vfeIrqCompositeMaskLocal.viewIrqComMask =
 			VFE_COMP_IRQ_BOTH_Y_CBCR;
 
-		ctrl->vfeBusConfigLocal.viewYWrPathEn        = FALSE;
-		ctrl->vfeBusConfigLocal.viewCbcrWrPathEn     = FALSE;
+		ctrl->vfeBusConfigLocal.viewYWrPathEn = FALSE;
+		ctrl->vfeBusConfigLocal.viewCbcrWrPathEn = FALSE;
 
 		if (ctrl->vfeBusConfigLocal.encYWrPathEn &&
-				ctrl->encPath.multiFrag)
-			ctrl->vfeImaskLocal.encYPingpongIrq    = TRUE;
+		    ctrl->encPath.multiFrag)
+			ctrl->vfeImaskLocal.encYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.encCbcrWrPathEn &&
-				ctrl->encPath.multiFrag)
+		    ctrl->encPath.multiFrag)
 			ctrl->vfeImaskLocal.encCbcrPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewYWrPathEn &&
-				ctrl->viewPath.multiFrag)
-			ctrl->vfeImaskLocal.viewYPingpongIrq   = TRUE;
+		    ctrl->viewPath.multiFrag)
+			ctrl->vfeImaskLocal.viewYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
-				ctrl->viewPath.multiFrag)
+		    ctrl->viewPath.multiFrag)
 			ctrl->vfeImaskLocal.viewCbcrPingpongIrq = TRUE;
 	} /* VFE_AXI_OUTPUT_MODE_CAMIFToAXIViaOutput2 */
-		break;
+	break;
 
 	case VFE_AXI_OUTPUT_MODE_Output2AndCAMIFToAXIViaOutput1: {
-		ctrl->vfeCamifConfigLocal.camif2BusEnable   = TRUE;
+		ctrl->vfeCamifConfigLocal.camif2BusEnable = TRUE;
 		ctrl->vfeCamifConfigLocal.camif2OutputEnable = TRUE;
-		ctrl->vfeBusConfigLocal.rawWritePathSelect  =
+		ctrl->vfeBusConfigLocal.rawWritePathSelect =
 			VFE_RAW_OUTPUT_VIEW_CBCR_PATH;
 
-		ctrl->encPath.pathEnabled                   = TRUE;
-		ctrl->vfeImaskLocal.encIrq                  = TRUE;
+		ctrl->encPath.pathEnabled = TRUE;
+		ctrl->vfeImaskLocal.encIrq = TRUE;
 		ctrl->vfeIrqCompositeMaskLocal.encIrqComMask =
 			VFE_COMP_IRQ_BOTH_Y_CBCR;
 
-		ctrl->vfeBusConfigLocal.encYWrPathEn        = TRUE;
-		ctrl->vfeBusConfigLocal.encCbcrWrPathEn     = TRUE;
+		ctrl->vfeBusConfigLocal.encYWrPathEn = TRUE;
+		ctrl->vfeBusConfigLocal.encCbcrWrPathEn = TRUE;
 
-		ctrl->viewPath.pathEnabled                   = TRUE;
-		ctrl->vfeImaskLocal.viewIrq                  = TRUE;
+		ctrl->viewPath.pathEnabled = TRUE;
+		ctrl->vfeImaskLocal.viewIrq = TRUE;
 		ctrl->vfeIrqCompositeMaskLocal.viewIrqComMask =
 			VFE_COMP_IRQ_CBCR_ONLY;
 
-		ctrl->vfeBusConfigLocal.viewYWrPathEn        = FALSE;
-		ctrl->vfeBusConfigLocal.viewCbcrWrPathEn     = TRUE;
+		ctrl->vfeBusConfigLocal.viewYWrPathEn = FALSE;
+		ctrl->vfeBusConfigLocal.viewCbcrWrPathEn = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.encYWrPathEn &&
-				ctrl->encPath.multiFrag)
-			ctrl->vfeImaskLocal.encYPingpongIrq    = TRUE;
+		    ctrl->encPath.multiFrag)
+			ctrl->vfeImaskLocal.encYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.encCbcrWrPathEn &&
-				ctrl->encPath.multiFrag)
+		    ctrl->encPath.multiFrag)
 			ctrl->vfeImaskLocal.encCbcrPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewYWrPathEn &&
-				ctrl->viewPath.multiFrag)
-			ctrl->vfeImaskLocal.viewYPingpongIrq   = TRUE;
+		    ctrl->viewPath.multiFrag)
+			ctrl->vfeImaskLocal.viewYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
-				ctrl->viewPath.multiFrag)
+		    ctrl->viewPath.multiFrag)
 			ctrl->vfeImaskLocal.viewCbcrPingpongIrq = TRUE;
 	} /* VFE_AXI_OUTPUT_MODE_Output2AndCAMIFToAXIViaOutput1 */
-		break;
+	break;
 
 	case VFE_AXI_OUTPUT_MODE_Output1AndCAMIFToAXIViaOutput2: {
-		ctrl->vfeCamifConfigLocal.camif2BusEnable   = TRUE;
+		ctrl->vfeCamifConfigLocal.camif2BusEnable = TRUE;
 		ctrl->vfeCamifConfigLocal.camif2OutputEnable = TRUE;
-		ctrl->vfeBusConfigLocal.rawWritePathSelect  =
+		ctrl->vfeBusConfigLocal.rawWritePathSelect =
 			VFE_RAW_OUTPUT_ENC_CBCR_PATH;
 
-		ctrl->encPath.pathEnabled                     = TRUE;
-		ctrl->vfeImaskLocal.encIrq                    = TRUE;
-		ctrl->vfeIrqCompositeMaskLocal.encIrqComMask  =
+		ctrl->encPath.pathEnabled = TRUE;
+		ctrl->vfeImaskLocal.encIrq = TRUE;
+		ctrl->vfeIrqCompositeMaskLocal.encIrqComMask =
 			VFE_COMP_IRQ_CBCR_ONLY;
 
-		ctrl->vfeBusConfigLocal.encYWrPathEn          = FALSE;
-		ctrl->vfeBusConfigLocal.encCbcrWrPathEn       = TRUE;
+		ctrl->vfeBusConfigLocal.encYWrPathEn = FALSE;
+		ctrl->vfeBusConfigLocal.encCbcrWrPathEn = TRUE;
 
-		ctrl->viewPath.pathEnabled                    = TRUE;
-		ctrl->vfeImaskLocal.viewIrq                   = TRUE;
+		ctrl->viewPath.pathEnabled = TRUE;
+		ctrl->vfeImaskLocal.viewIrq = TRUE;
 
 		ctrl->vfeIrqCompositeMaskLocal.viewIrqComMask =
 			VFE_COMP_IRQ_BOTH_Y_CBCR;
 
-		ctrl->vfeBusConfigLocal.viewYWrPathEn         = TRUE;
-		ctrl->vfeBusConfigLocal.viewCbcrWrPathEn      = TRUE;
+		ctrl->vfeBusConfigLocal.viewYWrPathEn = TRUE;
+		ctrl->vfeBusConfigLocal.viewCbcrWrPathEn = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.encYWrPathEn &&
-				ctrl->encPath.multiFrag)
-			ctrl->vfeImaskLocal.encYPingpongIrq       = TRUE;
+		    ctrl->encPath.multiFrag)
+			ctrl->vfeImaskLocal.encYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.encCbcrWrPathEn &&
-				ctrl->encPath.multiFrag)
-			ctrl->vfeImaskLocal.encCbcrPingpongIrq    = TRUE;
+		    ctrl->encPath.multiFrag)
+			ctrl->vfeImaskLocal.encCbcrPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewYWrPathEn &&
-				ctrl->viewPath.multiFrag)
-			ctrl->vfeImaskLocal.viewYPingpongIrq      = TRUE;
+		    ctrl->viewPath.multiFrag)
+			ctrl->vfeImaskLocal.viewYPingpongIrq = TRUE;
 
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
-				ctrl->viewPath.multiFrag)
-			ctrl->vfeImaskLocal.viewCbcrPingpongIrq   = TRUE;
+		    ctrl->viewPath.multiFrag)
+			ctrl->vfeImaskLocal.viewCbcrPingpongIrq = TRUE;
 	} /* VFE_AXI_OUTPUT_MODE_Output1AndCAMIFToAXIViaOutput2 */
-		break;
+	break;
 
 	case VFE_AXI_LAST_OUTPUT_MODE_ENUM:
 		break;
@@ -3807,82 +3809,83 @@ void vfe_axi_output_config(
 void vfe_camif_config(struct vfe_cmd_camif_config *in)
 {
 	struct vfe_camifcfg cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
 	CDBG("camif.frame pixelsPerLine = %d\n", in->frame.pixelsPerLine);
 	CDBG("camif.frame linesPerFrame = %d\n", in->frame.linesPerFrame);
 	CDBG("camif.window firstpixel = %d\n", in->window.firstpixel);
-	CDBG("camif.window lastpixel = %d\n",  in->window.lastpixel);
-	CDBG("camif.window firstline = %d\n",  in->window.firstline);
-	CDBG("camif.window lastline = %d\n",   in->window.lastline);
+	CDBG("camif.window lastpixel = %d\n", in->window.lastpixel);
+	CDBG("camif.window firstline = %d\n", in->window.firstline);
+	CDBG("camif.window lastline = %d\n", in->window.lastline);
 
 	/* determine if epoch interrupt needs to be enabled.  */
 	if ((in->epoch1.enable == TRUE) &&
-			(in->epoch1.lineindex <=
-			 in->frame.linesPerFrame))
+	    (in->epoch1.lineindex <=
+	     in->frame.linesPerFrame))
 		ctrl->vfeImaskLocal.camifEpoch1Irq = 1;
 
 	if ((in->epoch2.enable == TRUE) &&
-			(in->epoch2.lineindex <=
-			 in->frame.linesPerFrame)) {
+	    (in->epoch2.lineindex <=
+	     in->frame.linesPerFrame))
 		ctrl->vfeImaskLocal.camifEpoch2Irq = 1;
-	}
 
 	/*  save the content to program CAMIF_CONFIG separately. */
 	ctrl->vfeCamifConfigLocal.camifCfgFromCmd = in->camifConfig;
 
 	/* EFS_Config */
-	cmd.efsEndOfLine     = in->EFS.efsendofline;
-	cmd.efsStartOfLine   = in->EFS.efsstartofline;
-	cmd.efsEndOfFrame    = in->EFS.efsendofframe;
-	cmd.efsStartOfFrame  = in->EFS.efsstartofframe;
+	cmd.efsEndOfLine = in->EFS.efsendofline;
+	cmd.efsStartOfLine = in->EFS.efsstartofline;
+	cmd.efsEndOfFrame = in->EFS.efsendofframe;
+	cmd.efsStartOfFrame = in->EFS.efsstartofframe;
 
 	/* Frame Config */
 	cmd.frameConfigPixelsPerLine = in->frame.pixelsPerLine;
 	cmd.frameConfigLinesPerFrame = in->frame.linesPerFrame;
 
 	/* Window Width Config */
-	cmd.windowWidthCfgLastPixel  = in->window.lastpixel;
+	cmd.windowWidthCfgLastPixel = in->window.lastpixel;
 	cmd.windowWidthCfgFirstPixel = in->window.firstpixel;
 
 	/* Window Height Config */
-	cmd.windowHeightCfglastLine   = in->window.lastline;
-	cmd.windowHeightCfgfirstLine  = in->window.firstline;
+	cmd.windowHeightCfglastLine = in->window.lastline;
+	cmd.windowHeightCfgfirstLine = in->window.firstline;
 
 	/* Subsample 1 Config */
 	cmd.subsample1CfgPixelSkip = in->subsample.pixelskipmask;
-	cmd.subsample1CfgLineSkip  = in->subsample.lineskipmask;
+	cmd.subsample1CfgLineSkip = in->subsample.lineskipmask;
 
 	/* Subsample 2 Config */
-	cmd.subsample2CfgFrameSkip      = in->subsample.frameskip;
-	cmd.subsample2CfgFrameSkipMode  = in->subsample.frameskipmode;
-	cmd.subsample2CfgPixelSkipWrap  = in->subsample.pixelskipwrap;
+	cmd.subsample2CfgFrameSkip = in->subsample.frameskip;
+	cmd.subsample2CfgFrameSkipMode = in->subsample.frameskipmode;
+	cmd.subsample2CfgPixelSkipWrap = in->subsample.pixelskipwrap;
 
 	/* Epoch Interrupt */
 	cmd.epoch1Line = in->epoch1.lineindex;
 	cmd.epoch2Line = in->epoch2.lineindex;
 
 	vfe_prog_hw(ctrl->vfebase + CAMIF_EFS_CONFIG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_fov_crop_config(struct vfe_cmd_fov_crop_config *in)
 {
 	struct vfe_fov_crop_cfg cmd;
+
 	memset(&cmd, 0, sizeof(cmd));
 
 	ctrl->vfeModuleEnableLocal.cropEnable = in->enable;
 
 	/* FOV Corp, Part 1 */
-	cmd.lastPixel  = in->lastPixel;
+	cmd.lastPixel = in->lastPixel;
 	cmd.firstPixel = in->firstPixel;
 
 	/* FOV Corp, Part 2 */
-	cmd.lastLine   = in->lastLine;
-	cmd.firstLine  = in->firstLine;
+	cmd.lastLine = in->lastLine;
+	cmd.firstLine = in->firstLine;
 
 	vfe_prog_hw(ctrl->vfebase + VFE_CROP_WIDTH_CFG,
-		(uint32_t *)&cmd, sizeof(cmd));
+		    (uint32_t *)&cmd, sizeof(cmd));
 }
 
 void vfe_get_hw_version(struct vfe_cmd_hw_version *out)
@@ -3894,7 +3897,7 @@ void vfe_get_hw_version(struct vfe_cmd_hw_version *out)
 
 	ver = *((struct vfe_hw_ver *)&vfeHwVersionPacked);
 
-	out->coreVersion  = ver.coreVersion;
+	out->coreVersion = ver.coreVersion;
 	out->minorVersion = ver.minorVersion;
 	out->majorVersion = ver.majorVersion;
 }
@@ -3909,24 +3912,24 @@ static void vfe_reset_internal_variables(void)
 
 	/* FALSE = disable,  1 = enable. */
 	memset(&ctrl->vfeModuleEnableLocal, 0,
-		sizeof(ctrl->vfeModuleEnableLocal));
+	       sizeof(ctrl->vfeModuleEnableLocal));
 
 	/* 0 = disable, 1 = enable */
 	memset(&ctrl->vfeCamifConfigLocal, 0,
-		sizeof(ctrl->vfeCamifConfigLocal));
+	       sizeof(ctrl->vfeCamifConfigLocal));
 	/* 0 = disable, 1 = enable */
 	memset(&ctrl->vfeImaskLocal, 0, sizeof(ctrl->vfeImaskLocal));
 	memset(&ctrl->vfeStatsCmdLocal, 0, sizeof(ctrl->vfeStatsCmdLocal));
 	memset(&ctrl->vfeBusConfigLocal, 0, sizeof(ctrl->vfeBusConfigLocal));
 	memset(&ctrl->vfeBusPmConfigLocal, 0,
-		sizeof(ctrl->vfeBusPmConfigLocal));
+	       sizeof(ctrl->vfeBusPmConfigLocal));
 	memset(&ctrl->vfeBusCmdLocal, 0, sizeof(ctrl->vfeBusCmdLocal));
 	memset(&ctrl->vfeInterruptNameLocal, 0,
-		sizeof(ctrl->vfeInterruptNameLocal));
+	       sizeof(ctrl->vfeInterruptNameLocal));
 	memset(&ctrl->vfeDroppedFrameCounts, 0,
-		sizeof(ctrl->vfeDroppedFrameCounts));
+	       sizeof(ctrl->vfeDroppedFrameCounts));
 	memset(&ctrl->vfeIrqThreadMsgLocal, 0,
-		sizeof(ctrl->vfeIrqThreadMsgLocal));
+	       sizeof(ctrl->vfeIrqThreadMsgLocal));
 
 	/* state control variables */
 	ctrl->vfeStartAckPendingFlag = FALSE;
@@ -3949,20 +3952,20 @@ static void vfe_reset_internal_variables(void)
 	/* this is unsigned 32 bit integer. */
 	ctrl->vfeFrameId = 0;
 	ctrl->vfeFrameSkip.output1Pattern = 0xffffffff;
-	ctrl->vfeFrameSkip.output1Period  = 31;
+	ctrl->vfeFrameSkip.output1Period = 31;
 	ctrl->vfeFrameSkip.output2Pattern = 0xffffffff;
-	ctrl->vfeFrameSkip.output2Period  = 31;
+	ctrl->vfeFrameSkip.output2Period = 31;
 	ctrl->vfeFrameSkipPattern = 0xffffffff;
-	ctrl->vfeFrameSkipCount   = 0;
-	ctrl->vfeFrameSkipPeriod  = 31;
+	ctrl->vfeFrameSkipCount = 0;
+	ctrl->vfeFrameSkipPeriod = 31;
 
 	memset((void *)&ctrl->encPath, 0, sizeof(ctrl->encPath));
 	memset((void *)&ctrl->viewPath, 0, sizeof(ctrl->viewPath));
 
-	ctrl->encPath.whichOutputPath  = 1;
-	ctrl->encPath.cbcrStatusBit    = 5;
+	ctrl->encPath.whichOutputPath = 1;
+	ctrl->encPath.cbcrStatusBit = 5;
 	ctrl->viewPath.whichOutputPath = 0;
-	ctrl->viewPath.cbcrStatusBit   = 7;
+	ctrl->viewPath.cbcrStatusBit = 7;
 
 	ctrl->vfeTestGenStartFlag = FALSE;
 
@@ -3976,7 +3979,7 @@ static void vfe_reset_internal_variables(void)
 	memset(&ctrl->afStatsControl, 0, sizeof(ctrl->afStatsControl));
 	memset(&ctrl->awbStatsControl, 0, sizeof(ctrl->awbStatsControl));
 	vfe_set_stats_pingpong_address(&ctrl->afStatsControl,
-		&ctrl->awbStatsControl);
+				       &ctrl->awbStatsControl);
 }
 
 void vfe_reset(void)
@@ -3988,16 +3991,16 @@ void vfe_reset(void)
 
 	/* disable all interrupts. */
 	writel(VFE_DISABLE_ALL_IRQS,
-		ctrl->vfebase + VFE_IRQ_COMPOSITE_MASK);
+	       ctrl->vfebase + VFE_IRQ_COMPOSITE_MASK);
 
 	/* clear all pending interrupts*/
 	writel(VFE_CLEAR_ALL_IRQS,
-		ctrl->vfebase + VFE_IRQ_CLEAR);
+	       ctrl->vfebase + VFE_IRQ_CLEAR);
 
 	/* enable reset_ack interrupt.  */
 	writel(ctrl->vfeImaskPacked,
-		ctrl->vfebase + VFE_IRQ_MASK);
+	       ctrl->vfebase + VFE_IRQ_MASK);
 
 	writel(VFE_RESET_UPON_RESET_CMD,
-		ctrl->vfebase + VFE_GLOBAL_RESET_CMD);
+	       ctrl->vfebase + VFE_GLOBAL_RESET_CMD);
 }

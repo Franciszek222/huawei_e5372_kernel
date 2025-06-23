@@ -27,11 +27,11 @@
 
 struct timed_gpio_data {
 	struct timed_output_dev dev;
-	struct hrtimer timer;
-	spinlock_t lock;
-	unsigned 	gpio;
-	int 		max_timeout;
-	u8 		active_low;
+	struct hrtimer		timer;
+	spinlock_t		lock;
+	unsigned		gpio;
+	int			max_timeout;
+	u8			active_low;
 };
 
 static enum hrtimer_restart gpio_timer_func(struct hrtimer *timer)
@@ -45,22 +45,23 @@ static enum hrtimer_restart gpio_timer_func(struct hrtimer *timer)
 
 static int gpio_get_time(struct timed_output_dev *dev)
 {
-	struct timed_gpio_data	*data =
+	struct timed_gpio_data *data =
 		container_of(dev, struct timed_gpio_data, dev);
 
 	if (hrtimer_active(&data->timer)) {
 		ktime_t r = hrtimer_get_remaining(&data->timer);
 		struct timeval t = ktime_to_timeval(r);
 		return t.tv_sec * 1000 + t.tv_usec / 1000;
-	} else
+	} else {
 		return 0;
+	}
 }
 
 static void gpio_enable(struct timed_output_dev *dev, int value)
 {
-	struct timed_gpio_data	*data =
+	struct timed_gpio_data *data =
 		container_of(dev, struct timed_gpio_data, dev);
-	unsigned long	flags;
+	unsigned long flags;
 
 	spin_lock_irqsave(&data->lock, flags);
 
@@ -73,8 +74,8 @@ static void gpio_enable(struct timed_output_dev *dev, int value)
 			value = data->max_timeout;
 
 		hrtimer_start(&data->timer,
-			ktime_set(value / 1000, (value % 1000) * 1000000),
-			HRTIMER_MODE_REL);
+			      ktime_set(value / 1000, (value % 1000) * 1000000),
+			      HRTIMER_MODE_REL);
 	}
 
 	spin_unlock_irqrestore(&data->lock, flags);
@@ -91,7 +92,7 @@ static int timed_gpio_probe(struct platform_device *pdev)
 		return -EBUSY;
 
 	gpio_data = kzalloc(sizeof(struct timed_gpio_data) * pdata->num_gpios,
-			GFP_KERNEL);
+			    GFP_KERNEL);
 	if (!gpio_data)
 		return -ENOMEM;
 
@@ -100,7 +101,7 @@ static int timed_gpio_probe(struct platform_device *pdev)
 		gpio_dat = &gpio_data[i];
 
 		hrtimer_init(&gpio_dat->timer, CLOCK_MONOTONIC,
-				HRTIMER_MODE_REL);
+			     HRTIMER_MODE_REL);
 		gpio_dat->timer.function = gpio_timer_func;
 		spin_lock_init(&gpio_dat->lock);
 
@@ -153,8 +154,8 @@ static struct platform_driver timed_gpio_driver = {
 	.probe		= timed_gpio_probe,
 	.remove		= timed_gpio_remove,
 	.driver		= {
-		.name		= TIMED_GPIO_NAME,
-		.owner		= THIS_MODULE,
+		.name	= TIMED_GPIO_NAME,
+		.owner	= THIS_MODULE,
 	},
 };
 

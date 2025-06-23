@@ -38,10 +38,10 @@
 #include <asm/octeon/cvmx-ipd-defs.h>
 
 enum cvmx_ipd_mode {
-   CVMX_IPD_OPC_MODE_STT = 0LL,   /* All blocks DRAM, not cached in L2 */
-   CVMX_IPD_OPC_MODE_STF = 1LL,   /* All bloccks into  L2 */
-   CVMX_IPD_OPC_MODE_STF1_STT = 2LL,   /* 1st block L2, rest DRAM */
-   CVMX_IPD_OPC_MODE_STF2_STT = 3LL    /* 1st, 2nd blocks L2, rest DRAM */
+	CVMX_IPD_OPC_MODE_STT		= 0LL,  /* All blocks DRAM, not cached in L2 */
+	CVMX_IPD_OPC_MODE_STF		= 1LL,  /* All bloccks into  L2 */
+	CVMX_IPD_OPC_MODE_STF1_STT	= 2LL,  /* 1st block L2, rest DRAM */
+	CVMX_IPD_OPC_MODE_STF2_STT	= 3LL   /* 1st, 2nd blocks L2, rest DRAM */
 };
 
 #ifndef CVMX_ENABLE_LEN_M8_FIX
@@ -72,14 +72,14 @@ typedef cvmx_ipd_first_next_ptr_back_t cvmx_ipd_second_next_ptr_back_t;
  * @back_pres_enable_flag:
  *                   Enable or disable port back pressure
  */
-static inline void cvmx_ipd_config(uint64_t mbuff_size,
-				   uint64_t first_mbuff_skip,
-				   uint64_t not_first_mbuff_skip,
-				   uint64_t first_back,
-				   uint64_t second_back,
-				   uint64_t wqe_fpa_pool,
-				   enum cvmx_ipd_mode cache_mode,
-				   uint64_t back_pres_enable_flag)
+static inline void cvmx_ipd_config(uint64_t		mbuff_size,
+				   uint64_t		first_mbuff_skip,
+				   uint64_t		not_first_mbuff_skip,
+				   uint64_t		first_back,
+				   uint64_t		second_back,
+				   uint64_t		wqe_fpa_pool,
+				   enum cvmx_ipd_mode	cache_mode,
+				   uint64_t		back_pres_enable_flag)
 {
 	cvmx_ipd_mbuff_first_skip_t first_skip;
 	cvmx_ipd_mbuff_not_first_skip_t not_first_skip;
@@ -119,7 +119,7 @@ static inline void cvmx_ipd_config(uint64_t mbuff_size,
 	cvmx_write_csr(CVMX_IPD_CTL_STATUS, ipd_ctl_reg.u64);
 
 	/* Note: the example RED code that used to be here has been moved to
-	   cvmx_helper_setup_red */
+	 * cvmx_helper_setup_red */
 }
 
 /**
@@ -128,11 +128,11 @@ static inline void cvmx_ipd_config(uint64_t mbuff_size,
 static inline void cvmx_ipd_enable(void)
 {
 	union cvmx_ipd_ctl_status ipd_reg;
+
 	ipd_reg.u64 = cvmx_read_csr(CVMX_IPD_CTL_STATUS);
-	if (ipd_reg.s.ipd_en) {
+	if (ipd_reg.s.ipd_en)
 		cvmx_dprintf
-		    ("Warning: Enabling IPD when IPD already enabled.\n");
-	}
+			("Warning: Enabling IPD when IPD already enabled.\n");
 	ipd_reg.s.ipd_en = 1;
 #if  CVMX_ENABLE_LEN_M8_FIX
 	if (!OCTEON_IS_MODEL(OCTEON_CN38XX_PASS2))
@@ -147,6 +147,7 @@ static inline void cvmx_ipd_enable(void)
 static inline void cvmx_ipd_disable(void)
 {
 	union cvmx_ipd_ctl_status ipd_reg;
+
 	ipd_reg.u64 = cvmx_read_csr(CVMX_IPD_CTL_STATUS);
 	ipd_reg.s.ipd_en = 0;
 	cvmx_write_csr(CVMX_IPD_CTL_STATUS, ipd_reg.u64);
@@ -176,16 +177,17 @@ static inline void cvmx_ipd_free_ptr(void)
 		if (ipd_ptr_count.s.wqev_cnt) {
 			union cvmx_ipd_wqe_ptr_valid ipd_wqe_ptr_valid;
 			ipd_wqe_ptr_valid.u64 =
-			    cvmx_read_csr(CVMX_IPD_WQE_PTR_VALID);
-			if (no_wptr)
+				cvmx_read_csr(CVMX_IPD_WQE_PTR_VALID);
+			if (no_wptr) {
 				cvmx_fpa_free(cvmx_phys_to_ptr
-					      ((uint64_t) ipd_wqe_ptr_valid.s.
-					       ptr << 7), CVMX_FPA_PACKET_POOL,
+						      ((uint64_t)ipd_wqe_ptr_valid.s.
+						      ptr << 7), CVMX_FPA_PACKET_POOL,
 					      0);
-			else
+			} else {
 				cvmx_fpa_free(cvmx_phys_to_ptr
-					      ((uint64_t) ipd_wqe_ptr_valid.s.
-					       ptr << 7), CVMX_FPA_WQE_POOL, 0);
+						      ((uint64_t)ipd_wqe_ptr_valid.s.
+						      ptr << 7), CVMX_FPA_WQE_POOL, 0);
+			}
 		}
 
 		/* Free all WQE in the fifo */
@@ -193,29 +195,30 @@ static inline void cvmx_ipd_free_ptr(void)
 			int i;
 			union cvmx_ipd_pwp_ptr_fifo_ctl ipd_pwp_ptr_fifo_ctl;
 			ipd_pwp_ptr_fifo_ctl.u64 =
-			    cvmx_read_csr(CVMX_IPD_PWP_PTR_FIFO_CTL);
+				cvmx_read_csr(CVMX_IPD_PWP_PTR_FIFO_CTL);
 			for (i = 0; i < ipd_ptr_count.s.wqe_pcnt; i++) {
 				ipd_pwp_ptr_fifo_ctl.s.cena = 0;
 				ipd_pwp_ptr_fifo_ctl.s.raddr =
-				    ipd_pwp_ptr_fifo_ctl.s.max_cnts +
-				    (ipd_pwp_ptr_fifo_ctl.s.wraddr +
-				     i) % ipd_pwp_ptr_fifo_ctl.s.max_cnts;
+					ipd_pwp_ptr_fifo_ctl.s.max_cnts +
+					(ipd_pwp_ptr_fifo_ctl.s.wraddr +
+					 i) % ipd_pwp_ptr_fifo_ctl.s.max_cnts;
 				cvmx_write_csr(CVMX_IPD_PWP_PTR_FIFO_CTL,
 					       ipd_pwp_ptr_fifo_ctl.u64);
 				ipd_pwp_ptr_fifo_ctl.u64 =
-				    cvmx_read_csr(CVMX_IPD_PWP_PTR_FIFO_CTL);
-				if (no_wptr)
+					cvmx_read_csr(CVMX_IPD_PWP_PTR_FIFO_CTL);
+				if (no_wptr) {
 					cvmx_fpa_free(cvmx_phys_to_ptr
-						      ((uint64_t)
-						       ipd_pwp_ptr_fifo_ctl.s.
-						       ptr << 7),
+							      ((uint64_t)
+							      ipd_pwp_ptr_fifo_ctl.s.
+							      ptr << 7),
 						      CVMX_FPA_PACKET_POOL, 0);
-				else
+				} else {
 					cvmx_fpa_free(cvmx_phys_to_ptr
-						      ((uint64_t)
-						       ipd_pwp_ptr_fifo_ctl.s.
-						       ptr << 7),
+							      ((uint64_t)
+							      ipd_pwp_ptr_fifo_ctl.s.
+							      ptr << 7),
 						      CVMX_FPA_WQE_POOL, 0);
+				}
 			}
 			ipd_pwp_ptr_fifo_ctl.s.cena = 1;
 			cvmx_write_csr(CVMX_IPD_PWP_PTR_FIFO_CTL,
@@ -226,9 +229,9 @@ static inline void cvmx_ipd_free_ptr(void)
 		if (ipd_ptr_count.s.pktv_cnt) {
 			union cvmx_ipd_pkt_ptr_valid ipd_pkt_ptr_valid;
 			ipd_pkt_ptr_valid.u64 =
-			    cvmx_read_csr(CVMX_IPD_PKT_PTR_VALID);
+				cvmx_read_csr(CVMX_IPD_PKT_PTR_VALID);
 			cvmx_fpa_free(cvmx_phys_to_ptr
-				      (ipd_pkt_ptr_valid.s.ptr << 7),
+					      (ipd_pkt_ptr_valid.s.ptr << 7),
 				      CVMX_FPA_PACKET_POOL, 0);
 		}
 
@@ -236,24 +239,24 @@ static inline void cvmx_ipd_free_ptr(void)
 		if (1) {
 			int i;
 			union cvmx_ipd_prc_port_ptr_fifo_ctl
-			    ipd_prc_port_ptr_fifo_ctl;
+				ipd_prc_port_ptr_fifo_ctl;
 			ipd_prc_port_ptr_fifo_ctl.u64 =
-			    cvmx_read_csr(CVMX_IPD_PRC_PORT_PTR_FIFO_CTL);
+				cvmx_read_csr(CVMX_IPD_PRC_PORT_PTR_FIFO_CTL);
 
 			for (i = 0; i < ipd_prc_port_ptr_fifo_ctl.s.max_pkt;
 			     i++) {
 				ipd_prc_port_ptr_fifo_ctl.s.cena = 0;
 				ipd_prc_port_ptr_fifo_ctl.s.raddr =
-				    i % ipd_prc_port_ptr_fifo_ctl.s.max_pkt;
+					i % ipd_prc_port_ptr_fifo_ctl.s.max_pkt;
 				cvmx_write_csr(CVMX_IPD_PRC_PORT_PTR_FIFO_CTL,
 					       ipd_prc_port_ptr_fifo_ctl.u64);
 				ipd_prc_port_ptr_fifo_ctl.u64 =
-				    cvmx_read_csr
-				    (CVMX_IPD_PRC_PORT_PTR_FIFO_CTL);
+					cvmx_read_csr
+						(CVMX_IPD_PRC_PORT_PTR_FIFO_CTL);
 				cvmx_fpa_free(cvmx_phys_to_ptr
-					      ((uint64_t)
-					       ipd_prc_port_ptr_fifo_ctl.s.
-					       ptr << 7), CVMX_FPA_PACKET_POOL,
+						      ((uint64_t)
+						      ipd_prc_port_ptr_fifo_ctl.s.
+						      ptr << 7), CVMX_FPA_PACKET_POOL,
 					      0);
 			}
 			ipd_prc_port_ptr_fifo_ctl.s.cena = 1;
@@ -265,25 +268,25 @@ static inline void cvmx_ipd_free_ptr(void)
 		if (ipd_ptr_count.s.pfif_cnt) {
 			int i;
 			union cvmx_ipd_prc_hold_ptr_fifo_ctl
-			    ipd_prc_hold_ptr_fifo_ctl;
+				ipd_prc_hold_ptr_fifo_ctl;
 
 			ipd_prc_hold_ptr_fifo_ctl.u64 =
-			    cvmx_read_csr(CVMX_IPD_PRC_HOLD_PTR_FIFO_CTL);
+				cvmx_read_csr(CVMX_IPD_PRC_HOLD_PTR_FIFO_CTL);
 
 			for (i = 0; i < ipd_ptr_count.s.pfif_cnt; i++) {
 				ipd_prc_hold_ptr_fifo_ctl.s.cena = 0;
 				ipd_prc_hold_ptr_fifo_ctl.s.raddr =
-				    (ipd_prc_hold_ptr_fifo_ctl.s.praddr +
-				     i) % ipd_prc_hold_ptr_fifo_ctl.s.max_pkt;
+					(ipd_prc_hold_ptr_fifo_ctl.s.praddr +
+					 i) % ipd_prc_hold_ptr_fifo_ctl.s.max_pkt;
 				cvmx_write_csr(CVMX_IPD_PRC_HOLD_PTR_FIFO_CTL,
 					       ipd_prc_hold_ptr_fifo_ctl.u64);
 				ipd_prc_hold_ptr_fifo_ctl.u64 =
-				    cvmx_read_csr
-				    (CVMX_IPD_PRC_HOLD_PTR_FIFO_CTL);
+					cvmx_read_csr
+						(CVMX_IPD_PRC_HOLD_PTR_FIFO_CTL);
 				cvmx_fpa_free(cvmx_phys_to_ptr
-					      ((uint64_t)
-					       ipd_prc_hold_ptr_fifo_ctl.s.
-					       ptr << 7), CVMX_FPA_PACKET_POOL,
+						      ((uint64_t)
+						      ipd_prc_hold_ptr_fifo_ctl.s.
+						      ptr << 7), CVMX_FPA_PACKET_POOL,
 					      0);
 			}
 			ipd_prc_hold_ptr_fifo_ctl.s.cena = 1;
@@ -296,20 +299,20 @@ static inline void cvmx_ipd_free_ptr(void)
 			int i;
 			union cvmx_ipd_pwp_ptr_fifo_ctl ipd_pwp_ptr_fifo_ctl;
 			ipd_pwp_ptr_fifo_ctl.u64 =
-			    cvmx_read_csr(CVMX_IPD_PWP_PTR_FIFO_CTL);
+				cvmx_read_csr(CVMX_IPD_PWP_PTR_FIFO_CTL);
 
 			for (i = 0; i < ipd_ptr_count.s.pkt_pcnt; i++) {
 				ipd_pwp_ptr_fifo_ctl.s.cena = 0;
 				ipd_pwp_ptr_fifo_ctl.s.raddr =
-				    (ipd_pwp_ptr_fifo_ctl.s.praddr +
-				     i) % ipd_pwp_ptr_fifo_ctl.s.max_cnts;
+					(ipd_pwp_ptr_fifo_ctl.s.praddr +
+					 i) % ipd_pwp_ptr_fifo_ctl.s.max_cnts;
 				cvmx_write_csr(CVMX_IPD_PWP_PTR_FIFO_CTL,
 					       ipd_pwp_ptr_fifo_ctl.u64);
 				ipd_pwp_ptr_fifo_ctl.u64 =
-				    cvmx_read_csr(CVMX_IPD_PWP_PTR_FIFO_CTL);
+					cvmx_read_csr(CVMX_IPD_PWP_PTR_FIFO_CTL);
 				cvmx_fpa_free(cvmx_phys_to_ptr
-					      ((uint64_t) ipd_pwp_ptr_fifo_ctl.
-					       s.ptr << 7),
+						      ((uint64_t)ipd_pwp_ptr_fifo_ctl.
+						      s.ptr << 7),
 					      CVMX_FPA_PACKET_POOL, 0);
 			}
 			ipd_pwp_ptr_fifo_ctl.s.cena = 1;

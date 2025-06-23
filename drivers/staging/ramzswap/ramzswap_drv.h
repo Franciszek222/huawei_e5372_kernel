@@ -58,10 +58,10 @@ static const unsigned max_zpage_size = PAGE_SIZE / 4 * 3;
 
 /*-- End of configurable params */
 
-#define SECTOR_SHIFT		9
-#define SECTOR_SIZE		(1 << SECTOR_SHIFT)
-#define SECTORS_PER_PAGE_SHIFT	(PAGE_SHIFT - SECTOR_SHIFT)
-#define SECTORS_PER_PAGE	(1 << SECTORS_PER_PAGE_SHIFT)
+#define SECTOR_SHIFT            9
+#define SECTOR_SIZE             (1 << SECTOR_SHIFT)
+#define SECTORS_PER_PAGE_SHIFT  (PAGE_SHIFT - SECTOR_SHIFT)
+#define SECTORS_PER_PAGE        (1 << SECTORS_PER_PAGE_SHIFT)
 
 /* Flags for ramzswap pages (table[page_no].flags) */
 enum rzs_pageflags {
@@ -81,49 +81,49 @@ enum rzs_pageflags {
  * These table entries must fit exactly in a page.
  */
 struct table {
-	struct page *page;
-	u16 offset;
-	u8 count;	/* object ref count (not yet used) */
-	u8 flags;
+	struct page *	page;
+	u16		offset;
+	u8		count; /* object ref count (not yet used) */
+	u8		flags;
 } __attribute__((aligned(4)));
 
 struct ramzswap_stats {
 	/* basic stats */
-	size_t compr_size;	/* compressed size of pages stored -
-				 * needed to enforce memlimit */
+	size_t	compr_size;     /* compressed size of pages stored -
+	                         * needed to enforce memlimit */
 	/* more stats */
 #if defined(CONFIG_RAMZSWAP_STATS)
-	u64 num_reads;		/* failed + successful */
-	u64 num_writes;		/* --do-- */
-	u64 failed_reads;	/* should NEVER! happen */
-	u64 failed_writes;	/* can happen when memory is too low */
-	u64 invalid_io;		/* non-swap I/O requests */
-	u64 notify_free;	/* no. of swap slot free notifications */
-	u32 pages_zero;		/* no. of zero filled pages */
-	u32 pages_stored;	/* no. of pages currently stored */
-	u32 good_compress;	/* % of pages with compression ratio<=50% */
-	u32 pages_expand;	/* % of incompressible pages */
+	u64	num_reads;      /* failed + successful */
+	u64	num_writes;     /* --do-- */
+	u64	failed_reads;   /* should NEVER! happen */
+	u64	failed_writes;  /* can happen when memory is too low */
+	u64	invalid_io;     /* non-swap I/O requests */
+	u64	notify_free;    /* no. of swap slot free notifications */
+	u32	pages_zero;     /* no. of zero filled pages */
+	u32	pages_stored;   /* no. of pages currently stored */
+	u32	good_compress;  /* % of pages with compression ratio<=50% */
+	u32	pages_expand;   /* % of incompressible pages */
 #endif
 };
 
 struct ramzswap {
-	struct xv_pool *mem_pool;
-	void *compress_workmem;
-	void *compress_buffer;
-	struct table *table;
-	spinlock_t stat64_lock;	/* protect 64-bit stats */
-	struct mutex lock;
-	struct request_queue *queue;
-	struct gendisk *disk;
-	int init_done;
+	struct xv_pool *	mem_pool;
+	void *			compress_workmem;
+	void *			compress_buffer;
+	struct table *		table;
+	spinlock_t		stat64_lock; /* protect 64-bit stats */
+	struct mutex		lock;
+	struct request_queue *	queue;
+	struct gendisk *	disk;
+	int			init_done;
 	/*
 	 * This is limit on amount of *uncompressed* worth of data
 	 * we can hold. When backing swap device is provided, it is
 	 * set equal to device size.
 	 */
-	size_t disksize;	/* bytes */
+	size_t			disksize; /* bytes */
 
-	struct ramzswap_stats stats;
+	struct ramzswap_stats	stats;
 };
 
 /*-- */

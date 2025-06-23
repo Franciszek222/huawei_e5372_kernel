@@ -10,11 +10,11 @@
 #include <mach/balong_v7r1sft.h>
 #elif defined (BOARD_ASIC_BIGPACK) && defined (VERSION_V3R2)
 /*++pandong cs*/
-    #if defined(CHIP_BB_6756CS)
-        #include <mach/balong_v3r2cs.h>
-    #else
-        #include <mach/balong_v3r2asic.h>
-    #endif
+#if defined(CHIP_BB_6756CS)
+#include <mach/balong_v3r2cs.h>
+#else
+#include <mach/balong_v3r2asic.h>
+#endif
 #elif (defined (BOARD_ASIC) && (defined(CHIP_BB_6920ES) || defined (CHIP_BB_6920CS)))
 #include <mach/balong_v7r1asic.h>
 #elif (defined (BOARD_SFT) && defined (CHIP_BB_6920CS))
@@ -22,5 +22,4 @@
 #else
 
 #endif
-#define CLOCK_TICK_RATE        ((PBXA9_TIMERS_CLK)  / 16)
-
+#define CLOCK_TICK_RATE        ((PBXA9_TIMERS_CLK) / 16)

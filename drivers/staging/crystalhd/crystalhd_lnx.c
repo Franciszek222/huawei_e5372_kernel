@@ -1,18 +1,18 @@
 /***************************************************************************
-  BCM70010 Linux driver
-  Copyright (c) 2005-2009, Broadcom Corporation.
-
-  This driver is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, version 2 of the License.
-
-  This driver is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this driver.  If not, see <http://www.gnu.org/licenses/>.
+*  BCM70010 Linux driver
+*  Copyright (c) 2005-2009, Broadcom Corporation.
+*
+*  This driver is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, version 2 of the License.
+*
+*  This driver is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this driver.  If not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
 #include <linux/smp_lock.h>
@@ -26,8 +26,9 @@ static struct crystalhd_adp *g_adp_info;
 
 static irqreturn_t chd_dec_isr(int irq, void *arg)
 {
-	struct crystalhd_adp *adp = (struct crystalhd_adp *) arg;
+	struct crystalhd_adp *adp = (struct crystalhd_adp *)arg;
 	int rc = 0;
+
 	if (adp)
 		rc = crystalhd_cmd_interrupt(&adp->cmds);
 
@@ -176,7 +177,7 @@ static int chd_dec_release_cdata(struct crystalhd_adp *adp,
 	if (io->cmd != BCM_IOC_FW_DOWNLOAD) {
 		ua_off = ua + sizeof(io->udata);
 		rc = crystalhd_user_data(ua_off, io->add_cdata,
-					io->add_cdata_sz, 1);
+					 io->add_cdata_sz, 1);
 		if (rc) {
 			BCMLOG_ERR("failed to push add_cdata sz:%x ua_off:%x\n",
 				   io->add_cdata_sz, (unsigned int)ua_off);
@@ -241,7 +242,7 @@ static int chd_dec_api_cmd(struct crystalhd_adp *adp, unsigned long ua,
 	}
 
 	temp->u_id = uid;
-	temp->cmd  = cmd;
+	temp->cmd = cmd;
 
 	rc = chd_dec_proc_user_data(adp, temp, ua, 0);
 	if (!rc) {
@@ -348,10 +349,10 @@ static int chd_dec_close(struct inode *in, struct file *fd)
 }
 
 static const struct file_operations chd_dec_fops = {
-	.owner   = THIS_MODULE,
+	.owner		= THIS_MODULE,
 	.unlocked_ioctl = chd_dec_ioctl,
-	.open    = chd_dec_open,
-	.release = chd_dec_close,
+	.open		= chd_dec_open,
+	.release	= chd_dec_close,
 };
 
 static int __devinit chd_dec_init_chdev(struct crystalhd_adp *adp)
@@ -419,6 +420,7 @@ fail:
 static void __devexit chd_dec_release_chdev(struct crystalhd_adp *adp)
 {
 	struct crystalhd_ioctl_data *temp = NULL;
+
 	if (!adp)
 		return;
 
@@ -446,9 +448,9 @@ static int __devinit chd_pci_reserve_mem(struct crystalhd_adp *pinfo)
 {
 	int rc;
 	unsigned long bar2 = pci_resource_start(pinfo->pdev, 2);
-	uint32_t mem_len   = pci_resource_len(pinfo->pdev, 2);
+	uint32_t mem_len = pci_resource_len(pinfo->pdev, 2);
 	unsigned long bar0 = pci_resource_start(pinfo->pdev, 0);
-	uint32_t i2o_len   = pci_resource_len(pinfo->pdev, 0);
+	uint32_t i2o_len = pci_resource_len(pinfo->pdev, 0);
 
 	BCMLOG(BCMLOG_SSTEP, "bar2:0x%lx-0x%08x  bar0:0x%lx-0x%08x\n",
 	       bar2, mem_len, bar0, i2o_len);
@@ -466,7 +468,7 @@ static int __devinit chd_pci_reserve_mem(struct crystalhd_adp *pinfo)
 	}
 
 	pinfo->pci_mem_start = bar2;
-	pinfo->pci_mem_len   = mem_len;
+	pinfo->pci_mem_len = mem_len;
 
 	rc = check_mem_region(bar0, i2o_len);
 	if (rc) {
@@ -481,7 +483,7 @@ static int __devinit chd_pci_reserve_mem(struct crystalhd_adp *pinfo)
 	}
 
 	pinfo->pci_i2o_start = bar0;
-	pinfo->pci_i2o_len   = i2o_len;
+	pinfo->pci_i2o_len = i2o_len;
 
 	rc = pci_request_regions(pinfo->pdev, pinfo->name);
 	if (rc < 0) {
@@ -517,7 +519,7 @@ static void __devexit chd_dec_pci_remove(struct pci_dev *pdev)
 
 	BCMLOG_ENTER;
 
-	pinfo = (struct crystalhd_adp *) pci_get_drvdata(pdev);
+	pinfo = (struct crystalhd_adp *)pci_get_drvdata(pdev);
 	if (!pinfo) {
 		BCMLOG_ERR("could not get adp\n");
 		return;
@@ -538,8 +540,8 @@ static void __devexit chd_dec_pci_remove(struct pci_dev *pdev)
 	g_adp_info = NULL;
 }
 
-static int __devinit chd_dec_pci_probe(struct pci_dev *pdev,
-			     const struct pci_device_id *entry)
+static int __devinit chd_dec_pci_probe(struct pci_dev *			pdev,
+				       const struct pci_device_id *	entry)
 {
 	struct crystalhd_adp *pinfo;
 	int rc;
@@ -575,7 +577,7 @@ static int __devinit chd_dec_pci_probe(struct pci_dev *pdev,
 		return -ENOMEM;
 	}
 
-	pinfo->present	= 1;
+	pinfo->present = 1;
 	pinfo->drv_data = entry->driver_data;
 
 	/* Setup adapter level lock.. */
@@ -697,18 +699,18 @@ int chd_dec_pci_resume(struct pci_dev *pdev)
 
 static DEFINE_PCI_DEVICE_TABLE(chd_dec_pci_id_table) = {
 	{ PCI_VDEVICE(BROADCOM, 0x1612), 8 },
-	{ 0, },
+	{ 0,			},
 };
 MODULE_DEVICE_TABLE(pci, chd_dec_pci_id_table);
 
 static struct pci_driver bc_chd_70012_driver = {
-	.name     = "Broadcom 70012 Decoder",
-	.probe    = chd_dec_pci_probe,
-	.remove   = __devexit_p(chd_dec_pci_remove),
-	.id_table = chd_dec_pci_id_table,
+	.name		= "Broadcom 70012 Decoder",
+	.probe		= chd_dec_pci_probe,
+	.remove		= __devexit_p(chd_dec_pci_remove),
+	.id_table	= chd_dec_pci_id_table,
 #ifdef CONFIG_PM
-	.suspend  = chd_dec_pci_suspend,
-	.resume   = chd_dec_pci_resume
+	.suspend	= chd_dec_pci_suspend,
+	.resume		= chd_dec_pci_resume
 #endif
 };
 

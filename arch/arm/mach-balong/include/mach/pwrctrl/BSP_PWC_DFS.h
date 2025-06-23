@@ -26,7 +26,7 @@ typedef unsigned long long jiff;
 
 #define restrict __restrict__
 
-#define BUFFSIZE (64*1024)
+#define BUFFSIZE (64 * 1024)
 #define DPM_CLIENT_ID_MASK  0x3
 #define MAX_MSG_DFS (10)
 #define DFS_OK (0)
@@ -52,28 +52,25 @@ typedef unsigned long long jiff;
 #define DFS_PROFILE_NUM   3  //133/133/133/67œ»≤ª”√
 
 
-typedef struct
-{
-	unsigned int ulMsgName;
-	unsigned int ulClient;
-	unsigned int enVoteProfile;
-	unsigned int enVoteType;
-	unsigned int ulCoreID;
+typedef struct {
+	unsigned int	ulMsgName;
+	unsigned int	ulClient;
+	unsigned int	enVoteProfile;
+	unsigned int	enVoteType;
+	unsigned int	ulCoreID;
 }DFS_MSG_STRU;
 
 
-typedef struct 
-{
-	unsigned int module_id;
-	unsigned int func_id;
-	unsigned int result;
-	DFS_MSG_STRU pstVoteMsg;
+typedef struct {
+	unsigned int	module_id;
+	unsigned int	func_id;
+	unsigned int	result;
+	DFS_MSG_STRU	pstVoteMsg;
 }DFS_IFC_MSG_STRU;
 
 
-typedef enum
-{
-	DFS_SUCCESS = 0,
+typedef enum {
+	DFS_SUCCESS	= 0,
 	DFS_FAILURE,
 	DFS_DPM_IS_STOP = 0x100,
 	DFS_CLIENT_NAME_IS_EXIST,
@@ -85,31 +82,27 @@ typedef enum
 	DFS_MMI_REG_FULL
 }DFS_ERROR_ID_ENUM;
 
-typedef enum
-{
-	DFS_VOTE_CLEAN = 0,
-	DFS_VOTE_SET = 1,
+typedef enum {
+	DFS_VOTE_CLEAN	= 0,
+	DFS_VOTE_SET	= 1,
 	DFS_VOTE_TYPE_BUTT
 }DFS_VOTE_TYPE_ENUM;
 
-typedef struct
-{
-	unsigned short usProfileUpLimit;
-	unsigned short usProfileDownLimit;
+typedef struct {
+	unsigned short	usProfileUpLimit;
+	unsigned short	usProfileDownLimit;
 }DFS_PROFILELIMIT_STRU;
 
-typedef struct
-{
-	unsigned int ulDFSFunEnableFlag;
-	unsigned int ulTimerLen;
-	unsigned short usProfileUpTime;
-	unsigned short usProfileDownTime;
-	unsigned int ulProfileNum;
-	DFS_PROFILELIMIT_STRU astThresHold[DFS_PROFILE_NUM];
+typedef struct {
+	unsigned int		ulDFSFunEnableFlag;
+	unsigned int		ulTimerLen;
+	unsigned short		usProfileUpTime;
+	unsigned short		usProfileDownTime;
+	unsigned int		ulProfileNum;
+	DFS_PROFILELIMIT_STRU	astThresHold[DFS_PROFILE_NUM];
 }DFS_CONFIGINFO_STRU;
 
 void PWRCTRL_DfsAcpuInit(void);
-void PWRCTRL_DfsIfcGetAcpuLoad(void *para, unsigned int len );
+void PWRCTRL_DfsIfcGetAcpuLoad(void *para, unsigned int len);
 unsigned int PWRCTRL_DfsSetProfileAcpu(PWC_DFS_ID_E ulClientID, PWC_DFS_PROFILE_E enProfile);
 unsigned int PWRCTRL_DfsReleaseProfileAcpu(PWC_DFS_ID_E ulClientID);
-

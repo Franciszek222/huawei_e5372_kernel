@@ -3,9 +3,9 @@
 
 #ifdef LUOCHUANZAO
 struct clk {
-	unsigned long               rate;
-    char                        *name;
-	const struct clk_ops        *ops;
+	unsigned long		rate;
+	char *			name;
+	const struct clk_ops *	ops;
 	//void __iomem                *vcoreg;
 };
 
@@ -13,4 +13,3 @@ struct clk {
 #define __clk_put(clk) do { } while (0)
 #endif
 #endif
-

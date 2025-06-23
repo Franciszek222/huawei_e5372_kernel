@@ -23,100 +23,85 @@
 #include <mach/msm_rpcrouter.h>
 #include <mach/msm_adsp.h>
 
-int adsp_pmem_fixup(struct msm_adsp_module *module, void **addr,
-		    unsigned long len);
-int adsp_pmem_fixup_kvaddr(struct msm_adsp_module *module, void **addr,
-			   unsigned long *kvaddr, unsigned long len);
+int adsp_pmem_fixup(struct msm_adsp_module *module, void **addr, unsigned long len);
+int adsp_pmem_fixup_kvaddr(struct msm_adsp_module *module, void **addr, unsigned long *kvaddr, unsigned long len);
 int adsp_pmem_paddr_fixup(struct msm_adsp_module *module, void **addr);
 
-int adsp_vfe_verify_cmd(struct msm_adsp_module *module,
-			unsigned int queue_id, void *cmd_data,
-			size_t cmd_size);
-int adsp_jpeg_verify_cmd(struct msm_adsp_module *module,
-			 unsigned int queue_id, void *cmd_data,
-			 size_t cmd_size);
-int adsp_lpm_verify_cmd(struct msm_adsp_module *module,
-			unsigned int queue_id, void *cmd_data,
-			size_t cmd_size);
-int adsp_video_verify_cmd(struct msm_adsp_module *module,
-			  unsigned int queue_id, void *cmd_data,
-			  size_t cmd_size);
-int adsp_videoenc_verify_cmd(struct msm_adsp_module *module,
-			  unsigned int queue_id, void *cmd_data,
-			  size_t cmd_size);
+int adsp_vfe_verify_cmd(struct msm_adsp_module *module, unsigned int queue_id, void *cmd_data, size_t cmd_size);
+int adsp_jpeg_verify_cmd(struct msm_adsp_module *module, unsigned int queue_id, void *cmd_data, size_t cmd_size);
+int adsp_lpm_verify_cmd(struct msm_adsp_module *module, unsigned int queue_id, void *cmd_data, size_t cmd_size);
+int adsp_video_verify_cmd(struct msm_adsp_module *module, unsigned int queue_id, void *cmd_data, size_t cmd_size);
+int adsp_videoenc_verify_cmd(struct msm_adsp_module *module, unsigned int queue_id, void *cmd_data, size_t cmd_size);
 
 
 struct adsp_event;
 
-int adsp_vfe_patch_event(struct msm_adsp_module *module,
-			struct adsp_event *event);
+int adsp_vfe_patch_event(struct msm_adsp_module *module, struct adsp_event *event);
 
-int adsp_jpeg_patch_event(struct msm_adsp_module *module,
-			struct adsp_event *event);
+int adsp_jpeg_patch_event(struct msm_adsp_module *module, struct adsp_event *event);
 
 
 struct adsp_module_info {
-	const char *name;
-	const char *pdev_name;
-	uint32_t id;
-	const char *clk_name;
-	unsigned long clk_rate;
-	int (*verify_cmd) (struct msm_adsp_module*, unsigned int, void *,
-			   size_t);
-	int (*patch_event) (struct msm_adsp_module*, struct adsp_event *);
+	const char *	name;
+	const char *	pdev_name;
+	uint32_t	id;
+	const char *	clk_name;
+	unsigned long	clk_rate;
+	int		(*verify_cmd) (struct msm_adsp_module *, unsigned int, void *, size_t);
+	int		(*patch_event) (struct msm_adsp_module *, struct adsp_event *);
 };
 
 #define ADSP_EVENT_MAX_SIZE 496
-#define EVENT_LEN	12
-#define EVENT_MSG_ID	((uint16_t)~0)
+#define EVENT_LEN       12
+#define EVENT_MSG_ID    ((uint16_t) ~0)
 
 struct adsp_event {
-	struct list_head list;
-	uint32_t size; /* always in bytes */
-	uint16_t msg_id;
-	uint16_t type; /* 0 for msgs (from aDSP), -1 for events (from ARM9) */
-	int is16; /* always 0 (msg is 32-bit) when the event type is 1(ARM9) */
+	struct list_head	list;
+	uint32_t		size;   /* always in bytes */
+	uint16_t		msg_id;
+	uint16_t		type;   /* 0 for msgs (from aDSP), -1 for events (from ARM9) */
+	int			is16;   /* always 0 (msg is 32-bit) when the event type is 1(ARM9) */
 	union {
-		uint16_t msg16[ADSP_EVENT_MAX_SIZE / 2];
-		uint32_t msg32[ADSP_EVENT_MAX_SIZE / 4];
+		uint16_t	msg16[ADSP_EVENT_MAX_SIZE / 2];
+		uint32_t	msg32[ADSP_EVENT_MAX_SIZE / 4];
 	} data;
 };
 
 struct adsp_info {
-	uint32_t send_irq;
-	uint32_t read_ctrl;
-	uint32_t write_ctrl;
+	uint32_t					send_irq;
+	uint32_t					read_ctrl;
+	uint32_t					write_ctrl;
 
-	uint32_t max_msg16_size;
-	uint32_t max_msg32_size;
+	uint32_t					max_msg16_size;
+	uint32_t					max_msg32_size;
 
-	uint32_t max_task_id;
-	uint32_t max_module_id;
-	uint32_t max_queue_id;
-	uint32_t max_image_id;
+	uint32_t					max_task_id;
+	uint32_t					max_module_id;
+	uint32_t					max_queue_id;
+	uint32_t					max_image_id;
 
 	/* for each image id, a map of queue id to offset */
-	uint32_t **queue_offset;
+	uint32_t **					queue_offset;
 
 	/* for each image id, a map of task id to module id */
-	uint32_t **task_to_module;
+	uint32_t **					task_to_module;
 
 	/* for each module id, map of module id to module */
-	struct msm_adsp_module **id_to_module;
+	struct msm_adsp_module **			id_to_module;
 
-	uint32_t module_count;
-	struct adsp_module_info *module;
+	uint32_t					module_count;
+	struct adsp_module_info *			module;
 
 	/* stats */
-	uint32_t events_received;
-	uint32_t event_backlog_max;
+	uint32_t					events_received;
+	uint32_t					event_backlog_max;
 
 #if CONFIG_MSM_AMSS_VERSION >= 6350
 	/* rpc_client for init_info */
-	struct msm_rpc_endpoint *init_info_rpc_client;
-	struct adsp_rtos_mp_mtoa_init_info_type *init_info_ptr;
-	wait_queue_head_t init_info_wait;
-	unsigned init_info_state;
+	struct msm_rpc_endpoint *			init_info_rpc_client;
+	struct adsp_rtos_mp_mtoa_init_info_type *	init_info_ptr;
+	wait_queue_head_t				init_info_wait;
+	unsigned					init_info_state;
 #endif
 };
 
@@ -128,8 +113,8 @@ struct adsp_info {
 #define RPC_ADSP_RTOS_MODEM_TO_APP_PROC 2
 
 #if CONFIG_MSM_AMSS_VERSION >= 6350
-#define RPC_ADSP_RTOS_ATOM_VERS MSM_RPC_VERS(1,0)
-#define RPC_ADSP_RTOS_MTOA_VERS MSM_RPC_VERS(2,1) /* must be actual vers */
+#define RPC_ADSP_RTOS_ATOM_VERS MSM_RPC_VERS(1, 0)
+#define RPC_ADSP_RTOS_MTOA_VERS MSM_RPC_VERS(2, 1) /* must be actual vers */
 #define MSM_ADSP_DRIVER_NAME "rs3000000a:00010000"
 #elif (CONFIG_MSM_AMSS_VERSION == 6220) || (CONFIG_MSM_AMSS_VERSION == 6225)
 #define RPC_ADSP_RTOS_ATOM_VERS MSM_RPC_VERS(0x71d1094b, 0)
@@ -144,9 +129,9 @@ struct adsp_info {
 #endif
 
 enum rpc_adsp_rtos_proc_type {
-	RPC_ADSP_RTOS_PROC_NONE = 0,
-	RPC_ADSP_RTOS_PROC_MODEM = 1,
-	RPC_ADSP_RTOS_PROC_APPS = 2,
+	RPC_ADSP_RTOS_PROC_NONE		= 0,
+	RPC_ADSP_RTOS_PROC_MODEM	= 1,
+	RPC_ADSP_RTOS_PROC_APPS		= 2,
 };
 
 enum {
@@ -178,11 +163,11 @@ enum rpc_adsp_rtos_mod_status_type {
 };
 
 struct rpc_adsp_rtos_app_to_modem_args_t {
-	struct rpc_request_hdr hdr;
-	uint32_t gotit; /* if 1, the next elements are present */
-	uint32_t cmd; /* e.g., RPC_ADSP_RTOS_CMD_REGISTER_APP */
-	uint32_t proc_id; /* e.g., RPC_ADSP_RTOS_PROC_APPS */
-	uint32_t module; /* e.g., QDSP_MODULE_AUDPPTASK */
+	struct rpc_request_hdr	hdr;
+	uint32_t		gotit;          /* if 1, the next elements are present */
+	uint32_t		cmd;            /* e.g., RPC_ADSP_RTOS_CMD_REGISTER_APP */
+	uint32_t		proc_id;        /* e.g., RPC_ADSP_RTOS_PROC_APPS */
+	uint32_t		module;         /* e.g., QDSP_MODULE_AUDPPTASK */
 };
 
 #if CONFIG_MSM_AMSS_VERSION >= 6350
@@ -196,8 +181,8 @@ enum qdsp_image_type {
 };
 
 struct adsp_rtos_mp_mtoa_header_type {
-	enum rpc_adsp_rtos_mod_status_type  event;
-	enum rpc_adsp_rtos_proc_type        proc_id;
+	enum rpc_adsp_rtos_mod_status_type event;
+	enum rpc_adsp_rtos_proc_type proc_id;
 };
 
 /* ADSP RTOS MP Communications - Modem to APP's  Event Info*/
@@ -219,7 +204,7 @@ struct queue_to_offset_type {
 struct adsp_rtos_mp_mtoa_init_info_type {
 	uint32_t	image_count;
 	uint32_t	num_queue_offsets;
-	struct queue_to_offset_type	queue_offsets_tbl[IMG_MAX][ENTRIES_MAX];
+	struct queue_to_offset_type     queue_offsets_tbl[IMG_MAX][ENTRIES_MAX];
 	uint32_t	num_task_module_entries;
 	uint32_t	task_to_module_tbl[IMG_MAX][ENTRIES_MAX];
 
@@ -232,28 +217,28 @@ struct adsp_rtos_mp_mtoa_init_info_type {
 };
 
 struct adsp_rtos_mp_mtoa_s_type {
-	struct adsp_rtos_mp_mtoa_header_type mp_mtoa_header;
+	struct adsp_rtos_mp_mtoa_header_type	mp_mtoa_header;
 
-	uint32_t desc_field;
+	uint32_t				desc_field;
 	union {
 		struct adsp_rtos_mp_mtoa_init_info_type mp_mtoa_init_packet;
-		struct adsp_rtos_mp_mtoa_type mp_mtoa_packet;
+		struct adsp_rtos_mp_mtoa_type		mp_mtoa_packet;
 	} adsp_rtos_mp_mtoa_data;
 };
 
 struct rpc_adsp_rtos_modem_to_app_args_t {
-	struct rpc_request_hdr hdr;
-	uint32_t gotit; /* if 1, the next elements are present */
+	struct rpc_request_hdr		hdr;
+	uint32_t			gotit; /* if 1, the next elements are present */
 	struct adsp_rtos_mp_mtoa_s_type mtoa_pkt;
 };
 #else
 struct rpc_adsp_rtos_modem_to_app_args_t {
-	struct rpc_request_hdr hdr;
-	uint32_t gotit; /* if 1, the next elements are present */
-	uint32_t event; /* e.g., RPC_ADSP_RTOS_CMD_REGISTER_APP */
-	uint32_t proc_id; /* e.g., RPC_ADSP_RTOS_PROC_APPS */
-	uint32_t module; /* e.g., QDSP_MODULE_AUDPPTASK */
-	uint32_t image; /* RPC_QDSP_IMAGE_GAUDIO */
+	struct rpc_request_hdr	hdr;
+	uint32_t		gotit;          /* if 1, the next elements are present */
+	uint32_t		event;          /* e.g., RPC_ADSP_RTOS_CMD_REGISTER_APP */
+	uint32_t		proc_id;        /* e.g., RPC_ADSP_RTOS_PROC_APPS */
+	uint32_t		module;         /* e.g., QDSP_MODULE_AUDPPTASK */
+	uint32_t		image;          /* RPC_QDSP_IMAGE_GAUDIO */
 };
 #endif /* CONFIG_MSM_AMSS_VERSION >= 6350 */
 
@@ -266,31 +251,30 @@ struct rpc_adsp_rtos_modem_to_app_args_t {
 #endif
 
 struct msm_adsp_module {
-	struct mutex lock;
-	const char *name;
-	unsigned id;
-	struct adsp_info *info;
+	struct mutex			lock;
+	const char *			name;
+	unsigned			id;
+	struct adsp_info *		info;
 
-	struct msm_rpc_endpoint *rpc_client;
-	struct msm_adsp_ops *ops;
-	void *driver_data;
+	struct msm_rpc_endpoint *	rpc_client;
+	struct msm_adsp_ops *		ops;
+	void *				driver_data;
 
 	/* statistics */
-	unsigned num_commands;
-	unsigned num_events;
+	unsigned			num_commands;
+	unsigned			num_events;
 
-	wait_queue_head_t state_wait;
-	unsigned state;
+	wait_queue_head_t		state_wait;
+	unsigned			state;
 
-	struct platform_device pdev;
-	struct clk *clk;
-	int open_count;
+	struct platform_device		pdev;
+	struct clk *			clk;
+	int				open_count;
 
-	struct mutex pmem_regions_lock;
-	struct hlist_head pmem_regions;
-	int (*verify_cmd) (struct msm_adsp_module*, unsigned int, void *,
-			   size_t);
-	int (*patch_event) (struct msm_adsp_module*, struct adsp_event *);
+	struct mutex			pmem_regions_lock;
+	struct hlist_head		pmem_regions;
+	int				(*verify_cmd) (struct msm_adsp_module *, unsigned int, void *, size_t);
+	int				(*patch_event) (struct msm_adsp_module *, struct adsp_event *);
 };
 
 extern void msm_adsp_publish_cdevs(struct msm_adsp_module *, unsigned);

@@ -1,33 +1,33 @@
 /*
-   comedi/drivers/multiq3.c
-   Hardware driver for Quanser Consulting MultiQ-3 board
-
-   COMEDI - Linux Control and Measurement Device Interface
-   Copyright (C) 1999 Anders Blomdell <anders.blomdell@control.lth.se>
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
+ * comedi/drivers/multiq3.c
+ * Hardware driver for Quanser Consulting MultiQ-3 board
+ *
+ * COMEDI - Linux Control and Measurement Device Interface
+ * Copyright (C) 1999 Anders Blomdell <anders.blomdell@control.lth.se>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
  */
 /*
-Driver: multiq3
-Description: Quanser Consulting MultiQ-3
-Author: Anders Blomdell <anders.blomdell@control.lth.se>
-Status: works
-Devices: [Quanser Consulting] MultiQ-3 (multiq3)
-
-*/
+ * Driver: multiq3
+ * Description: Quanser Consulting MultiQ-3
+ * Author: Anders Blomdell <anders.blomdell@control.lth.se>
+ * Status: works
+ * Devices: [Quanser Consulting] MultiQ-3 (multiq3)
+ *
+ */
 
 #include <linux/interrupt.h>
 #include "../comedidev.h"
@@ -83,14 +83,13 @@ Devices: [Quanser Consulting] MultiQ-3 (multiq3)
 
 #define MULTIQ3_TIMEOUT 30
 
-static int multiq3_attach(struct comedi_device *dev,
-			  struct comedi_devconfig *it);
+static int multiq3_attach(struct comedi_device *dev, struct comedi_devconfig *it);
 static int multiq3_detach(struct comedi_device *dev);
 static struct comedi_driver driver_multiq3 = {
-	.driver_name = "multiq3",
-	.module = THIS_MODULE,
-	.attach = multiq3_attach,
-	.detach = multiq3_detach,
+	.driver_name	= "multiq3",
+	.module		= THIS_MODULE,
+	.attach		= multiq3_attach,
+	.detach		= multiq3_detach,
 };
 
 COMEDI_INITCLEANUP(driver_multiq3);
@@ -112,10 +111,9 @@ static int multiq3_ai_insn_read(struct comedi_device *dev,
 	outw(MULTIQ3_CONTROL_MUST | MULTIQ3_AD_MUX_EN | (chan << 3),
 	     dev->iobase + MULTIQ3_CONTROL);
 
-	for (i = 0; i < MULTIQ3_TIMEOUT; i++) {
+	for (i = 0; i < MULTIQ3_TIMEOUT; i++)
 		if (inw(dev->iobase + MULTIQ3_STATUS) & MULTIQ3_STATUS_EOC)
 			break;
-	}
 	if (i == MULTIQ3_TIMEOUT)
 		return -ETIMEDOUT;
 
@@ -197,10 +195,10 @@ static int multiq3_do_insn_bits(struct comedi_device *dev,
 	return 2;
 }
 
-static int multiq3_encoder_insn_read(struct comedi_device *dev,
-				     struct comedi_subdevice *s,
-				     struct comedi_insn *insn,
-				     unsigned int *data)
+static int multiq3_encoder_insn_read(struct comedi_device *	dev,
+				     struct comedi_subdevice *	s,
+				     struct comedi_insn *	insn,
+				     unsigned int *		data)
 {
 	int n;
 	int chan = CR_CHAN(insn->chanspec);
@@ -223,9 +221,10 @@ static int multiq3_encoder_insn_read(struct comedi_device *dev,
 static void encoder_reset(struct comedi_device *dev)
 {
 	int chan;
+
 	for (chan = 0; chan < dev->subdevices[4].n_chan; chan++) {
 		int control =
-		    MULTIQ3_CONTROL_MUST | MULTIQ3_AD_MUX_EN | (chan << 3);
+			MULTIQ3_CONTROL_MUST | MULTIQ3_AD_MUX_EN | (chan << 3);
 		outw(control, dev->iobase + MULTIQ3_CONTROL);
 		outb(MULTIQ3_EFLAG_RESET, dev->iobase + MULTIQ3_ENC_CONTROL);
 		outb(MULTIQ3_BP_RESET, dev->iobase + MULTIQ3_ENC_CONTROL);
@@ -238,13 +237,12 @@ static void encoder_reset(struct comedi_device *dev)
 }
 
 /*
-   options[0] - I/O port
-   options[1] - irq
-   options[2] - number of encoder chips installed
+ * options[0] - I/O port
+ * options[1] - irq
+ * options[2] - number of encoder chips installed
  */
-
-static int multiq3_attach(struct comedi_device *dev,
-			  struct comedi_devconfig *it)
+static int multiq3_attach(struct comedi_device *	dev,
+			  struct comedi_devconfig *	it)
 {
 	int result = 0;
 	unsigned long iobase;
@@ -263,7 +261,7 @@ static int multiq3_attach(struct comedi_device *dev,
 	irq = it->options[1];
 	if (irq)
 		printk(KERN_WARNING "comedi%d: irq = %u ignored\n",
-			dev->minor, irq);
+		       dev->minor, irq);
 	else
 		printk(KERN_WARNING "comedi%d: no irq\n", dev->minor);
 	dev->board_name = "multiq3";

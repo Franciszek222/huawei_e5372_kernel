@@ -41,8 +41,8 @@ DECLARE_MUTEX(mt9d112_sem);
 
 
 /*=============================================================
-	EXTERNAL DECLARATIONS
-==============================================================*/
+ *      EXTERNAL DECLARATIONS
+ * ==============================================================*/
 extern struct mt9d112_reg mt9d112_regs;
 
 
@@ -65,7 +65,7 @@ static int mt9d112_reset(const struct msm_camera_sensor_info *dev)
 }
 
 static int32_t mt9d112_i2c_txdata(unsigned short saddr,
-	unsigned char *txdata, int length)
+				  unsigned char *txdata, int length)
 {
 	struct i2c_msg msg[] = {
 		{
@@ -85,7 +85,7 @@ static int32_t mt9d112_i2c_txdata(unsigned short saddr,
 }
 
 static int32_t mt9d112_i2c_write(unsigned short saddr,
-	unsigned short waddr, unsigned short wdata, enum mt9d112_width width)
+				 unsigned short waddr, unsigned short wdata, enum mt9d112_width width)
 {
 	int32_t rc = -EIO;
 	unsigned char buf[4];
@@ -93,21 +93,21 @@ static int32_t mt9d112_i2c_write(unsigned short saddr,
 	memset(buf, 0, sizeof(buf));
 	switch (width) {
 	case WORD_LEN: {
-		buf[0] = (waddr & 0xFF00)>>8;
+		buf[0] = (waddr & 0xFF00) >> 8;
 		buf[1] = (waddr & 0x00FF);
-		buf[2] = (wdata & 0xFF00)>>8;
+		buf[2] = (wdata & 0xFF00) >> 8;
 		buf[3] = (wdata & 0x00FF);
 
 		rc = mt9d112_i2c_txdata(saddr, buf, 4);
 	}
-		break;
+	break;
 
 	case BYTE_LEN: {
 		buf[0] = waddr;
 		buf[1] = wdata;
 		rc = mt9d112_i2c_txdata(saddr, buf, 2);
 	}
-		break;
+	break;
 
 	default:
 		break;
@@ -115,23 +115,23 @@ static int32_t mt9d112_i2c_write(unsigned short saddr,
 
 	if (rc < 0)
 		CDBG(
-		"i2c_write failed, addr = 0x%x, val = 0x%x!\n",
-		waddr, wdata);
+			"i2c_write failed, addr = 0x%x, val = 0x%x!\n",
+			waddr, wdata);
 
 	return rc;
 }
 
 static int32_t mt9d112_i2c_write_table(
-	struct mt9d112_i2c_reg_conf const *reg_conf_tbl,
-	int num_of_items_in_table)
+	struct mt9d112_i2c_reg_conf const *	reg_conf_tbl,
+	int					num_of_items_in_table)
 {
 	int i;
 	int32_t rc = -EIO;
 
 	for (i = 0; i < num_of_items_in_table; i++) {
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			reg_conf_tbl->waddr, reg_conf_tbl->wdata,
-			reg_conf_tbl->width);
+				       reg_conf_tbl->waddr, reg_conf_tbl->wdata,
+				       reg_conf_tbl->width);
 		if (rc < 0)
 			break;
 		if (reg_conf_tbl->mdelay_time != 0)
@@ -143,21 +143,21 @@ static int32_t mt9d112_i2c_write_table(
 }
 
 static int mt9d112_i2c_rxdata(unsigned short saddr,
-	unsigned char *rxdata, int length)
+			      unsigned char *rxdata, int length)
 {
 	struct i2c_msg msgs[] = {
-	{
-		.addr   = saddr,
-		.flags = 0,
-		.len   = 2,
-		.buf   = rxdata,
-	},
-	{
-		.addr   = saddr,
-		.flags = I2C_M_RD,
-		.len   = length,
-		.buf   = rxdata,
-	},
+		{
+			.addr = saddr,
+			.flags = 0,
+			.len = 2,
+			.buf = rxdata,
+		},
+		{
+			.addr = saddr,
+			.flags = I2C_M_RD,
+			.len = length,
+			.buf = rxdata,
+		},
 	};
 
 	if (i2c_transfer(mt9d112_client->adapter, msgs, 2) < 0) {
@@ -168,8 +168,8 @@ static int mt9d112_i2c_rxdata(unsigned short saddr,
 	return 0;
 }
 
-static int32_t mt9d112_i2c_read(unsigned short   saddr,
-	unsigned short raddr, unsigned short *rdata, enum mt9d112_width width)
+static int32_t mt9d112_i2c_read(unsigned short saddr,
+				unsigned short raddr, unsigned short *rdata, enum mt9d112_width width)
 {
 	int32_t rc = 0;
 	unsigned char buf[4];
@@ -181,7 +181,7 @@ static int32_t mt9d112_i2c_read(unsigned short   saddr,
 
 	switch (width) {
 	case WORD_LEN: {
-		buf[0] = (raddr & 0xFF00)>>8;
+		buf[0] = (raddr & 0xFF00) >> 8;
 		buf[1] = (raddr & 0x00FF);
 
 		rc = mt9d112_i2c_rxdata(saddr, buf, 2);
@@ -190,7 +190,7 @@ static int32_t mt9d112_i2c_read(unsigned short   saddr,
 
 		*rdata = buf[0] << 8 | buf[1];
 	}
-		break;
+	break;
 
 	default:
 		break;
@@ -205,8 +205,9 @@ static int32_t mt9d112_i2c_read(unsigned short   saddr,
 static int32_t mt9d112_set_lens_roll_off(void)
 {
 	int32_t rc = 0;
+
 	rc = mt9d112_i2c_write_table(&mt9d112_regs.rftbl[0],
-								 mt9d112_regs.rftbl_size);
+				     mt9d112_regs.rftbl_size);
 	return rc;
 }
 
@@ -218,7 +219,7 @@ static long mt9d112_reg_init(void)
 
 	/* PLL Setup Start */
 	rc = mt9d112_i2c_write_table(&mt9d112_regs.plltbl[0],
-					mt9d112_regs.plltbl_size);
+				     mt9d112_regs.plltbl_size);
 
 	if (rc < 0)
 		return rc;
@@ -229,9 +230,9 @@ static long mt9d112_reg_init(void)
 	/* Configure sensor for Preview mode and Snapshot mode */
 	for (i = 0; i < array_length; i++) {
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-		  mt9d112_regs.prev_snap_reg_settings[i].register_address,
-		  mt9d112_regs.prev_snap_reg_settings[i].register_value,
-		  WORD_LEN);
+				       mt9d112_regs.prev_snap_reg_settings[i].register_address,
+				       mt9d112_regs.prev_snap_reg_settings[i].register_value,
+				       WORD_LEN);
 
 		if (rc < 0)
 			return rc;
@@ -242,9 +243,9 @@ static long mt9d112_reg_init(void)
 
 	for (i = 0; i < array_length; i++) {
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			mt9d112_regs.noise_reduction_reg_settings[i].register_address,
-			mt9d112_regs.noise_reduction_reg_settings[i].register_value,
-			WORD_LEN);
+				       mt9d112_regs.noise_reduction_reg_settings[i].register_address,
+				       mt9d112_regs.noise_reduction_reg_settings[i].register_value,
+				       WORD_LEN);
 
 		if (rc < 0)
 			return rc;
@@ -252,15 +253,15 @@ static long mt9d112_reg_init(void)
 
 	/* Set Color Kill Saturation point to optimum value */
 	rc =
-	mt9d112_i2c_write(mt9d112_client->addr,
-	0x35A4,
-	0x0593,
-	WORD_LEN);
+		mt9d112_i2c_write(mt9d112_client->addr,
+				  0x35A4,
+				  0x0593,
+				  WORD_LEN);
 	if (rc < 0)
 		return rc;
 
 	rc = mt9d112_i2c_write_table(&mt9d112_regs.stbl[0],
-					mt9d112_regs.stbl_size);
+				     mt9d112_regs.stbl_size);
 	if (rc < 0)
 		return rc;
 
@@ -280,37 +281,37 @@ static long mt9d112_set_sensor_mode(int mode)
 	case SENSOR_PREVIEW_MODE:
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x338C, 0xA20C, WORD_LEN);
+					  0x338C, 0xA20C, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x3390, 0x0004, WORD_LEN);
+					  0x3390, 0x0004, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x338C, 0xA215, WORD_LEN);
+					  0x338C, 0xA215, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x3390, 0x0004, WORD_LEN);
+					  0x3390, 0x0004, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x338C, 0xA20B, WORD_LEN);
+					  0x338C, 0xA20B, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x3390, 0x0000, WORD_LEN);
+					  0x3390, 0x0000, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
@@ -318,19 +319,19 @@ static long mt9d112_set_sensor_mode(int mode)
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x341C, clock, WORD_LEN);
+					  0x341C, clock, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x338C, 0xA103, WORD_LEN);
+					  0x338C, 0xA103, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x3390, 0x0001, WORD_LEN);
+					  0x3390, 0x0001, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
@@ -341,19 +342,19 @@ static long mt9d112_set_sensor_mode(int mode)
 		/* Switch to lower fps for Snapshot */
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x341C, 0x0120, WORD_LEN);
+					  0x341C, 0x0120, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x338C, 0xA120, WORD_LEN);
+					  0x338C, 0xA120, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x3390, 0x0002, WORD_LEN);
+					  0x3390, 0x0002, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
@@ -361,13 +362,13 @@ static long mt9d112_set_sensor_mode(int mode)
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x338C, 0xA103, WORD_LEN);
+					  0x338C, 0xA103, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc =
 			mt9d112_i2c_write(mt9d112_client->addr,
-				0x3390, 0x0002, WORD_LEN);
+					  0x3390, 0x0002, WORD_LEN);
 		if (rc < 0)
 			return rc;
 		break;
@@ -406,72 +407,72 @@ static long mt9d112_set_effect(int mode, int effect)
 		reg_val = 0x6440;
 
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x338C, reg_addr, WORD_LEN);
+				       0x338C, reg_addr, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x3390, reg_val, WORD_LEN);
+				       0x3390, reg_val, WORD_LEN);
 		if (rc < 0)
 			return rc;
 	}
-			break;
+	break;
 
 	case CAMERA_EFFECT_MONO: {
 		reg_val = 0x6441;
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x338C, reg_addr, WORD_LEN);
+				       0x338C, reg_addr, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x3390, reg_val, WORD_LEN);
+				       0x3390, reg_val, WORD_LEN);
 		if (rc < 0)
 			return rc;
 	}
-		break;
+	break;
 
 	case CAMERA_EFFECT_NEGATIVE: {
 		reg_val = 0x6443;
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x338C, reg_addr, WORD_LEN);
+				       0x338C, reg_addr, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x3390, reg_val, WORD_LEN);
+				       0x3390, reg_val, WORD_LEN);
 		if (rc < 0)
 			return rc;
 	}
-		break;
+	break;
 
 	case CAMERA_EFFECT_SOLARIZE: {
 		reg_val = 0x6445;
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x338C, reg_addr, WORD_LEN);
+				       0x338C, reg_addr, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x3390, reg_val, WORD_LEN);
+				       0x3390, reg_val, WORD_LEN);
 		if (rc < 0)
 			return rc;
 	}
-		break;
+	break;
 
 	case CAMERA_EFFECT_SEPIA: {
 		reg_val = 0x6442;
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x338C, reg_addr, WORD_LEN);
+				       0x338C, reg_addr, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x3390, reg_val, WORD_LEN);
+				       0x3390, reg_val, WORD_LEN);
 		if (rc < 0)
 			return rc;
 	}
-		break;
+	break;
 
 	case CAMERA_EFFECT_PASTEL:
 	case CAMERA_EFFECT_MOSAIC:
@@ -481,12 +482,12 @@ static long mt9d112_set_effect(int mode, int effect)
 	default: {
 		reg_val = 0x6440;
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x338C, reg_addr, WORD_LEN);
+				       0x338C, reg_addr, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
 		rc = mt9d112_i2c_write(mt9d112_client->addr,
-			0x3390, reg_val, WORD_LEN);
+				       0x3390, reg_val, WORD_LEN);
 		if (rc < 0)
 			return rc;
 
@@ -496,12 +497,12 @@ static long mt9d112_set_effect(int mode, int effect)
 
 	/* Refresh Sequencer */
 	rc = mt9d112_i2c_write(mt9d112_client->addr,
-		0x338C, 0xA103, WORD_LEN);
+			       0x338C, 0xA103, WORD_LEN);
 	if (rc < 0)
 		return rc;
 
 	rc = mt9d112_i2c_write(mt9d112_client->addr,
-		0x3390, 0x0005, WORD_LEN);
+			       0x3390, 0x0005, WORD_LEN);
 
 	return rc;
 }
@@ -521,15 +522,15 @@ static int mt9d112_sensor_init_probe(const struct msm_camera_sensor_info *data)
 	mdelay(5);
 
 	/* Micron suggested Power up block Start:
-	* Put MCU into Reset - Stop MCU */
+	 * Put MCU into Reset - Stop MCU */
 	rc = mt9d112_i2c_write(mt9d112_client->addr,
-		REG_MT9D112_MCU_BOOT, 0x0501, WORD_LEN);
+			       REG_MT9D112_MCU_BOOT, 0x0501, WORD_LEN);
 	if (rc < 0)
 		goto init_probe_fail;
 
 	/* Pull MCU from Reset - Start MCU */
 	rc = mt9d112_i2c_write(mt9d112_client->addr,
-		REG_MT9D112_MCU_BOOT, 0x0500, WORD_LEN);
+			       REG_MT9D112_MCU_BOOT, 0x0500, WORD_LEN);
 	if (rc < 0)
 		goto init_probe_fail;
 
@@ -537,18 +538,18 @@ static int mt9d112_sensor_init_probe(const struct msm_camera_sensor_info *data)
 
 	/* Micron Suggested - Power up block */
 	rc = mt9d112_i2c_write(mt9d112_client->addr,
-		REG_MT9D112_SENSOR_RESET, 0x0ACC, WORD_LEN);
+			       REG_MT9D112_SENSOR_RESET, 0x0ACC, WORD_LEN);
 	if (rc < 0)
 		goto init_probe_fail;
 
 	rc = mt9d112_i2c_write(mt9d112_client->addr,
-		REG_MT9D112_STANDBY_CONTROL, 0x0008, WORD_LEN);
+			       REG_MT9D112_STANDBY_CONTROL, 0x0008, WORD_LEN);
 	if (rc < 0)
 		goto init_probe_fail;
 
 	/* FUSED_DEFECT_CORRECTION */
 	rc = mt9d112_i2c_write(mt9d112_client->addr,
-		0x33F4, 0x031D, WORD_LEN);
+			       0x33F4, 0x031D, WORD_LEN);
 	if (rc < 0)
 		goto init_probe_fail;
 
@@ -557,7 +558,7 @@ static int mt9d112_sensor_init_probe(const struct msm_camera_sensor_info *data)
 	/* Micron suggested Power up block End */
 	/* Read the Model ID of the sensor */
 	rc = mt9d112_i2c_read(mt9d112_client->addr,
-		REG_MT9D112_MODEL_ID, &model_id, WORD_LEN);
+			      REG_MT9D112_MODEL_ID, &model_id, WORD_LEN);
 	if (rc < 0)
 		goto init_probe_fail;
 
@@ -623,34 +624,34 @@ static int mt9d112_init_client(struct i2c_client *client)
 int mt9d112_sensor_config(void __user *argp)
 {
 	struct sensor_cfg_data cfg_data;
-	long   rc = 0;
+	long rc = 0;
 
 	if (copy_from_user(&cfg_data,
-			(void *)argp,
-			sizeof(struct sensor_cfg_data)))
+			   (void *)argp,
+			   sizeof(struct sensor_cfg_data)))
 		return -EFAULT;
 
 	/* down(&mt9d112_sem); */
 
 	CDBG("mt9d112_ioctl, cfgtype = %d, mode = %d\n",
-		cfg_data.cfgtype, cfg_data.mode);
+	     cfg_data.cfgtype, cfg_data.mode);
 
-		switch (cfg_data.cfgtype) {
-		case CFG_SET_MODE:
-			rc = mt9d112_set_sensor_mode(
-						cfg_data.mode);
-			break;
+	switch (cfg_data.cfgtype) {
+	case CFG_SET_MODE:
+		rc = mt9d112_set_sensor_mode(
+			cfg_data.mode);
+		break;
 
-		case CFG_SET_EFFECT:
-			rc = mt9d112_set_effect(cfg_data.mode,
-						cfg_data.cfg.effect);
-			break;
+	case CFG_SET_EFFECT:
+		rc = mt9d112_set_effect(cfg_data.mode,
+					cfg_data.cfg.effect);
+		break;
 
-		case CFG_GET_AF_MAX_STEPS:
-		default:
-			rc = -EINVAL;
-			break;
-		}
+	case CFG_GET_AF_MAX_STEPS:
+	default:
+		rc = -EINVAL;
+		break;
+	}
 
 	/* up(&mt9d112_sem); */
 
@@ -669,10 +670,11 @@ int mt9d112_sensor_release(void)
 	return rc;
 }
 
-static int mt9d112_i2c_probe(struct i2c_client *client,
-	const struct i2c_device_id *id)
+static int mt9d112_i2c_probe(struct i2c_client *		client,
+			     const struct i2c_device_id *	id)
 {
 	int rc = 0;
+
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
 		rc = -ENOTSUPP;
 		goto probe_failure;
@@ -702,23 +704,24 @@ probe_failure:
 }
 
 static const struct i2c_device_id mt9d112_i2c_id[] = {
-	{ "mt9d112", 0},
+	{ "mt9d112", 0 },
 	{ },
 };
 
 static struct i2c_driver mt9d112_i2c_driver = {
-	.id_table = mt9d112_i2c_id,
-	.probe  = mt9d112_i2c_probe,
-	.remove = __exit_p(mt9d112_i2c_remove),
-	.driver = {
-		.name = "mt9d112",
+	.id_table	= mt9d112_i2c_id,
+	.probe		= mt9d112_i2c_probe,
+	.remove		= __exit_p(mt9d112_i2c_remove),
+	.driver		= {
+		.name	= "mt9d112",
 	},
 };
 
-static int mt9d112_sensor_probe(const struct msm_camera_sensor_info *info,
-				struct msm_sensor_ctrl *s)
+static int mt9d112_sensor_probe(const struct msm_camera_sensor_info *	info,
+				struct msm_sensor_ctrl *		s)
 {
 	int rc = i2c_add_driver(&mt9d112_i2c_driver);
+
 	if (rc < 0 || mt9d112_client == NULL) {
 		rc = -ENOTSUPP;
 		goto probe_done;
@@ -734,7 +737,7 @@ static int mt9d112_sensor_probe(const struct msm_camera_sensor_info *info,
 
 	s->s_init = mt9d112_sensor_init;
 	s->s_release = mt9d112_sensor_release;
-	s->s_config  = mt9d112_sensor_config;
+	s->s_config = mt9d112_sensor_config;
 
 probe_done:
 	CDBG("%s %s:%d\n", __FILE__, __func__, __LINE__);
@@ -747,10 +750,10 @@ static int __mt9d112_probe(struct platform_device *pdev)
 }
 
 static struct platform_driver msm_camera_driver = {
-	.probe = __mt9d112_probe,
-	.driver = {
-		.name = "msm_camera_mt9d112",
-		.owner = THIS_MODULE,
+	.probe		= __mt9d112_probe,
+	.driver		= {
+		.name	= "msm_camera_mt9d112",
+		.owner	= THIS_MODULE,
 	},
 };
 

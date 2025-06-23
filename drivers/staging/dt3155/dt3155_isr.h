@@ -1,37 +1,37 @@
 /*
-
-Copyright 1996,2002 Gregory D. Hager, Alfred A. Rizzi, Noah J. Cowan,
-		    Jason Lapenta, Scott Smedley
-
-This file is part of the DT3155 Device Driver.
-
-The DT3155 Device Driver is free software; you can redistribute it
-and/or modify it under the terms of the GNU General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
-
-The DT3155 Device Driver is distributed in the hope that it will be
-useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with the DT3155 Device Driver; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-MA 02111-1307 USA
-
-
--- Changes --
-
-  Date     Programmer   Description of changes made
-  -------------------------------------------------------------------
-  03-Jul-2000 JML       n/a
-  24-Jul-2002 SS        GPL licence.
-  26-Oct-2009 SS	Porting to 2.6.30 kernel.
-
--- notes --
-
-*/
+ *
+ * Copyright 1996,2002 Gregory D. Hager, Alfred A. Rizzi, Noah J. Cowan,
+ *                  Jason Lapenta, Scott Smedley
+ *
+ * This file is part of the DT3155 Device Driver.
+ *
+ * The DT3155 Device Driver is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * The DT3155 Device Driver is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the DT3155 Device Driver; if not, write to the Free
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307 USA
+ *
+ *
+ * -- Changes --
+ *
+ * Date     Programmer   Description of changes made
+ * -------------------------------------------------------------------
+ * 03-Jul-2000 JML       n/a
+ * 24-Jul-2002 SS        GPL licence.
+ * 26-Oct-2009 SS	Porting to 2.6.30 kernel.
+ *
+ * -- notes --
+ *
+ */
 
 #ifndef DT3155_ISR_H
 #define DT3155_ISR_H
@@ -59,8 +59,8 @@ void dt3155_release_locked_buffer(int minor);
 int dt3155_flush(int minor);
 
 /**********************************
- * Simple array based que struct
- **********************************/
+* Simple array based que struct
+**********************************/
 
 bool are_empty_buffers(int minor);
 void push_empty(int index, int minor);

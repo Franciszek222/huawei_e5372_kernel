@@ -1,25 +1,25 @@
 /*
-    module/drivers.c
-    functions for manipulating drivers
-
-    COMEDI - Linux Control and Measurement Device Interface
-    Copyright (C) 1997-2000 David A. Schleef <ds@schleef.org>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
-*/
+ *  module/drivers.c
+ *  functions for manipulating drivers
+ *
+ *  COMEDI - Linux Control and Measurement Device Interface
+ *  Copyright (C) 1997-2000 David A. Schleef <ds@schleef.org>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ */
 
 #define _GNU_SOURCE
 
@@ -37,7 +37,7 @@
 #include <linux/ioport.h>
 #include <linux/mm.h>
 #include <linux/slab.h>
-#include <linux/highmem.h>	/* for SuSE brokenness */
+#include <linux/highmem.h>      /* for SuSE brokenness */
 #include <linux/vmalloc.h>
 #include <linux/cdev.h>
 #include <linux/dma-mapping.h>
@@ -48,9 +48,7 @@
 #include "internal.h"
 
 static int postconfig(struct comedi_device *dev);
-static int insn_rw_emulate_bits(struct comedi_device *dev,
-				struct comedi_subdevice *s,
-				struct comedi_insn *insn, unsigned int *data);
+static int insn_rw_emulate_bits(struct comedi_device *dev, struct comedi_subdevice *s, struct comedi_insn *insn, unsigned int *data);
 static void *comedi_recognize(struct comedi_driver *driv, const char *name);
 static void comedi_report_boards(struct comedi_driver *driv);
 static int poll_invalid(struct comedi_device *dev, struct comedi_subdevice *s);
@@ -118,7 +116,7 @@ int comedi_device_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 	for (driv = comedi_drivers; driv; driv = driv->next) {
 		if (!try_module_get(driv->module)) {
 			printk
-			    (KERN_INFO "comedi: failed to increment module count, skipping\n");
+				(KERN_INFO "comedi: failed to increment module count, skipping\n");
 			continue;
 		}
 		if (driv->num_names) {
@@ -195,7 +193,7 @@ int comedi_driver_unregister(struct comedi_driver *driver)
 	/* check for devices using this driver */
 	for (i = 0; i < COMEDI_NUM_BOARD_MINORS; i++) {
 		struct comedi_device_file_info *dev_file_info =
-		    comedi_get_device_file_info(i);
+			comedi_get_device_file_info(i);
 		struct comedi_device *dev;
 
 		if (dev_file_info == NULL)
@@ -206,8 +204,8 @@ int comedi_driver_unregister(struct comedi_driver *driver)
 		if (dev->attached && dev->driver == driver) {
 			if (dev->use_count)
 				printk
-				    (KERN_WARNING "BUG! detaching device with use_count=%d\n",
-				     dev->use_count);
+					(KERN_WARNING "BUG! detaching device with use_count=%d\n",
+					dev->use_count);
 			comedi_device_detach(dev);
 		}
 		mutex_unlock(&dev->mutex);
@@ -250,7 +248,7 @@ static int postconfig(struct comedi_device *dev)
 			BUG_ON(!s->do_cmdtest);
 
 			async =
-			    kzalloc(sizeof(struct comedi_async), GFP_KERNEL);
+				kzalloc(sizeof(struct comedi_async), GFP_KERNEL);
 			if (async == NULL) {
 				printk(KERN_INFO
 				       "failed to allocate async struct\n");
@@ -260,8 +258,8 @@ static int postconfig(struct comedi_device *dev)
 			async->subdevice = s;
 			s->async = async;
 
-#define DEFAULT_BUF_MAXSIZE (64*1024)
-#define DEFAULT_BUF_SIZE (64*1024)
+#define DEFAULT_BUF_MAXSIZE (64 * 1024)
+#define DEFAULT_BUF_SIZE (64 * 1024)
 
 			async->max_bufsize = DEFAULT_BUF_MAXSIZE;
 
@@ -313,8 +311,8 @@ static void *comedi_recognize(struct comedi_driver *driv, const char *name)
 		if (strcmp(*name_ptr, name) == 0)
 			return (void *)name_ptr;
 		name_ptr =
-		    (const char *const *)((const char *)name_ptr +
-					  driv->offset);
+			(const char *const *)((const char *)name_ptr +
+					      driv->offset);
 	}
 
 	return NULL;
@@ -359,7 +357,7 @@ static int insn_rw_emulate_bits(struct comedi_device *dev,
 
 	unsigned chan = CR_CHAN(insn->chanspec);
 	const unsigned base_bitfield_channel =
-	    (chan < channels_per_bitfield) ? 0 : chan;
+		(chan < channels_per_bitfield) ? 0 : chan;
 	unsigned int new_data[2];
 	memset(new_data, 0, sizeof(new_data));
 	memset(&new_insn, 0, sizeof(new_insn));
@@ -372,9 +370,9 @@ static int insn_rw_emulate_bits(struct comedi_device *dev,
 	if (insn->insn == INSN_WRITE) {
 		if (!(s->subdev_flags & SDF_WRITABLE))
 			return -EINVAL;
-		new_data[0] = 1 << (chan - base_bitfield_channel); /* mask */
+		new_data[0] = 1 << (chan - base_bitfield_channel);      /* mask */
 		new_data[1] = data[0] ? (1 << (chan - base_bitfield_channel))
-			      : 0; /* bits */
+			      : 0;                                      /* bits */
 	}
 
 	ret = s->insn_bits(dev, s, &new_insn, new_data);
@@ -402,7 +400,7 @@ static inline unsigned long uvirt_to_kva(pgd_t *pgd, unsigned long adr)
 			pte = *ptep;
 			if (pte_present(pte)) {
 				ret = (unsigned long)
-				    page_address(pte_page(pte));
+				      page_address(pte_page(pte));
 				ret |= (adr & (PAGE_SIZE - 1));
 			}
 		}
@@ -470,7 +468,7 @@ int comedi_buf_alloc(struct comedi_device *dev, struct comedi_subdevice *s,
 		struct page **pages = NULL;
 
 		async->buf_page_list =
-		    vmalloc(sizeof(struct comedi_buf_page) * n_pages);
+			vmalloc(sizeof(struct comedi_buf_page) * n_pages);
 		if (async->buf_page_list) {
 			memset(async->buf_page_list, 0,
 			       sizeof(struct comedi_buf_page) * n_pages);
@@ -480,17 +478,17 @@ int comedi_buf_alloc(struct comedi_device *dev, struct comedi_subdevice *s,
 			for (i = 0; i < n_pages; i++) {
 				if (s->async_dma_dir != DMA_NONE) {
 					async->buf_page_list[i].virt_addr =
-					    dma_alloc_coherent(dev->hw_dev,
-							       PAGE_SIZE,
-							       &async->
-							       buf_page_list
-							       [i].dma_addr,
-							       GFP_KERNEL |
-							       __GFP_COMP);
+						dma_alloc_coherent(dev->hw_dev,
+								   PAGE_SIZE,
+								   &async->
+								   buf_page_list
+								   [i].dma_addr,
+								   GFP_KERNEL |
+								   __GFP_COMP);
 				} else {
 					async->buf_page_list[i].virt_addr =
-					    (void *)
-					    get_zeroed_page(GFP_KERNEL);
+						(void *)
+						get_zeroed_page(GFP_KERNEL);
 				}
 				if (async->buf_page_list[i].virt_addr == NULL)
 					break;
@@ -500,10 +498,9 @@ int comedi_buf_alloc(struct comedi_device *dev, struct comedi_subdevice *s,
 				pages[i] = virt_to_page(async->buf_page_list[i].virt_addr);
 			}
 		}
-		if (i == n_pages) {
+		if (i == n_pages)
 			async->prealloc_buf =
-			    vmap(pages, n_pages, VM_MAP, PAGE_KERNEL_NOCACHE);
-		}
+				vmap(pages, n_pages, VM_MAP, PAGE_KERNEL_NOCACHE);
 		vfree(pages);
 
 		if (async->prealloc_buf == NULL) {
@@ -511,9 +508,8 @@ int comedi_buf_alloc(struct comedi_device *dev, struct comedi_subdevice *s,
 			if (async->buf_page_list) {
 				for (i = 0; i < n_pages; i++) {
 					if (async->buf_page_list[i].virt_addr ==
-					    NULL) {
+					    NULL)
 						break;
-					}
 					clear_bit(PG_reserved, &(virt_to_page(async->buf_page_list[i].virt_addr)->flags));
 					if (s->async_dma_dir != DMA_NONE) {
 						dma_free_coherent(dev->hw_dev,
@@ -544,8 +540,8 @@ int comedi_buf_alloc(struct comedi_device *dev, struct comedi_subdevice *s,
 
 /* munging is applied to data by core as it passes between user
  * and kernel space */
-static unsigned int comedi_buf_munge(struct comedi_async *async,
-				     unsigned int num_bytes)
+static unsigned int comedi_buf_munge(struct comedi_async *	async,
+				     unsigned int		num_bytes)
 {
 	struct comedi_subdevice *s = async->subdevice;
 	unsigned int count = 0;
@@ -575,8 +571,8 @@ static unsigned int comedi_buf_munge(struct comedi_async *async,
 		s->munge(s->device, s, async->prealloc_buf + async->munge_ptr,
 			 block_size, async->munge_chan);
 
-		smp_wmb();	/* barrier insures data is munged in buffer
-				 * before munge_count is incremented */
+		smp_wmb();      /* barrier insures data is munged in buffer
+		                 * before munge_count is incremented */
 
 		async->munge_chan += block_size / num_sample_bytes;
 		async->munge_chan %= async->cmd.chanlist_len;
@@ -601,16 +597,16 @@ unsigned int comedi_buf_write_n_available(struct comedi_async *async)
 	nbytes = free_end - async->buf_write_alloc_count;
 	nbytes -= nbytes % bytes_per_sample(async->subdevice);
 	/* barrier insures the read of buf_read_count in this
-	   query occurs before any following writes to the buffer which
-	   might be based on the return value from this query.
+	 * query occurs before any following writes to the buffer which
+	 * might be based on the return value from this query.
 	 */
 	smp_mb();
 	return nbytes;
 }
 
 /* allocates chunk for the writer from free buffer space */
-unsigned int comedi_buf_write_alloc(struct comedi_async *async,
-				    unsigned int nbytes)
+unsigned int comedi_buf_write_alloc(struct comedi_async *	async,
+				    unsigned int		nbytes)
 {
 	unsigned int free_end = async->buf_read_count + async->prealloc_bufsz;
 
@@ -619,7 +615,7 @@ unsigned int comedi_buf_write_alloc(struct comedi_async *async,
 
 	async->buf_write_alloc_count += nbytes;
 	/* barrier insures the read of buf_read_count above occurs before
-	   we write data to the write-alloc'ed buffer space */
+	 * we write data to the write-alloc'ed buffer space */
 	smp_mb();
 	return nbytes;
 }
@@ -627,7 +623,7 @@ EXPORT_SYMBOL(comedi_buf_write_alloc);
 
 /* allocates nothing unless it can completely fulfill the request */
 unsigned int comedi_buf_write_alloc_strict(struct comedi_async *async,
-					   unsigned int nbytes)
+					   unsigned int		nbytes)
 {
 	unsigned int free_end = async->buf_read_count + async->prealloc_bufsz;
 
@@ -636,7 +632,7 @@ unsigned int comedi_buf_write_alloc_strict(struct comedi_async *async,
 
 	async->buf_write_alloc_count += nbytes;
 	/* barrier insures the read of buf_read_count above occurs before
-	   we write data to the write-alloc'ed buffer space */
+	 * we write data to the write-alloc'ed buffer space */
 	smp_mb();
 	return nbytes;
 }
@@ -647,7 +643,7 @@ unsigned comedi_buf_write_free(struct comedi_async *async, unsigned int nbytes)
 	if ((int)(async->buf_write_count + nbytes -
 		  async->buf_write_alloc_count) > 0) {
 		printk
-		    (KERN_INFO "comedi: attempted to write-free more bytes than have been write-allocated.\n");
+			(KERN_INFO "comedi: attempted to write-free more bytes than have been write-allocated.\n");
 		nbytes = async->buf_write_alloc_count - async->buf_write_count;
 	}
 	async->buf_write_count += nbytes;
@@ -664,12 +660,11 @@ EXPORT_SYMBOL(comedi_buf_write_free);
 unsigned comedi_buf_read_alloc(struct comedi_async *async, unsigned nbytes)
 {
 	if ((int)(async->buf_read_alloc_count + nbytes - async->munge_count) >
-	    0) {
+	    0)
 		nbytes = async->munge_count - async->buf_read_alloc_count;
-	}
 	async->buf_read_alloc_count += nbytes;
 	/* barrier insures read of munge_count occurs before we actually read
-	   data out of buffer */
+	 * data out of buffer */
 	smp_rmb();
 	return nbytes;
 }
@@ -679,7 +674,7 @@ EXPORT_SYMBOL(comedi_buf_read_alloc);
 unsigned comedi_buf_read_free(struct comedi_async *async, unsigned int nbytes)
 {
 	/* barrier insures data has been read out of
-	 * buffer before read count is incremented */
+	* buffer before read count is incremented */
 	smp_mb();
 	if ((int)(async->buf_read_count + nbytes -
 		  async->buf_read_alloc_count) > 0) {
@@ -755,8 +750,8 @@ unsigned int comedi_buf_read_n_available(struct comedi_async *async)
 		return 0;
 	num_bytes = async->munge_count - async->buf_read_count;
 	/* barrier insures the read of munge_count in this
-	   query occurs before any following reads of the buffer which
-	   might be based on the return value from this query.
+	 * query occurs before any following reads of the buffer which
+	 * might be based on the return value from this query.
 	 */
 	smp_rmb();
 	return num_bytes;

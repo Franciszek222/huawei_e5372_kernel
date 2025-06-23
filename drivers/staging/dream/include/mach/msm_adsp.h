@@ -24,8 +24,7 @@ struct msm_adsp_ops {
 	 * to copy the message into a local buffer.  Do NOT call
 	 * it multiple times.
 	 */
-	void (*event)(void *driver_data, unsigned id, size_t len,
-		      void (*getevent)(void *ptr, size_t len));
+	void (*event)(void *driver_data, unsigned id, size_t len, void (*getevent)(void *ptr, size_t len));
 };
 
 /* Get, Put, Enable, and Disable are synchronous and must only
@@ -33,8 +32,7 @@ struct msm_adsp_ops {
  * up to one second in the event of a fatal DSP error but are
  * much faster otherwise.
  */
-int msm_adsp_get(const char *name, struct msm_adsp_module **module,
-		 struct msm_adsp_ops *ops, void *driver_data);
+int msm_adsp_get(const char *name, struct msm_adsp_module **module, struct msm_adsp_ops *ops, void *driver_data);
 void msm_adsp_put(struct msm_adsp_module *module);
 int msm_adsp_enable(struct msm_adsp_module *module);
 int msm_adsp_disable(struct msm_adsp_module *module);
@@ -42,9 +40,7 @@ int adsp_set_clkrate(struct msm_adsp_module *module, unsigned long clk_rate);
 
 /* Write is safe to call from interrupt context.
  */
-int msm_adsp_write(struct msm_adsp_module *module,
-		   unsigned queue_id,
-		   void *data, size_t len);
+int msm_adsp_write(struct msm_adsp_module *module, unsigned queue_id, void *data, size_t len);
 
 #if CONFIG_MSM_AMSS_VERSION >= 6350
 /* Command Queue Indexes */

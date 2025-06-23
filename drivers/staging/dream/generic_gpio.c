@@ -21,11 +21,11 @@
 #include <asm/gpio.h>
 #include "gpio_chip.h"
 
-#define GPIO_NUM_TO_CHIP_INDEX(gpio) ((gpio)>>5)
+#define GPIO_NUM_TO_CHIP_INDEX(gpio) ((gpio) >> 5)
 
 struct gpio_state {
-	unsigned long flags;
-	int refcount;
+	unsigned long	flags;
+	int		refcount;
 };
 
 static DEFINE_SPINLOCK(gpio_chips_lock);
@@ -82,10 +82,9 @@ int register_gpio_chip(struct gpio_chip *new_gpio_chip)
 	}
 	list_add_tail(&new_gpio_chip->list, &gpio_chip_list);
 added:
-	for (i = chip_array_start_index; i <= chip_array_end_index; i++) {
+	for (i = chip_array_start_index; i <= chip_array_end_index; i++)
 		if (gpio_chip_array[i] == NULL || gpio_chip_array[i]->start > new_gpio_chip->start)
 			gpio_chip_array[i] = new_gpio_chip;
-	}
 failed:
 	spin_unlock_irqrestore(&gpio_chips_lock, irq_flags);
 	if (err)
@@ -131,10 +130,11 @@ static int request_gpio(unsigned int gpio, unsigned long flags)
 		chip->configure(chip, gpio, flags);
 		chip->state[chip_index].flags = flags;
 		chip->state[chip_index].refcount++;
-	} else if ((flags & IRQF_SHARED) && (chip->state[chip_index].flags & IRQF_SHARED))
+	} else if ((flags & IRQF_SHARED) && (chip->state[chip_index].flags & IRQF_SHARED)) {
 		chip->state[chip_index].refcount++;
-	else
+	} else {
 		err = -EBUSY;
+	}
 err:
 	spin_unlock_irqrestore(&gpio_chips_lock, irq_flags);
 	return err;
@@ -179,6 +179,7 @@ static int gpio_get_irq_num(unsigned int gpio, unsigned int *irqp, unsigned long
 int gpio_to_irq(unsigned gpio)
 {
 	int ret, irq;
+
 	ret = gpio_get_irq_num(gpio, &irq, NULL);
 	if (ret)
 		return ret;

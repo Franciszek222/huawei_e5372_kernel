@@ -32,7 +32,7 @@
 #define STATE_ENABLING  2
 #define STATE_ENABLED   3
 #define STATE_DISABLING 4
-#define STATE_ERROR	5
+#define STATE_ERROR     5
 
 static void rpc_ack(struct msm_rpc_endpoint *ept, uint32_t xid)
 {
@@ -48,9 +48,9 @@ static void rpc_ack(struct msm_rpc_endpoint *ept, uint32_t xid)
 	msm_rpc_write(ept, rep, sizeof(rep));
 }
 
-static void process_audmgr_callback(struct audmgr *am,
-				   struct rpc_audmgr_cb_func_ptr *args,
-				   int len)
+static void process_audmgr_callback(struct audmgr *			am,
+				    struct rpc_audmgr_cb_func_ptr *	args,
+				    int					len)
 {
 	if (len < (sizeof(uint32_t) * 3))
 		return;
@@ -146,7 +146,7 @@ static int audmgr_rpc_thread(void *data)
 			kfree(hdr);
 			hdr = NULL;
 		}
-		len = msm_rpc_read(am->ept, (void **) &hdr, -1, -1);
+		len = msm_rpc_read(am->ept, (void **)&hdr, -1, -1);
 		if (len < 0) {
 			pr_err("audmgr: rpc read failed (%d)\n", len);
 			break;
@@ -156,7 +156,7 @@ static int audmgr_rpc_thread(void *data)
 
 		type = be32_to_cpu(hdr->type);
 		if (type == RPC_TYPE_REPLY) {
-			struct rpc_reply_hdr *rep = (void *) hdr;
+			struct rpc_reply_hdr *rep = (void *)hdr;
 			uint32_t status;
 			if (len < RPC_REPLY_HDR_SZ)
 				continue;
@@ -176,7 +176,7 @@ static int audmgr_rpc_thread(void *data)
 
 		process_rpc_request(be32_to_cpu(hdr->procedure),
 				    be32_to_cpu(hdr->xid),
-				    (void *) (hdr + 1),
+				    (void *)(hdr + 1),
 				    len - sizeof(*hdr),
 				    data);
 	}
@@ -191,13 +191,13 @@ static int audmgr_rpc_thread(void *data)
 }
 
 struct audmgr_enable_msg {
-	struct rpc_request_hdr hdr;
-	struct rpc_audmgr_enable_client_args args;
+	struct rpc_request_hdr			hdr;
+	struct rpc_audmgr_enable_client_args	args;
 };
 
 struct audmgr_disable_msg {
-	struct rpc_request_hdr hdr;
-	uint32_t handle;
+	struct rpc_request_hdr	hdr;
+	uint32_t		handle;
 };
 
 int audmgr_open(struct audmgr *am)
@@ -208,8 +208,8 @@ int audmgr_open(struct audmgr *am)
 		return 0;
 
 	am->ept = msm_rpc_connect(AUDMGR_PROG,
-				AUDMGR_VERS,
-				MSM_RPC_UNINTERRUPTIBLE);
+				  AUDMGR_VERS,
+				  MSM_RPC_UNINTERRUPTIBLE);
 
 	init_waitqueue_head(&am->wait);
 

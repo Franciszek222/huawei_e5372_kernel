@@ -90,20 +90,20 @@
 #include "wfa_wmmps.h"
 
 
-#define MAC_ADDR_LEN		18
-#define DEVICE_NAME_LEN		20
-#define TRANSPORT_TYPE_LEN	10
-#define SERVER_IP_LEN		20
-#define INTERFACE_NAME_LEN	31
-#define RESPONSE_SIZE		256
+#define MAC_ADDR_LEN            18
+#define DEVICE_NAME_LEN         20
+#define TRANSPORT_TYPE_LEN      10
+#define SERVER_IP_LEN           20
+#define INTERFACE_NAME_LEN      31
+#define RESPONSE_SIZE           256
 
-char gnetIf[WFA_BUFF_32]; /* specify the interface to use */
-int adj_latency;          /* adjust sleep time due to latency */
+char gnetIf[WFA_BUFF_32];       /* specify the interface to use */
+int adj_latency;                /* adjust sleep time due to latency */
 int isExit = 1;
-int gRegSec = 1;         /* regularly periodical timeout */
-int gtimeOut = 0;        /* timeout value for select call in usec */
-int gSock = -1,xcSockfd = -1, gtgSend, gtgRecv, gtgTransac;
-int rwl_wifi_flag = 0;	/*Flag to check wheather the transport is wifi */
+int gRegSec = 1;                /* regularly periodical timeout */
+int gtimeOut = 0;               /* timeout value for select call in usec */
+int gSock = -1, xcSockfd = -1, gtgSend, gtgRecv, gtgTransac;
+int rwl_wifi_flag = 0;          /*Flag to check wheather the transport is wifi */
 BYTE *xcCmdBuf = NULL, *parmsVal = NULL, *trafficBuf = NULL, *respBuf = NULL;
 
 /* stream table */
@@ -117,15 +117,15 @@ struct timeval *toutvalp;
 tgWMM_t wmm_thr[WFA_THREADS_NUM];
 extern void *wfa_wmm_thread(void *thr_param);
 extern void *wfa_wmmps_thread();
-BOOL gtgStartSync = 0;       /* flag to sync End2End Time handshaking */
-BOOL gtgFinishSync = 0;      /* flag to sync End2End Time handshaking */
+BOOL gtgStartSync = 0;          /* flag to sync End2End Time handshaking */
+BOOL gtgFinishSync = 0;         /* flag to sync End2End Time handshaking */
 double min_rttime = 0xFFFFFFFF;
 
 #ifdef WFA_WMM_PS_EXT
-BOOL       gtgWmmPS = 0;
+BOOL gtgWmmPS = 0;
 unsigned long psTxMsg[WFA_BUFF_512];
 unsigned long psRxMsg[WFA_BUFF_512];
-extern int psSockfd ;
+extern int psSockfd;
 extern struct apts_msg apts_msgs[];
 extern void BUILD_APTS_MSG(int msg, unsigned long *txbuf);
 extern int wfaWmmPowerSaveProcess(int sockfd);
@@ -151,7 +151,7 @@ extern typeNameStr_t nameStr[];
 extern char gRespStr[];
 extern sockfd_t gCaSockfd;
 extern unsigned short wfa_defined_debug;
-extern char* rwl_client_path;
+extern char *rwl_client_path;
 extern xcCommandFuncPtr gWfaCmdFuncTbl[]; /* command process functions */
 extern char gCmdStr[];
 extern dutCmdResponse_t gGenericResp;
@@ -173,11 +173,12 @@ main(int argc, char *argv[])
 	sockfd_t tmsockfd;
 	BYTE xcCmdBuf[WFA_BUFF_1K], xcCmdTag, pcmdBuf[WFA_BUFF_1K];
 	BYTE *respBuf = NULL, *parmsVal = NULL;
-	FILE* fp = NULL;
+	FILE *fp = NULL;
 	fd_set sockSet;
 	char *rwl_exe_path;
+
 	rwl_exe_path = malloc(WFA_BUFF_1K);
-	
+
 /* CA assumes that wl.exe will be stored in the current working directory */
 	get_rwl_exe_path(rwl_exe_path, WFA_BUFF_1K);
 	if (argc < 3) {
@@ -185,7 +186,7 @@ main(int argc, char *argv[])
 		return 0;
 	}
 
-    /* isdigit() is not working with the build server tagged build 
+	/* isdigit() is not working with the build server tagged build
 	 * so isdigit is replaced with isNumber() function call */
 
 	if (isNumber(argv[2]) == FALSE) {
@@ -203,18 +204,17 @@ main(int argc, char *argv[])
 		return 0;
 	}
 
-	if((errno_defined = Start_Socket_Service()) != 0){
+	if ((errno_defined = Start_Socket_Service()) != 0) {
 		DPRINT_ERR(WFA_ERR, "Start_Socket_Service failed\n");
 		return 0;
 	}
 
 	strncpy(gnetIf, argv[1], INTERFACE_NAME_LEN); /* For integration */
 
-	if ((rwl_client_path = malloc(WFA_BUFF_256))== NULL) {
+	if ((rwl_client_path = malloc(WFA_BUFF_256)) == NULL) {
 		DPRINT_ERR(WFA_ERR, "malloc failed\r\n");
-		if((errno_defined = Stop_Socket_Service()) != 0){
+		if ((errno_defined = Stop_Socket_Service()) != 0)
 			DPRINT_ERR(WFA_ERR, "Stop_Socket_Service failed\n");
-		}
 		return 0;
 	}
 
@@ -230,45 +230,40 @@ main(int argc, char *argv[])
 	}
 	length_client_path = strlen(rwl_client_path);
 	/* Look for wifi transport */
-	if(strstr(rwl_client_path, "--wifi") != NULL) {
-		rwl_wifi_flag = 1; 
-	} else {
+	if (strstr(rwl_client_path, "--wifi") != NULL)
+		rwl_wifi_flag = 1;
+	else
 		rwl_wifi_flag = 0;
-	}
 	/* Allocate buffers */
-	if ((parmsVal = malloc(MAX_PARMS_BUFF))== NULL) {
+	if ((parmsVal = malloc(MAX_PARMS_BUFF)) == NULL) {
 		DPRINT_ERR(WFA_ERR, "malloc failed allocating parmsVal\n");
-		if((errno_defined = Stop_Socket_Service()) != 0){
+		if ((errno_defined = Stop_Socket_Service()) != 0)
 			DPRINT_ERR(WFA_ERR, "Stop_Socket_Service failed\n");
-		}
 		return 0;
 	}
 
-	if ((respBuf = malloc(WFA_BUFF_512))== NULL) {
+	if ((respBuf = malloc(WFA_BUFF_512)) == NULL) {
 		DPRINT_ERR(WFA_ERR, "malloc failed allocating respBuf\n");
-		if((errno_defined = Stop_Socket_Service()) != 0){
+		if ((errno_defined = Stop_Socket_Service()) != 0)
 			DPRINT_ERR(WFA_ERR, "Stop_Socket_Service failed\n");
-		}
 		free(parmsVal);
 		return 0;
 	}
 	DPRINT_INFO(WFA_OUT, "rwl_client_path = %s\n", rwl_client_path);
-	
-	
+
+
 	/* Create TCP socket for getting the commands from tc_cli */
-	if ((tmsockfd = wfaCreateTCPServSock(myport))== -1) {
+	if ((tmsockfd = wfaCreateTCPServSock(myport)) == -1) {
 		DPRINT_ERR(WFA_ERR, "Failed to open socket\n");
-	    if((errno_defined = Stop_Socket_Service()) != 0){
+		if ((errno_defined = Stop_Socket_Service()) != 0)
 			DPRINT_ERR(WFA_ERR, "Stop_Socket_Service failed\n");
-		}
 		return 0;
 	}
 
 	maxfdn1 = tmsockfd + 1;
 	FD_ZERO(&sockSet);
 
-	for (;;)
-	{
+	for (;;) {
 		FD_ZERO(&sockSet);
 		FD_SET(tmsockfd, &sockSet);
 		maxfdn1 = tmsockfd + 1;
@@ -279,9 +274,9 @@ main(int argc, char *argv[])
 				maxfdn1 = gCaSockfd + 1;
 		}
 		/*
-		* The timer will be set for transaction traffic if no echo is back
-		* The timeout from the select call force to send a new packet
-		*/
+		 * The timer will be set for transaction traffic if no echo is back
+		 * The timeout from the select call force to send a new packet
+		 */
 		nfds = 0;
 		if ((nfds = select(maxfdn1, &sockSet, NULL, NULL, NULL)) < 0) {
 			if (error_check(errno_defined))
@@ -295,7 +290,7 @@ main(int argc, char *argv[])
 		if (FD_ISSET(tmsockfd, &sockSet)) {
 			gCaSockfd = wfaAcceptTCPConn(tmsockfd);
 			DPRINT_INFO(WFA_OUT, "accept new connection\n");
-				FD_SET(gCaSockfd, &sockSet);
+			FD_SET(gCaSockfd, &sockSet);
 		}
 
 
@@ -313,28 +308,28 @@ main(int argc, char *argv[])
 			memset(respStr, 0, WFA_BUFF_128);
 			sprintf(respStr, "status,RUNNING\r\n");
 			wfaCtrlSend(gCaSockfd, (BYTE *)respStr, strlen(respStr));
-			/* WFA Comment :having this is for slowing down unexpected 
-			 * output result on CLI command sometimes 
+			/* WFA Comment :having this is for slowing down unexpected
+			 * output result on CLI command sometimes
 			 */
 			asd_sleep(1);
 			DPRINT_INFO(WFA_OUT, "%s\n", respStr);
 			DPRINT_INFO(WFA_OUT, "message %s %i\n", xcCmdBuf, nbytes);
-			slen = (int )strlen((char *)xcCmdBuf);
-			strncpy(command, (char*)xcCmdBuf, strlen((char*)xcCmdBuf));
-		   /* The carriage return and newline character need to be
-			* removed before sending the command to the DUT for the TCL 
-			* scripts to run correctly.
-			*/
+			slen = (int)strlen((char *)xcCmdBuf);
+			strncpy(command, (char *)xcCmdBuf, strlen((char *)xcCmdBuf));
+			/* The carriage return and newline character need to be
+			 * removed before sending the command to the DUT for the TCL
+			 * scripts to run correctly.
+			 */
 			strtok(command, "\r\n");
-			DPRINT_INFO(WFA_OUT, "last %x last-1  %x last-2 %x last-3 %x\n", cmdName[slen], cmdName[slen-1], cmdName[slen-2], cmdName[slen-3]);
+			DPRINT_INFO(WFA_OUT, "last %x last-1  %x last-2 %x last-3 %x\n", cmdName[slen], cmdName[slen - 1], cmdName[slen - 2], cmdName[slen - 3]);
 
-			xcCmdBuf[slen-3] = '\0';
+			xcCmdBuf[slen - 3] = '\0';
 
 			isFound = 0;
 			DutCmd = 0;
 			/* tokenize for the command name. Rest of the command buffer
-		 	 * is copied to pcmdStr for command processing later.
-		 	 */
+			 * is copied to pcmdStr for command processing later.
+			 */
 			memcpy(cmdName, strtok_r((char *)xcCmdBuf, ",", (char **)&pcmdStr), 32);
 			i = 0;
 			/* Check if we need to execute the command using rwl client */
@@ -363,24 +358,24 @@ main(int argc, char *argv[])
 
 			memset(pcmdBuf, 0, WFA_BUFF_1K);
 
-			/* Check for the valid command and the valid arguements for the command 
+			/* Check for the valid command and the valid arguements for the command
 			 * and return STATUS INVLID for commands that do not exist or if the arguements
 			 * for the command are invalid.
 			 */
 			if ((!isFound && !DutCmd)
-				|| (DutCmd && (nameStr[i].cmdProcFunc(pcmdStr, pcmdBuf, &cmdLen)==FALSE))
-			    || (!DutCmd && (nameLocalStr[i].cmdProcFunc(pcmdStr, pcmdBuf, &cmdLen)==FALSE))) {
-					asd_sleep(1);
-					sprintf(respStr, "status,INVALID\r\n");
-					wfaCtrlSend(gCaSockfd, (BYTE *)respStr, WFA_BUFF_128);/* Buffer size modified from strlen(respStr) on 21/11/07 */
-					DPRINT_WARNING(WFA_WNG, "Incorrect command syntax\n");
-					continue;
-			} 
-		   /*
-			* Decode the command that is parsed above to find the actual function pointer
-			* that needs to be executed. (decode for xcCmdTag )
-			* Commands that use rwl client are processed here.
-			*/
+			    || (DutCmd && (nameStr[i].cmdProcFunc(pcmdStr, pcmdBuf, &cmdLen) == FALSE))
+			    || (!DutCmd && (nameLocalStr[i].cmdProcFunc(pcmdStr, pcmdBuf, &cmdLen) == FALSE))) {
+				asd_sleep(1);
+				sprintf(respStr, "status,INVALID\r\n");
+				wfaCtrlSend(gCaSockfd, (BYTE *)respStr, WFA_BUFF_128);        /* Buffer size modified from strlen(respStr) on 21/11/07 */
+				DPRINT_WARNING(WFA_WNG, "Incorrect command syntax\n");
+				continue;
+			}
+			/*
+			 * Decode the command that is parsed above to find the actual function pointer
+			 * that needs to be executed. (decode for xcCmdTag )
+			 * Commands that use rwl client are processed here.
+			 */
 			if (!DutCmd && isFound) {
 				/* reset two commond storages used by control functions */
 				wfaDecodeTLV(pcmdBuf, cmdLen, &xcCmdTag, &cmdLen, parmsVal);
@@ -394,28 +389,28 @@ main(int argc, char *argv[])
 
 				tag = ((wfaTLV *)respBuf)->tag;
 
-				DPRINT_INFO(WFA_OUT, "bytes=%i,%i,%x %x %x %x \n", ((wfaTLV *)respBuf)->tag,((wfaTLV *)respBuf)->len, *(respBuf+4), *(respBuf+5), *(respBuf+6), *(respBuf+7));
+				DPRINT_INFO(WFA_OUT, "bytes=%i,%i,%x %x %x %x \n", ((wfaTLV *)respBuf)->tag, ((wfaTLV *)respBuf)->len, *(respBuf + 4), *(respBuf + 5), *(respBuf + 6), *(respBuf + 7));
 
-				DPRINT_INFO(WFA_OUT, "tag %i \n", tag-WFA_STA_COMMANDS_END);
+				DPRINT_INFO(WFA_OUT, "tag %i \n", tag - WFA_STA_COMMANDS_END);
 
 				/* Response for the executed command is updated using the below function pointer
 				 * table
 				 */
 				if ((tag != 0 && tag < WFA_STA_RESPONSE_END) &&
-					wfaCmdRespProcFuncTbl[tag-WFA_STA_COMMANDS_END] != NULL) {
-					wfaCmdRespProcFuncTbl[tag-WFA_STA_COMMANDS_END](respBuf);
+				    wfaCmdRespProcFuncTbl[tag - WFA_STA_COMMANDS_END] != NULL) {
+					wfaCmdRespProcFuncTbl[tag - WFA_STA_COMMANDS_END](respBuf);
 				} else {
 					DPRINT_WARNING(WFA_WNG, "function not defined\n");
-					memset(respBuf, 0, sizeof (respBuf));
-					memset(pcmdBuf, 0, sizeof (pcmdBuf));
+					memset(respBuf, 0, sizeof(respBuf));
+					memset(pcmdBuf, 0, sizeof(pcmdBuf));
 				}
 			} else {
 				/* Commands that need to be executed at DUT are processed here
 				 * TG commands for example
 				 */
-				 /*In case of Multiple streams the commands will have space after each 
-				  * streamid. So Look for \n for the end of command.
-				  */
+				/*In case of Multiple streams the commands will have space after each
+				 * streamid. So Look for \n for the end of command.
+				 */
 				strtok(command, "\n");
 				trafficPath = malloc(WFA_BUFF_1K);
 				strcpy(trafficPath, rwl_client_path);
@@ -425,26 +420,24 @@ main(int argc, char *argv[])
 				strncat(trafficPath, command, strlen(command));
 				strncat(trafficPath, " > ", 3);
 				if ((fp = asd_cmd_exec(trafficPath)) == NULL)
-				continue;
+					continue;
 				memset(trafficPath, 0, WFA_BUFF_1K);
 
 				if (fread(trafficPath, sizeof(char), RESPONSE_SIZE, fp) <= 0)
 					strcpy(trafficPath, "status,ERROR\r\n");
-				
+
 				DPRINT_INFO(WFA_OUT, "%s %d\n", trafficPath, strlen(trafficPath));
 
 				wfaCtrlSend(gCaSockfd, (BYTE *)trafficPath, strlen(trafficPath));
 				file_cleanup(fp);
-												
+
 				memset(command, 0, strlen(command));
 				free(trafficPath);
-
-			} /* DutCmd */
-		} /* done with  if(gCaSockfd) */
-	} /* for */
-    if((errno_defined = Stop_Socket_Service()) != 0){
+			}       /* DutCmd */
+		}               /* done with  if(gCaSockfd) */
+	}                       /* for */
+	if ((errno_defined = Stop_Socket_Service()) != 0)
 		DPRINT_ERR(WFA_ERR, "Stop_Socket_Service failed\n");
-	}
 	asd_closeSocket(gCaSockfd);
 	return 0;
 }

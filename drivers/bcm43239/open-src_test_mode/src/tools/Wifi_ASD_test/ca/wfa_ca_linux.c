@@ -11,8 +11,8 @@
  *
  */
 
-#include <stdio.h> 
-#include <stdlib.h> 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "wfa_debug.h"
@@ -32,7 +32,7 @@
 void
 get_rwl_exe_path(char *rwl_exe_path, int exe_path_len)
 {
-	strncpy(rwl_exe_path,  "./wl", exe_path_len);
+	strncpy(rwl_exe_path, "./wl", exe_path_len);
 }
 
 int
@@ -44,14 +44,15 @@ error_check(int errno_defined)
 		return FALSE;
 }
 
-FILE*
-asd_cmd_exec(char * trafficPath)
+FILE *
+asd_cmd_exec(char *trafficPath)
 {
 	/* Execute the command through "wl" on the DUT,
 	 * read the response into trafficPath and return the response
 	 */
 	FILE *fp;
-	strncat(trafficPath,TEMP_FILE_PATH, strlen(TEMP_FILE_PATH));
+
+	strncat(trafficPath, TEMP_FILE_PATH, strlen(TEMP_FILE_PATH));
 	system(trafficPath);
 	if ((fp = fopen(TEMP_FILE_PATH, "r+")) == NULL) {
 		DPRINT_ERR(WFA_ERR, "failed to open temp_file_path\n");
@@ -63,10 +64,11 @@ void
 file_cleanup(FILE *fp)
 {
 	char *trafficPath;
+
 	trafficPath = malloc(WFA_BUFF_1K);
 	fclose(fp);
-	strcpy(trafficPath,"rm -f ");
-	strncat(trafficPath,TEMP_FILE_PATH, strlen(TEMP_FILE_PATH));
+	strcpy(trafficPath, "rm -f ");
+	strncat(trafficPath, TEMP_FILE_PATH, strlen(TEMP_FILE_PATH));
 	exec_process(trafficPath);
 	free(trafficPath);
 }

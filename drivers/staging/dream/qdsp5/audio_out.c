@@ -59,7 +59,9 @@ enum {
 };
 
 #if (LOG_AUDIO_EVENTS != 1)
-static inline void LOG(unsigned id, unsigned arg) {}
+static inline void LOG(unsigned id, unsigned arg)
+{
+}
 #else
 static const char *pcm_log_strings[] = {
 	"NULL",
@@ -83,7 +85,7 @@ static int __init _pcm_log_init(void)
 }
 module_init(_pcm_log_init);
 
-#define LOG(id,arg) ev_log_write(&pcm_log, id, arg)
+#define LOG(id, arg) ev_log_write(&pcm_log, id, arg)
 #endif
 
 
@@ -94,102 +96,102 @@ module_init(_pcm_log_init);
 #define DMASZ (BUFSZ * 2)
 
 #define AUDPP_CMD_CFG_OBJ_UPDATE 0x8000
-#define AUDPP_CMD_EQ_FLAG_DIS	0x0000
-#define AUDPP_CMD_EQ_FLAG_ENA	-1
-#define AUDPP_CMD_IIR_FLAG_DIS	  0x0000
-#define AUDPP_CMD_IIR_FLAG_ENA	  -1
+#define AUDPP_CMD_EQ_FLAG_DIS   0x0000
+#define AUDPP_CMD_EQ_FLAG_ENA   -1
+#define AUDPP_CMD_IIR_FLAG_DIS    0x0000
+#define AUDPP_CMD_IIR_FLAG_ENA    -1
 
 #define AUDPP_CMD_IIR_TUNING_FILTER  1
-#define AUDPP_CMD_EQUALIZER	2
-#define AUDPP_CMD_ADRC	3
+#define AUDPP_CMD_EQUALIZER     2
+#define AUDPP_CMD_ADRC  3
 
 #define ADRC_ENABLE  0x0001
 #define EQ_ENABLE    0x0002
 #define IIR_ENABLE   0x0004
 
 struct adrc_filter {
-	uint16_t compression_th;
-	uint16_t compression_slope;
-	uint16_t rms_time;
-	uint16_t attack_const_lsw;
-	uint16_t attack_const_msw;
-	uint16_t release_const_lsw;
-	uint16_t release_const_msw;
-	uint16_t adrc_system_delay;
+	uint16_t	compression_th;
+	uint16_t	compression_slope;
+	uint16_t	rms_time;
+	uint16_t	attack_const_lsw;
+	uint16_t	attack_const_msw;
+	uint16_t	release_const_lsw;
+	uint16_t	release_const_msw;
+	uint16_t	adrc_system_delay;
 };
 
 struct eqalizer {
-	uint16_t num_bands;
-	uint16_t eq_params[132];
+	uint16_t	num_bands;
+	uint16_t	eq_params[132];
 };
 
 struct rx_iir_filter {
-	uint16_t num_bands;
-	uint16_t iir_params[48];
+	uint16_t	num_bands;
+	uint16_t	iir_params[48];
 };
 
 typedef struct {
-	audpp_cmd_cfg_object_params_common common;
-	uint16_t eq_flag;
-	uint16_t num_bands;
-	uint16_t eq_params[132];
+	audpp_cmd_cfg_object_params_common	common;
+	uint16_t				eq_flag;
+	uint16_t				num_bands;
+	uint16_t				eq_params[132];
 } audpp_cmd_cfg_object_params_eq;
 
 typedef struct {
-	audpp_cmd_cfg_object_params_common common;
-	uint16_t active_flag;
-	uint16_t num_bands;
-	uint16_t iir_params[48];
+	audpp_cmd_cfg_object_params_common	common;
+	uint16_t				active_flag;
+	uint16_t				num_bands;
+	uint16_t				iir_params[48];
 } audpp_cmd_cfg_object_params_rx_iir;
 
 struct buffer {
-	void *data;
-	unsigned size;
-	unsigned used;
-	unsigned addr;
+	void *		data;
+	unsigned	size;
+	unsigned	used;
+	unsigned	addr;
 };
 
 struct audio {
-	struct buffer out[2];
+	struct buffer		out[2];
 
-	spinlock_t dsp_lock;
+	spinlock_t		dsp_lock;
 
-	uint8_t out_head;
-	uint8_t out_tail;
-	uint8_t out_needed; /* number of buffers the dsp is waiting for */
+	uint8_t			out_head;
+	uint8_t			out_tail;
+	uint8_t			out_needed; /* number of buffers the dsp is waiting for */
 
-	atomic_t out_bytes;
+	atomic_t		out_bytes;
 
-	struct mutex lock;
-	struct mutex write_lock;
-	wait_queue_head_t wait;
+	struct mutex		lock;
+	struct mutex		write_lock;
+	wait_queue_head_t	wait;
 
 	/* configuration to use on next enable */
-	uint32_t out_sample_rate;
-	uint32_t out_channel_mode;
-	uint32_t out_weight;
-	uint32_t out_buffer_size;
+	uint32_t		out_sample_rate;
+	uint32_t		out_channel_mode;
+	uint32_t		out_weight;
+	uint32_t		out_buffer_size;
 
-	struct audmgr audmgr;
+	struct audmgr		audmgr;
 
 	/* data allocated for various buffers */
-	char *data;
-	dma_addr_t phys;
+	char *			data;
+	dma_addr_t		phys;
 
-	int opened;
-	int enabled;
-	int running;
-	int stopped; /* set when stopped, cleared on flush */
-	unsigned volume;
+	int			opened;
+	int			enabled;
+	int			running;
+	int			stopped; /* set when stopped, cleared on flush */
+	unsigned		volume;
 
-	int adrc_enable;
-	struct adrc_filter adrc;
+	int			adrc_enable;
+	struct adrc_filter	adrc;
 
-	int eq_enable;
-	struct eqalizer eq;
+	int			eq_enable;
+	struct eqalizer		eq;
 
-	int rx_iir_enable;
-	struct rx_iir_filter iir;
+	int			rx_iir_enable;
+	struct rx_iir_filter	iir;
 };
 
 static void audio_prevent_sleep(struct audio *audio)
@@ -346,24 +348,24 @@ static int audio_dsp_out_enable(struct audio *audio, int yes)
 	audpp_cmd_pcm_intf cmd;
 
 	memset(&cmd, 0, sizeof(cmd));
-	cmd.cmd_id	= AUDPP_CMD_PCM_INTF_2;
-	cmd.object_num	= AUDPP_CMD_PCM_INTF_OBJECT_NUM;
-	cmd.config	= AUDPP_CMD_PCM_INTF_CONFIG_CMD_V;
-	cmd.intf_type	= AUDPP_CMD_PCM_INTF_RX_ENA_ARMTODSP_V;
+	cmd.cmd_id = AUDPP_CMD_PCM_INTF_2;
+	cmd.object_num = AUDPP_CMD_PCM_INTF_OBJECT_NUM;
+	cmd.config = AUDPP_CMD_PCM_INTF_CONFIG_CMD_V;
+	cmd.intf_type = AUDPP_CMD_PCM_INTF_RX_ENA_ARMTODSP_V;
 
 	if (yes) {
-		cmd.write_buf1LSW	= audio->out[0].addr;
-		cmd.write_buf1MSW	= audio->out[0].addr >> 16;
-		cmd.write_buf1_len	= audio->out[0].size;
-		cmd.write_buf2LSW	= audio->out[1].addr;
-		cmd.write_buf2MSW	= audio->out[1].addr >> 16;
-		cmd.write_buf2_len	= audio->out[1].size;
-		cmd.arm_to_rx_flag	= AUDPP_CMD_PCM_INTF_ENA_V;
+		cmd.write_buf1LSW = audio->out[0].addr;
+		cmd.write_buf1MSW = audio->out[0].addr >> 16;
+		cmd.write_buf1_len = audio->out[0].size;
+		cmd.write_buf2LSW = audio->out[1].addr;
+		cmd.write_buf2MSW = audio->out[1].addr >> 16;
+		cmd.write_buf2_len = audio->out[1].size;
+		cmd.arm_to_rx_flag = AUDPP_CMD_PCM_INTF_ENA_V;
 		cmd.weight_decoder_to_rx = audio->out_weight;
-		cmd.weight_arm_to_rx	= 1;
+		cmd.weight_arm_to_rx = 1;
 		cmd.partition_number_arm_to_dsp = 0;
-		cmd.sample_rate		= audio->out_sample_rate;
-		cmd.channel_mode	= audio->out_channel_mode;
+		cmd.sample_rate = audio->out_sample_rate;
+		cmd.channel_mode = audio->out_channel_mode;
 	}
 
 	return audpp_send_queue2(&cmd, sizeof(cmd));
@@ -373,13 +375,13 @@ static int audio_dsp_send_buffer(struct audio *audio, unsigned idx, unsigned len
 {
 	audpp_cmd_pcm_intf_send_buffer cmd;
 
-	cmd.cmd_id		= AUDPP_CMD_PCM_INTF_2;
-	cmd.host_pcm_object	= AUDPP_CMD_PCM_INTF_OBJECT_NUM;
-	cmd.config		= AUDPP_CMD_PCM_INTF_BUFFER_CMD_V;
-	cmd.intf_type		= AUDPP_CMD_PCM_INTF_RX_ENA_ARMTODSP_V;
-	cmd.dsp_to_arm_buf_id	= 0;
-	cmd.arm_to_dsp_buf_id	= idx + 1;
-	cmd.arm_to_dsp_buf_len	= len;
+	cmd.cmd_id = AUDPP_CMD_PCM_INTF_2;
+	cmd.host_pcm_object = AUDPP_CMD_PCM_INTF_OBJECT_NUM;
+	cmd.config = AUDPP_CMD_PCM_INTF_BUFFER_CMD_V;
+	cmd.intf_type = AUDPP_CMD_PCM_INTF_RX_ENA_ARMTODSP_V;
+	cmd.dsp_to_arm_buf_id = 0;
+	cmd.arm_to_dsp_buf_id = idx + 1;
+	cmd.arm_to_dsp_buf_len = len;
 
 	LOG(EV_SEND_BUFFER, idx);
 	return audpp_send_queue2(&cmd, sizeof(cmd));
@@ -497,7 +499,7 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	if (cmd == AUDIO_GET_STATS) {
 		struct msm_audio_stats stats;
 		stats.byte_count = atomic_read(&audio->out_bytes);
-		if (copy_to_user((void*) arg, &stats, sizeof(stats)))
+		if (copy_to_user((void *)arg, &stats, sizeof(stats)))
 			return -EFAULT;
 		return 0;
 	}
@@ -534,14 +536,14 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		}
 	case AUDIO_SET_CONFIG: {
 		struct msm_audio_config config;
-		if (copy_from_user(&config, (void*) arg, sizeof(config))) {
+		if (copy_from_user(&config, (void *)arg, sizeof(config))) {
 			rc = -EFAULT;
 			break;
 		}
 		if (config.channel_count == 1) {
 			config.channel_count = AUDPP_CMD_PCM_INTF_MONO_V;
 		} else if (config.channel_count == 2) {
-			config.channel_count= AUDPP_CMD_PCM_INTF_STEREO_V;
+			config.channel_count = AUDPP_CMD_PCM_INTF_STEREO_V;
 		} else {
 			rc = -EINVAL;
 			break;
@@ -556,20 +558,18 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		config.buffer_size = BUFSZ;
 		config.buffer_count = 2;
 		config.sample_rate = audio->out_sample_rate;
-		if (audio->out_channel_mode == AUDPP_CMD_PCM_INTF_MONO_V) {
+		if (audio->out_channel_mode == AUDPP_CMD_PCM_INTF_MONO_V)
 			config.channel_count = 1;
-		} else {
+		else
 			config.channel_count = 2;
-		}
 		config.unused[0] = 0;
 		config.unused[1] = 0;
 		config.unused[2] = 0;
 		config.unused[3] = 0;
-		if (copy_to_user((void*) arg, &config, sizeof(config))) {
+		if (copy_to_user((void *)arg, &config, sizeof(config)))
 			rc = -EFAULT;
-		} else {
+		else
 			rc = 0;
-		}
 		break;
 	}
 	default:
@@ -670,7 +670,7 @@ static ssize_t audio_write(struct file *file, const char __user *buf,
 		}
 	}
 
-	LOG(EV_RETURN,(buf > start) ? (buf - start) : rc);
+	LOG(EV_RETURN, (buf > start) ? (buf - start) : rc);
 	if (buf > start)
 		return buf - start;
 	return rc;
@@ -753,7 +753,7 @@ static long audpp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	mutex_lock(&audio->lock);
 	switch (cmd) {
 	case AUDIO_ENABLE_AUDPP:
-		if (copy_from_user(&enable_mask, (void *) arg, sizeof(enable_mask)))
+		if (copy_from_user(&enable_mask, (void *)arg, sizeof(enable_mask)))
 			goto out_fault;
 
 		enable = (enable_mask & ADRC_ENABLE)? 1 : 0;
@@ -765,17 +765,17 @@ static long audpp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		break;
 
 	case AUDIO_SET_ADRC:
-		if (copy_from_user(&audio->adrc, (void*) arg, sizeof(audio->adrc)))
+		if (copy_from_user(&audio->adrc, (void *)arg, sizeof(audio->adrc)))
 			goto out_fault;
 		break;
 
 	case AUDIO_SET_EQ:
-		if (copy_from_user(&audio->eq, (void*) arg, sizeof(audio->eq)))
+		if (copy_from_user(&audio->eq, (void *)arg, sizeof(audio->eq)))
 			goto out_fault;
 		break;
 
 	case AUDIO_SET_RX_IIR:
-		if (copy_from_user(&audio->iir, (void*) arg, sizeof(audio->iir)))
+		if (copy_from_user(&audio->iir, (void *)arg, sizeof(audio->iir)))
 			goto out_fault;
 		break;
 
@@ -785,9 +785,9 @@ static long audpp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 
 	goto out;
 
- out_fault:
+out_fault:
 	rc = -EFAULT;
- out:
+out:
 	mutex_unlock(&audio->lock);
 	return rc;
 }
@@ -806,13 +806,13 @@ static struct file_operations audio_fops = {
 	.release	= audio_release,
 	.read		= audio_read,
 	.write		= audio_write,
-	.unlocked_ioctl	= audio_ioctl,
+	.unlocked_ioctl = audio_ioctl,
 };
 
 static struct file_operations audpp_fops = {
 	.owner		= THIS_MODULE,
 	.open		= audpp_open,
-	.unlocked_ioctl	= audpp_ioctl,
+	.unlocked_ioctl = audpp_ioctl,
 };
 
 struct miscdevice audio_misc = {
@@ -833,7 +833,7 @@ static int __init audio_init(void)
 	mutex_init(&the_audio.write_lock);
 	spin_lock_init(&the_audio.dsp_lock);
 	init_waitqueue_head(&the_audio.wait);
-	return (misc_register(&audio_misc) || misc_register(&audpp_misc));
+	return misc_register(&audio_misc) || misc_register(&audpp_misc);
 }
 
 device_initcall(audio_init);

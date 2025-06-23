@@ -1,9 +1,9 @@
-/* wlmSampleTests.cpp : Sample test program which uses the 
+/* wlmSampleTests.cpp : Sample test program which uses the
  * 		Wireless LAN Manufacturing (WLM) Test Library.
  *
  * Copyright (C) 2011, Broadcom Corporation
  * All Rights Reserved.
- * 
+ *
  * This is UNPUBLISHED PROPRIETARY SOURCE CODE of Broadcom Corporation;
  * the contents of this file may not be disclosed to third parties, copied
  * or duplicated in any form, in whole or in part, without the prior
@@ -33,55 +33,54 @@
 #include "wlm.h"
 
 /* --------------------------------------------------------------- */
-typedef struct
-{
-	int count;		/* number of tests run */
-	int passed;		/* number of tests passed */
-	int failed;		/* number of tests failed */
+typedef struct {
+	int	count;          /* number of tests run */
+	int	passed;         /* number of tests passed */
+	int	failed;         /* number of tests failed */
 } TestLog;
 
 static TestLog testLog;
 
-#define TEST_INITIALIZE()						\
-{												\
-	memset(&testLog, 0, sizeof(testLog));		\
-}
-
-#define TEST(condition, error)					\
-	testLog.count++;							\
-	if ((condition)) {							\
-		testLog.passed++;						\
-	}											\
-	else {										\
-		testLog.failed++;						\
-		printf("\n*** FAIL *** - %s():%d - %s\n\n",	\
-			__FUNCTION__, __LINE__, error);		\
+#define TEST_INITIALIZE()                                               \
+	{                                                                                               \
+		memset(&testLog, 0, sizeof(testLog));           \
 	}
 
-#define TEST_FATAL(condition, error)			\
-	testLog.count++;							\
-	if ((condition)) {							\
-		testLog.passed++;						\
-	}											\
-	else {										\
-		testLog.failed++;						\
-		printf("\n*** FAIL *** - %s():%d - %s\n\n",	\
-			__FUNCTION__, __LINE__, error);		\
-		exit(-1);								\
+#define TEST(condition, error)                                  \
+	testLog.count++;                                                        \
+	if ((condition)) {                                                      \
+		testLog.passed++;                                               \
+	}                                                                                       \
+	else {                                                                          \
+		testLog.failed++;                                               \
+		printf("\n*** FAIL *** - %s():%d - %s\n\n",     \
+		       __FUNCTION__, __LINE__, error);         \
 	}
 
-#define TEST_FINALIZE()							\
-{												\
-	int percent = testLog.count ?				\
-		testLog.passed * 100 / testLog.count : 0; \
-	printf("\n\n");								\
-	printf("Test Summary:\n\n");				\
-	printf("Tests    %d\n", testLog.count);		\
-	printf("Pass     %d\n", testLog.passed);	\
-	printf("Fail     %d\n\n", testLog.failed);	\
-	printf("%d%%\n\n", percent);				\
-	printf("-----------------------------------\n\n");	\
-}
+#define TEST_FATAL(condition, error)                    \
+	testLog.count++;                                                        \
+	if ((condition)) {                                                      \
+		testLog.passed++;                                               \
+	}                                                                                       \
+	else {                                                                          \
+		testLog.failed++;                                               \
+		printf("\n*** FAIL *** - %s():%d - %s\n\n",     \
+		       __FUNCTION__, __LINE__, error);         \
+		exit(-1);                                                               \
+	}
+
+#define TEST_FINALIZE()                                                 \
+	{                                                                                               \
+		int percent = testLog.count ?                           \
+			      testLog.passed * 100 / testLog.count : 0; \
+		printf("\n\n");                                                         \
+		printf("Test Summary:\n\n");                            \
+		printf("Tests    %d\n", testLog.count);         \
+		printf("Pass     %d\n", testLog.passed);        \
+		printf("Fail     %d\n\n", testLog.failed);      \
+		printf("%d%%\n\n", percent);                            \
+		printf("-----------------------------------\n\n");      \
+	}
 
 /* --------------------------------------------------------------- */
 
@@ -108,6 +107,7 @@ static void testDutInit()
 static void testVersion()
 {
 	char buffer[1024];
+
 	TEST(wlmVersionGet(buffer, 1024), "wlmVersionGet failed");
 	printf("version info: %s\n", buffer);
 }
@@ -118,7 +118,7 @@ static void testVersion()
 static void testTransmit()
 {
 	int i;
-	int txPower = 17000;	/* power in milli-dB */
+	int txPower = 17000;    /* power in milli-dB */
 
 	for (i = 0; i < 8; i++) {
 		int power;
@@ -132,7 +132,7 @@ static void testTransmit()
 		TEST(wlmTxGetAckedPackets(&beforeAckCount), "wlmTxGetAckedPackets failed");
 
 		TEST(wlmTxPacketStart(100, txPacketCount, 1024, "00:11:22:33:44:55", TRUE, TRUE),
-			"wlmTxPacketStart failed");
+		     "wlmTxPacketStart failed");
 
 		afterAckCount = beforeAckCount;
 		TEST(wlmTxGetAckedPackets(&afterAckCount), "wlmTxGetAckedPackets failed");
@@ -163,7 +163,7 @@ static void testTransmit()
 static void testBatchingTransmit(int clientBatching)
 {
 	int i, count = 8;
-	int txPower = 17000;	/* power in milli-dB */
+	int txPower = 17000;    /* power in milli-dB */
 	unsigned int txPacketCount = 50;
 	unsigned int beforeAckCount, afterAckCount, ackCount;
 
@@ -172,12 +172,11 @@ static void testBatchingTransmit(int clientBatching)
 	/* start command batching */
 	TEST(wlmSequenceStart(clientBatching), "wlmSequenceStart failed");
 
-		for (i = 0; i < count; i++) {
-
+	for (i = 0; i < count; i++) {
 		TEST(wlmTxPowerSet(txPower), "wlmTxPowerSet failed");
 
 		TEST(wlmTxPacketStart(100, txPacketCount, 1024, "00:11:22:33:44:55", TRUE, TRUE),
-			"wlmTxPacketStart failed");
+		     "wlmTxPacketStart failed");
 
 		/* reduce tx power */
 		txPower -= 1000;
@@ -222,12 +221,12 @@ static void testReceive()
 {
 	unsigned int beforeRxPacketCount, afterRxPacketCount, rxPacketCount;
 	unsigned int rxPacketExpected = 50;
-	unsigned int maxTimeout = 500; 	/* milliseconds */
+	unsigned int maxTimeout = 500;  /* milliseconds */
 	int rssi = 0;
 
 	TEST(wlmRxGetReceivedPackets(&beforeRxPacketCount), "wlmRxGetReceivedPackets failed");
 	TEST(wlmRxPacketStart("00:11:22:33:44:55", FALSE, TRUE, rxPacketExpected, maxTimeout),
-		"wlmRxPacketStart failed");
+	     "wlmRxPacketStart failed");
 
 	afterRxPacketCount = beforeRxPacketCount;
 	TEST(wlmRxGetReceivedPackets(&afterRxPacketCount), "wlmRxGetReceivedPackets failed");
@@ -248,7 +247,7 @@ static void testReceive()
 
 /* Test joining a network, get and compare the SSID */
 static int testJoinNetwork(char *ssid, WLM_AUTH_MODE authMode,
-	WLM_ENCRYPTION encryption, const char *key)
+			   WLM_ENCRYPTION encryption, const char *key)
 {
 	char bssidBuf[256];
 	int isAssociated;
@@ -258,7 +257,7 @@ static int testJoinNetwork(char *ssid, WLM_AUTH_MODE authMode,
 	TEST(wlmDisassociateNetwork(), "wlmDisassociateNetwork failed");
 
 	TEST(wlmSecuritySet(WLM_TYPE_OPEN, authMode, encryption, key),
-		"wlmSecuritySet failed");
+	     "wlmSecuritySet failed");
 	TEST(wlmJoinNetwork(ssid, WLM_MODE_BSS), "wlmJoinNetwork failed");
 	/* delay to allow network association */
 	delay(5000);
@@ -268,8 +267,7 @@ static int testJoinNetwork(char *ssid, WLM_AUTH_MODE authMode,
 		TEST(wlmSsidGet(ssidBuf, 256), "wlmSsidGet failed");
 		printf("associated to SSID=%s BSSID=%s\n", ssidBuf, bssidBuf);
 		TEST(strcmp(ssid, ssidBuf) == 0, "SSID does not match");
-	}
-	else {
+	} else {
 		printf("failed to associate to SSID=%s using key=%s\n", ssid, key ? key : "");
 	}
 
@@ -281,69 +279,69 @@ static int testJoinNetwork(char *ssid, WLM_AUTH_MODE authMode,
 /* Test joining a network */
 static void testJoinNetworkNone()
 {
-	/* requires an AP with the SSID, authentication, and encryption 
+	/* requires an AP with the SSID, authentication, and encryption
 	 * configured to match these settings
 	 */
 	TEST(testJoinNetwork("WLM_NONE", WLM_WPA_AUTH_DISABLED, WLM_ENCRYPT_NONE, 0),
-		"testJoinNetworkNone failed");
+	     "testJoinNetworkNone failed");
 }
 
 /* Test joining a WEP network */
 static void testJoinNetworkWep()
 {
-	/* requires an AP with the SSID, authentication, and encryption 
+	/* requires an AP with the SSID, authentication, and encryption
 	 * configured to match these settings
 	 */
 	TEST(testJoinNetwork("WLM_WEP", WLM_WPA_AUTH_DISABLED, WLM_ENCRYPT_WEP,
-		"2222222222444444444466666666668888888888"),
-		"testJoinNetworkWep failed");
+			     "2222222222444444444466666666668888888888"),
+	     "testJoinNetworkWep failed");
 }
 
 /* Test joining a WPA TKIP network */
 static void testJoinNetworkWpaTkip()
 {
-	/* requires an AP with the SSID, authentication, and encryption 
+	/* requires an AP with the SSID, authentication, and encryption
 	 * configured to match these settings
 	 */
 	TEST(testJoinNetwork("WLM_WPA_TKIP", WLM_WPA_AUTH_PSK, WLM_ENCRYPT_TKIP,
-		"helloworld"), "testJoinNetworkWpaTkip failed");
+			     "helloworld"), "testJoinNetworkWpaTkip failed");
 }
 
 /* Test joining a WPA AES network */
 static void testJoinNetworkWpaAes()
 {
-	/* requires an AP with the SSID, authentication, and encryption 
+	/* requires an AP with the SSID, authentication, and encryption
 	 * configured to match these settings
 	 */
 	TEST(testJoinNetwork("WLM_WPA_AES", WLM_WPA_AUTH_PSK, WLM_ENCRYPT_AES,
-		"helloworld"), "testJoinNetworkWpaAes failed");
+			     "helloworld"), "testJoinNetworkWpaAes failed");
 }
 
 /* Test joining a WPA2 TKIP network */
 static void testJoinNetworkWpa2Tkip()
 {
-	/* requires an AP with the SSID, authentication, and encryption 
+	/* requires an AP with the SSID, authentication, and encryption
 	 * configured to match these settings
 	 */
 	TEST(testJoinNetwork("WLM_WPA2_TKIP", WLM_WPA2_AUTH_PSK, WLM_ENCRYPT_TKIP,
-		"helloworld"), "testJoinNetworkWpa2Tkip failed");
+			     "helloworld"), "testJoinNetworkWpa2Tkip failed");
 }
 
 /* Test joining a WPA2 AES network */
 static void testJoinNetworkWpa2Aes()
 {
-	/* requires an AP with the SSID, authentication, and encryption 
+	/* requires an AP with the SSID, authentication, and encryption
 	 * configured to match these settings
 	 */
 	TEST(testJoinNetwork("WLM_WPA2_AES", WLM_WPA2_AUTH_PSK, WLM_ENCRYPT_AES,
-		"helloworld"), "testJoinNetworkWpa2Aes failed");
+			     "helloworld"), "testJoinNetworkWpa2Aes failed");
 }
 
 static void printUsage(void)
 {
 	printf("\nUsage: wlmSampleTests [--socket <IP address> [server port] | "
-		"--serial <serial port> | --wifi <MAC address> | "
-		"--dongle <serial port>] [--linux | --linuxdut]]\n\n");
+	       "--serial <serial port> | --wifi <MAC address> | "
+	       "--dongle <serial port>] [--linux | --linuxdut]]\n\n");
 	printf("--socket - Ethernet between client and server (running 'wl_server_socket')\n");
 	printf("      IP address - IP address of server (e.g. 10.200.30.10)\n");
 	printf("      server port - Server port number (default 8000)\n\n");
@@ -352,7 +350,7 @@ static void printUsage(void)
 	printf("--wifi - 802.11 between client and server (running 'wl_server_wifi')\n");
 	printf("         (external dongle only, NIC not supported)\n");
 	printf("      MAC address - MAC address of wifi interface on dongle "
-		"(e.g. 00:11:22:33:44:55)\n\n");
+	       "(e.g. 00:11:22:33:44:55)\n\n");
 	printf("--dongle - Serial between client and dongle UART (running 'wl_server_dongle')\n");
 	printf("      serial port - Client serial port (e.g. COM1 or /dev/ttyS0)\n\n");
 	printf("--linux|linuxdut - Server DUT running Linux\n");
@@ -368,7 +366,6 @@ int main(int argc, char **argv)
 	(void)argc;
 
 	while (*++argv) {
-
 		if (strncmp(*argv, "--help", strlen(*argv)) == 0) {
 			printUsage();
 			exit(0);
@@ -384,13 +381,11 @@ int main(int argc, char **argv)
 				exit(-1);
 			}
 			interfaceName = *argv;
-			if (*++argv && (sscanf(*argv, "%d", &port) == 1)) {
+			if (*++argv && (sscanf(*argv, "%d", &port) == 1))
 				dutServerPort = (WLM_DUT_SERVER_PORT)port;
-			}
-			else {
+			else
 				/* optional parameter */
 				--argv;
-			}
 		}
 
 		if (strncmp(*argv, "--serial", strlen(*argv)) == 0) {
@@ -424,7 +419,7 @@ int main(int argc, char **argv)
 				exit(-1);
 			}
 			if (!(sscanf(*argv, "COM%u", &i) == 1 ||
-				sscanf(*argv, "/dev/tty%s", buffer) == 1)) {
+			      sscanf(*argv, "/dev/tty%s", buffer) == 1)) {
 				printf("serial port invalid\n");
 				printUsage();
 				exit(-1);
@@ -433,9 +428,8 @@ int main(int argc, char **argv)
 		}
 
 		if ((strncmp(*argv, "--linux", strlen(*argv)) == 0) ||
-			strncmp(*argv, "--linuxdut", strlen(*argv)) == 0) {
+		    strncmp(*argv, "--linuxdut", strlen(*argv)) == 0)
 			dutOs = WLM_DUT_OS_LINUX;
-		}
 	}
 
 	TEST_INITIALIZE();
@@ -443,42 +437,42 @@ int main(int argc, char **argv)
 	TEST_FATAL(wlmApiInit(), "wlmApiInit failed");
 
 	TEST_FATAL(wlmSelectInterface(dutInterface, interfaceName,
-		dutServerPort, dutOs), "wlmSelectInterface failed");
+				      dutServerPort, dutOs), "wlmSelectInterface failed");
 
 	printf("\n");
 	switch (dutInterface) {
-		case WLM_DUT_LOCAL:
-			printf("Test running against local DUT.\n");
-			break;
-		case WLM_DUT_SOCKET:
-			printf("Test running over Ethernet to remote DUT IP=%s.\n", interfaceName);
-			break;
-		case WLM_DUT_SERIAL:
-			printf("Test running over serial from port %s\n", interfaceName);
-			break;
-		case WLM_DUT_WIFI:
-			printf("Test running over 802.11 to remote DUT MAC=%s.\n", interfaceName);
-			break;
-		case WLM_DUT_DONGLE:
-			printf("Test running over serial from %s to remote dongle UART\n",
-				interfaceName);
-			break;
-		default:
-			printf("Invalid interface\n");
-			exit(-1);
-			break;
+	case WLM_DUT_LOCAL:
+		printf("Test running against local DUT.\n");
+		break;
+	case WLM_DUT_SOCKET:
+		printf("Test running over Ethernet to remote DUT IP=%s.\n", interfaceName);
+		break;
+	case WLM_DUT_SERIAL:
+		printf("Test running over serial from port %s\n", interfaceName);
+		break;
+	case WLM_DUT_WIFI:
+		printf("Test running over 802.11 to remote DUT MAC=%s.\n", interfaceName);
+		break;
+	case WLM_DUT_DONGLE:
+		printf("Test running over serial from %s to remote dongle UART\n",
+		       interfaceName);
+		break;
+	default:
+		printf("Invalid interface\n");
+		exit(-1);
+		break;
 	}
 	switch (dutOs) {
-		case WLM_DUT_OS_LINUX:
-			printf("Test running against Linux DUT.\n");
-			break;
-		case WLM_DUT_OS_WIN32:
-			printf("Test running against Win32 DUT.\n");
-			break;
-		default:
-			printf("Invalid DUT OS\n");
-			exit(-1);
-			break;
+	case WLM_DUT_OS_LINUX:
+		printf("Test running against Linux DUT.\n");
+		break;
+	case WLM_DUT_OS_WIN32:
+		printf("Test running against Win32 DUT.\n");
+		break;
+	default:
+		printf("Invalid DUT OS\n");
+		exit(-1);
+		break;
 	}
 	printf("\n");
 

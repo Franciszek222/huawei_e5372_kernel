@@ -45,19 +45,19 @@ static int lowmem_adj[6] = {
 };
 static int lowmem_adj_size = 4;
 static size_t lowmem_minfree[6] = {
-	3 * 512,	/* 6MB */
-	2 * 1024,	/* 8MB */
-	4 * 1024,	/* 16MB */
-	16 * 1024,	/* 64MB */
+	3 * 512,        /* 6MB */
+	2 * 1024,       /* 8MB */
+	4 * 1024,       /* 16MB */
+	16 * 1024,      /* 64MB */
 };
 static int lowmem_minfree_size = 4;
 
 static struct task_struct *lowmem_deathpending;
 
-#define lowmem_print(level, x...)			\
-	do {						\
-		if (lowmem_debug_level >= (level))	\
-			printk(x);			\
+#define lowmem_print(level, x ...)                       \
+	do {                                            \
+		if (lowmem_debug_level >= (level))      \
+		printk(x);                      \
 	} while (0)
 
 static int
@@ -71,6 +71,7 @@ static int
 task_notify_func(struct notifier_block *self, unsigned long val, void *data)
 {
 	struct task_struct *task = data;
+
 	if (task == lowmem_deathpending) {
 		lowmem_deathpending = NULL;
 		task_free_unregister(&task_nb);
@@ -118,9 +119,9 @@ static int lowmem_shrink(struct shrinker *s, int nr_to_scan, gfp_t gfp_mask)
 			     nr_to_scan, gfp_mask, other_free, other_file,
 			     min_adj);
 	rem = global_page_state(NR_ACTIVE_ANON) +
-		global_page_state(NR_ACTIVE_FILE) +
-		global_page_state(NR_INACTIVE_ANON) +
-		global_page_state(NR_INACTIVE_FILE);
+	      global_page_state(NR_ACTIVE_FILE) +
+	      global_page_state(NR_INACTIVE_ANON) +
+	      global_page_state(NR_INACTIVE_FILE);
 	if (nr_to_scan <= 0 || min_adj == OOM_ADJUST_MAX + 1) {
 		lowmem_print(5, "lowmem_shrink %d, %x, return %d\n",
 			     nr_to_scan, gfp_mask, rem);
@@ -180,7 +181,7 @@ static int lowmem_shrink(struct shrinker *s, int nr_to_scan, gfp_t gfp_mask)
 
 static struct shrinker lowmem_shrinker = {
 	.shrink = lowmem_shrink,
-	.seeks = DEFAULT_SEEKS * 16
+	.seeks	= DEFAULT_SEEKS * 16
 };
 
 static int __init lowmem_init(void)
@@ -205,4 +206,3 @@ module_init(lowmem_init);
 module_exit(lowmem_exit);
 
 MODULE_LICENSE("GPL");
-

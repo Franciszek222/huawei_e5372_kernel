@@ -39,33 +39,27 @@ tgStream_t *findStreamProfile(int id);
 void
 asd_sleep(int SleepTime)
 {
-
 	sleep(SleepTime);
-
 }
 
 void
 uapsd_sleep(int SleepTime)
 {
-
 	usleep(SleepTime);
-
 }
 
 void
 asd_closeSocket(int sockfd)
 {
 	close(sockfd);
-
 }
 void
 asd_shutDown(int Sockfd)
 {
 	shutdown(Sockfd, SHUT_WR);
-
 }
 void
-exec_process(char* command)
+exec_process(char *command)
 {
 	system(command);
 }
@@ -81,16 +75,17 @@ Stop_Socket_Service()
 	return 0;
 }
 
-void 
-wfaGetSockOpt(int sockfd, int* tosval, socklen_t* size)
+void
+wfaGetSockOpt(int sockfd, int *tosval, socklen_t *size)
 {
 	getsockopt(sockfd, IPPROTO_IP, IP_TOS, tosval, size);
 }
 
 int
-wfaSetSockOpt(int sockfd, int* tosval, int size)
+wfaSetSockOpt(int sockfd, int *tosval, int size)
 {
 	int sockOpt;
+
 	sockOpt = setsockopt(sockfd, IPPROTO_IP, IP_TOS, tosval, size);
 	return sockOpt;
 }
@@ -99,47 +94,46 @@ int
 wfa_estimate_timer_latency()
 {
 	struct timeval t1, t2, tp2;
-	int sleep=20000; /* two miniseconds */
-	int latency =0;
+	int sleep = 20000; /* two miniseconds */
+	int latency = 0;
 
 	gettimeofday(&t1, NULL);
 	usleep(sleep);
 
-	gettimeofday(&t2, NULL); 
+	gettimeofday(&t2, NULL);
 
 	tp2.tv_usec = t1.tv_usec + 20000;
-	if( tp2.tv_usec >= 1000000)
-	{
-		tp2.tv_sec = t1.tv_sec +1;
+	if (tp2.tv_usec >= 1000000) {
+		tp2.tv_sec = t1.tv_sec + 1;
 		tp2.tv_usec -= 1000000;
-	}
-	else
+	} else {
 		tp2.tv_sec = t1.tv_sec;
+	}
 
-	return latency = (t2.tv_sec - tp2.tv_sec) * 1000000 + (t2.tv_usec - tp2.tv_usec); 
+	return latency = (t2.tv_sec - tp2.tv_sec) * 1000000 + (t2.tv_usec - tp2.tv_usec);
 }
 
-/* This function returns the wireless adapter in Linux systems. 
- * This is for getting wireless adapter name programmatically */
+/* This function returns the wireless adapter in Linux systems.
+* This is for getting wireless adapter name programmatically */
 void
 GetWirelessAdapter(char *adapter_name)
 {
-	char	buf[1024];
-	struct	ifconf ifc;
-	struct	ifreq *ifr;
-	int	sck;
-	int	nInterfaces;
-	int	i;
+	char buf[1024];
+	struct  ifconf ifc;
+	struct  ifreq *ifr;
+	int sck;
+	int nInterfaces;
+	int i;
 	struct utsname name;
+
 	uname(&name);
 	/* Checking for x86 architecture */
 	if (!strcmp(name.machine, "i386") || !strcmp(name.machine, "i686") || !strcmp(name.machine, "i586")) {
-			
 		/* Get a socket handle. */
 		sck = socket(AF_INET, SOCK_DGRAM, 0);
 		if (sck < 0) {
 			perror("socket");
-			return ;
+			return;
 		}
 
 		/* Query available interfaces. */
@@ -147,8 +141,8 @@ GetWirelessAdapter(char *adapter_name)
 		ifc.ifc_buf = buf;
 		if (ioctl(sck, SIOCGIFCONF, &ifc) < 0) {
 			perror("ioctl(SIOCGIFCONF)");
-			close (sck);
-			return ;
+			close(sck);
+			return;
 		}
 
 		/* Iterate through the list of interfaces. */
@@ -157,32 +151,32 @@ GetWirelessAdapter(char *adapter_name)
 		for (i = 0; i < nInterfaces; i++) {
 			struct ifreq *item = &ifr[i];
 			if (ioctl(sck, SIOCGIWNAME, item) == 0) {
-				strncpy(adapter_name,item->ifr_name, sizeof(item->ifr_name));
+				strncpy(adapter_name, item->ifr_name, sizeof(item->ifr_name));
 				close(sck);
 				return;
 			}
 		}
-		close (sck);
+		close(sck);
 	}
 #ifdef TARGETENV_android
 	else { /* If its Android */
-		strncpy (adapter_name, "eth0", 15);
+		strncpy(adapter_name, "eth0", 15);
 	}
 #else
-	else { /* If its ARM */ 
-		strncpy (adapter_name,"eth1", 15);
+	else { /* If its ARM */
+		strncpy(adapter_name, "eth1", 15);
 	}
 #endif
 	return;
-
 }
 
 
 
-FILE*
+FILE *
 asd_Config(char *strFunct, char *strstrParams)
 {
-	FILE* fp = NULL;
+	FILE *fp = NULL;
+
 	if ((fp = popen(strFunct, "r")) == NULL) {
 		printf("popen failed\n");
 		return NULL;
@@ -190,55 +184,51 @@ asd_Config(char *strFunct, char *strstrParams)
 	return fp;
 }
 void
-Cleanup_File(FILE* fp)
+Cleanup_File(FILE *fp)
 {
 	pclose(fp);
 }
 
-int exec_process_cnclient (char *buf, char *rwl_client_path, int rwl_wifi_flag)
+int exec_process_cnclient(char *buf, char *rwl_client_path, int rwl_wifi_flag)
 {
-	int pid, status,timeout_count = 30;
+	int pid, status, timeout_count = 30;
 	FILE *tmpfd;
 	char gCmdStr[WFA_CMD_STR_SZ];
 
 	if (rwl_wifi_flag) {
 		pid = fork();
-		if (pid == 0) {
-			if ((status=execl (SH_PATH, "sh", "-c", buf, NULL)) == -1)
-				exit (1);		
-		}
+		if (pid == 0)
+			if ((status = execl(SH_PATH, "sh", "-c", buf, NULL)) == -1)
+				exit(1);
 		/*The server can be in different channel after association
-		 *Hence we issue a findserver and then find out if it has
-		 *been associated to return the right status
-		 */	
+		 * Hence we issue a findserver and then find out if it has
+		 * been associated to return the right status
+		 */
 		asd_sleep(3);
 		sprintf(gCmdStr, "%s findserver", rwl_client_path);
 		pid = fork();
-		if (pid == 0) {
-			if ((status=execl (SH_PATH, "sh", "-c", gCmdStr, NULL)) == -1)
-				exit (1);		
-		}
-		waitpid(pid,&status,0);
-	}
-	else {
+		if (pid == 0)
+			if ((status = execl(SH_PATH, "sh", "-c", gCmdStr, NULL)) == -1)
+				exit(1);
+		waitpid(pid, &status, 0);
+	} else {
 		pid = fork();
-		if (pid == 0) {
-			if ((status=execl (SH_PATH, "sh", "-c", buf, NULL)) == -1)
-				exit (1);		
-		}
-		waitpid(pid,&status,0);
+		if (pid == 0)
+			if ((status = execl(SH_PATH, "sh", "-c", buf, NULL)) == -1)
+				exit(1);
+		waitpid(pid, &status, 0);
 	}
-	/* while cnClient associates in the child, parent looks 
+	/* while cnClient associates in the child, parent looks
 	 * for association if it has happened
 	 * If it has not associated within a loop of 30, it comes out
 	 * as not associated
-	 */ 
-	while(timeout_count > 0){
+	 */
+	while (timeout_count > 0) {
 		sprintf(gCmdStr, "%s assoc | wc -l", rwl_client_path);
-		if((tmpfd = asd_Config(gCmdStr,TEMP_FILE_PATH)) == NULL){
+		if ((tmpfd = asd_Config(gCmdStr, TEMP_FILE_PATH)) == NULL) {
 			DPRINT_ERR(WFA_ERR, "\nassoc failed\n");
 			return FALSE;
-			}
+		}
 		fgets(gCmdStr, sizeof(gCmdStr), tmpfd);
 		/* Short response means not associated */
 		if (atoi(gCmdStr) > 2)
@@ -248,7 +238,7 @@ int exec_process_cnclient (char *buf, char *rwl_client_path, int rwl_wifi_flag)
 		asd_sleep(1);
 		timeout_count--;
 	}
-	if(timeout_count)
+	if (timeout_count)
 		return TRUE;
 	else
 		return FALSE;

@@ -81,8 +81,7 @@ extern cvmx_helper_link_info_t __cvmx_helper_sgmii_link_get(int ipd_port);
  *
  * Returns Zero on success, negative on failure
  */
-extern int __cvmx_helper_sgmii_link_set(int ipd_port,
-					cvmx_helper_link_info_t link_info);
+extern int __cvmx_helper_sgmii_link_set(int ipd_port, cvmx_helper_link_info_t link_info);
 
 /**
  * Configure a port for internal and/or external loopback. Internal loopback
@@ -97,8 +96,6 @@ extern int __cvmx_helper_sgmii_link_set(int ipd_port,
  *
  * Returns Zero on success, negative on failure.
  */
-extern int __cvmx_helper_sgmii_configure_loopback(int ipd_port,
-						  int enable_internal,
-						  int enable_external);
+extern int __cvmx_helper_sgmii_configure_loopback(int ipd_port, int enable_internal, int enable_external);
 
 #endif

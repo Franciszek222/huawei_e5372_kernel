@@ -1,28 +1,28 @@
 /**********************************************************************
- * Author: Cavium Networks
- *
- * Contact: support@caviumnetworks.com
- * This file is part of the OCTEON SDK
- *
- * Copyright (c) 2003-2007 Cavium Networks
- *
- * This file is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License, Version 2, as
- * published by the Free Software Foundation.
- *
- * This file is distributed in the hope that it will be useful, but
- * AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
- * NONINFRINGEMENT.  See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this file; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
- * or visit http://www.gnu.org/licenses/.
- *
- * This file may also be available under a different license from Cavium.
- * Contact Cavium Networks for more information
+* Author: Cavium Networks
+*
+* Contact: support@caviumnetworks.com
+* This file is part of the OCTEON SDK
+*
+* Copyright (c) 2003-2007 Cavium Networks
+*
+* This file is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License, Version 2, as
+* published by the Free Software Foundation.
+*
+* This file is distributed in the hope that it will be useful, but
+* AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+* NONINFRINGEMENT.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this file; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+* or visit http://www.gnu.org/licenses/.
+*
+* This file may also be available under a different license from Cavium.
+* Contact Cavium Networks for more information
 **********************************************************************/
 #include <linux/kernel.h>
 #include <linux/netdevice.h>
@@ -50,15 +50,13 @@ static irqreturn_t cvm_oct_spi_rml_interrupt(int cpl, void *dev_id)
 
 	/* Check and see if this interrupt was caused by the GMX block */
 	rsl_int_blocks.u64 = cvmx_read_csr(CVMX_NPI_RSL_INT_BLOCKS);
-	if (rsl_int_blocks.s.spx1) {	/* 19 - SPX1_INT_REG & STX1_INT_REG */
-
+	if (rsl_int_blocks.s.spx1) {    /* 19 - SPX1_INT_REG & STX1_INT_REG */
 		union cvmx_spxx_int_reg spx_int_reg;
 		union cvmx_stxx_int_reg stx_int_reg;
 
 		spx_int_reg.u64 = cvmx_read_csr(CVMX_SPXX_INT_REG(1));
 		cvmx_write_csr(CVMX_SPXX_INT_REG(1), spx_int_reg.u64);
 		if (!need_retrain[1]) {
-
 			spx_int_reg.u64 &= cvmx_read_csr(CVMX_SPXX_INT_MSK(1));
 			if (spx_int_reg.s.spf)
 				pr_err("SPI1: SRX Spi4 interface down\n");
@@ -95,7 +93,6 @@ static irqreturn_t cvm_oct_spi_rml_interrupt(int cpl, void *dev_id)
 		stx_int_reg.u64 = cvmx_read_csr(CVMX_STXX_INT_REG(1));
 		cvmx_write_csr(CVMX_STXX_INT_REG(1), stx_int_reg.u64);
 		if (!need_retrain[1]) {
-
 			stx_int_reg.u64 &= cvmx_read_csr(CVMX_STXX_INT_MSK(1));
 			if (stx_int_reg.s.syncerr)
 				pr_err("SPI1: STX Interface encountered a "
@@ -131,14 +128,13 @@ static irqreturn_t cvm_oct_spi_rml_interrupt(int cpl, void *dev_id)
 		return_status = IRQ_HANDLED;
 	}
 
-	if (rsl_int_blocks.s.spx0) {	/* 18 - SPX0_INT_REG & STX0_INT_REG */
+	if (rsl_int_blocks.s.spx0) {    /* 18 - SPX0_INT_REG & STX0_INT_REG */
 		union cvmx_spxx_int_reg spx_int_reg;
 		union cvmx_stxx_int_reg stx_int_reg;
 
 		spx_int_reg.u64 = cvmx_read_csr(CVMX_SPXX_INT_REG(0));
 		cvmx_write_csr(CVMX_SPXX_INT_REG(0), spx_int_reg.u64);
 		if (!need_retrain[0]) {
-
 			spx_int_reg.u64 &= cvmx_read_csr(CVMX_SPXX_INT_MSK(0));
 			if (spx_int_reg.s.spf)
 				pr_err("SPI0: SRX Spi4 interface down\n");
@@ -175,7 +171,6 @@ static irqreturn_t cvm_oct_spi_rml_interrupt(int cpl, void *dev_id)
 		stx_int_reg.u64 = cvmx_read_csr(CVMX_STXX_INT_REG(0));
 		cvmx_write_csr(CVMX_STXX_INT_REG(0), stx_int_reg.u64);
 		if (!need_retrain[0]) {
-
 			stx_int_reg.u64 &= cvmx_read_csr(CVMX_STXX_INT_MSK(0));
 			if (stx_int_reg.s.syncerr)
 				pr_err("SPI0: STX Interface encountered a "
@@ -251,11 +246,9 @@ static void cvm_oct_spi_poll(struct net_device *dev)
 	int interface;
 
 	for (interface = 0; interface < 2; interface++) {
-
 		if ((priv->port == interface * 16) && need_retrain[interface]) {
-
 			if (cvmx_spi_restart_interface
-			    (interface, CVMX_SPI_MODE_DUPLEX, 10) == 0) {
+				    (interface, CVMX_SPI_MODE_DUPLEX, 10) == 0) {
 				need_retrain[interface] = 0;
 				cvm_oct_spi_enable_error_reporting(interface);
 			}
@@ -291,10 +284,9 @@ int cvm_oct_spi_init(struct net_device *dev)
 	int r;
 	struct octeon_ethernet *priv = netdev_priv(dev);
 
-	if (number_spi_ports == 0) {
+	if (number_spi_ports == 0)
 		r = request_irq(OCTEON_IRQ_RML, cvm_oct_spi_rml_interrupt,
 				IRQF_SHARED, "SPI", &number_spi_ports);
-	}
 	number_spi_ports++;
 
 	if ((priv->port == 0) || (priv->port == 16)) {

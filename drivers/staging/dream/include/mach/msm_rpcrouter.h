@@ -38,13 +38,13 @@
 #define RPC_VERSION_MAJOR_OFFSET 16
 #define RPC_VERSION_MINOR_MASK 0x0000ffff
 
-#define MSM_RPC_VERS(major, minor)					\
-	((uint32_t)((((major) << RPC_VERSION_MAJOR_OFFSET) &		\
-		RPC_VERSION_MAJOR_MASK) |				\
-	((minor) & RPC_VERSION_MINOR_MASK)))
-#define MSM_RPC_GET_MAJOR(vers) (((vers) & RPC_VERSION_MAJOR_MASK) >>	\
-					RPC_VERSION_MAJOR_OFFSET)
-#define MSM_RPC_GET_MINOR(vers) ((vers) & RPC_VERSION_MINOR_MASK)
+#define MSM_RPC_VERS(major, minor)                                      \
+	((uint32_t)((((major) << RPC_VERSION_MAJOR_OFFSET)&            \
+		     RPC_VERSION_MAJOR_MASK) |                               \
+		    ((minor)&RPC_VERSION_MINOR_MASK)))
+#define MSM_RPC_GET_MAJOR(vers) (((vers)&RPC_VERSION_MAJOR_MASK) >>   \
+				 RPC_VERSION_MAJOR_OFFSET)
+#define MSM_RPC_GET_MINOR(vers) ((vers)&RPC_VERSION_MINOR_MASK)
 #else
 #define MSM_RPC_VERS(major, minor) (major)
 #define MSM_RPC_GET_MAJOR(vers) (vers)
@@ -53,48 +53,43 @@
 
 struct msm_rpc_endpoint;
 
-struct rpcsvr_platform_device
-{
-	struct platform_device base;
-	uint32_t prog;
-	uint32_t vers;
+struct rpcsvr_platform_device {
+	struct platform_device	base;
+	uint32_t		prog;
+	uint32_t		vers;
 };
 
-#define RPC_DATA_IN	0
+#define RPC_DATA_IN     0
 /*
  * Structures for sending / receiving direct RPC requests
  * XXX: Any cred/verif lengths > 0 not supported
  */
 
-struct rpc_request_hdr
-{
-	uint32_t xid;
-	uint32_t type;	/* 0 */
-	uint32_t rpc_vers; /* 2 */
-	uint32_t prog;
-	uint32_t vers;
-	uint32_t procedure;
-	uint32_t cred_flavor;
-	uint32_t cred_length;
-	uint32_t verf_flavor;
-	uint32_t verf_length;
+struct rpc_request_hdr {
+	uint32_t	xid;
+	uint32_t	type;           /* 0 */
+	uint32_t	rpc_vers;       /* 2 */
+	uint32_t	prog;
+	uint32_t	vers;
+	uint32_t	procedure;
+	uint32_t	cred_flavor;
+	uint32_t	cred_length;
+	uint32_t	verf_flavor;
+	uint32_t	verf_length;
 };
 
-typedef struct
-{
-	uint32_t low;
-	uint32_t high;
+typedef struct {
+	uint32_t	low;
+	uint32_t	high;
 } rpc_reply_progmismatch_data;
 
-typedef struct
-{
+typedef struct {
 } rpc_denied_reply_hdr;
 
-typedef struct
-{
-	uint32_t verf_flavor;
-	uint32_t verf_length;
-	uint32_t accept_stat;
+typedef struct {
+	uint32_t	verf_flavor;
+	uint32_t	verf_length;
+	uint32_t	accept_stat;
 #define RPC_ACCEPTSTAT_SUCCESS 0
 #define RPC_ACCEPTSTAT_PROG_UNAVAIL 1
 #define RPC_ACCEPTSTAT_PROG_MISMATCH 2
@@ -110,16 +105,15 @@ typedef struct
 	 */
 } rpc_accepted_reply_hdr;
 
-struct rpc_reply_hdr
-{
-	uint32_t xid;
-	uint32_t type;
-	uint32_t reply_stat;
+struct rpc_reply_hdr {
+	uint32_t	xid;
+	uint32_t	type;
+	uint32_t	reply_stat;
 #define RPCMSG_REPLYSTAT_ACCEPTED 0
 #define RPCMSG_REPLYSTAT_DENIED 1
 	union {
-		rpc_accepted_reply_hdr acc_hdr;
-		rpc_denied_reply_hdr dny_hdr;
+		rpc_accepted_reply_hdr	acc_hdr;
+		rpc_denied_reply_hdr	dny_hdr;
 	} data;
 };
 
@@ -132,20 +126,14 @@ struct msm_rpc_endpoint *msm_rpc_open(void);
 struct msm_rpc_endpoint *msm_rpc_connect(uint32_t prog, uint32_t vers, unsigned flags);
 uint32_t msm_rpc_get_vers(struct msm_rpc_endpoint *ept);
 /* check if server version can handle client requested version */
-int msm_rpc_is_compatible_version(uint32_t server_version,
-				  uint32_t client_version);
+int msm_rpc_is_compatible_version(uint32_t server_version, uint32_t client_version);
 
 int msm_rpc_close(struct msm_rpc_endpoint *ept);
-int msm_rpc_write(struct msm_rpc_endpoint *ept,
-		  void *data, int len);
-int msm_rpc_read(struct msm_rpc_endpoint *ept,
-		 void **data, unsigned len, long timeout);
-void msm_rpc_setup_req(struct rpc_request_hdr *hdr,
-		       uint32_t prog, uint32_t vers, uint32_t proc);
-int msm_rpc_register_server(struct msm_rpc_endpoint *ept,
-			    uint32_t prog, uint32_t vers);
-int msm_rpc_unregister_server(struct msm_rpc_endpoint *ept,
-			      uint32_t prog, uint32_t vers);
+int msm_rpc_write(struct msm_rpc_endpoint *ept, void *data, int len);
+int msm_rpc_read(struct msm_rpc_endpoint *ept, void **data, unsigned len, long timeout);
+void msm_rpc_setup_req(struct rpc_request_hdr *hdr, uint32_t prog, uint32_t vers, uint32_t proc);
+int msm_rpc_register_server(struct msm_rpc_endpoint *ept, uint32_t prog, uint32_t vers);
+int msm_rpc_unregister_server(struct msm_rpc_endpoint *ept, uint32_t prog, uint32_t vers);
 
 /* simple blocking rpc call
  *
@@ -154,24 +142,17 @@ int msm_rpc_unregister_server(struct msm_rpc_endpoint *ept,
  *
  * reply provides a buffer for replies of reply_max_size
  */
-int msm_rpc_call_reply(struct msm_rpc_endpoint *ept, uint32_t proc,
-		       void *request, int request_size,
-		       void *reply, int reply_max_size,
-		       long timeout);
-int msm_rpc_call(struct msm_rpc_endpoint *ept, uint32_t proc,
-		 void *request, int request_size,
-		 long timeout);
+int msm_rpc_call_reply(struct msm_rpc_endpoint *ept, uint32_t proc, void *request, int request_size, void *reply, int reply_max_size, long timeout);
+int msm_rpc_call(struct msm_rpc_endpoint *ept, uint32_t proc, void *request, int request_size, long timeout);
 
-struct msm_rpc_server
-{
-	struct list_head list;
-	uint32_t flags;
+struct msm_rpc_server {
+	struct list_head	list;
+	uint32_t		flags;
 
-	uint32_t prog;
-	uint32_t vers;
+	uint32_t		prog;
+	uint32_t		vers;
 
-	int (*rpc_call)(struct msm_rpc_server *server,
-			struct rpc_request_hdr *req, unsigned len);
+	int			(*rpc_call)(struct msm_rpc_server *server, struct rpc_request_hdr *req, unsigned len);
 };
 
 int msm_rpc_create_server(struct msm_rpc_server *server);

@@ -56,6 +56,7 @@ __cvmx_cmd_queue_all_state_t *__cvmx_cmd_queue_state_ptr;
 static cvmx_cmd_queue_result_t __cvmx_cmd_queue_init_state_ptr(void)
 {
 	char *alloc_name = "cvmx_cmd_queues";
+
 #if defined(CONFIG_CAVIUM_RESERVE32) && CONFIG_CAVIUM_RESERVE32
 	extern uint64_t octeon_reserve32_memory;
 #endif
@@ -64,32 +65,32 @@ static cvmx_cmd_queue_result_t __cvmx_cmd_queue_init_state_ptr(void)
 		return CVMX_CMD_QUEUE_SUCCESS;
 
 #if defined(CONFIG_CAVIUM_RESERVE32) && CONFIG_CAVIUM_RESERVE32
-	if (octeon_reserve32_memory)
+	if (octeon_reserve32_memory) {
 		__cvmx_cmd_queue_state_ptr =
-		    cvmx_bootmem_alloc_named_range(sizeof(*__cvmx_cmd_queue_state_ptr),
-						   octeon_reserve32_memory,
-						   octeon_reserve32_memory +
-						   (CONFIG_CAVIUM_RESERVE32 <<
-						    20) - 1, 128, alloc_name);
-	else
+			cvmx_bootmem_alloc_named_range(sizeof(*__cvmx_cmd_queue_state_ptr),
+						       octeon_reserve32_memory,
+						       octeon_reserve32_memory +
+						       (CONFIG_CAVIUM_RESERVE32 <<
+							20) - 1, 128, alloc_name);
+	} else
 #endif
-		__cvmx_cmd_queue_state_ptr =
-		    cvmx_bootmem_alloc_named(sizeof(*__cvmx_cmd_queue_state_ptr),
-					    128,
-					    alloc_name);
-	if (__cvmx_cmd_queue_state_ptr)
+	__cvmx_cmd_queue_state_ptr =
+		cvmx_bootmem_alloc_named(sizeof(*__cvmx_cmd_queue_state_ptr),
+					 128,
+					 alloc_name);
+	if (__cvmx_cmd_queue_state_ptr) {
 		memset(__cvmx_cmd_queue_state_ptr, 0,
 		       sizeof(*__cvmx_cmd_queue_state_ptr));
-	else {
+	} else {
 		struct cvmx_bootmem_named_block_desc *block_desc =
-		    cvmx_bootmem_find_named_block(alloc_name);
-		if (block_desc)
+			cvmx_bootmem_find_named_block(alloc_name);
+		if (block_desc) {
 			__cvmx_cmd_queue_state_ptr =
-			    cvmx_phys_to_ptr(block_desc->base_addr);
-		else {
+				cvmx_phys_to_ptr(block_desc->base_addr);
+		} else {
 			cvmx_dprintf
-			    ("ERROR: cvmx_cmd_queue_initialize: Unable to get named block %s.\n",
-			     alloc_name);
+				("ERROR: cvmx_cmd_queue_initialize: Unable to get named block %s.\n",
+				alloc_name);
 			return CVMX_CMD_QUEUE_NO_MEMORY;
 		}
 	}
@@ -114,6 +115,7 @@ cvmx_cmd_queue_result_t cvmx_cmd_queue_initialize(cvmx_cmd_queue_id_t queue_id,
 {
 	__cvmx_cmd_queue_state_t *qstate;
 	cvmx_cmd_queue_result_t result = __cvmx_cmd_queue_init_state_ptr();
+
 	if (result != CVMX_CMD_QUEUE_SUCCESS)
 		return result;
 
@@ -128,8 +130,9 @@ cvmx_cmd_queue_result_t cvmx_cmd_queue_initialize(cvmx_cmd_queue_id_t queue_id,
 	if (CVMX_CMD_QUEUE_ENABLE_MAX_DEPTH) {
 		if ((max_depth < 0) || (max_depth > 1 << 20))
 			return CVMX_CMD_QUEUE_INVALID_PARAM;
-	} else if (max_depth != 0)
+	} else if (max_depth != 0) {
 		return CVMX_CMD_QUEUE_INVALID_PARAM;
+	}
 
 	if ((fpa_pool < 0) || (fpa_pool > 7))
 		return CVMX_CMD_QUEUE_INVALID_PARAM;
@@ -140,23 +143,23 @@ cvmx_cmd_queue_result_t cvmx_cmd_queue_initialize(cvmx_cmd_queue_id_t queue_id,
 	if (qstate->base_ptr_div128) {
 		if (max_depth != (int)qstate->max_depth) {
 			cvmx_dprintf("ERROR: cvmx_cmd_queue_initialize: "
-				"Queue already initalized with different "
-				"max_depth (%d).\n",
-			     (int)qstate->max_depth);
+				     "Queue already initalized with different "
+				     "max_depth (%d).\n",
+				     (int)qstate->max_depth);
 			return CVMX_CMD_QUEUE_INVALID_PARAM;
 		}
 		if (fpa_pool != qstate->fpa_pool) {
 			cvmx_dprintf("ERROR: cvmx_cmd_queue_initialize: "
-				"Queue already initalized with different "
-				"FPA pool (%u).\n",
-			     qstate->fpa_pool);
+				     "Queue already initalized with different "
+				     "FPA pool (%u).\n",
+				     qstate->fpa_pool);
 			return CVMX_CMD_QUEUE_INVALID_PARAM;
 		}
 		if ((pool_size >> 3) - 1 != qstate->pool_size_m1) {
 			cvmx_dprintf("ERROR: cvmx_cmd_queue_initialize: "
-				"Queue already initalized with different "
-				"FPA pool size (%u).\n",
-			     (qstate->pool_size_m1 + 1) << 3);
+				     "Queue already initalized with different "
+				     "FPA pool size (%u).\n",
+				     (qstate->pool_size_m1 + 1) << 3);
 			return CVMX_CMD_QUEUE_INVALID_PARAM;
 		}
 		CVMX_SYNCWS;
@@ -188,7 +191,7 @@ cvmx_cmd_queue_result_t cvmx_cmd_queue_initialize(cvmx_cmd_queue_id_t queue_id,
 		 * zero the ticket.
 		 */
 		__cvmx_cmd_queue_state_ptr->
-		    ticket[__cvmx_cmd_queue_get_index(queue_id)] = 0;
+		ticket[__cvmx_cmd_queue_get_index(queue_id)] = 0;
 		CVMX_SYNCWS;
 		return CVMX_CMD_QUEUE_SUCCESS;
 	}
@@ -206,6 +209,7 @@ cvmx_cmd_queue_result_t cvmx_cmd_queue_initialize(cvmx_cmd_queue_id_t queue_id,
 cvmx_cmd_queue_result_t cvmx_cmd_queue_shutdown(cvmx_cmd_queue_id_t queue_id)
 {
 	__cvmx_cmd_queue_state_t *qptr = __cvmx_cmd_queue_get_state(queue_id);
+
 	if (qptr == NULL) {
 		cvmx_dprintf("ERROR: cvmx_cmd_queue_shutdown: Unable to "
 			     "get queue information.\n");
@@ -221,7 +225,7 @@ cvmx_cmd_queue_result_t cvmx_cmd_queue_shutdown(cvmx_cmd_queue_id_t queue_id)
 	__cvmx_cmd_queue_lock(queue_id, qptr);
 	if (qptr->base_ptr_div128) {
 		cvmx_fpa_free(cvmx_phys_to_ptr
-			      ((uint64_t) qptr->base_ptr_div128 << 7),
+				      ((uint64_t)qptr->base_ptr_div128 << 7),
 			      qptr->fpa_pool, 0);
 		qptr->base_ptr_div128 = 0;
 	}
@@ -240,16 +244,15 @@ cvmx_cmd_queue_result_t cvmx_cmd_queue_shutdown(cvmx_cmd_queue_id_t queue_id)
  */
 int cvmx_cmd_queue_length(cvmx_cmd_queue_id_t queue_id)
 {
-	if (CVMX_ENABLE_PARAMETER_CHECKING) {
+	if (CVMX_ENABLE_PARAMETER_CHECKING)
 		if (__cvmx_cmd_queue_get_state(queue_id) == NULL)
 			return CVMX_CMD_QUEUE_INVALID_PARAM;
-	}
 
 	/*
 	 * The cast is here so gcc with check that all values in the
 	 * cvmx_cmd_queue_id_t enumeration are here.
 	 */
-	switch ((cvmx_cmd_queue_id_t) (queue_id & 0xff0000)) {
+	switch ((cvmx_cmd_queue_id_t)(queue_id & 0xff0000)) {
 	case CVMX_CMD_QUEUE_PKO_BASE:
 		/*
 		 * FIXME: Need atomic lock on
@@ -273,13 +276,13 @@ int cvmx_cmd_queue_length(cvmx_cmd_queue_id_t queue_id)
 		/* FIXME: Implement other lengths */
 		return 0;
 	case CVMX_CMD_QUEUE_DMA_BASE:
-		{
-			union cvmx_npei_dmax_counts dmax_counts;
-			dmax_counts.u64 =
-			    cvmx_read_csr(CVMX_PEXP_NPEI_DMAX_COUNTS
-					  (queue_id & 0x7));
-			return dmax_counts.s.dbell;
-		}
+	{
+		union cvmx_npei_dmax_counts dmax_counts;
+		dmax_counts.u64 =
+			cvmx_read_csr(CVMX_PEXP_NPEI_DMAX_COUNTS
+					      (queue_id & 0x7));
+		return dmax_counts.s.dbell;
+	}
 	case CVMX_CMD_QUEUE_END:
 		return CVMX_CMD_QUEUE_INVALID_PARAM;
 	}
@@ -299,8 +302,9 @@ int cvmx_cmd_queue_length(cvmx_cmd_queue_id_t queue_id)
 void *cvmx_cmd_queue_buffer(cvmx_cmd_queue_id_t queue_id)
 {
 	__cvmx_cmd_queue_state_t *qptr = __cvmx_cmd_queue_get_state(queue_id);
+
 	if (qptr && qptr->base_ptr_div128)
-		return cvmx_phys_to_ptr((uint64_t) qptr->base_ptr_div128 << 7);
+		return cvmx_phys_to_ptr((uint64_t)qptr->base_ptr_div128 << 7);
 	else
 		return NULL;
 }

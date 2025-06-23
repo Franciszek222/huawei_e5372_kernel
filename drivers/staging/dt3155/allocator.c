@@ -20,21 +20,21 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
-
--- Changes --
-
-  Date	      Programmer  Description of changes made
-  -------------------------------------------------------------------
-  02-Aug-2002 NJC         allocator now steps in 1MB increments, rather
-			  than doubling its size each time.
-			  Also, allocator_init(u32 *) now returns
-			  (in the first arg) the size of the free
-			  space.  This is no longer consistent with
-			  using the allocator as a module, and some changes
-			  may be necessary for that purpose.  This was
-			  designed to work with the DT3155 driver, in
-			  stand alone mode only!!!
-  26-Oct-2009 SS	  Port to 2.6.30 kernel.
+ *
+ * -- Changes --
+ *
+ * Date	      Programmer  Description of changes made
+ * -------------------------------------------------------------------
+ * 02-Aug-2002 NJC         allocator now steps in 1MB increments, rather
+ *                        than doubling its size each time.
+ *                        Also, allocator_init(u32 *) now returns
+ *                        (in the first arg) the size of the free
+ *                        space.  This is no longer consistent with
+ *                        using the allocator as a module, and some changes
+ *                        may be necessary for that purpose.  This was
+ *                        designed to work with the DT3155 driver, in
+ *                        stand alone mode only!!!
+ * 26-Oct-2009 SS	  Port to 2.6.30 kernel.
  */
 
 
@@ -52,7 +52,7 @@
 #include <linux/proc_fs.h>
 #include <linux/errno.h>
 #include <linux/types.h>
-#include <linux/mm.h>	/* PAGE_ALIGN() */
+#include <linux/mm.h>   /* PAGE_ALIGN() */
 #include <linux/io.h>
 #include <linux/slab.h>
 
@@ -68,29 +68,29 @@
 #  define __static
 #  define DUMP_LIST() dump_list()
 #  ifdef __KERNEL__
-     /* This one if debugging is on, and kernel space */
-#    define PDEBUG(fmt, args...) printk(KERN_DEBUG ALL_MSG fmt, ## args)
+/* This one if debugging is on, and kernel space */
+#    define PDEBUG(fmt, args ...) printk(KERN_DEBUG ALL_MSG fmt, ## args)
 #  else
-     /* This one for user space */
-#    define PDEBUG(fmt, args...) fprintf(stderr, fmt, ## args)
+/* This one for user space */
+#    define PDEBUG(fmt, args ...) fprintf(stderr, fmt, ## args)
 #  endif
 #else
-#  define PDEBUG(fmt, args...) /* not debugging: nothing */
+#  define PDEBUG(fmt, args ...) /* not debugging: nothing */
 #  define DUMP_LIST()
 #  define __static static
 #endif
 
 #undef PDEBUGG
-#define PDEBUGG(fmt, args...)
+#define PDEBUGG(fmt, args ...)
 /*#define PDEBUGG(fmt, args...) printk( KERN_DEBUG ALL_MSG fmt, ## args)*/
 
 
-static int allocator_himem = 1; /* 0 = probe, pos. = megs, neg. = disable   */
-static int allocator_step = 1;  /* This is the step size in MB              */
-static int allocator_probe = 1; /* This is a flag -- 1=probe, 0=don't probe */
+static int allocator_himem = 1;                 /* 0 = probe, pos. = megs, neg. = disable   */
+static int allocator_step = 1;                  /* This is the step size in MB              */
+static int allocator_probe = 1;                 /* This is a flag -- 1=probe, 0=don't probe */
 
-static unsigned long allocator_buffer;		/* physical address */
-static unsigned long allocator_buffer_size;	/* kilobytes */
+static unsigned long allocator_buffer;          /* physical address */
+static unsigned long allocator_buffer_size;     /* kilobytes */
 
 /*
  * The allocator keeps a list of DMA areas, so multiple devices
@@ -98,9 +98,9 @@ static unsigned long allocator_buffer_size;	/* kilobytes */
  */
 
 struct allocator_struct {
-	unsigned long address;
-	unsigned long size;
-	struct allocator_struct *next;
+	unsigned long			address;
+	unsigned long			size;
+	struct allocator_struct *	next;
 };
 
 static struct allocator_struct *allocator_list;
@@ -112,7 +112,7 @@ static int dump_list(void)
 
 	PDEBUG("Current list:\n");
 	for (ptr = allocator_list; ptr; ptr = ptr->next)
-		PDEBUG("0x%08lx (size %likB)\n", ptr->address, ptr->size>>10);
+		PDEBUG("0x%08lx (size %likB)\n", ptr->address, ptr->size >> 10);
 	return 0;
 }
 #endif
@@ -124,7 +124,6 @@ static int dump_list(void)
  * one is returned. The return value is a physical address (i.e., it can
  * be used straight ahead for DMA, but needs remapping for program use).
  */
-
 unsigned long allocator_allocate_dma(unsigned long kilobytes, gfp_t flags)
 {
 	struct allocator_struct *ptr = allocator_list, *newptr;
@@ -199,9 +198,9 @@ int allocator_init(u32 *allocator_max)
 	/* check how much free memory is there */
 	void *remapped;
 	unsigned long max;
-	unsigned long trial_size = allocator_himem<<20;
+	unsigned long trial_size = allocator_himem << 20;
 	unsigned long last_trial = 0;
-	unsigned long step = allocator_step<<20;
+	unsigned long step = allocator_step << 20;
 	unsigned long i = 0;
 	struct allocator_struct *head, *tail;
 	char test_string[] = "0123456789abcde"; /* 16 bytes */
@@ -211,35 +210,35 @@ int allocator_init(u32 *allocator_max)
 		return -EINVAL;
 
 	if (!trial_size)
-		trial_size = 1<<20; /* not specified: try one meg */
+		trial_size = 1 << 20; /* not specified: try one meg */
 
 	while (1) {
 		remapped = ioremap(__pa(high_memory), trial_size);
 		if (!remapped) {
-			PDEBUGG("%li megs failed!\n", trial_size>>20);
+			PDEBUGG("%li megs failed!\n", trial_size >> 20);
 			break;
 		}
-		PDEBUGG("Trying %li megs (at %p, %p)\n", trial_size>>20,
+		PDEBUGG("Trying %li megs (at %p, %p)\n", trial_size >> 20,
 			(void *)__pa(high_memory), remapped);
 		for (i = last_trial; i < trial_size; i += 16) {
-			strcpy((char *)(remapped)+i, test_string);
-			if (strcmp((char *)(remapped)+i, test_string))
+			strcpy((char *)(remapped) + i, test_string);
+			if (strcmp((char *)(remapped) + i, test_string))
 				break;
-			}
+		}
 		iounmap((void *)remapped);
 		schedule();
 		last_trial = trial_size;
-		if (i == trial_size)
+		if (i == trial_size) {
 			trial_size += step; /* increment, if all went well */
-		else {
-			PDEBUGG("%li megs copy test failed!\n", trial_size>>20);
+		} else {
+			PDEBUGG("%li megs copy test failed!\n", trial_size >> 20);
 			break;
 		}
 		if (!allocator_probe)
 			break;
 	}
-	PDEBUG("%li megs (%li k, %li b)\n", i>>20, i>>10, i);
-	allocator_buffer_size = i>>10; /* kilobytes */
+	PDEBUG("%li megs (%li k, %li b)\n", i >> 20, i >> 10, i);
+	allocator_buffer_size = i >> 10; /* kilobytes */
 	allocator_buffer = __pa(high_memory);
 	if (!allocator_buffer_size) {
 		printk(KERN_WARNING ALL_MSG "no free high memory to use\n");
@@ -247,11 +246,11 @@ int allocator_init(u32 *allocator_max)
 	}
 
 	/*
-	* to simplify things, always have two cells in the list:
-	* the first and the last. This avoids some conditionals and
-	* extra code when allocating and deallocating: we only play
-	* in the middle of the list
-	*/
+	 * to simplify things, always have two cells in the list:
+	 * the first and the last. This avoids some conditionals and
+	 * extra code when allocating and deallocating: we only play
+	 * in the middle of the list
+	 */
 	head = kmalloc(sizeof(struct allocator_struct), GFP_KERNEL);
 	if (!head)
 		return -ENOMEM;
@@ -261,7 +260,7 @@ int allocator_init(u32 *allocator_max)
 		return -ENOMEM;
 	}
 
-	max = allocator_buffer_size<<10;
+	max = allocator_buffer_size << 10;
 
 	head->size = tail->size = 0;
 	head->address = allocator_buffer;
@@ -286,9 +285,7 @@ void allocator_cleanup(void)
 		kfree(ptr);
 	}
 
-	allocator_buffer      = 0;
+	allocator_buffer = 0;
 	allocator_buffer_size = 0;
 	allocator_list = NULL;
 }
-
-

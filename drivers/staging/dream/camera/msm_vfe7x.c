@@ -36,14 +36,14 @@ static void *extdata;
 static uint32_t extlen;
 
 struct mutex vfe_lock;
-static void     *vfe_syncdata;
+static void *vfe_syncdata;
 static uint8_t vfestopped;
 
 static struct stop_event stopevent;
 
 static void vfe_7x_convert(struct msm_vfe_phy_info *pinfo,
-		enum vfe_resp_msg type,
-		void *data, void **ext, int32_t *elen)
+			   enum vfe_resp_msg type,
+			   void *data, void **ext, int32_t *elen)
 {
 	switch (type) {
 	case VFE_MSG_OUTPUT1:
@@ -53,24 +53,24 @@ static void vfe_7x_convert(struct msm_vfe_phy_info *pinfo,
 			((struct vfe_endframe *)data)->cbcr_address;
 
 		CDBG("vfe_7x_convert, y_phy = 0x%x, cbcr_phy = 0x%x\n",
-				 pinfo->y_phy, pinfo->cbcr_phy);
+		     pinfo->y_phy, pinfo->cbcr_phy);
 
 		((struct vfe_frame_extra *)extdata)->bl_evencol =
-		((struct vfe_endframe *)data)->blacklevelevencolumn;
+			((struct vfe_endframe *)data)->blacklevelevencolumn;
 
 		((struct vfe_frame_extra *)extdata)->bl_oddcol =
-		((struct vfe_endframe *)data)->blackleveloddcolumn;
+			((struct vfe_endframe *)data)->blackleveloddcolumn;
 
 		((struct vfe_frame_extra *)extdata)->g_def_p_cnt =
-		((struct vfe_endframe *)data)->greendefectpixelcount;
+			((struct vfe_endframe *)data)->greendefectpixelcount;
 
 		((struct vfe_frame_extra *)extdata)->r_b_def_p_cnt =
-		((struct vfe_endframe *)data)->redbluedefectpixelcount;
+			((struct vfe_endframe *)data)->redbluedefectpixelcount;
 
-		*ext  = extdata;
+		*ext = extdata;
 		*elen = extlen;
 	}
-		break;
+	break;
 
 	case VFE_MSG_STATS_AF:
 	case VFE_MSG_STATS_WE:
@@ -83,7 +83,7 @@ static void vfe_7x_convert(struct msm_vfe_phy_info *pinfo,
 }
 
 static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
-		void (*getevent)(void *ptr, size_t len))
+		       void (*getevent)(void *ptr, size_t len))
 {
 	uint32_t evt_buf[3];
 	struct msm_vfe_resp *rp;
@@ -101,14 +101,14 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 
 	if (id == ((uint16_t)-1)) {
 		/* event */
-		rp->type           = VFE_EVENT;
-		rp->evt_msg.type   = MSM_CAMERA_EVT;
+		rp->type = VFE_EVENT;
+		rp->evt_msg.type = MSM_CAMERA_EVT;
 		getevent(evt_buf, sizeof(evt_buf));
 		rp->evt_msg.msg_id = evt_buf[0];
 		resp->vfe_resp(rp, MSM_CAM_Q_VFE_EVT, vfe_syncdata);
 	} else {
 		/* messages */
-		rp->evt_msg.type   = MSM_CAMERA_MSG;
+		rp->evt_msg.type = MSM_CAMERA_MSG;
 		rp->evt_msg.msg_id = id;
 		rp->evt_msg.data = rp + 1;
 		getevent(rp->evt_msg.data, len);
@@ -121,27 +121,27 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 		case MSG_OUTPUT1:
 			rp->type = VFE_MSG_OUTPUT1;
 			vfe_7x_convert(&(rp->phy), VFE_MSG_OUTPUT1,
-				rp->evt_msg.data, &(rp->extdata),
-				&(rp->extlen));
+				       rp->evt_msg.data, &(rp->extdata),
+				       &(rp->extlen));
 			break;
 
 		case MSG_OUTPUT2:
 			rp->type = VFE_MSG_OUTPUT2;
 			vfe_7x_convert(&(rp->phy), VFE_MSG_OUTPUT2,
-					rp->evt_msg.data, &(rp->extdata),
-					&(rp->extlen));
+				       rp->evt_msg.data, &(rp->extdata),
+				       &(rp->extlen));
 			break;
 
 		case MSG_STATS_AF:
 			rp->type = VFE_MSG_STATS_AF;
 			vfe_7x_convert(&(rp->phy), VFE_MSG_STATS_AF,
-					rp->evt_msg.data, NULL, NULL);
+				       rp->evt_msg.data, NULL, NULL);
 			break;
 
 		case MSG_STATS_WE:
 			rp->type = VFE_MSG_STATS_WE;
 			vfe_7x_convert(&(rp->phy), VFE_MSG_STATS_WE,
-					rp->evt_msg.data, NULL, NULL);
+				       rp->evt_msg.data, NULL, NULL);
 
 			CDBG("MSG_STATS_WE: phy = 0x%x\n", rp->phy.sbuf_phy);
 			break;
@@ -162,7 +162,7 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 }
 
 static struct msm_adsp_ops vfe_7x_sync = {
-	.event = vfe_7x_ops,
+	.event	= vfe_7x_ops,
 };
 
 static int vfe_7x_enable(struct camera_enable_cmd *enable)
@@ -177,8 +177,8 @@ static int vfe_7x_enable(struct camera_enable_cmd *enable)
 	return rc;
 }
 
-static int vfe_7x_disable(struct camera_enable_cmd *enable,
-		struct platform_device *dev __attribute__((unused)))
+static int vfe_7x_disable(struct camera_enable_cmd *	enable,
+			  struct platform_device *	dev __attribute__((unused)))
 {
 	int rc = -EFAULT;
 
@@ -194,8 +194,9 @@ static int vfe_7x_stop(void)
 {
 	int rc = 0;
 	uint32_t stopcmd = VFE_STOP_CMD;
+
 	rc = msm_adsp_write(vfe_mod, QDSP_CMDQUEUE,
-				&stopcmd, sizeof(uint32_t));
+			    &stopcmd, sizeof(uint32_t));
 	if (rc < 0) {
 		CDBG("%s:%d: failed rc = %d \n", __func__, __LINE__, rc);
 		return rc;
@@ -203,8 +204,8 @@ static int vfe_7x_stop(void)
 
 	stopevent.state = 0;
 	rc = wait_event_timeout(stopevent.wait,
-		stopevent.state != 0,
-		msecs_to_jiffies(stopevent.timeout));
+				stopevent.state != 0,
+				msecs_to_jiffies(stopevent.timeout));
 
 	return rc;
 }
@@ -218,8 +219,9 @@ static void vfe_7x_release(struct platform_device *pdev)
 	if (!vfestopped) {
 		CDBG("%s:%d:Calling vfe_7x_stop()\n", __func__, __LINE__);
 		vfe_7x_stop();
-	} else
+	} else {
 		vfestopped = 0;
+	}
 
 	msm_adsp_disable(qcam_mod);
 	msm_adsp_disable(vfe_mod);
@@ -234,7 +236,7 @@ static void vfe_7x_release(struct platform_device *pdev)
 }
 
 static int vfe_7x_init(struct msm_vfe_callback *presp,
-	struct platform_device *dev)
+		       struct platform_device * dev)
 {
 	int rc = 0;
 
@@ -286,11 +288,11 @@ init_fail:
 }
 
 static int vfe_7x_config_axi(int mode,
-	struct axidata *ad, struct axiout *ao)
+			     struct axidata *ad, struct axiout *ao)
 {
 	struct msm_pmem_region *regptr;
 	unsigned long *bptr;
-	int    cnt;
+	int cnt;
 
 	int rc = 0;
 
@@ -299,7 +301,7 @@ static int vfe_7x_config_axi(int mode,
 
 		CDBG("bufnum1 = %d\n", ad->bufnum1);
 		CDBG("config_axi1: O1, phy = 0x%lx, y_off = %d, cbcr_off =%d\n",
-			regptr->paddr, regptr->y_off, regptr->cbcr_off);
+		     regptr->paddr, regptr->y_off, regptr->cbcr_off);
 
 		bptr = &ao->output1buffer1_y_phy;
 		for (cnt = 0; cnt < ad->bufnum1; cnt++) {
@@ -325,7 +327,7 @@ static int vfe_7x_config_axi(int mode,
 
 		CDBG("bufnum2 = %d\n", ad->bufnum2);
 		CDBG("config_axi2: O2, phy = 0x%lx, y_off = %d, cbcr_off =%d\n",
-			regptr->paddr, regptr->y_off, regptr->cbcr_off);
+		     regptr->paddr, regptr->y_off, regptr->cbcr_off);
 
 		bptr = &ao->output2buffer1_y_phy;
 		for (cnt = 0; cnt < ad->bufnum2; cnt++) {
@@ -362,14 +364,14 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 	struct vfe_stats_af_cfg *sfcfg = NULL;
 
 	struct axiout *axio = NULL;
-	void   *cmd_data = NULL;
-	void   *cmd_data_alloc = NULL;
+	void *cmd_data = NULL;
+	void *cmd_data_alloc = NULL;
 	long rc = 0;
 	struct msm_vfe_command_7k *vfecmd;
 
 	vfecmd =
-			kmalloc(sizeof(struct msm_vfe_command_7k),
-				GFP_ATOMIC);
+		kmalloc(sizeof(struct msm_vfe_command_7k),
+			GFP_ATOMIC);
 	if (!vfecmd) {
 		pr_err("vfecmd alloc failed!\n");
 		return -ENOMEM;
@@ -379,8 +381,8 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 	    cmd->cmd_type != CMD_STATS_BUF_RELEASE &&
 	    cmd->cmd_type != CMD_STATS_AF_BUF_RELEASE) {
 		if (copy_from_user(vfecmd,
-				(void __user *)(cmd->value),
-				sizeof(struct msm_vfe_command_7k))) {
+				   (void __user *)(cmd->value),
+				   sizeof(struct msm_vfe_command_7k))) {
 			rc = -EFAULT;
 			goto config_failure;
 		}
@@ -404,23 +406,21 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 		}
 
 		if (copy_from_user(scfg,
-					(void __user *)(vfecmd->value),
-					vfecmd->length)) {
-
+				   (void __user *)(vfecmd->value),
+				   vfecmd->length)) {
 			rc = -EFAULT;
 			goto config_done;
 		}
 
 		CDBG("STATS_ENABLE: bufnum = %d, enabling = %d\n",
-			axid->bufnum1, scfg->wb_expstatsenable);
+		     axid->bufnum1, scfg->wb_expstatsenable);
 
 		if (axid->bufnum1 > 0) {
 			regptr = axid->region;
 
 			for (i = 0; i < axid->bufnum1; i++) {
-
 				CDBG("STATS_ENABLE, phy = 0x%lx\n",
-					regptr->paddr);
+				     regptr->paddr);
 
 				scfg->wb_expstatoutputbuffer[i] =
 					(void *)regptr->paddr;
@@ -428,13 +428,12 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 			}
 
 			cmd_data = scfg;
-
 		} else {
 			rc = -EINVAL;
 			goto config_done;
 		}
 	}
-		break;
+	break;
 
 	case CMD_STATS_AF_ENABLE:
 	case CMD_STATS_AF_AXI_CFG: {
@@ -454,23 +453,21 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 		}
 
 		if (copy_from_user(sfcfg,
-					(void __user *)(vfecmd->value),
-					vfecmd->length)) {
-
+				   (void __user *)(vfecmd->value),
+				   vfecmd->length)) {
 			rc = -EFAULT;
 			goto config_done;
 		}
 
 		CDBG("AF_ENABLE: bufnum = %d, enabling = %d\n",
-			axid->bufnum1, sfcfg->af_enable);
+		     axid->bufnum1, sfcfg->af_enable);
 
 		if (axid->bufnum1 > 0) {
 			regptr = axid->region;
 
 			for (i = 0; i < axid->bufnum1; i++) {
-
 				CDBG("STATS_ENABLE, phy = 0x%lx\n",
-					regptr->paddr);
+				     regptr->paddr);
 
 				sfcfg->af_outbuf[i] =
 					(void *)regptr->paddr;
@@ -479,19 +476,18 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 			}
 
 			cmd_data = sfcfg;
-
 		} else {
 			rc = -EINVAL;
 			goto config_done;
 		}
 	}
-		break;
+	break;
 
 	case CMD_FRAME_BUF_RELEASE: {
 		struct msm_frame *b;
 		unsigned long p;
 		struct vfe_outputack fack;
-		if (!data)  {
+		if (!data) {
 			rc = -EFAULT;
 			goto config_failure;
 		}
@@ -511,7 +507,7 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 		vfecmd->length = sizeof(struct vfe_outputack);
 		cmd_data = &fack;
 	}
-		break;
+	break;
 
 	case CMD_SNAP_BUF_RELEASE:
 		break;
@@ -526,11 +522,11 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 		sack.header = STATS_WE_ACK;
 		sack.bufaddr = (void *)*(uint32_t *)data;
 
-		vfecmd->queue  = QDSP_CMDQUEUE;
+		vfecmd->queue = QDSP_CMDQUEUE;
 		vfecmd->length = sizeof(struct vfe_stats_ack);
 		cmd_data = &sack;
 	}
-		break;
+	break;
 
 	case CMD_STATS_AF_BUF_RELEASE: {
 		CDBG("vfe_7x_config: CMD_STATS_AF_BUF_RELEASE\n");
@@ -542,28 +538,28 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 		sack.header = STATS_AF_ACK;
 		sack.bufaddr = (void *)*(uint32_t *)data;
 
-		vfecmd->queue  = QDSP_CMDQUEUE;
+		vfecmd->queue = QDSP_CMDQUEUE;
 		vfecmd->length = sizeof(struct vfe_stats_ack);
 		cmd_data = &sack;
 	}
-		break;
+	break;
 
 	case CMD_GENERAL:
 	case CMD_STATS_DISABLE: {
 		if (vfecmd->length > 256) {
 			cmd_data_alloc =
-			cmd_data = kmalloc(vfecmd->length, GFP_ATOMIC);
+				cmd_data = kmalloc(vfecmd->length, GFP_ATOMIC);
 			if (!cmd_data) {
 				rc = -ENOMEM;
 				goto config_failure;
 			}
-		} else
+		} else {
 			cmd_data = buf;
+		}
 
 		if (copy_from_user(cmd_data,
-					(void __user *)(vfecmd->value),
-					vfecmd->length)) {
-
+				   (void __user *)(vfecmd->value),
+				   vfecmd->length)) {
 			rc = -EFAULT;
 			goto config_done;
 		}
@@ -590,7 +586,7 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 			}
 		} /* QDSP_CMDQUEUE */
 	}
-		break;
+	break;
 
 	case CMD_AXI_CFG_OUT1: {
 		axid = data;
@@ -606,7 +602,7 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 		}
 
 		if (copy_from_user(axio, (void *)(vfecmd->value),
-					sizeof(struct axiout))) {
+				   sizeof(struct axiout))) {
 			rc = -EFAULT;
 			goto config_done;
 		}
@@ -615,7 +611,7 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 
 		cmd_data = axio;
 	}
-		break;
+	break;
 
 	case CMD_AXI_CFG_OUT2:
 	case CMD_RAW_PICT_AXI_CFG: {
@@ -632,7 +628,7 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 		}
 
 		if (copy_from_user(axio, (void __user *)(vfecmd->value),
-					sizeof(struct axiout))) {
+				   sizeof(struct axiout))) {
 			rc = -EFAULT;
 			goto config_done;
 		}
@@ -640,7 +636,7 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 		vfe_7x_config_axi(OUTPUT_2, axid, axio);
 		cmd_data = axio;
 	}
-		break;
+	break;
 
 	case CMD_AXI_CFG_SNAP_O1_AND_O2: {
 		axid = data;
@@ -656,7 +652,7 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 		}
 
 		if (copy_from_user(axio, (void __user *)(vfecmd->value),
-					sizeof(struct axiout))) {
+				   sizeof(struct axiout))) {
 			rc = -EFAULT;
 			goto config_done;
 		}
@@ -665,7 +661,7 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 
 		cmd_data = axio;
 	}
-		break;
+	break;
 
 	default:
 		break;
@@ -677,7 +673,7 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 config_send:
 	CDBG("send adsp command = %d\n", *(uint32_t *)cmd_data);
 	rc = msm_adsp_write(vfe_mod, vfecmd->queue,
-				cmd_data, vfecmd->length);
+			    cmd_data, vfecmd->length);
 
 config_done:
 	if (cmd_data_alloc != NULL)
@@ -693,9 +689,9 @@ config_failure:
 void msm_camvfe_fn_init(struct msm_camvfe_fn *fptr, void *data)
 {
 	mutex_init(&vfe_lock);
-	fptr->vfe_init    = vfe_7x_init;
-	fptr->vfe_enable  = vfe_7x_enable;
-	fptr->vfe_config  = vfe_7x_config;
+	fptr->vfe_init = vfe_7x_init;
+	fptr->vfe_enable = vfe_7x_enable;
+	fptr->vfe_config = vfe_7x_config;
 	fptr->vfe_disable = vfe_7x_disable;
 	fptr->vfe_release = vfe_7x_release;
 	vfe_syncdata = data;

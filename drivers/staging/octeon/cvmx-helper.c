@@ -53,8 +53,7 @@
  * number. Users should set this pointer to a function before
  * calling any cvmx-helper operations.
  */
-void (*cvmx_override_pko_queue_priority) (int pko_port,
-					  uint64_t priorities[16]);
+void (*cvmx_override_pko_queue_priority) (int pko_port, uint64_t priorities[16]);
 
 /**
  * cvmx_override_ipd_port_setup(int ipd_port) is a function
@@ -71,7 +70,7 @@ static int interface_port_count[4] = { 0, 0, 0, 0 };
 
 /* Port last configured link info index by IPD/PKO port */
 static cvmx_helper_link_info_t
-    port_link_info[CVMX_PIP_NUM_INPUT_PORTS];
+	port_link_info[CVMX_PIP_NUM_INPUT_PORTS];
 
 /**
  * Return the number of interfaces the chip has. Each interface
@@ -116,6 +115,7 @@ int cvmx_helper_ports_on_interface(int interface)
 cvmx_helper_interface_mode_t cvmx_helper_interface_get_mode(int interface)
 {
 	union cvmx_gmxx_inf_mode mode;
+
 	if (interface == 2)
 		return CVMX_HELPER_INTERFACE_MODE_NPI;
 
@@ -129,7 +129,7 @@ cvmx_helper_interface_mode_t cvmx_helper_interface_get_mode(int interface)
 
 	if (interface == 0
 	    && cvmx_sysinfo_get()->board_type == CVMX_BOARD_TYPE_CN3005_EVB_HS5
-	    && cvmx_sysinfo_get()->board_rev_major == 1) {
+	    && cvmx_sysinfo_get()->board_rev_major == 1)
 		/*
 		 * Lie about interface type of CN3005 board.  This
 		 * board has a switch on port 1 like the other
@@ -141,7 +141,6 @@ cvmx_helper_interface_mode_t cvmx_helper_interface_get_mode(int interface)
 		 * setup between GMII and RGMII modes.
 		 */
 		return CVMX_HELPER_INTERFACE_MODE_GMII;
-	}
 
 	/* Interface 1 is always disabled on CN31XX and CN30XX */
 	if ((interface == 1)
@@ -175,8 +174,9 @@ cvmx_helper_interface_mode_t cvmx_helper_interface_get_mode(int interface)
 				return CVMX_HELPER_INTERFACE_MODE_SPI;
 			else
 				return CVMX_HELPER_INTERFACE_MODE_GMII;
-		} else
+		} else {
 			return CVMX_HELPER_INTERFACE_MODE_RGMII;
+		}
 	}
 }
 
@@ -247,64 +247,64 @@ static int __cvmx_helper_port_setup_ipd(int ipd_port)
 int cvmx_helper_interface_probe(int interface)
 {
 	/* At this stage in the game we don't want packets to be moving yet.
-	   The following probe calls should perform hardware setup
-	   needed to determine port counts. Receive must still be disabled */
+	 * The following probe calls should perform hardware setup
+	 * needed to determine port counts. Receive must still be disabled */
 	switch (cvmx_helper_interface_get_mode(interface)) {
-		/* These types don't support ports to IPD/PKO */
+	/* These types don't support ports to IPD/PKO */
 	case CVMX_HELPER_INTERFACE_MODE_DISABLED:
 	case CVMX_HELPER_INTERFACE_MODE_PCIE:
 		interface_port_count[interface] = 0;
 		break;
-		/* XAUI is a single high speed port */
+	/* XAUI is a single high speed port */
 	case CVMX_HELPER_INTERFACE_MODE_XAUI:
 		interface_port_count[interface] =
-		    __cvmx_helper_xaui_probe(interface);
+			__cvmx_helper_xaui_probe(interface);
 		break;
-		/*
-		 * RGMII/GMII/MII are all treated about the same. Most
-		 * functions refer to these ports as RGMII.
-		 */
+	/*
+	 * RGMII/GMII/MII are all treated about the same. Most
+	 * functions refer to these ports as RGMII.
+	 */
 	case CVMX_HELPER_INTERFACE_MODE_RGMII:
 	case CVMX_HELPER_INTERFACE_MODE_GMII:
 		interface_port_count[interface] =
-		    __cvmx_helper_rgmii_probe(interface);
+			__cvmx_helper_rgmii_probe(interface);
 		break;
-		/*
-		 * SPI4 can have 1-16 ports depending on the device at
-		 * the other end.
-		 */
+	/*
+	 * SPI4 can have 1-16 ports depending on the device at
+	 * the other end.
+	 */
 	case CVMX_HELPER_INTERFACE_MODE_SPI:
 		interface_port_count[interface] =
-		    __cvmx_helper_spi_probe(interface);
+			__cvmx_helper_spi_probe(interface);
 		break;
-		/*
-		 * SGMII can have 1-4 ports depending on how many are
-		 * hooked up.
-		 */
+	/*
+	 * SGMII can have 1-4 ports depending on how many are
+	 * hooked up.
+	 */
 	case CVMX_HELPER_INTERFACE_MODE_SGMII:
 	case CVMX_HELPER_INTERFACE_MODE_PICMG:
 		interface_port_count[interface] =
-		    __cvmx_helper_sgmii_probe(interface);
+			__cvmx_helper_sgmii_probe(interface);
 		break;
-		/* PCI target Network Packet Interface */
+	/* PCI target Network Packet Interface */
 	case CVMX_HELPER_INTERFACE_MODE_NPI:
 		interface_port_count[interface] =
-		    __cvmx_helper_npi_probe(interface);
+			__cvmx_helper_npi_probe(interface);
 		break;
-		/*
-		 * Special loopback only ports. These are not the same
-		 * as other ports in loopback mode.
-		 */
+	/*
+	 * Special loopback only ports. These are not the same
+	 * as other ports in loopback mode.
+	 */
 	case CVMX_HELPER_INTERFACE_MODE_LOOP:
 		interface_port_count[interface] =
-		    __cvmx_helper_loop_probe(interface);
+			__cvmx_helper_loop_probe(interface);
 		break;
 	}
 
 	interface_port_count[interface] =
-	    __cvmx_helper_board_interface_probe(interface,
-						interface_port_count
-						[interface]);
+		__cvmx_helper_board_interface_probe(interface,
+						    interface_port_count
+						    [interface]);
 
 	/* Make sure all global variables propagate to other cores */
 	CVMX_SYNCWS;
@@ -346,9 +346,9 @@ static int __cvmx_helper_global_setup_ipd(void)
 	cvmx_ipd_config(CVMX_FPA_PACKET_POOL_SIZE / 8,
 			CVMX_HELPER_FIRST_MBUFF_SKIP / 8,
 			CVMX_HELPER_NOT_FIRST_MBUFF_SKIP / 8,
-			/* The +8 is to account for the next ptr */
+	                /* The +8 is to account for the next ptr */
 			(CVMX_HELPER_FIRST_MBUFF_SKIP + 8) / 128,
-			/* The +8 is to account for the next ptr */
+	                /* The +8 is to account for the next ptr */
 			(CVMX_HELPER_NOT_FIRST_MBUFF_SKIP + 8) / 128,
 			CVMX_FPA_WQE_POOL,
 			CVMX_IPD_OPC_MODE_STT,
@@ -380,7 +380,7 @@ static int __cvmx_helper_interface_setup_pko(int interface)
 	 * operation) all queues have the same priority.
 	 */
 	uint64_t priorities[16] =
-	    { 8, 7, 6, 5, 4, 3, 2, 1, 8, 7, 6, 5, 4, 3, 2, 1 };
+	{ 8, 7, 6, 5, 4, 3, 2, 1, 8, 7, 6, 5, 4, 3, 2, 1 };
 
 	/*
 	 * Setup the IPD/PIP and PKO for the ports discovered
@@ -389,6 +389,7 @@ static int __cvmx_helper_interface_setup_pko(int interface)
 	 */
 	int ipd_port = cvmx_helper_get_ipd_port(interface, 0);
 	int num_ports = interface_port_count[interface];
+
 	while (num_ports--) {
 		/*
 		 * Give the user a chance to override the per queue
@@ -420,6 +421,7 @@ static int __cvmx_helper_global_setup_pko(void)
 	 * anyone might start packet output using tags.
 	 */
 	union cvmx_iob_fau_timeout fau_to;
+
 	fau_to.u64 = 0;
 	fau_to.s.tout_val = 0xfff;
 	fau_to.s.tout_enb = 0;
@@ -475,47 +477,48 @@ static int __cvmx_helper_global_setup_backpressure(void)
 static int __cvmx_helper_packet_hardware_enable(int interface)
 {
 	int result = 0;
+
 	switch (cvmx_helper_interface_get_mode(interface)) {
-		/* These types don't support ports to IPD/PKO */
+	/* These types don't support ports to IPD/PKO */
 	case CVMX_HELPER_INTERFACE_MODE_DISABLED:
 	case CVMX_HELPER_INTERFACE_MODE_PCIE:
 		/* Nothing to do */
 		break;
-		/* XAUI is a single high speed port */
+	/* XAUI is a single high speed port */
 	case CVMX_HELPER_INTERFACE_MODE_XAUI:
 		result = __cvmx_helper_xaui_enable(interface);
 		break;
-		/*
-		 * RGMII/GMII/MII are all treated about the same. Most
-		 * functions refer to these ports as RGMII
-		 */
+	/*
+	 * RGMII/GMII/MII are all treated about the same. Most
+	 * functions refer to these ports as RGMII
+	 */
 	case CVMX_HELPER_INTERFACE_MODE_RGMII:
 	case CVMX_HELPER_INTERFACE_MODE_GMII:
 		result = __cvmx_helper_rgmii_enable(interface);
 		break;
-		/*
-		 * SPI4 can have 1-16 ports depending on the device at
-		 * the other end
-		 */
+	/*
+	 * SPI4 can have 1-16 ports depending on the device at
+	 * the other end
+	 */
 	case CVMX_HELPER_INTERFACE_MODE_SPI:
 		result = __cvmx_helper_spi_enable(interface);
 		break;
-		/*
-		 * SGMII can have 1-4 ports depending on how many are
-		 * hooked up
-		 */
+	/*
+	 * SGMII can have 1-4 ports depending on how many are
+	 * hooked up
+	 */
 	case CVMX_HELPER_INTERFACE_MODE_SGMII:
 	case CVMX_HELPER_INTERFACE_MODE_PICMG:
 		result = __cvmx_helper_sgmii_enable(interface);
 		break;
-		/* PCI target Network Packet Interface */
+	/* PCI target Network Packet Interface */
 	case CVMX_HELPER_INTERFACE_MODE_NPI:
 		result = __cvmx_helper_npi_enable(interface);
 		break;
-		/*
-		 * Special loopback only ports. These are not the same
-		 * as other ports in loopback mode
-		 */
+	/*
+	 * Special loopback only ports. These are not the same
+	 * as other ports in loopback mode
+	 */
 	case CVMX_HELPER_INTERFACE_MODE_LOOP:
 		result = __cvmx_helper_loop_enable(interface);
 		break;
@@ -533,9 +536,9 @@ static int __cvmx_helper_packet_hardware_enable(int interface)
 int __cvmx_helper_errata_fix_ipd_ptr_alignment(void)
 {
 #define FIX_IPD_FIRST_BUFF_PAYLOAD_BYTES \
-     (CVMX_FPA_PACKET_POOL_SIZE-8-CVMX_HELPER_FIRST_MBUFF_SKIP)
+	(CVMX_FPA_PACKET_POOL_SIZE - 8 - CVMX_HELPER_FIRST_MBUFF_SKIP)
 #define FIX_IPD_NON_FIRST_BUFF_PAYLOAD_BYTES \
-	(CVMX_FPA_PACKET_POOL_SIZE-8-CVMX_HELPER_NOT_FIRST_MBUFF_SKIP)
+	(CVMX_FPA_PACKET_POOL_SIZE - 8 - CVMX_HELPER_NOT_FIRST_MBUFF_SKIP)
 #define FIX_IPD_OUTPORT 0
 	/* Ports 0-15 are interface 0, 16-31 are interface 1 */
 #define INTERFACE(port) (port >> 4)
@@ -554,18 +557,18 @@ int __cvmx_helper_errata_fix_ipd_ptr_alignment(void)
 
 	/* Save values for restore at end */
 	uint64_t prtx_cfg =
-	    cvmx_read_csr(CVMX_GMXX_PRTX_CFG
-			  (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)));
+		cvmx_read_csr(CVMX_GMXX_PRTX_CFG
+				      (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)));
 	uint64_t tx_ptr_en =
-	    cvmx_read_csr(CVMX_ASXX_TX_PRT_EN(INTERFACE(FIX_IPD_OUTPORT)));
+		cvmx_read_csr(CVMX_ASXX_TX_PRT_EN(INTERFACE(FIX_IPD_OUTPORT)));
 	uint64_t rx_ptr_en =
-	    cvmx_read_csr(CVMX_ASXX_RX_PRT_EN(INTERFACE(FIX_IPD_OUTPORT)));
+		cvmx_read_csr(CVMX_ASXX_RX_PRT_EN(INTERFACE(FIX_IPD_OUTPORT)));
 	uint64_t rxx_jabber =
-	    cvmx_read_csr(CVMX_GMXX_RXX_JABBER
-			  (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)));
+		cvmx_read_csr(CVMX_GMXX_RXX_JABBER
+				      (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)));
 	uint64_t frame_max =
-	    cvmx_read_csr(CVMX_GMXX_RXX_FRM_MAX
-			  (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)));
+		cvmx_read_csr(CVMX_GMXX_RXX_FRM_MAX
+				      (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)));
 
 	/* Configure port to gig FDX as required for loopback mode */
 	cvmx_helper_rgmii_internal_loopback(FIX_IPD_OUTPORT);
@@ -592,9 +595,9 @@ int __cvmx_helper_errata_fix_ipd_ptr_alignment(void)
 		num_segs += 1;
 
 		size =
-		    FIX_IPD_FIRST_BUFF_PAYLOAD_BYTES +
-		    ((num_segs - 1) * FIX_IPD_NON_FIRST_BUFF_PAYLOAD_BYTES) -
-		    (FIX_IPD_NON_FIRST_BUFF_PAYLOAD_BYTES / 2);
+			FIX_IPD_FIRST_BUFF_PAYLOAD_BYTES +
+			((num_segs - 1) * FIX_IPD_NON_FIRST_BUFF_PAYLOAD_BYTES) -
+			(FIX_IPD_NON_FIRST_BUFF_PAYLOAD_BYTES / 2);
 
 		cvmx_write_csr(CVMX_ASXX_PRT_LOOP(INTERFACE(FIX_IPD_OUTPORT)),
 			       1 << INDEX(FIX_IPD_OUTPORT));
@@ -602,7 +605,7 @@ int __cvmx_helper_errata_fix_ipd_ptr_alignment(void)
 
 		g_buffer.u64 = 0;
 		g_buffer.s.addr =
-		    cvmx_ptr_to_phys(cvmx_fpa_alloc(CVMX_FPA_WQE_POOL));
+			cvmx_ptr_to_phys(cvmx_fpa_alloc(CVMX_FPA_WQE_POOL));
 		if (g_buffer.s.addr == 0) {
 			cvmx_dprintf("WARNING: FIX_IPD_PTR_ALIGNMENT "
 				     "buffer allocation failure.\n");
@@ -614,7 +617,7 @@ int __cvmx_helper_errata_fix_ipd_ptr_alignment(void)
 
 		pkt_buffer.u64 = 0;
 		pkt_buffer.s.addr =
-		    cvmx_ptr_to_phys(cvmx_fpa_alloc(CVMX_FPA_PACKET_POOL));
+			cvmx_ptr_to_phys(cvmx_fpa_alloc(CVMX_FPA_PACKET_POOL));
 		if (pkt_buffer.s.addr == 0) {
 			cvmx_dprintf("WARNING: FIX_IPD_PTR_ALIGNMENT "
 				     "buffer allocation failure.\n");
@@ -624,22 +627,22 @@ int __cvmx_helper_errata_fix_ipd_ptr_alignment(void)
 		pkt_buffer.s.pool = CVMX_FPA_PACKET_POOL;
 		pkt_buffer.s.size = FIX_IPD_FIRST_BUFF_PAYLOAD_BYTES;
 
-		p64 = (uint64_t *) cvmx_phys_to_ptr(pkt_buffer.s.addr);
+		p64 = (uint64_t *)cvmx_phys_to_ptr(pkt_buffer.s.addr);
 		p64[0] = 0xffffffffffff0000ull;
 		p64[1] = 0x08004510ull;
-		p64[2] = ((uint64_t) (size - 14) << 48) | 0x5ae740004000ull;
+		p64[2] = ((uint64_t)(size - 14) << 48) | 0x5ae740004000ull;
 		p64[3] = 0x3a5fc0a81073c0a8ull;
 
 		for (i = 0; i < num_segs; i++) {
 			if (i > 0)
 				pkt_buffer.s.size =
-				    FIX_IPD_NON_FIRST_BUFF_PAYLOAD_BYTES;
+					FIX_IPD_NON_FIRST_BUFF_PAYLOAD_BYTES;
 
 			if (i == (num_segs - 1))
 				pkt_buffer.s.i = 0;
 
-			*(uint64_t *) cvmx_phys_to_ptr(g_buffer.s.addr +
-						       8 * i) = pkt_buffer.u64;
+			*(uint64_t *)cvmx_phys_to_ptr(g_buffer.s.addr +
+						      8 * i) = pkt_buffer.u64;
 		}
 
 		/* Build the PKO command */
@@ -650,36 +653,36 @@ int __cvmx_helper_errata_fix_ipd_ptr_alignment(void)
 		pko_command.s.gather = 1;
 
 		gmx_cfg.u64 =
-		    cvmx_read_csr(CVMX_GMXX_PRTX_CFG
-				  (INDEX(FIX_IPD_OUTPORT),
-				   INTERFACE(FIX_IPD_OUTPORT)));
+			cvmx_read_csr(CVMX_GMXX_PRTX_CFG
+					      (INDEX(FIX_IPD_OUTPORT),
+					      INTERFACE(FIX_IPD_OUTPORT)));
 		gmx_cfg.s.en = 1;
 		cvmx_write_csr(CVMX_GMXX_PRTX_CFG
-			       (INDEX(FIX_IPD_OUTPORT),
-				INTERFACE(FIX_IPD_OUTPORT)), gmx_cfg.u64);
+				       (INDEX(FIX_IPD_OUTPORT),
+				       INTERFACE(FIX_IPD_OUTPORT)), gmx_cfg.u64);
 		cvmx_write_csr(CVMX_ASXX_TX_PRT_EN(INTERFACE(FIX_IPD_OUTPORT)),
 			       1 << INDEX(FIX_IPD_OUTPORT));
 		cvmx_write_csr(CVMX_ASXX_RX_PRT_EN(INTERFACE(FIX_IPD_OUTPORT)),
 			       1 << INDEX(FIX_IPD_OUTPORT));
 
 		mtu =
-		    cvmx_read_csr(CVMX_GMXX_RXX_JABBER
-				  (INDEX(FIX_IPD_OUTPORT),
-				   INTERFACE(FIX_IPD_OUTPORT)));
+			cvmx_read_csr(CVMX_GMXX_RXX_JABBER
+					      (INDEX(FIX_IPD_OUTPORT),
+					      INTERFACE(FIX_IPD_OUTPORT)));
 		cvmx_write_csr(CVMX_GMXX_RXX_JABBER
-			       (INDEX(FIX_IPD_OUTPORT),
-				INTERFACE(FIX_IPD_OUTPORT)), 65392 - 14 - 4);
+				       (INDEX(FIX_IPD_OUTPORT),
+				       INTERFACE(FIX_IPD_OUTPORT)), 65392 - 14 - 4);
 		cvmx_write_csr(CVMX_GMXX_RXX_FRM_MAX
-			       (INDEX(FIX_IPD_OUTPORT),
-				INTERFACE(FIX_IPD_OUTPORT)), 65392 - 14 - 4);
+				       (INDEX(FIX_IPD_OUTPORT),
+				       INTERFACE(FIX_IPD_OUTPORT)), 65392 - 14 - 4);
 
 		cvmx_pko_send_packet_prepare(FIX_IPD_OUTPORT,
 					     cvmx_pko_get_base_queue
-					     (FIX_IPD_OUTPORT),
+						     (FIX_IPD_OUTPORT),
 					     CVMX_PKO_LOCK_CMD_QUEUE);
 		cvmx_pko_send_packet_finish(FIX_IPD_OUTPORT,
 					    cvmx_pko_get_base_queue
-					    (FIX_IPD_OUTPORT), pko_command,
+						    (FIX_IPD_OUTPORT), pko_command,
 					    g_buffer, CVMX_PKO_LOCK_CMD_QUEUE);
 
 		CVMX_SYNC;
@@ -702,17 +705,17 @@ fix_ipd_exit:
 
 	/* Return CSR configs to saved values */
 	cvmx_write_csr(CVMX_GMXX_PRTX_CFG
-		       (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)),
+			       (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)),
 		       prtx_cfg);
 	cvmx_write_csr(CVMX_ASXX_TX_PRT_EN(INTERFACE(FIX_IPD_OUTPORT)),
 		       tx_ptr_en);
 	cvmx_write_csr(CVMX_ASXX_RX_PRT_EN(INTERFACE(FIX_IPD_OUTPORT)),
 		       rx_ptr_en);
 	cvmx_write_csr(CVMX_GMXX_RXX_JABBER
-		       (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)),
+			       (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)),
 		       rxx_jabber);
 	cvmx_write_csr(CVMX_GMXX_RXX_FRM_MAX
-		       (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)),
+			       (INDEX(FIX_IPD_OUTPORT), INTERFACE(FIX_IPD_OUTPORT)),
 		       frame_max);
 	cvmx_write_csr(CVMX_ASXX_PRT_LOOP(INTERFACE(FIX_IPD_OUTPORT)), 0);
 	/* Set link to down so autonegotiation will set it up again */
@@ -730,7 +733,6 @@ fix_ipd_exit:
 		cvmx_dprintf("WARNING: FIX_IPD_PTR_ALIGNMENT failed.\n");
 
 	return !!num_segs;
-
 }
 
 /**
@@ -753,10 +755,9 @@ int cvmx_helper_ipd_and_packet_input_enable(void)
 	 * must be disabled
 	 */
 	num_interfaces = cvmx_helper_get_number_of_interfaces();
-	for (interface = 0; interface < num_interfaces; interface++) {
+	for (interface = 0; interface < num_interfaces; interface++)
 		if (cvmx_helper_ports_on_interface(interface) > 0)
 			__cvmx_helper_packet_hardware_enable(interface);
-	}
 
 	/* Finally enable PKO now that the entire path is up and running */
 	cvmx_pko_enable();
@@ -823,13 +824,14 @@ int cvmx_helper_initialize_packet_io_global(void)
 	cvmx_pko_initialize_global();
 	for (interface = 0; interface < num_interfaces; interface++) {
 		result |= cvmx_helper_interface_probe(interface);
-		if (cvmx_helper_ports_on_interface(interface) > 0)
+		if (cvmx_helper_ports_on_interface(interface) > 0) {
 			cvmx_dprintf("Interface %d has %d ports (%s)\n",
 				     interface,
 				     cvmx_helper_ports_on_interface(interface),
 				     cvmx_helper_interface_mode_to_string
-				     (cvmx_helper_interface_get_mode
-				      (interface)));
+					     (cvmx_helper_interface_get_mode
+						     (interface)));
+		}
 		result |= __cvmx_helper_interface_setup_ipd(interface);
 		result |= __cvmx_helper_interface_setup_pko(interface);
 	}
@@ -907,7 +909,7 @@ cvmx_helper_link_info_t cvmx_helper_link_get(int ipd_port)
 	int index = cvmx_helper_get_interface_index_num(ipd_port);
 
 	/* The default result will be a down link unless the code below
-	   changes it */
+	 * changes it */
 	result.u64 = 0;
 
 	if (index >= cvmx_helper_ports_on_interface(interface))
@@ -922,9 +924,9 @@ cvmx_helper_link_info_t cvmx_helper_link_get(int ipd_port)
 		result = __cvmx_helper_xaui_link_get(ipd_port);
 		break;
 	case CVMX_HELPER_INTERFACE_MODE_GMII:
-		if (index == 0)
+		if (index == 0) {
 			result = __cvmx_helper_rgmii_link_get(ipd_port);
-		else {
+		} else {
 			result.s.full_duplex = 1;
 			result.s.link_up = 1;
 			result.s.speed = 1000;
@@ -976,10 +978,10 @@ int cvmx_helper_link_set(int ipd_port, cvmx_helper_link_info_t link_info)
 	case CVMX_HELPER_INTERFACE_MODE_XAUI:
 		result = __cvmx_helper_xaui_link_set(ipd_port, link_info);
 		break;
-		/*
-		 * RGMII/GMII/MII are all treated about the same. Most
-		 * functions refer to these ports as RGMII.
-		 */
+	/*
+	 * RGMII/GMII/MII are all treated about the same. Most
+	 * functions refer to these ports as RGMII.
+	 */
 	case CVMX_HELPER_INTERFACE_MODE_RGMII:
 	case CVMX_HELPER_INTERFACE_MODE_GMII:
 		result = __cvmx_helper_rgmii_link_set(ipd_port, link_info);
@@ -996,8 +998,8 @@ int cvmx_helper_link_set(int ipd_port, cvmx_helper_link_info_t link_info)
 		break;
 	}
 	/* Set the port_link_info here so that the link status is updated
-	   no matter how cvmx_helper_link_set is called. We don't change
-	   the value if link_set failed */
+	 * no matter how cvmx_helper_link_set is called. We don't change
+	 * the value if link_set failed */
 	if (result == 0)
 		port_link_info[ipd_port].u64 = link_info.u64;
 	return result;
@@ -1035,23 +1037,23 @@ int cvmx_helper_configure_loopback(int ipd_port, int enable_internal,
 		break;
 	case CVMX_HELPER_INTERFACE_MODE_XAUI:
 		result =
-		    __cvmx_helper_xaui_configure_loopback(ipd_port,
-							  enable_internal,
-							  enable_external);
+			__cvmx_helper_xaui_configure_loopback(ipd_port,
+							      enable_internal,
+							      enable_external);
 		break;
 	case CVMX_HELPER_INTERFACE_MODE_RGMII:
 	case CVMX_HELPER_INTERFACE_MODE_GMII:
 		result =
-		    __cvmx_helper_rgmii_configure_loopback(ipd_port,
-							   enable_internal,
-							   enable_external);
+			__cvmx_helper_rgmii_configure_loopback(ipd_port,
+							       enable_internal,
+							       enable_external);
 		break;
 	case CVMX_HELPER_INTERFACE_MODE_SGMII:
 	case CVMX_HELPER_INTERFACE_MODE_PICMG:
 		result =
-		    __cvmx_helper_sgmii_configure_loopback(ipd_port,
-							   enable_internal,
-							   enable_external);
+			__cvmx_helper_sgmii_configure_loopback(ipd_port,
+							       enable_internal,
+							       enable_external);
 		break;
 	}
 	return result;

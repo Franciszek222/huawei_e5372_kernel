@@ -1,28 +1,28 @@
 /*********************************************************************
- * Author: Cavium Networks
- *
- * Contact: support@caviumnetworks.com
- * This file is part of the OCTEON SDK
- *
- * Copyright (c) 2003-2010 Cavium Networks
- *
- * This file is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License, Version 2, as
- * published by the Free Software Foundation.
- *
- * This file is distributed in the hope that it will be useful, but
- * AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
- * NONINFRINGEMENT.  See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this file; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
- * or visit http://www.gnu.org/licenses/.
- *
- * This file may also be available under a different license from Cavium.
- * Contact Cavium Networks for more information
+* Author: Cavium Networks
+*
+* Contact: support@caviumnetworks.com
+* This file is part of the OCTEON SDK
+*
+* Copyright (c) 2003-2010 Cavium Networks
+*
+* This file is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License, Version 2, as
+* published by the Free Software Foundation.
+*
+* This file is distributed in the hope that it will be useful, but
+* AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+* NONINFRINGEMENT.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this file; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+* or visit http://www.gnu.org/licenses/.
+*
+* This file may also be available under a different license from Cavium.
+* Contact Cavium Networks for more information
 *********************************************************************/
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -54,7 +54,7 @@
 
 #include "cvmx-gmxx-defs.h"
 
-#define CVM_OCT_SKB_CB(skb)	((u64 *)((skb)->cb))
+#define CVM_OCT_SKB_CB(skb)     ((u64 *)((skb)->cb))
 
 /*
  * You can define GET_SKBUFF_QOS() to override how the skbuff output
@@ -76,6 +76,7 @@ static DECLARE_TASKLET(cvm_oct_tx_cleanup_tasklet, cvm_oct_tx_do_cleanup, 0);
 static inline int32_t cvm_oct_adjust_skb_to_free(int32_t skb_to_free, int fau)
 {
 	int32_t undo;
+
 	undo = skb_to_free > 0 ? MAX_SKB_TO_FREE : skb_to_free + MAX_SKB_TO_FREE;
 	if (undo > 0)
 		cvmx_fau_atomic_add32(fau, -undo);
@@ -86,6 +87,7 @@ static inline int32_t cvm_oct_adjust_skb_to_free(int32_t skb_to_free, int fau)
 static void cvm_oct_kick_tx_poll_watchdog(void)
 {
 	union cvmx_ciu_timx ciu_timx;
+
 	ciu_timx.u64 = 0;
 	ciu_timx.s.one_shot = 1;
 	ciu_timx.s.len = cvm_oct_tx_poll_interval;
@@ -106,8 +108,8 @@ void cvm_oct_free_tx_skbs(struct net_device *dev)
 	for (qos = 0; qos < queues_per_port; qos++) {
 		if (skb_queue_len(&priv->tx_free_list[qos]) == 0)
 			continue;
-		skb_to_free = cvmx_fau_fetch_and_add32(priv->fau+qos*4, MAX_SKB_TO_FREE);
-		skb_to_free = cvm_oct_adjust_skb_to_free(skb_to_free, priv->fau+qos*4);
+		skb_to_free = cvmx_fau_fetch_and_add32(priv->fau + qos * 4, MAX_SKB_TO_FREE);
+		skb_to_free = cvm_oct_adjust_skb_to_free(skb_to_free, priv->fau + qos * 4);
 
 
 		total_freed += skb_to_free;
@@ -151,7 +153,8 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
 	uint64_t old_scratch2;
 	int qos;
 	int i;
-	enum {QUEUE_CORE, QUEUE_HW, QUEUE_DROP} queue_type;
+
+	enum { QUEUE_CORE, QUEUE_HW, QUEUE_DROP } queue_type;
 	struct octeon_ethernet *priv = netdev_priv(dev);
 	struct sk_buff *to_free_list;
 	int32_t skb_to_free;
@@ -180,8 +183,9 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
 			qos = 0;
 		else if (qos >= cvmx_pko_get_num_queues(priv->port))
 			qos = 0;
-	} else
+	} else {
 		qos = 0;
+	}
 
 	if (USE_ASYNC_IOBDMA) {
 		/* Save scratch in case userspace is using it */
@@ -240,7 +244,7 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
 		if (interface < 2) {
 			/* We only need to pad packet in half duplex mode */
 			gmx_prt_cfg.u64 =
-			    cvmx_read_csr(CVMX_GMXX_PRTX_CFG(index, interface));
+				cvmx_read_csr(CVMX_GMXX_PRTX_CFG(index, interface));
 			if (gmx_prt_cfg.s.duplex == 0) {
 				int add_bytes = 64 - skb->len;
 				if ((skb_tail_pointer(skb) + add_bytes) <=
@@ -253,7 +257,7 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
 
 	/* Build the PKO command */
 	pko_command.u64 = 0;
-	pko_command.s.n2 = 1;	/* Don't pollute L2 with the outgoing packet */
+	pko_command.s.n2 = 1;   /* Don't pollute L2 with the outgoing packet */
 	pko_command.s.segs = 1;
 	pko_command.s.total_bytes = skb->len;
 	pko_command.s.size0 = CVMX_FAU_OP_SIZE_32;
@@ -297,58 +301,50 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
 	 */
 #if REUSE_SKBUFFS_WITHOUT_FREE
 	fpa_head = skb->head + 256 - ((unsigned long)skb->head & 0x7f);
-	if (unlikely(skb->data < fpa_head)) {
+	if (unlikely(skb->data < fpa_head))
 		/*
 		 * printk("TX buffer beginning can't meet FPA
 		 * alignment constraints\n");
 		 */
 		goto dont_put_skbuff_in_hw;
-	}
 	if (unlikely
-	    ((skb_end_pointer(skb) - fpa_head) < CVMX_FPA_PACKET_POOL_SIZE)) {
+		    ((skb_end_pointer(skb) - fpa_head) < CVMX_FPA_PACKET_POOL_SIZE))
 		/*
-		   printk("TX buffer isn't large enough for the FPA\n");
+		 * printk("TX buffer isn't large enough for the FPA\n");
 		 */
 		goto dont_put_skbuff_in_hw;
-	}
-	if (unlikely(skb_shared(skb))) {
+	if (unlikely(skb_shared(skb)))
 		/*
-		   printk("TX buffer sharing data with someone else\n");
+		 * printk("TX buffer sharing data with someone else\n");
 		 */
 		goto dont_put_skbuff_in_hw;
-	}
-	if (unlikely(skb_cloned(skb))) {
+	if (unlikely(skb_cloned(skb)))
 		/*
-		   printk("TX buffer has been cloned\n");
+		 * printk("TX buffer has been cloned\n");
 		 */
 		goto dont_put_skbuff_in_hw;
-	}
-	if (unlikely(skb_header_cloned(skb))) {
+	if (unlikely(skb_header_cloned(skb)))
 		/*
-		   printk("TX buffer header has been cloned\n");
+		 * printk("TX buffer header has been cloned\n");
 		 */
 		goto dont_put_skbuff_in_hw;
-	}
-	if (unlikely(skb->destructor)) {
+	if (unlikely(skb->destructor))
 		/*
-		   printk("TX buffer has a destructor\n");
+		 * printk("TX buffer has a destructor\n");
 		 */
 		goto dont_put_skbuff_in_hw;
-	}
-	if (unlikely(skb_shinfo(skb)->nr_frags)) {
+	if (unlikely(skb_shinfo(skb)->nr_frags))
 		/*
-		   printk("TX buffer has fragments\n");
+		 * printk("TX buffer has fragments\n");
 		 */
 		goto dont_put_skbuff_in_hw;
-	}
 	if (unlikely
-	    (skb->truesize !=
-	     sizeof(*skb) + skb_end_pointer(skb) - skb->head)) {
+		    (skb->truesize !=
+		    sizeof(*skb) + skb_end_pointer(skb) - skb->head))
 		/*
-		   printk("TX buffer truesize has been changed\n");
+		 * printk("TX buffer truesize has been changed\n");
 		 */
 		goto dont_put_skbuff_in_hw;
-	}
 
 	/*
 	 * We can use this buffer in the FPA.  We don't need the FAU
@@ -386,10 +382,9 @@ dont_put_skbuff_in_hw:
 	    (ip_hdr(skb)->version == 4) && (ip_hdr(skb)->ihl == 5) &&
 	    ((ip_hdr(skb)->frag_off == 0) || (ip_hdr(skb)->frag_off == 1 << 14))
 	    && ((ip_hdr(skb)->protocol == IPPROTO_TCP)
-		|| (ip_hdr(skb)->protocol == IPPROTO_UDP))) {
+		|| (ip_hdr(skb)->protocol == IPPROTO_UDP)))
 		/* Use hardware checksum calc */
 		pko_command.s.ipoffp1 = sizeof(struct ethhdr) + 1;
-	}
 
 	if (USE_ASYNC_IOBDMA) {
 		/* Get the number of skbuffs in use by the hardware */
@@ -401,10 +396,10 @@ dont_put_skbuff_in_hw:
 		skb_to_free = cvmx_fau_fetch_and_add32(priv->fau + qos * 4,
 						       MAX_SKB_TO_FREE);
 		buffers_to_free =
-		    cvmx_fau_fetch_and_add32(FAU_NUM_PACKET_BUFFERS_TO_FREE, 0);
+			cvmx_fau_fetch_and_add32(FAU_NUM_PACKET_BUFFERS_TO_FREE, 0);
 	}
 
-	skb_to_free = cvm_oct_adjust_skb_to_free(skb_to_free, priv->fau+qos*4);
+	skb_to_free = cvm_oct_adjust_skb_to_free(skb_to_free, priv->fau + qos * 4);
 
 	/*
 	 * If we're sending faster than the receive can free them then
@@ -415,7 +410,7 @@ dont_put_skbuff_in_hw:
 
 	if (pko_command.s.dontfree) {
 		queue_type = QUEUE_CORE;
-		pko_command.s.reg0 = priv->fau+qos*4;
+		pko_command.s.reg0 = priv->fau + qos * 4;
 	} else {
 		queue_type = QUEUE_HW;
 	}
@@ -494,7 +489,7 @@ skip_xmit:
 		total_to_clean = cvmx_fau_fetch_and_add32(FAU_TOTAL_TX_TO_CLEAN, 1);
 	}
 
-	if (total_to_clean & 0x3ff) {
+	if (total_to_clean & 0x3ff)
 		/*
 		 * Schedule the cleanup tasklet every 1024 packets for
 		 * the pathological case of high traffic on one port
@@ -502,7 +497,6 @@ skip_xmit:
 		 * that is blocked waiting for the cleanup.
 		 */
 		tasklet_schedule(&cvm_oct_tx_cleanup_tasklet);
-	}
 
 	cvm_oct_kick_tx_poll_watchdog();
 
@@ -513,7 +507,7 @@ skip_xmit:
  * cvm_oct_xmit_pow - transmit a packet to the POW
  * @skb:    Packet to send
  * @dev:    Device info structure
-
+ *
  * Returns Always returns zero
  */
 int cvm_oct_xmit_pow(struct sk_buff *skb, struct net_device *dev)
@@ -524,6 +518,7 @@ int cvm_oct_xmit_pow(struct sk_buff *skb, struct net_device *dev)
 
 	/* Get a work queue entry */
 	cvmx_wqe_t *work = cvmx_fpa_alloc(CVMX_FPA_WQE_POOL);
+
 	if (unlikely(work == NULL)) {
 		DEBUGPRINT("%s: Failed to allocate a work queue entry\n",
 			   dev->name);
@@ -572,7 +567,7 @@ int cvm_oct_xmit_pow(struct sk_buff *skb, struct net_device *dev)
 	work->qos = priv->port & 0x7;
 	work->grp = pow_send_group;
 	work->tag_type = CVMX_HELPER_INPUT_TAG_TYPE;
-	work->tag = pow_send_group;	/* FIXME */
+	work->tag = pow_send_group;     /* FIXME */
 	/* Default to zero. Sets of zero later are commented out */
 	work->word2.u64 = 0;
 	work->word2.s.bufs = 1;
@@ -585,14 +580,14 @@ int cvm_oct_xmit_pow(struct sk_buff *skb, struct net_device *dev)
 	if (skb->protocol == htons(ETH_P_IP)) {
 		work->word2.s.ip_offset = 14;
 #if 0
-		work->word2.s.vlan_valid = 0;	/* FIXME */
-		work->word2.s.vlan_cfi = 0;	/* FIXME */
-		work->word2.s.vlan_id = 0;	/* FIXME */
-		work->word2.s.dec_ipcomp = 0;	/* FIXME */
+		work->word2.s.vlan_valid = 0;   /* FIXME */
+		work->word2.s.vlan_cfi = 0;     /* FIXME */
+		work->word2.s.vlan_id = 0;      /* FIXME */
+		work->word2.s.dec_ipcomp = 0;   /* FIXME */
 #endif
 		work->word2.s.tcp_or_udp =
-		    (ip_hdr(skb)->protocol == IPPROTO_TCP)
-		    || (ip_hdr(skb)->protocol == IPPROTO_UDP);
+			(ip_hdr(skb)->protocol == IPPROTO_TCP)
+			|| (ip_hdr(skb)->protocol == IPPROTO_UDP);
 #if 0
 		/* FIXME */
 		work->word2.s.dec_ipsec = 0;
@@ -630,18 +625,18 @@ int cvm_oct_xmit_pow(struct sk_buff *skb, struct net_device *dev)
 		       sizeof(work->packet_data));
 	} else {
 #if 0
-		work->word2.snoip.vlan_valid = 0;	/* FIXME */
-		work->word2.snoip.vlan_cfi = 0;	/* FIXME */
-		work->word2.snoip.vlan_id = 0;	/* FIXME */
-		work->word2.snoip.software = 0;	/* Hardware would set to zero */
+		work->word2.snoip.vlan_valid = 0;       /* FIXME */
+		work->word2.snoip.vlan_cfi = 0;         /* FIXME */
+		work->word2.snoip.vlan_id = 0;          /* FIXME */
+		work->word2.snoip.software = 0;         /* Hardware would set to zero */
 #endif
 		work->word2.snoip.is_rarp = skb->protocol == htons(ETH_P_RARP);
 		work->word2.snoip.is_arp = skb->protocol == htons(ETH_P_ARP);
 		work->word2.snoip.is_bcast =
-		    (skb->pkt_type == PACKET_BROADCAST);
+			(skb->pkt_type == PACKET_BROADCAST);
 		work->word2.snoip.is_mcast =
-		    (skb->pkt_type == PACKET_MULTICAST);
-		work->word2.snoip.not_IP = 1;	/* IP was done up above */
+			(skb->pkt_type == PACKET_MULTICAST);
+		work->word2.snoip.not_IP = 1;   /* IP was done up above */
 #if 0
 		/* No error, packet is internal */
 		work->word2.snoip.rcv_error = 0;
@@ -675,7 +670,7 @@ void cvm_oct_tx_shutdown_dev(struct net_device *dev)
 		spin_lock_irqsave(&priv->tx_free_list[qos].lock, flags);
 		while (skb_queue_len(&priv->tx_free_list[qos]))
 			dev_kfree_skb_any(__skb_dequeue
-					  (&priv->tx_free_list[qos]));
+						  (&priv->tx_free_list[qos]));
 		spin_unlock_irqrestore(&priv->tx_free_list[qos].lock, flags);
 	}
 }

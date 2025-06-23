@@ -28,7 +28,7 @@
 #else
 #define ISRAM1_VA_SLEEP                (MEMORY_AXI_DRXA_ADDR)
 #endif
-#define DSARM0_BASE_ADDR                (ISRAM1_VA_SLEEP+0x2000) 
+#define DSARM0_BASE_ADDR                (ISRAM1_VA_SLEEP + 0x2000)
 #define DSRAM0_DEEPSLEEP_ADDR           (DSARM0_BASE_ADDR + 0x200)
 #define ISRAM0_DEEPSLEEP_ADDR        (ISRAM1_VA_SLEEP)
 
@@ -71,9 +71,9 @@
 #define STORE_BAK_TIMER4           (DSRAM0_DEEPSLEEP_ADDR + 0x780)
 #define STORE_BAK_TIMER5           (DSRAM0_DEEPSLEEP_ADDR + 0x784)
 #define STORE_BAK_TIMER6           (DSRAM0_DEEPSLEEP_ADDR + 0x788)
-#define STORE_BAK_TIMER7         	(DSRAM0_DEEPSLEEP_ADDR + 0x78c)
+#define STORE_BAK_TIMER7                (DSRAM0_DEEPSLEEP_ADDR + 0x78c)
 
-#define STORE_PERI_PD_FLAG			(DSRAM0_DEEPSLEEP_ADDR + 0x790)
+#define STORE_PERI_PD_FLAG                      (DSRAM0_DEEPSLEEP_ADDR + 0x790)
 #define STORE_REMAP_ADDR1           (DSRAM0_DEEPSLEEP_ADDR + 0x794)
 #define STORE_REMAP_ADDR2           (DSRAM0_DEEPSLEEP_ADDR + 0x798)
 #define STORE_REMAP_ADDR3           (DSRAM0_DEEPSLEEP_ADDR + 0x79C)
@@ -82,8 +82,8 @@
 
 #define STORE_CTRL_REG_BASE          (DSRAM0_DEEPSLEEP_ADDR + 0x800)
 
-#define PWRCTRL_ASM_SP_BEGIN            (ISRAM1_VA_SLEEP +0x3000)
-#define PWRCTRL_ASM_SP_END              (ISRAM1_VA_SLEEP +0x3000)
+#define PWRCTRL_ASM_SP_BEGIN            (ISRAM1_VA_SLEEP + 0x3000)
+#define PWRCTRL_ASM_SP_END              (ISRAM1_VA_SLEEP + 0x3000)
 
 
 /*IPC地址*/
@@ -91,10 +91,10 @@
 
 /*GIC基址*/
 #ifdef PRODUCT_CFG_CORE_TYPE_MODEM
-#define CARM_GIC_CPU_BASE 	             (0x8000100)
+#define CARM_GIC_CPU_BASE                    (0x8000100)
 #define CARM_GIC_DIST_BASE              (0x8001000)
 #else
-#define CARM_GIC_CPU_BASE 	            (IO_ADDRESS(0x4000100))
+#define CARM_GIC_CPU_BASE                   (IO_ADDRESS(0x4000100))
 #define CARM_GIC_DIST_BASE              (IO_ADDRESS(0x4001000))
 #endif
 
@@ -106,10 +106,10 @@
 #define CARM_GIC_CPUEOIR                (CARM_GIC_CPU_BASE + 0x010)
 #define CARM_GIC_CPURPR                 (CARM_GIC_CPU_BASE + 0x014)
 #define CARM_GIC_CPUHPIR                (CARM_GIC_CPU_BASE + 0x018)
-#define CARM_GIC_ICABPR					(CARM_GIC_CPU_BASE + 0x01C)
+#define CARM_GIC_ICABPR                                 (CARM_GIC_CPU_BASE + 0x01C)
 
 #define CARM_GIC_ICDDCR                 (CARM_GIC_DIST_BASE + 0x000)
-#define CARM_GIC_ICDISR					(CARM_GIC_DIST_BASE + 0x080)
+#define CARM_GIC_ICDISR                                 (CARM_GIC_DIST_BASE + 0x080)
 #define CARM_GIC_ICDISER                (CARM_GIC_DIST_BASE + 0x100)
 #define CARM_GIC_ICDICER                (CARM_GIC_DIST_BASE + 0x180)
 #define CARM_GIC_ICDISR1                (CARM_GIC_DIST_BASE + 0x200)
@@ -121,7 +121,7 @@
 #define CARM_GIC_ICDICFR                (CARM_GIC_DIST_BASE + 0xC00)
 #define CARM_GIC_ICDSGIR                (CARM_GIC_DIST_BASE + 0xF00)
 
-#define CARM_GIC_ICDISPR_OFFSET(x)      (CARM_GIC_ICDISPR  + ((x)*0x4))
+#define CARM_GIC_ICDISPR_OFFSET(x)      (CARM_GIC_ICDISPR + ((x) * 0x4))
 /*系统控制器地址*/
 #define PWR_SC_PERIPH_CLKEN0            (PWR_SYSCTRL_BASE + 0x00)
 #define PWR_SC_PERIPH_CLKDIS0           (PWR_SYSCTRL_BASE + 0x04)
@@ -136,11 +136,11 @@
 #define PWR_SC_PERIPH_CLKDIS3           (PWR_SYSCTRL_BASE + 0x28)
 #define PWR_SC_SCPERSTAT3               (PWR_SYSCTRL_BASE + 0x2C)
 #define PWR_SC_RST_REQ1                 (PWR_SYSCTRL_BASE + 0x38)
-#define PWR_SC_RST_REQ2			        (PWR_SYSCTRL_BASE + 0x3C)
+#define PWR_SC_RST_REQ2                         (PWR_SYSCTRL_BASE + 0x3C)
 
 #define PWR_SC_ARM_PLL_CTRL             (PWR_SYSCTRL_BASE + 0x58)
-#define PWR_SC_DSP_DFS			        (PWR_SYSCTRL_BASE + 0x64)
-#define PWR_SC_BBP1_DFS			        (PWR_SYSCTRL_BASE + 0x70)
+#define PWR_SC_DSP_DFS                          (PWR_SYSCTRL_BASE + 0x64)
+#define PWR_SC_BBP1_DFS                         (PWR_SYSCTRL_BASE + 0x70)
 #define PWR_SC_PERIPLL_CTRL                (PWR_SYSCTRL_BASE + 0x88)
 
 #define PWR_SC_PERIPH_CLKEN4            (INTEGRATOR_SC_BASE + 0x9C)
@@ -151,7 +151,7 @@
 #define PWR_SC_CARN_WARM_STAR           (PWR_SYSCTRL_BASE + 0x418)
 #define PWR_SC_PERI_CLK_GATE_EN1        (PWR_SYSCTRL_BASE + 0x450)
 #define PWR_SC_PERI_CLK_GATE_EN2        (PWR_SYSCTRL_BASE + 0x454)
-#define PWR_SC_MEM_PWC		        (PWR_SYSCTRL_BASE + 0x4DC)
+#define PWR_SC_MEM_PWC                  (PWR_SYSCTRL_BASE + 0x4DC)
 
 #define PWR_SC_CARM_MOD                 (PWR_SYSCTRL_BASE + 0xC00)
 #define PWR_SC_CARM_IMSTAT              (PWR_SYSCTRL_BASE + 0xC04)
@@ -177,11 +177,11 @@
 #define PWR_WAKEUP_INT_ENABLE           (PWR_SYSCTRL_BASE + 0xC5C)
 #define PWR_SC_PWC_STAT                 (PWR_SYSCTRL_BASE + 0xE00)
 
-#define PWR_IOS_CTRL_GPIO0              (PWR_SYSCTRL_BASE + 0x800) 
+#define PWR_IOS_CTRL_GPIO0              (PWR_SYSCTRL_BASE + 0x800)
 #define PWR_IOS_CTRL_GPIO1              (PWR_SYSCTRL_BASE + 0x840)
 #define PWR_IOS_CTRL_GPIO2              (PWR_SYSCTRL_BASE + 0x880)
 #define PWR_IOS_CTRL_GPIO3              (PWR_SYSCTRL_BASE + 0x8C0)
-#define PWR_IOS_CTRL_GPIO4              (PWR_SYSCTRL_BASE + 0x9A0) 
+#define PWR_IOS_CTRL_GPIO4              (PWR_SYSCTRL_BASE + 0x9A0)
 #define PWR_IOS_CTRL_GPIO5              (PWR_SYSCTRL_BASE + 0x9e0)
 
 /*DDR寄存器地址*/
@@ -191,18 +191,18 @@
 #define PWR_DDRC_SREFCTRL               (PWRC_DDRC_BASE + 0x4)
 #define PWR_DDRC_CLK_SWITCH             (PWRC_DDRC_BASE + 0x20)
 #define PWR_DDRC_EMRS                   (PWRC_DDRC_BASE + 0x14)
-#define PWR_DDRC_RNKCFG                	(PWRC_DDRC_BASE + 0x2c)
-#define PWR_DDRC_BASEADDR             	(PWRC_DDRC_BASE + 0x40)  
-#define PWR_DDRC_TIMING0              	(PWRC_DDRC_BASE + 0x50)
-#define PWR_DDRC_DTRCTRL               	(PWRC_DDRC_BASE + 0xac)
-#define PWR_DDRC_PHYSEL          		(PWRC_DDRC_BASE + 0x430)
-#define PWR_DDRC_QDLLCFG          		(PWRC_DDRC_BASE + 0x440)
+#define PWR_DDRC_RNKCFG                 (PWRC_DDRC_BASE + 0x2c)
+#define PWR_DDRC_BASEADDR               (PWRC_DDRC_BASE + 0x40)
+#define PWR_DDRC_TIMING0                (PWRC_DDRC_BASE + 0x50)
+#define PWR_DDRC_DTRCTRL                (PWRC_DDRC_BASE + 0xac)
+#define PWR_DDRC_PHYSEL                         (PWRC_DDRC_BASE + 0x430)
+#define PWR_DDRC_QDLLCFG                        (PWRC_DDRC_BASE + 0x440)
 #define PWR_DDRC_WRDQS_SKEW             (PWRC_DDRC_BASE + 0x500)
-#define PWR_DDRC_ZQCTRL0              	(PWRC_DDRC_BASE + 0x800)
-#define PWR_DDRC_ZQCTRL1              	(PWRC_DDRC_BASE + 0x804)
-#define PWR_DDRC_STATUS0              	(PWRC_DDRC_BASE + 0x808)
-#define PWR_DDRC_CKSEL           		(PWRC_DDRC_BASE + 0x810)
-#define PWR_DDRC_HISI_IOCFG      		(PWRC_DDRC_BASE + 0x814)
+#define PWR_DDRC_ZQCTRL0                (PWRC_DDRC_BASE + 0x800)
+#define PWR_DDRC_ZQCTRL1                (PWRC_DDRC_BASE + 0x804)
+#define PWR_DDRC_STATUS0                (PWRC_DDRC_BASE + 0x808)
+#define PWR_DDRC_CKSEL                          (PWRC_DDRC_BASE + 0x810)
+#define PWR_DDRC_HISI_IOCFG                     (PWRC_DDRC_BASE + 0x814)
 
 #define ARM_SOC_TIMER0_BASE_ADDR         (IO_ADDRESS(0x90002000))
 #define ARM_SOC_TIMER1_BASE_ADDR         (ARM_SOC_TIMER0_BASE_ADDR + 0x14)
@@ -246,56 +246,56 @@
 /*physical addr */
 /**********************************************************/
 #if (defined(BOARD_ASIC_BIGPACK) && defined(VERSION_V3R2))  \
-    ||(defined(BOARD_SFT) && defined(VERSION_V7R1)) 
+	|| (defined(BOARD_SFT) && defined(VERSION_V7R1))
 
-#define PWRCTRL_SOC_PHY_ADDR_TIMER0			(0x90002000)
-#define PWRCTRL_SOC_PHY_ADDR_TIMER1			(0x90003000)
-#define PWRCTRL_SOC_PHY_ADDR_TIMER2			(0x90004000)
+#define PWRCTRL_SOC_PHY_ADDR_TIMER0                     (0x90002000)
+#define PWRCTRL_SOC_PHY_ADDR_TIMER1                     (0x90003000)
+#define PWRCTRL_SOC_PHY_ADDR_TIMER2                     (0x90004000)
 
 #elif (defined (BOARD_SFT) && defined (VERSION_V3R2))
 
-#define PWRCTRL_SOC_PHY_ADDR_TIMER0			(0x90026000)
-#define PWRCTRL_SOC_PHY_ADDR_TIMER1			(0x90002000)
-#define PWRCTRL_SOC_PHY_ADDR_TIMER2			(0x90003000)
+#define PWRCTRL_SOC_PHY_ADDR_TIMER0                     (0x90026000)
+#define PWRCTRL_SOC_PHY_ADDR_TIMER1                     (0x90002000)
+#define PWRCTRL_SOC_PHY_ADDR_TIMER2                     (0x90003000)
 
-#elif ((defined (BOARD_ASIC)||defined (BOARD_ASIC_BIGPACK)) \
-  && (defined(CHIP_BB_6920ES)||defined (CHIP_BB_6920CS)))
+#elif ((defined (BOARD_ASIC) || defined (BOARD_ASIC_BIGPACK)) \
+	&& (defined(CHIP_BB_6920ES) || defined (CHIP_BB_6920CS)))
 
-#define PWRCTRL_SOC_PHY_ADDR_TIMER0			(0x90002000)
-#define PWRCTRL_SOC_PHY_ADDR_TIMER1			(0x90003000)
-#define PWRCTRL_SOC_PHY_ADDR_TIMER2			(0x90004000)
+#define PWRCTRL_SOC_PHY_ADDR_TIMER0                     (0x90002000)
+#define PWRCTRL_SOC_PHY_ADDR_TIMER1                     (0x90003000)
+#define PWRCTRL_SOC_PHY_ADDR_TIMER2                     (0x90004000)
 
 #endif
 
 /*********************************************************/
 /*virtual addr*/
 /*********************************************************/
-#define PWRCTRL_SOC_ADDR_TIMER0_0         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5*4*0))
-#define PWRCTRL_SOC_ADDR_TIMER0_1         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5*4*1))
-#define PWRCTRL_SOC_ADDR_TIMER0_2         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5*4*2))
-#define PWRCTRL_SOC_ADDR_TIMER0_3         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5*4*3))
-#define PWRCTRL_SOC_ADDR_TIMER0_4         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5*4*4))
-#define PWRCTRL_SOC_ADDR_TIMER0_5         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5*4*5))
-#define PWRCTRL_SOC_ADDR_TIMER0_6         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5*4*6))
-#define PWRCTRL_SOC_ADDR_TIMER0_7         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5*4*7))
+#define PWRCTRL_SOC_ADDR_TIMER0_0               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5 * 4 * 0))
+#define PWRCTRL_SOC_ADDR_TIMER0_1               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5 * 4 * 1))
+#define PWRCTRL_SOC_ADDR_TIMER0_2               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5 * 4 * 2))
+#define PWRCTRL_SOC_ADDR_TIMER0_3               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5 * 4 * 3))
+#define PWRCTRL_SOC_ADDR_TIMER0_4               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5 * 4 * 4))
+#define PWRCTRL_SOC_ADDR_TIMER0_5               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5 * 4 * 5))
+#define PWRCTRL_SOC_ADDR_TIMER0_6               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5 * 4 * 6))
+#define PWRCTRL_SOC_ADDR_TIMER0_7               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER0 + 5 * 4 * 7))
 
-#define PWRCTRL_SOC_ADDR_TIMER1_0         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5*4*0))
-#define PWRCTRL_SOC_ADDR_TIMER1_1         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5*4*1))
-#define PWRCTRL_SOC_ADDR_TIMER1_2         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5*4*2))
-#define PWRCTRL_SOC_ADDR_TIMER1_3         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5*4*3))
-#define PWRCTRL_SOC_ADDR_TIMER1_4         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5*4*4))
-#define PWRCTRL_SOC_ADDR_TIMER1_5         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5*4*5))
-#define PWRCTRL_SOC_ADDR_TIMER1_6         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5*4*6))
-#define PWRCTRL_SOC_ADDR_TIMER1_7         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5*4*7))
+#define PWRCTRL_SOC_ADDR_TIMER1_0               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5 * 4 * 0))
+#define PWRCTRL_SOC_ADDR_TIMER1_1               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5 * 4 * 1))
+#define PWRCTRL_SOC_ADDR_TIMER1_2               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5 * 4 * 2))
+#define PWRCTRL_SOC_ADDR_TIMER1_3               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5 * 4 * 3))
+#define PWRCTRL_SOC_ADDR_TIMER1_4               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5 * 4 * 4))
+#define PWRCTRL_SOC_ADDR_TIMER1_5               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5 * 4 * 5))
+#define PWRCTRL_SOC_ADDR_TIMER1_6               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5 * 4 * 6))
+#define PWRCTRL_SOC_ADDR_TIMER1_7               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER1 + 5 * 4 * 7))
 
-#define PWRCTRL_SOC_ADDR_TIMER2_0         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5*4*0))
-#define PWRCTRL_SOC_ADDR_TIMER2_1         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5*4*1))
-#define PWRCTRL_SOC_ADDR_TIMER2_2         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5*4*2))
-#define PWRCTRL_SOC_ADDR_TIMER2_3         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5*4*3))
-#define PWRCTRL_SOC_ADDR_TIMER2_4         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5*4*4))
-#define PWRCTRL_SOC_ADDR_TIMER2_5         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5*4*5))
-#define PWRCTRL_SOC_ADDR_TIMER2_6         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5*4*6))
-#define PWRCTRL_SOC_ADDR_TIMER2_7         	(IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5*4*7))
+#define PWRCTRL_SOC_ADDR_TIMER2_0               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5 * 4 * 0))
+#define PWRCTRL_SOC_ADDR_TIMER2_1               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5 * 4 * 1))
+#define PWRCTRL_SOC_ADDR_TIMER2_2               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5 * 4 * 2))
+#define PWRCTRL_SOC_ADDR_TIMER2_3               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5 * 4 * 3))
+#define PWRCTRL_SOC_ADDR_TIMER2_4               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5 * 4 * 4))
+#define PWRCTRL_SOC_ADDR_TIMER2_5               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5 * 4 * 5))
+#define PWRCTRL_SOC_ADDR_TIMER2_6               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5 * 4 * 6))
+#define PWRCTRL_SOC_ADDR_TIMER2_7               (IO_ADDRESS(PWRCTRL_SOC_PHY_ADDR_TIMER2 + 5 * 4 * 7))
 
 /*********************************************************/
 /*WIFI/HSIC SLAVE PERI*/
@@ -305,17 +305,14 @@
 #define PWRCTRL_HSIC_SLAVE_L2_BIT             (2)
 #define PWRCTRL_HSIC_SLAVE_L3_BIT             (3)
 
-#define PWRCTRL_WIFI_SET_LIGHT_SLEEP_BIT(x)   (*(volatile unsigned int*)x |= (1<<PWRCTRL_WIFI_LIGHT_SLEEP_BIT))
-#define PWRCTRL_WIFI_SET_DEEP_SLEEP_BIT(x)    (*(volatile unsigned int*)x |= (1<<PWRCTRL_WIFI_DEEP_SLEEP_BIT))
-#define PWRCTRL_WIFI_CLEAR_SLEEP_BIT(x)       (*(volatile unsigned int*)x &= (~(unsigned int)(0x3)))
-#define PWRCTRL_WIFI_GET_DEEP_SLEEP_BIT(x)    (*(volatile unsigned int*)x & (1<<PWRCTRL_WIFI_DEEP_SLEEP_BIT))
-#define PWRCTRL_HSIC_SET_L2_BIT(x)            (*(volatile unsigned int*)x |= (1<<PWRCTRL_HSIC_SLAVE_L2_BIT))
-#define PWRCTRL_HSIC_SET_L3_BIT(x)            (*(volatile unsigned int*)x |= (1<<PWRCTRL_HSIC_SLAVE_L3_BIT))
-#define PWRCTRL_HSIC_CLEAR_SLEEP_BIT(x)       (*(volatile unsigned int*)x &= (~(unsigned int)(0xc)))
-#define PWRCTRL_HSIC_GET_L3_BIT(x)            (*(volatile unsigned int*)x & (1<<PWRCTRL_HSIC_SLAVE_L3_BIT))
+#define PWRCTRL_WIFI_SET_LIGHT_SLEEP_BIT(x)   (*(volatile unsigned int *)x |= (1 << PWRCTRL_WIFI_LIGHT_SLEEP_BIT))
+#define PWRCTRL_WIFI_SET_DEEP_SLEEP_BIT(x)    (*(volatile unsigned int *)x |= (1 << PWRCTRL_WIFI_DEEP_SLEEP_BIT))
+#define PWRCTRL_WIFI_CLEAR_SLEEP_BIT(x)       (*(volatile unsigned int *)x &= (~(unsigned int)(0x3)))
+#define PWRCTRL_WIFI_GET_DEEP_SLEEP_BIT(x)    (*(volatile unsigned int *)x & (1 << PWRCTRL_WIFI_DEEP_SLEEP_BIT))
+#define PWRCTRL_HSIC_SET_L2_BIT(x)            (*(volatile unsigned int *)x |= (1 << PWRCTRL_HSIC_SLAVE_L2_BIT))
+#define PWRCTRL_HSIC_SET_L3_BIT(x)            (*(volatile unsigned int *)x |= (1 << PWRCTRL_HSIC_SLAVE_L3_BIT))
+#define PWRCTRL_HSIC_CLEAR_SLEEP_BIT(x)       (*(volatile unsigned int *)x &= (~(unsigned int)(0xc)))
+#define PWRCTRL_HSIC_GET_L3_BIT(x)            (*(volatile unsigned int *)x & (1 << PWRCTRL_HSIC_SLAVE_L3_BIT))
 
 
 #endif
-
-
-

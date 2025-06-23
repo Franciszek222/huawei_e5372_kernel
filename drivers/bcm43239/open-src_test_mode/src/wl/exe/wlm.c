@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2011, Broadcom Corporation
  * All Rights Reserved.
- * 
+ *
  * This is UNPUBLISHED PROPRIETARY SOURCE CODE of Broadcom Corporation;
  * the contents of this file may not be disclosed to third parties, copied
  * or duplicated in any form, in whole or in part, without the prior
@@ -24,24 +24,24 @@
 #include <bcmstdlib.h>
 #endif
 #include <bcmendian.h>
-#include <bcmutils.h>    // ARRAYSIZE, bcmerrorstr()
-#include <bcmsrom_fmt.h> // SROM4_WORDS
-#include <bcmsrom_tbl.h> // pavars_t
+#include <bcmutils.h>           // ARRAYSIZE, bcmerrorstr()
+#include <bcmsrom_fmt.h>        // SROM4_WORDS
+#include <bcmsrom_tbl.h>        // pavars_t
 #include <wlioctl.h>
 #if defined(WIN32)
-#include <epictrl.h>     // ADAPTER
+#include <epictrl.h>            // ADAPTER
 #endif
-#include <proto/ethernet.h>	 // ETHER_ADDR_LEN
+#include <proto/ethernet.h>     // ETHER_ADDR_LEN
 
 #include <sys/socket.h>
-#include <proto/bcmip.h> // ipv4_addr
-#include <arpa/inet.h>	// struct sockaddr_in
+#include <proto/bcmip.h>        // ipv4_addr
+#include <arpa/inet.h>          // struct sockaddr_in
 #include <string.h>
 #include <signal.h>
 
-#include "wlu_remote.h"  // wl remote type defines (ex: NO_REMOTE)
-#include "wlu_pipe.h"    // rwl_open_pipe()
-#include "wlu.h"         // wl_ether_atoe()
+#include "wlu_remote.h"         // wl remote type defines (ex: NO_REMOTE)
+#include "wlu_pipe.h"           // rwl_open_pipe()
+#include "wlu.h"                // wl_ether_atoe()
 #include "wlm.h"
 
 /* IOCTL swapping mode for Big Endian host with Little Endian dongle.  Default to off */
@@ -58,12 +58,12 @@
 static HANDLE irh;
 int adapter;
 #else
-static void * irh;
+static void *irh;
 #define HANDLE void *
 #endif
 
 #define MAX_INTERFACE_NAME_LENGTH     128
-static char interfaceName[MAX_INTERFACE_NAME_LENGTH + 1] = {0};
+static char interfaceName[MAX_INTERFACE_NAME_LENGTH + 1] = { 0 };
 static WLM_BAND curBand = WLM_BAND_AUTO;
 
 extern int wl_os_type_get_rwl(void);
@@ -95,10 +95,10 @@ extern int wl_seq_stop(void *wl, cmd_t *cmd, char **argv);
 static int wlmPhyTypeGet(void);
 
 static void wlm_dump_bss_info(wl_bss_info_t *bi, char *scan_dump_buf, int *len);
-static int wlm_format_ssid(char* buf, uint8* ssid, int ssid_len);
-static char* wlm_ether_etoa(const struct ether_addr *n);
-static const char* wlm_capmode2str(uint16 capability);
-static char* wlm_wf_chspec_ntoa(chanspec_t chspec, char *buf);
+static int wlm_format_ssid(char *buf, uint8 *ssid, int ssid_len);
+static char * wlm_ether_etoa(const struct ether_addr *n);
+static const char * wlm_capmode2str(uint16 capability);
+static char * wlm_wf_chspec_ntoa(chanspec_t chspec, char *buf);
 
 static const char *
 wlmLastError(void)
@@ -138,32 +138,31 @@ int wlmApiCleanup(void)
 }
 
 int wlmSelectInterface(WLM_DUT_INTERFACE ifType, char *ifName,
-	WLM_DUT_SERVER_PORT dutServerPort, WLM_DUT_OS dutOs)
+		       WLM_DUT_SERVER_PORT dutServerPort, WLM_DUT_OS dutOs)
 {
 	/* close previous handle */
-	if (irh != NULL) {
+	if (irh != NULL)
 		wlmApiCleanup();
-	}
 
 	switch (ifType) {
-		case WLM_DUT_LOCAL:
-			rwl_set_remote_type(NO_REMOTE);
-			break;
-		case WLM_DUT_SERIAL:
-			rwl_set_remote_type(REMOTE_SERIAL);
-			break;
-		case WLM_DUT_SOCKET:
-			rwl_set_remote_type(REMOTE_SOCKET);
-			break;
-		case WLM_DUT_WIFI:
-			rwl_set_remote_type(REMOTE_WIFI);
-			break;
-		case WLM_DUT_DONGLE:
-			rwl_set_remote_type(REMOTE_DONGLE);
-			break;
-		default:
-			/* ERROR! Unknown interface! */
-			return FALSE;
+	case WLM_DUT_LOCAL:
+		rwl_set_remote_type(NO_REMOTE);
+		break;
+	case WLM_DUT_SERIAL:
+		rwl_set_remote_type(REMOTE_SERIAL);
+		break;
+	case WLM_DUT_SOCKET:
+		rwl_set_remote_type(REMOTE_SOCKET);
+		break;
+	case WLM_DUT_WIFI:
+		rwl_set_remote_type(REMOTE_WIFI);
+		break;
+	case WLM_DUT_DONGLE:
+		rwl_set_remote_type(REMOTE_DONGLE);
+		break;
+	default:
+		/* ERROR! Unknown interface! */
+		return FALSE;
 	}
 
 	if (ifName) {
@@ -172,72 +171,72 @@ int wlmSelectInterface(WLM_DUT_INTERFACE ifType, char *ifName,
 	}
 
 	switch (dutOs) {
-		case WLM_DUT_OS_LINUX:
-			wl_os_type_set_rwl(LINUX_OS);
-			break;
-		case WLM_DUT_OS_WIN32:
-			wl_os_type_set_rwl(WIN32_OS);
-			break;
-		default:
-			/* ERROR! Unknown OS! */
-			return FALSE;
+	case WLM_DUT_OS_LINUX:
+		wl_os_type_set_rwl(LINUX_OS);
+		break;
+	case WLM_DUT_OS_WIN32:
+		wl_os_type_set_rwl(WIN32_OS);
+		break;
+	default:
+		/* ERROR! Unknown OS! */
+		return FALSE;
 	}
 
 	switch (rwl_get_remote_type()) {
-		struct ipv4_addr temp;
-		case REMOTE_SOCKET:
-			if (!wl_atoip(interfaceName, &temp)) {
-				printf("wlmSelectInterface: IP address invalid\n");
-				return FALSE;
-			}
-			rwl_set_server_ip(interfaceName);
-			rwl_set_server_port(dutServerPort);
-			rwl_init_socket();
-			break;
-		case REMOTE_SERIAL:
-			rwl_set_serial_port_name(interfaceName); /* x (port number) or /dev/ttySx */
-			if ((irh = rwl_open_pipe(rwl_get_remote_type(),
-				rwl_get_serial_port_name(), 0, 0)) == NULL) {
-				printf("wlmSelectInterface: rwl_open_pipe failed\n");
-				return FALSE;
-			}
-			break;
-		case REMOTE_DONGLE:
-			rwl_set_serial_port_name(interfaceName); /* COMx or /dev/ttySx */
-			if ((irh = rwl_open_pipe(rwl_get_remote_type(), "\0", 0, 0)) == NULL) {
-				printf("wlmSelectInterface: rwl_open_pipe failed\n");
-				return FALSE;
-			}
-			break;
-		case REMOTE_WIFI:
-			if (!wl_ether_atoe(interfaceName,
-				(struct ether_addr *)rwl_get_wifi_mac())) {
-				printf("wlmSelectInterface: ethernet MAC address invalid\n");
-				return FALSE;
-			}
-			/* intentionally no break here to pass through to NO_REMOTE case */
-		case NO_REMOTE:
-#if defined(WIN32)
-			adapter = atoi(interfaceName);
-			if (adapter == 0)
-				adapter = -1;
-
-			if (wl_ir_init_adapter_rwl(&irh, adapter) != 0) {
-				printf("wlmSelectInterface: Adapter %d init failed\n", adapter);
-				return FALSE;
-			}
-#else
-			if (wl_ir_init_rwl(&irh) != 0) {
-				printf("wlmSelectInterface: initialize failed\n");
-				return FALSE;
-			}
-#endif
-			break;
-		default:
-			/* ERROR! Invalid interface!
-			 * NOTE: API should not allow code to come here.
-			 */
+	struct ipv4_addr temp;
+	case REMOTE_SOCKET:
+		if (!wl_atoip(interfaceName, &temp)) {
+			printf("wlmSelectInterface: IP address invalid\n");
 			return FALSE;
+		}
+		rwl_set_server_ip(interfaceName);
+		rwl_set_server_port(dutServerPort);
+		rwl_init_socket();
+		break;
+	case REMOTE_SERIAL:
+		rwl_set_serial_port_name(interfaceName);         /* x (port number) or /dev/ttySx */
+		if ((irh = rwl_open_pipe(rwl_get_remote_type(),
+					 rwl_get_serial_port_name(), 0, 0)) == NULL) {
+			printf("wlmSelectInterface: rwl_open_pipe failed\n");
+			return FALSE;
+		}
+		break;
+	case REMOTE_DONGLE:
+		rwl_set_serial_port_name(interfaceName);         /* COMx or /dev/ttySx */
+		if ((irh = rwl_open_pipe(rwl_get_remote_type(), "\0", 0, 0)) == NULL) {
+			printf("wlmSelectInterface: rwl_open_pipe failed\n");
+			return FALSE;
+		}
+		break;
+	case REMOTE_WIFI:
+		if (!wl_ether_atoe(interfaceName,
+				   (struct ether_addr *)rwl_get_wifi_mac())) {
+			printf("wlmSelectInterface: ethernet MAC address invalid\n");
+			return FALSE;
+		}
+	/* intentionally no break here to pass through to NO_REMOTE case */
+	case NO_REMOTE:
+#if defined(WIN32)
+		adapter = atoi(interfaceName);
+		if (adapter == 0)
+			adapter = -1;
+
+		if (wl_ir_init_adapter_rwl(&irh, adapter) != 0) {
+			printf("wlmSelectInterface: Adapter %d init failed\n", adapter);
+			return FALSE;
+		}
+#else
+		if (wl_ir_init_rwl(&irh) != 0) {
+			printf("wlmSelectInterface: initialize failed\n");
+			return FALSE;
+		}
+#endif
+		break;
+	default:
+		/* ERROR! Invalid interface!
+		 * NOTE: API should not allow code to come here.
+		 */
+		return FALSE;
 	}
 
 	return TRUE;
@@ -264,14 +263,12 @@ int wlmVersionGet(char *buf, int len)
 int wlmEnableAdapterUp(int enable)
 {
 	/*  Enable/disable adapter  */
-	if (enable)
-	{
+	if (enable) {
 		if (wlu_set(irh, WLC_UP, NULL, 0)) {
 			printf("wlmEnableAdapterUp: %s\n", wlmLastError());
 			return FALSE;
 		}
-	}
-	else {
+	} else {
 		if (wlu_set(irh, WLC_DOWN, NULL, 0)) {
 			printf("wlmEnableAdapterUp: %s\n", wlmLastError());
 			return FALSE;
@@ -303,7 +300,7 @@ int wlmMinPowerConsumption(int enable)
 	return TRUE;
 }
 
-int wlmMimoPreambleGet(int* type)
+int wlmMimoPreambleGet(int *type)
 {
 	if (wlu_iovar_getint(irh, "mimo_preamble", type)) {
 		printf("wlmMimoPreambleGet(): %s\n", wlmLastError());
@@ -318,18 +315,16 @@ int wlmMimoPreambleSet(int type)
 		printf("wlmMimoPreambleSet(): %s\n", wlmLastError());
 		return FALSE;
 	}
-	return  TRUE;
+	return TRUE;
 }
 
 int wlmChannelSet(int channel)
 {
-
 	/* Check band lock first before set  channel */
-	if ((channel <= 14) && (curBand != WLM_BAND_2G)) {
+	if ((channel <= 14) && (curBand != WLM_BAND_2G))
 		curBand = WLM_BAND_2G;
-	} else if ((channel > 14) && (curBand != WLM_BAND_5G)) {
+	else if ((channel > 14) && (curBand != WLM_BAND_5G))
 		curBand = WLM_BAND_5G;
-	}
 
 	/* Set 'channel' */
 	channel = htod32(channel);
@@ -348,20 +343,20 @@ int wlmRateSet(WLM_RATE rate)
 	char *name;
 
 	switch (curBand) {
-	        case WLM_BAND_AUTO :
-			printf("wlmRateSet: must set channel or band lock first \n");
-			return FALSE;
-	        case WLM_BAND_DUAL :
-			printf("wlmRateSet: must set channel or band lock first\n");
-			return FALSE;
-		case WLM_BAND_5G :
-			name = (char *)aname;
-			break;
-		case WLM_BAND_2G :
-			name = (char *)bgname;
-			break;
-		default :
-			return FALSE;
+	case WLM_BAND_AUTO:
+		printf("wlmRateSet: must set channel or band lock first \n");
+		return FALSE;
+	case WLM_BAND_DUAL:
+		printf("wlmRateSet: must set channel or band lock first\n");
+		return FALSE;
+	case WLM_BAND_5G:
+		name = (char *)aname;
+		break;
+	case WLM_BAND_2G:
+		name = (char *)bgname;
+		break;
+	default:
+		return FALSE;
 	}
 
 	rate = htod32(rate);
@@ -386,7 +381,7 @@ int wlmLegacyRateSet(WLM_RATE rate)
 		return FALSE;
 	}
 
-	return  TRUE;
+	return TRUE;
 }
 
 int wlmMcsRateSet(WLM_MCS_RATE mcs_rate, WLM_STF_MODE stf_mode)
@@ -401,11 +396,12 @@ int wlmMcsRateSet(WLM_MCS_RATE mcs_rate, WLM_STF_MODE stf_mode)
 		stf = 0;
 		if ((nrate & NRATE_RATE_MASK) <= HIGHEST_SINGLE_STREAM_MCS ||
 		    (nrate & NRATE_RATE_MASK) == 32)
-			stf = NRATE_STF_SISO;	/* SISO */
+			stf = NRATE_STF_SISO;   /* SISO */
 		else
-			stf = NRATE_STF_SDM;	/* SDM */
-	} else
-			stf = stf_mode;
+			stf = NRATE_STF_SDM;    /* SDM */
+	} else {
+		stf = stf_mode;
+	}
 
 	nrate |= (stf << NRATE_STF_SHIFT) & NRATE_STF_MASK;
 
@@ -414,7 +410,7 @@ int wlmMcsRateSet(WLM_MCS_RATE mcs_rate, WLM_STF_MODE stf_mode)
 		printf("wlmMcsRateSet: %s\n", wlmLastError());
 		return FALSE;
 	}
-	return  TRUE;
+	return TRUE;
 }
 
 int wlmPreambleSet(WLM_PREAMBLE preamble)
@@ -443,7 +439,7 @@ int wlmBandSet(WLM_BAND band)
 	return TRUE;
 }
 
-int wlmGetBandList(WLM_BAND * bands)
+int wlmGetBandList(WLM_BAND *bands)
 {
 	unsigned int list[3];
 	unsigned int i;
@@ -523,15 +519,13 @@ int wlmEstimatedPowerGet(int *estPower, int chain)
 	mimo = (power.flags & WL_TX_POWER_F_MIMO);
 
 	/* value returned is in units of quarter dBm, need to multiply by 250 to get milli-dBm */
-	if (mimo) {
+	if (mimo)
 		*estPower = power.est_Pout[chain] * 250;
-	} else {
+	else
 		*estPower = power.est_Pout[0] * 250;
-	}
 
-	if (!mimo && CHSPEC_IS2G(power.chanspec)) {
+	if (!mimo && CHSPEC_IS2G(power.chanspec))
 		*estPower = power.est_Pout_cck * 250;
-	}
 
 	return TRUE;
 }
@@ -557,7 +551,7 @@ int wlmTxPowerSet(int powerValue)
 	int newValue = 0;
 
 	if (powerValue == -1) {
-		newValue = 127;		/* Max val of 127 qdbm */
+		newValue = 127;         /* Max val of 127 qdbm */
 	} else {
 		/* expected to be in units of quarter dBm */
 		newValue = powerValue / 250;
@@ -574,11 +568,10 @@ int wlmTxPowerSet(int powerValue)
 
 static int wlmPhyTypeGet(void)
 {
-
 	int phytype = PHY_TYPE_NULL;
 
 	if (wlu_get(irh, WLC_GET_PHYTYPE, &phytype, sizeof(int)) < 0) {
-	        printf("wlmPhyTypeGet: %s\n", wlmLastError());
+		printf("wlmPhyTypeGet: %s\n", wlmLastError());
 		return FALSE;
 	}
 
@@ -586,7 +579,7 @@ static int wlmPhyTypeGet(void)
 }
 
 int wlmPaParametersGet(WLM_BANDRANGE bandrange,
-	unsigned int *a1, unsigned int *b0, unsigned int *b1)
+		       unsigned int *a1, unsigned int *b0, unsigned int *b1)
 {
 	uint16 inpa[WL_PHY_PAVARS_LEN];
 	void *ptr = NULL;
@@ -623,7 +616,7 @@ int wlmPaParametersGet(WLM_BANDRANGE bandrange,
 }
 
 int wlmPaParametersSet(WLM_BANDRANGE bandrange,
-	unsigned int a1, unsigned int b0, unsigned int b1)
+		       unsigned int a1, unsigned int b0, unsigned int b1)
 {
 	uint16 inpa[WL_PHY_PAVARS_LEN];
 	int i = 0;
@@ -636,7 +629,7 @@ int wlmPaParametersSet(WLM_BANDRANGE bandrange,
 		inpa[i++] = bandrange;
 		inpa[i++] = 0;  /* Fix me: default with chain 0 for all SISO system */
 	} else {
-	        printf("wlmPaParametersSet: unknow Phy type\n");
+		printf("wlmPaParametersSet: unknow Phy type\n");
 		return FALSE;
 	}
 
@@ -654,7 +647,7 @@ int wlmPaParametersSet(WLM_BANDRANGE bandrange,
 
 
 int wlmMIMOPaParametersGet(WLM_BANDRANGE bandrange, int chain,
-	unsigned int *a1, unsigned int *b0, unsigned int *b1)
+			   unsigned int *a1, unsigned int *b0, unsigned int *b1)
 {
 	uint16 inpa[WL_PHY_PAVARS_LEN];
 	void *ptr = NULL;
@@ -687,7 +680,7 @@ int wlmMIMOPaParametersGet(WLM_BANDRANGE bandrange, int chain,
 }
 
 int wlmMIMOPaParametersSet(WLM_BANDRANGE bandrange, int chain,
-	unsigned int a1, unsigned int b0, unsigned int b1)
+			   unsigned int a1, unsigned int b0, unsigned int b1)
 {
 	uint16 inpa[WL_PHY_PAVARS_LEN];
 	int i = 0;
@@ -696,11 +689,11 @@ int wlmMIMOPaParametersSet(WLM_BANDRANGE bandrange, int chain,
 	/* Do not rely on user to have knowledge of phy type */
 	phytype = wlmPhyTypeGet();
 	if (phytype != PHY_TYPE_NULL) {
-	        inpa[i++] = phytype;
+		inpa[i++] = phytype;
 		inpa[i++] = bandrange;
 		inpa[i++] = chain;
 	} else {
-	        printf("wlmMIMOPaParametersSet: unknow Phy type\n");
+		printf("wlmMIMOPaParametersSet: unknow Phy type\n");
 		return FALSE;
 	}
 
@@ -718,7 +711,7 @@ int wlmMIMOPaParametersSet(WLM_BANDRANGE bandrange, int chain,
 
 int wlmMacAddrGet(char *macAddr, int length)
 {
-	struct ether_addr ea = {{0, 0, 0, 0, 0, 0}};
+	struct ether_addr ea = { { 0, 0, 0, 0, 0, 0 } };
 
 	/* query for 'cur_etheraddr' to get MAC address */
 	if (wlu_iovar_get(irh, "cur_etheraddr", &ea, ETHER_ADDR_LEN) < 0) {
@@ -731,7 +724,7 @@ int wlmMacAddrGet(char *macAddr, int length)
 	return TRUE;
 }
 
-int wlmMacAddrSet(const char* macAddr)
+int wlmMacAddrSet(const char *macAddr)
 {
 	struct ether_addr ea;
 
@@ -755,12 +748,11 @@ int wlmEnableCarrierTone(int enable, int channel)
 
 	if (!enable) {
 		val = 0;
-	}
-	else {
+	} else {
 		wlmEnableAdapterUp(1);
 		if (wlu_set(irh, WLC_OUT, NULL, 0) < 0) {
-		printf("wlmEnableCarrierTone: %s\n", wlmLastError());
-		return FALSE;
+			printf("wlmEnableCarrierTone: %s\n", wlmLastError());
+			return FALSE;
 		}
 	}
 	val = htod32(val);
@@ -773,7 +765,8 @@ int wlmEnableCarrierTone(int enable, int channel)
 
 int wlmEnableEVMTest(int enable, WLM_RATE rate, int channel)
 {
-	int val[3] = {0};
+	int val[3] = { 0 };
+
 	val[1] = WLM_RATE_1M; /* default value */
 	if (enable) {
 		val[0] = htod32(channel);
@@ -792,8 +785,8 @@ int wlmEnableEVMTest(int enable, WLM_RATE rate, int channel)
 }
 
 int wlmTxPacketStart(unsigned int interPacketDelay,
-	unsigned int numPackets, unsigned int packetLength,
-	const char* destMac, int withAck, int syncMode)
+		     unsigned int numPackets, unsigned int packetLength,
+		     const char *destMac, int withAck, int syncMode)
 {
 	wl_pkteng_t pkteng;
 
@@ -813,8 +806,8 @@ int wlmTxPacketStart(unsigned int interPacketDelay,
 	pkteng.length = packetLength;
 	pkteng.nframes = numPackets;
 
-	pkteng.seqno = 0;			/* not used */
-	pkteng.src = ether_null;	/* implies current ether addr */
+	pkteng.seqno = 0;               /* not used */
+	pkteng.src = ether_null;        /* implies current ether addr */
 
 	if (wlu_var_setbuf(irh, "pkteng", &pkteng, sizeof(pkteng))) {
 		printf("wlmTxPacketStart: %s\n", wlmLastError());
@@ -839,8 +832,8 @@ int wlmTxPacketStop(void)
 	return TRUE;
 }
 
-int wlmRxPacketStart(const char* srcMac, int withAck,
-	int syncMode, unsigned int numPackets, unsigned int timeout)
+int wlmRxPacketStart(const char *srcMac, int withAck,
+		     int syncMode, unsigned int numPackets, unsigned int timeout)
 {
 	wl_pkteng_t pkteng;
 
@@ -855,9 +848,9 @@ int wlmRxPacketStart(const char* srcMac, int withAck,
 		pkteng.flags |= WL_PKTENG_SYNCHRONOUS;
 		pkteng.nframes = numPackets;
 		pkteng.delay = timeout;
-	}
-	else
+	} else {
 		pkteng.flags &= ~WL_PKTENG_SYNCHRONOUS;
+	}
 
 	if (wlu_var_setbuf(irh, "pkteng", &pkteng, sizeof(pkteng))) {
 		printf("wlmRxPacketStart: %s\n", wlmLastError());
@@ -909,11 +902,10 @@ int wlmRxGetReceivedPackets(unsigned int *count)
 	cnt->length = dtoh16(cnt->version);
 
 	/* current wl_cnt_t version is 7 */
-	if (cnt->version == WL_CNT_T_VERSION) {
+	if (cnt->version == WL_CNT_T_VERSION)
 		*count = dtoh32(cnt->pktengrxducast);
-	} else {
+	else
 		*count = dtoh32(cnt->rxdfrmucastmbss);
-	}
 
 	return TRUE;
 }
@@ -932,7 +924,7 @@ int wlmRssiGet(int *rssi)
 	return TRUE;
 }
 
-int wlmUnmodRssiGet(int* rssi)
+int wlmUnmodRssiGet(int *rssi)
 {
 	if (wlu_iovar_getint(irh, "unmod_rssi", rssi)) {
 		printf("wlmUnmodRssiGet: %s\n", wlmLastError());
@@ -991,10 +983,10 @@ int wlmSequenceErrorIndex(int *index)
 	return TRUE;
 }
 
-int wlmDeviceImageWrite(const char* byteStream, int length, WLM_IMAGE_TYPE imageType)
+int wlmDeviceImageWrite(const char *byteStream, int length, WLM_IMAGE_TYPE imageType)
 {
 	srom_rw_t *srt;
-	char buffer[WLC_IOCTL_MAXLEN] = {0};
+	char buffer[WLC_IOCTL_MAXLEN] = { 0 };
 
 	char *bufp;
 	char *cisp, *cisdata;
@@ -1004,9 +996,9 @@ int wlmDeviceImageWrite(const char* byteStream, int length, WLM_IMAGE_TYPE image
 		printf("wlmDeviceImageWrite: Buffer is invalid!\n");
 		return FALSE;
 	}
-	if (length > SROM_MAX+1) {
-	    printf("wlmDeviceImageWrite: Data length should be less than %d bytes\n", SROM_MAX);
-	    return FALSE;
+	if (length > SROM_MAX + 1) {
+		printf("wlmDeviceImageWrite: Data length should be less than %d bytes\n", SROM_MAX);
+		return FALSE;
 	}
 
 	switch (imageType) {
@@ -1018,17 +1010,17 @@ int wlmDeviceImageWrite(const char* byteStream, int length, WLM_IMAGE_TYPE image
 			if ((srt->buf[SROM4_SIGN] != SROM4_SIGNATURE) &&
 			    (srt->buf[SROM8_SIGN] != SROM4_SIGNATURE)) {
 				printf("wlmDeviceImageWrite: Data lacks a REV4 signature!\n");
-			    return FALSE;
+				return FALSE;
 			}
 		} else if ((length != SROM_WORDS * 2) && (length != SROM_MAX)) {
-		    printf("wlmDeviceImageWrite: Data length is invalid!\n");
-		    return FALSE;
+			printf("wlmDeviceImageWrite: Data length is invalid!\n");
+			return FALSE;
 		}
 
 		srt->nbytes = length;
 		if (wlu_set(irh, WLC_SET_SROM, buffer, length + 8)) {
-		    printf("wlmDeviceImageWrite: %s\n", wlmLastError());
-		    return FALSE;
+			printf("wlmDeviceImageWrite: %s\n", wlmLastError());
+			return FALSE;
 		}
 
 
@@ -1044,20 +1036,20 @@ int wlmDeviceImageWrite(const char* byteStream, int length, WLM_IMAGE_TYPE image
 
 		cish.byteoff = htod32(0);
 		cish.nbytes = htod32(length);
-		memcpy(cisp, (char*)&cish, sizeof(cish));
+		memcpy(cisp, (char *)&cish, sizeof(cish));
 
 		if (wl_set(irh, WLC_SET_VAR, buffer, (cisp - buffer) + sizeof(cish) + length) < 0) {
-		    printf("wlmDeviceImageWrite: %s\n", wlmLastError());
-		    return FALSE;
-		 }
+			printf("wlmDeviceImageWrite: %s\n", wlmLastError());
+			return FALSE;
+		}
 		break;
 	case WLM_TYPE_AUTO:
 		if (!wlmDeviceImageWrite(byteStream, length, WLM_TYPE_SROM) &&
-			!wlmDeviceImageWrite(byteStream, length, WLM_TYPE_OTP)) {
-		    printf("wlmDeviceImageWrite: %s\n", wlmLastError());
-		    return FALSE;
-	    }
-	    break;
+		    !wlmDeviceImageWrite(byteStream, length, WLM_TYPE_OTP)) {
+			printf("wlmDeviceImageWrite: %s\n", wlmLastError());
+			return FALSE;
+		}
+		break;
 	default:
 		printf("wlmDeviceImageWrite: Invalid image type!\n");
 		return FALSE;
@@ -1065,11 +1057,11 @@ int wlmDeviceImageWrite(const char* byteStream, int length, WLM_IMAGE_TYPE image
 	return TRUE;
 }
 
-int wlmDeviceImageRead(char* byteStream, unsigned int len, WLM_IMAGE_TYPE imageType)
+int wlmDeviceImageRead(char *byteStream, unsigned int len, WLM_IMAGE_TYPE imageType)
 {
 	srom_rw_t *srt;
 	cis_rw_t *cish;
-	char buf[WLC_IOCTL_MAXLEN] = {0};
+	char buf[WLC_IOCTL_MAXLEN] = { 0 };
 	unsigned int numRead = 0;
 
 	if (byteStream == NULL) {
@@ -1078,18 +1070,18 @@ int wlmDeviceImageRead(char* byteStream, unsigned int len, WLM_IMAGE_TYPE imageT
 	}
 
 	if (len > SROM_MAX) {
-	    printf("wlmDeviceImageRead: byteStream should be less than %d bytes!\n", SROM_MAX);
-	    return FALSE;
+		printf("wlmDeviceImageRead: byteStream should be less than %d bytes!\n", SROM_MAX);
+		return FALSE;
 	}
 
 	if (len & 1) {
-			printf("wlmDeviceImageRead: Invalid byte count %d, must be even\n", len);
-			return FALSE;
+		printf("wlmDeviceImageRead: Invalid byte count %d, must be even\n", len);
+		return FALSE;
 	}
 
 	switch (imageType) {
 	case WLM_TYPE_SROM:
-		if (len < 2*SROM4_WORDS) {
+		if (len < 2 * SROM4_WORDS) {
 			printf("wlmDeviceImageRead: Buffer not large enough!\n");
 			return FALSE;
 		}
@@ -1108,9 +1100,9 @@ int wlmDeviceImageRead(char* byteStream, unsigned int len, WLM_IMAGE_TYPE imageT
 	case WLM_TYPE_OTP:
 		strcpy(buf, "cisdump");
 		/* strlen("cisdump ") = 9 */
-		if (wl_get(irh, WLC_GET_VAR, buf, 9  + (len < SROM_MAX ? len : SROM_MAX)) < 0) {
-		    printf("wlmDeviceImageRead: %s\n", wlmLastError());
-		    return FALSE;
+		if (wl_get(irh, WLC_GET_VAR, buf, 9 + (len < SROM_MAX ? len : SROM_MAX)) < 0) {
+			printf("wlmDeviceImageRead: %s\n", wlmLastError());
+			return FALSE;
 		}
 
 		cish = (cis_rw_t *)buf;
@@ -1126,13 +1118,13 @@ int wlmDeviceImageRead(char* byteStream, unsigned int len, WLM_IMAGE_TYPE imageT
 		numRead = cish->nbytes;
 		break;
 	case WLM_TYPE_AUTO:
-	  numRead = wlmDeviceImageRead(byteStream, len, WLM_TYPE_SROM);
+		numRead = wlmDeviceImageRead(byteStream, len, WLM_TYPE_SROM);
 		if (!numRead) {
 			numRead = wlmDeviceImageRead(byteStream, len, WLM_TYPE_OTP);
-		    printf("wlmDeviceImageRead: %s\n", wlmLastError());
-		    return FALSE;
-	    }
-	    break;
+			printf("wlmDeviceImageRead: %s\n", wlmLastError());
+			return FALSE;
+		}
+		break;
 	default:
 		printf("wlmDeviceImageRead: Invalid image type!\n");
 		return FALSE;
@@ -1141,7 +1133,7 @@ int wlmDeviceImageRead(char* byteStream, unsigned int len, WLM_IMAGE_TYPE imageT
 }
 
 int wlmSecuritySet(WLM_AUTH_TYPE authType, WLM_AUTH_MODE authMode,
-	WLM_ENCRYPTION encryption, const char *key)
+		   WLM_ENCRYPTION encryption, const char *key)
 {
 	int length = 0;
 	int wpa_auth;
@@ -1156,12 +1148,10 @@ int wlmSecuritySet(WLM_AUTH_TYPE authType, WLM_AUTH_MODE authMode,
 		return FALSE;
 	}
 
-	if (key) {
+	if (key)
 		length = strlen(key);
-	}
 
 	switch (encryption) {
-
 	case WLM_ENCRYPT_NONE:
 		wpa_auth = WPA_AUTH_DISABLED;
 		sup_wpa = 0;
@@ -1176,8 +1166,8 @@ int wlmSecuritySet(WLM_AUTH_TYPE authType, WLM_AUTH_MODE authMode,
 
 		if (!(length == 40 || length == 104 || length == 128 || length == 256)) {
 			printf("wlmSecuritySet: invalid WEP key length %d"
-			"       - expect 40, 104, 128, or 256"
-			" (i.e. 10, 26, 32, or 64 for each of 4 keys)\n", length);
+			       "       - expect 40, 104, 128, or 256"
+			       " (i.e. 10, 26, 32, or 64 for each of 4 keys)\n", length);
 			return FALSE;
 		}
 
@@ -1198,7 +1188,7 @@ int wlmSecuritySet(WLM_AUTH_TYPE authType, WLM_AUTH_MODE authMode,
 				k->data[j] = (char)strtoul(hex, &end, 16);
 				if (*end != 0) {
 					printf("wlmSecuritySet: invalid WEP key"
-					"       - expect hex values\n");
+					       "       - expect hex values\n");
 					return FALSE;
 				}
 			}
@@ -1229,7 +1219,6 @@ int wlmSecuritySet(WLM_AUTH_TYPE authType, WLM_AUTH_MODE authMode,
 
 	case WLM_ENCRYPT_TKIP:
 	case WLM_ENCRYPT_AES: {
-
 		if (authMode != WLM_WPA_AUTH_PSK && authMode != WLM_WPA2_AUTH_PSK) {
 			printf("wlmSecuritySet: authentication mode must be WPA PSK or WPA2 PSK\n");
 			return FALSE;
@@ -1240,7 +1229,7 @@ int wlmSecuritySet(WLM_AUTH_TYPE authType, WLM_AUTH_MODE authMode,
 
 		if (length < WSEC_MIN_PSK_LEN || length > WSEC_MAX_PSK_LEN) {
 			printf("wlmSecuritySet: passphrase must be between %d and %d characters\n",
-			WSEC_MIN_PSK_LEN, WSEC_MAX_PSK_LEN);
+			       WSEC_MIN_PSK_LEN, WSEC_MAX_PSK_LEN);
 			return FALSE;
 		}
 
@@ -1293,8 +1282,7 @@ int wlmSecuritySet(WLM_AUTH_TYPE authType, WLM_AUTH_MODE authMode,
 			printf("wlmSecuritySet: %s\n", wlmLastError());
 			return FALSE;
 		}
-	}
-	else if (encryption == WLM_ENCRYPT_TKIP || encryption == WLM_ENCRYPT_AES) {
+	} else if (encryption == WLM_ENCRYPT_TKIP || encryption == WLM_ENCRYPT_AES) {
 		psk.key_len = htod16(psk.key_len);
 		psk.flags = htod16(psk.flags);
 
@@ -1314,16 +1302,16 @@ int wlmSecuritySet(WLM_AUTH_TYPE authType, WLM_AUTH_MODE authMode,
 }
 
 
-int wlmNvramGet(void* vardata, int len, char* varname)
+int wlmNvramGet(void *vardata, int len, char *varname)
 {
-	char buf[WLC_IOCTL_MAXLEN] = {0};
+	char buf[WLC_IOCTL_MAXLEN] = { 0 };
 
 	if ((wlu_var_getbuf(irh, "nvram_dump", NULL, 0, vardata)) < 0) {
 		if ((wlu_get(irh, WLC_NVRAM_DUMP, &buf[0], WLC_IOCTL_MAXLEN)) < 0) {
 			printf("wlmNvramGet: %s\n", wlmLastError());
 			return FALSE;
 		}
-		memcpy(vardata, (void*)&buf[0], len);
+		memcpy(vardata, (void *)&buf[0], len);
 	}
 	printf("%s\n", vardata);
 
@@ -1331,13 +1319,14 @@ int wlmNvramGet(void* vardata, int len, char* varname)
 }
 
 
-int wlmJoinNetwork(const char* ssid, WLM_JOIN_MODE mode)
+int wlmJoinNetwork(const char *ssid, WLM_JOIN_MODE mode)
 {
 	wlc_ssid_t wlcSsid;
 	int infra = htod32(mode);
+
 	if (wlu_set(irh, WLC_SET_INFRA, &infra, sizeof(int)) < 0) {
-	    printf("wlmJoinNetwork: %s\n", wlmLastError());
-	    return FALSE;
+		printf("wlmJoinNetwork: %s\n", wlmLastError());
+		return FALSE;
 	}
 
 	wlcSsid.SSID_len = htod32(strlen(ssid));
@@ -1366,7 +1355,7 @@ int wlmSsidGet(char *ssid, int length)
 
 	if (length < SSID_FMT_BUF_LEN) {
 		printf("wlmSsidGet: Ssid buffer too short - %d bytes at least\n",
-		SSID_FMT_BUF_LEN);
+		       SSID_FMT_BUF_LEN);
 		return FALSE;
 	}
 
@@ -1390,14 +1379,12 @@ int wlmBssidGet(char *bssid, int length)
 		return FALSE;
 	}
 
-	if (wlu_get(irh, WLC_GET_BSSID, &ea, ETHER_ADDR_LEN) == 0) {
+	if (wlu_get(irh, WLC_GET_BSSID, &ea, ETHER_ADDR_LEN) == 0)
 		/* associated - format and return bssid */
 		strncpy(bssid, wl_ether_etoa(&ea), length);
-	}
-	else {
+	else
 		/* not associated - return empty string */
 		memset(bssid, 0, length);
-	}
 
 	return TRUE;
 }
@@ -1435,6 +1422,7 @@ int wlmSlowTimerSet(int val)
 int wlmScanSuppress(int on)
 {
 	int val;
+
 	if (on)
 		val = 1;
 	else
@@ -1447,7 +1435,7 @@ int wlmScanSuppress(int on)
 	return TRUE;
 }
 
-int wlmCountryCodeSet(const char * country_name)
+int wlmCountryCodeSet(const char *country_name)
 {
 	wl_country_t cspec;
 	int err;
@@ -1551,24 +1539,24 @@ int wlmIovarBufferSet(const char *iovar, void *param, int param_len)
 	return TRUE;
 }
 
-int wlmCga5gOffsetsSet(char* values, int len)
+int wlmCga5gOffsetsSet(char *values, int len)
 {
 	if (len != CGA_5G_OFFSETS_LEN) {
 		printf("wlmCga5gOffsetsSet() requires a %d-value array as a parameter\n",
-		      CGA_5G_OFFSETS_LEN);
+		       CGA_5G_OFFSETS_LEN);
 		return FALSE;
 	}
 
 	if ((wlu_var_setbuf(irh, "sslpnphy_cga_5g", values,
-	                    CGA_5G_OFFSETS_LEN * sizeof(int8))) < 0) {
-		printf("wlmCga5gOffsetsSet(): Error setting offset values (%s)\n",  wlmLastError());
+			    CGA_5G_OFFSETS_LEN * sizeof(int8))) < 0) {
+		printf("wlmCga5gOffsetsSet(): Error setting offset values (%s)\n", wlmLastError());
 		return FALSE;
 	}
 
 	return TRUE;
 }
 
-int wlmCga5gOffsetsGet(char* buf, int len)
+int wlmCga5gOffsetsGet(char *buf, int len)
 {
 	if (len != CGA_5G_OFFSETS_LEN) {
 		printf("wlmCga5gOffsetsGet() requires a %d-value array as a parameter\n",
@@ -1583,7 +1571,7 @@ int wlmCga5gOffsetsGet(char* buf, int len)
 	return TRUE;
 }
 
-int wlmCga2gOffsetsSet(char* values, int len)
+int wlmCga2gOffsetsSet(char *values, int len)
 {
 	if (len != CGA_2G_OFFSETS_LEN) {
 		printf("wlmCga2gOffsetsSet(): requires a %d-value array as a parameter\n",
@@ -1592,16 +1580,15 @@ int wlmCga2gOffsetsSet(char* values, int len)
 	}
 
 	if ((wlu_var_setbuf(irh, "sslpnphy_cga_2g", values,
-	                    CGA_2G_OFFSETS_LEN * sizeof(int8))) < 0) {
+			    CGA_2G_OFFSETS_LEN * sizeof(int8))) < 0) {
 		printf("wlmCga2gOffsetsSet(): Error setting offset values (%s)\n", wlmLastError());
 		return FALSE;
 	}
 
 	return TRUE;
-
 }
 
-int wlmCga2gOffsetsGet(char* buf, int len)
+int wlmCga2gOffsetsGet(char *buf, int len)
 {
 	if (len != CGA_2G_OFFSETS_LEN) {
 		printf("wlmCga2gOffsetsGet(): requires a %d-value array as a parameter\n",
@@ -1619,9 +1606,9 @@ int wlmCga2gOffsetsGet(char* buf, int len)
 
 #ifdef SERDOWNLOAD
 /* parsed values are the filename of the firmware and the args file */
-int wlmDhdDownload(const char* firmware, const char* vars)
+int wlmDhdDownload(const char *firmware, const char *vars)
 {
-	char *args[3] = {0};
+	char *args[3] = { 0 };
 	bool ret;
 
 	if (!firmware) {
@@ -1634,9 +1621,9 @@ int wlmDhdDownload(const char* firmware, const char* vars)
 		return FALSE;
 	}
 
-	args[0] = malloc(sizeof(char*) * (strlen(" ")+1));
-	args[1] = malloc(sizeof(char*) * (strlen(firmware)+1));
-	args[2] = malloc(sizeof(char*) * (strlen(vars)+1));
+	args[0] = malloc(sizeof(char *) * (strlen(" ") + 1));
+	args[1] = malloc(sizeof(char *) * (strlen(firmware) + 1));
+	args[2] = malloc(sizeof(char *) * (strlen(vars) + 1));
 
 	if (args[0] == NULL || args[1] == NULL || args[2] == NULL) {
 		ret = FALSE;
@@ -1644,9 +1631,9 @@ int wlmDhdDownload(const char* firmware, const char* vars)
 		goto cleanup;
 	}
 
-	memset(args[0], 0, sizeof(char*) * (strlen(" ")+1));
-	memset(args[1], 0, sizeof(char*) * (strlen(firmware)+1));
-	memset(args[2], 0, sizeof(char*) * (strlen(vars)+1));
+	memset(args[0], 0, sizeof(char *) * (strlen(" ") + 1));
+	memset(args[1], 0, sizeof(char *) * (strlen(firmware) + 1));
+	memset(args[2], 0, sizeof(char *) * (strlen(vars) + 1));
 
 	strncpy(args[0], " ", strlen(" "));
 	strncpy(args[1], firmware, strlen(firmware));
@@ -1654,24 +1641,23 @@ int wlmDhdDownload(const char* firmware, const char* vars)
 
 	printf("downloading firmware...\n");
 
-	if (dhd_download(irh, 0, (char **) args)) {
+	if (dhd_download(irh, 0, (char **)args)) {
 		printf("wlmDhdDownload for firmware %s and vars file %s failed\n", firmware, vars);
 		ret = FALSE;
 	}
 
 	printf("firmware download complete\n");
-	    ret = TRUE;
+	ret = TRUE;
 
 cleanup:
-	    if (args[0] != NULL)
-		    free(args[0]);
-	    if (args[1] != NULL)
-		    free(args[1]);
-	    if (args[2] != NULL)
-		    free(args[2]);
+	if (args[0] != NULL)
+		free(args[0]);
+	if (args[1] != NULL)
+		free(args[1]);
+	if (args[2] != NULL)
+		free(args[2]);
 
-	    return ret;
-
+	return ret;
 }
 
 /* only parsed argv value is the chip string */
@@ -1679,10 +1665,10 @@ cleanup:
 int wlmDhdInit(const char *chip)
 {
 	bool ret;
-	char *args[2] = {0};
+	char *args[2] = { 0 };
 
-	args[0] = malloc(sizeof(char*) * (strlen(" ")+1));
-	args[1] = malloc(sizeof(char*) * (strlen(chip)+1));
+	args[0] = malloc(sizeof(char *) * (strlen(" ") + 1));
+	args[1] = malloc(sizeof(char *) * (strlen(chip) + 1));
 
 	if (args[0] == NULL || args[1] == NULL) {
 		ret = FALSE;
@@ -1690,8 +1676,8 @@ int wlmDhdInit(const char *chip)
 		goto cleanup;
 	}
 
-	memset(args[0], 0, sizeof(char*) * (strlen(" ")+1));
-	memset(args[1], 0, sizeof(char*) * (strlen(" ")+1));
+	memset(args[0], 0, sizeof(char *) * (strlen(" ") + 1));
+	memset(args[1], 0, sizeof(char *) * (strlen(" ") + 1));
 
 	strncpy(args[0], " ", strlen(" "));
 	strncpy(args[1], chip, strlen(chip));
@@ -1702,15 +1688,15 @@ int wlmDhdInit(const char *chip)
 		printf("wlmDhdInit for chip %s failed\n", chip);
 		ret = FALSE;
 	}
-	    ret = TRUE;
+	ret = TRUE;
 
 cleanup:
-	    if (args[0] != NULL)
-		    free(args[0]);
-	    if (args[1] != NULL)
-		    free(args[1]);
+	if (args[0] != NULL)
+		free(args[0]);
+	if (args[1] != NULL)
+		free(args[1]);
 
-	    return ret;
+	return ret;
 }
 #endif /* SERDOWNLOAD */
 
@@ -1719,7 +1705,7 @@ int wlmRadioOn(void)
 	int val;
 
 	/* val = WL_RADIO_SW_DISABLE << 16; */
-	val = (1<<0) << 16;
+	val = (1 << 0) << 16;
 
 	if (wlu_set(irh, WLC_SET_RADIO, &val, sizeof(int)) < 0) {
 		printf("wlmRadioOn: %s\n", wlmLastError());
@@ -1734,10 +1720,10 @@ int wlmRadioOff(void)
 	int val;
 
 	/* val = WL_RADIO_SW_DISABLE << 16 | WL_RADIO_SW_DISABLE; */
-	val = (1<<0) << 16 | (1<<0);
+	val = (1 << 0) << 16 | (1 << 0);
 
 	if (wlu_set(irh, WLC_SET_RADIO, &val, sizeof(int)) < 0) {
-		 printf("wlmRadioOff: %s\n", wlmLastError());
+		printf("wlmRadioOff: %s\n", wlmLastError());
 		return FALSE;
 	}
 
@@ -1747,7 +1733,7 @@ int wlmRadioOff(void)
 int wlmPMmode(int val)
 {
 	if (val < 0 || val > 2) {
-	        printf("wlmPMmode: setting for PM mode out of range [0,2].\n");
+		printf("wlmPMmode: setting for PM mode out of range [0,2].\n");
 		/* 0: CAM constant awake mode */
 		/* 1: PS (Power save) mode */
 		/* 2: Fast PS mode */
@@ -1784,8 +1770,8 @@ int wlmRoamingOff(void)
 int wlmRoamTriggerLevelGet(int *val, WLM_BAND band)
 {
 	struct {
-		int val;
-		int band;
+		int	val;
+		int	band;
 	} x;
 
 	x.band = htod32(band);
@@ -1804,8 +1790,8 @@ int wlmRoamTriggerLevelGet(int *val, WLM_BAND band)
 int wlmRoamTriggerLevelSet(int val, WLM_BAND band)
 {
 	struct {
-		int val;
-		int band;
+		int	val;
+		int	band;
 	} x;
 
 	x.band = htod32(band);
@@ -1993,7 +1979,7 @@ int wlmPHYWatchdogSet(int val)
 	val = htod32(val);
 
 	if (wlu_iovar_setint(irh, "phy_watchdog", val) < 0) {
-	        printf("wlmPHYWatchdogSet: %s\n", wlmLastError());
+		printf("wlmPHYWatchdogSet: %s\n", wlmLastError());
 		return FALSE;
 	}
 
@@ -2003,6 +1989,7 @@ int wlmPHYWatchdogSet(int val)
 int wlmTemperatureSensorDisable(void)
 {
 	int val = 1; /* 0 = temp sensor enabled; 1 = temp sensor disabled */
+
 	if (wlu_iovar_setint(irh, "tempsense_disable", val) < 0) {
 		printf("wlmTempSensorDisable %s\n", wlmLastError());
 		return FALSE;
@@ -2014,6 +2001,7 @@ int wlmTemperatureSensorDisable(void)
 int wlmTemperatureSensorEnable(void)
 {
 	int val = 0; /* 0 = temp sensor enabled; 1 = temp sensor disabled */
+
 	if (wlu_iovar_setint(irh, "tempsense_disable", val) < 0) {
 		printf("wlmTempSensorEnable %s\n", wlmLastError());
 		return FALSE;
@@ -2023,7 +2011,8 @@ int wlmTemperatureSensorEnable(void)
 }
 
 int wlmTransmitCoreSet(int val)
-{	val = htod32(val);
+{
+	val = htod32(val);
 
 	if (wlu_iovar_setint(irh, "txcore", val) < 0) {
 		printf("wlmTransmitCoreSet: %s\n", wlmLastError());
@@ -2059,8 +2048,9 @@ int wlmChannelSpecSet(int channel, int bandwidth, int sideband)
 	if (channel > 224) {
 		printf("wlmChannelSpecSet: %d is invalid channel\n", channel);
 		return FALSE;
-	} else
+	} else {
 		chanspec |= channel;
+	}
 
 	if (channel > 14)
 		chanspec |= WL_CHANSPEC_BAND_5G;
@@ -2089,7 +2079,7 @@ int wlmChannelSpecSet(int channel, int bandwidth, int sideband)
 	else
 		chanspec |= WL_CHANSPEC_CTL_SB_NONE;
 
-	if (wlu_iovar_setint(irh, "chanspec", (int) chanspec) < 0) {
+	if (wlu_iovar_setint(irh, "chanspec", (int)chanspec) < 0) {
 		printf("wlmChannelSpecSet: %s\n", wlmLastError());
 		return FALSE;
 	}
@@ -2102,7 +2092,7 @@ int wlmRtsThresholdOverride(int val)
 	val = htod32(val);
 
 	if (wlu_iovar_setint(irh, "rtsthresh", val) < 0) {
-	        printf("wlmRtsThresholdOverride: %s\n", wlmLastError());
+		printf("wlmRtsThresholdOverride: %s\n", wlmLastError());
 		return FALSE;
 	}
 
@@ -2115,7 +2105,7 @@ int wlmSTBCTxSet(int val)
 	val = htod32(val);
 
 	if (wlu_iovar_setint(irh, "stbc_tx", val) < 0) {
-	        printf("wlmSTBCTxSet: %s\n", wlmLastError());
+		printf("wlmSTBCTxSet: %s\n", wlmLastError());
 		return FALSE;
 	}
 
@@ -2128,7 +2118,7 @@ int wlmSTBCRxSet(int val)
 	val = htod32(val);
 
 	if (wlu_iovar_setint(irh, "stbc_rx", val) < 0) {
-	        printf("wlmSTBCRxSet: %s\n", wlmLastError());
+		printf("wlmSTBCRxSet: %s\n", wlmLastError());
 		return FALSE;
 	}
 
@@ -2141,7 +2131,7 @@ int wlmTxChainSet(int val)
 	val = htod32(val);
 
 	if (wlu_iovar_setint(irh, "txchain", val) < 0) {
-	        printf("wlmTxChainSet: %s\n", wlmLastError());
+		printf("wlmTxChainSet: %s\n", wlmLastError());
 		return FALSE;
 	}
 
@@ -2153,7 +2143,7 @@ int wlmRxChainSet(int val)
 	val = htod32(val);
 
 	if (wlu_iovar_setint(irh, "rxchain", val) < 0) {
-	        printf("wlmRxChainSet: %s\n", wlmLastError());
+		printf("wlmRxChainSet: %s\n", wlmLastError());
 		return FALSE;
 	}
 
@@ -2164,9 +2154,9 @@ int wlmRxChainSet(int val)
 int wlmRxIQEstGet(float *val, int sampleCount, int ant)
 {
 	uint32 rxiq;
-	int sample_count = sampleCount;  /* [0, 16], default: maximum 15 sample counts */
-	int antenna = ant ;       /* [0, 3], default: antenna 0 */
-	uint8 resolution = 1;     /* resolution default to 0.25dB */
+	int sample_count = sampleCount; /* [0, 16], default: maximum 15 sample counts */
+	int antenna = ant;              /* [0, 3], default: antenna 0 */
+	uint8 resolution = 1;           /* resolution default to 0.25dB */
 	uint8 lpf_hpc = 1;
 	uint8 gain_correct = 0;
 	float x, y;
@@ -2222,33 +2212,33 @@ int wlmRxIQEstGet(float *val, int sampleCount, int ant)
 	}
 
 	/*
-	  printf("wlmRxIQGet: rxiq = 0x%x before wlu_iovar_setint().\n", rxiq);
-	*/
-	if ((wlu_iovar_setint(irh, "phy_rxiqest", (int) rxiq) < 0)) {
+	 * printf("wlmRxIQGet: rxiq = 0x%x before wlu_iovar_setint().\n", rxiq);
+	 */
+	if ((wlu_iovar_setint(irh, "phy_rxiqest", (int)rxiq) < 0)) {
 		printf("wlmRxIQGet: %s\n", wlmLastError());
 		return FALSE;
 	}
 
-	if ((wlu_iovar_getint(irh, "phy_rxiqest", (int*)&rxiq) < 0)) {
+	if ((wlu_iovar_getint(irh, "phy_rxiqest", (int *)&rxiq) < 0)) {
 		printf("wlmRxIQGet: %s\n", wlmLastError());
 		return FALSE;
 	}
 	/*
-	  printf("wlmRxIQGet: rxiq = 0x%x after wlu_iovar_getint\n.", rxiq);
-	*/
+	 * printf("wlmRxIQGet: rxiq = 0x%x after wlu_iovar_getint\n.", rxiq);
+	 */
 	if (resolution == 1) {
 		/* fine resolutin power reporting (0.25dB resolution) */
 		uint8 core;
 		int16 tmp;
 		/*
-		  printf("wlmRxIQGet: inside resulution == 1 block, rxiq = 0x%x\n", rxiq);
-		*/
+		 * printf("wlmRxIQGet: inside resulution == 1 block, rxiq = 0x%x\n", rxiq);
+		 */
 		if (rxiq >> 20) {
 			/* Three chains: return the core matches the antenna number */
 			for (core = 0; core < 3; core++) {
 				if (core == antenna) {
-					tmp = (rxiq >>(10*core)) & 0x3ff;
-					tmp = ((int16)(tmp << 6)) >>6;  /* sign extension */
+					tmp = (rxiq >> (10 * core)) & 0x3ff;
+					tmp = ((int16)(tmp << 6)) >> 6;  /* sign extension */
 					break;
 				}
 			}
@@ -2256,7 +2246,7 @@ int wlmRxIQEstGet(float *val, int sampleCount, int ant)
 			/* Two chains: return the core matches the antenna number */
 			for (core = 0; core < 2; core++) {
 				if (core == antenna) {
-					tmp = (rxiq >>(10*core)) & 0x3ff;
+					tmp = (rxiq >> (10 * core)) & 0x3ff;
 					tmp = ((int16)(tmp << 6)) >> 6;  /* sign extension */
 					break;
 				}
@@ -2267,19 +2257,18 @@ int wlmRxIQEstGet(float *val, int sampleCount, int ant)
 			tmp = (rxiq & 0x3ff);
 			tmp = ((int16)(tmp << 6)) >> 6; /* signed extension */
 			/*
-			  printf("wlmRxIQGet: single core, tmp 0x%x\n", tmp);
-			  printf("wlmRxIQGet: tmp before processing 0x%x\n", tmp);
-			*/
-			if (tmp < 0) {
+			 * printf("wlmRxIQGet: single core, tmp 0x%x\n", tmp);
+			 * printf("wlmRxIQGet: tmp before processing 0x%x\n", tmp);
+			 */
+			if (tmp < 0)
 				tmp = -1 * tmp;
-			}
-			x = (float) (tmp >> 2);
-			y = (float) (tmp & 0x3);
-			*val = (float)(x + (y * 25) /100) * (-1);
+			x = (float)(tmp >> 2);
+			y = (float)(tmp & 0x3);
+			*val = (float)(x + (y * 25) / 100) * (-1);
 		}
 	} else {
 		/* return the core matches the antenna number */
-		*val = (float)((rxiq >> (8 *antenna)) & 0xff);
+		*val = (float)((rxiq >> (8 * antenna)) & 0xff);
 	}
 
 	return TRUE;
@@ -2287,34 +2276,34 @@ int wlmRxIQEstGet(float *val, int sampleCount, int ant)
 
 int wlmPHYTxPowerIndexGet(unsigned int *val, const char *chipid)
 {
-	uint32 power_index = (uint32)-1;
-	uint32 txpwridx[4] = {0};
+	uint32 power_index = (uint32) - 1;
+	uint32 txpwridx[4] = { 0 };
 	int chip = atoi(chipid);
 
 	switch (chip) {
-	        case 4329:
-		case 43291:
-		  if (wlu_iovar_getint(irh, "sslpnphy_txpwrindex", (int*)&power_index) < 0) {
-				printf("wlmPHYTxPowerIndexGet: %s\n", wlmLastError());
-				return FALSE;
-			}
-			*val = power_index;
-			break;
-	        case 4325:
-		  if (wlu_iovar_getint(irh, "lppphy_txpwrindex", (int*)&power_index) < 0) {
-				printf("wlmPHYTxPowerIndexGet: %s\n", wlmLastError());
-				return FALSE;
-			}
-			*val = power_index;
-			break;
-	        default:
-		  if (wlu_iovar_getint(irh, "phy_txpwrindex", (int*)&txpwridx[0]) < 0) {
-			  printf("wlmPHYTxPowerIndexGet: %s\n", wlmLastError());
-			  return FALSE;
-		  }
-		  txpwridx[0] = dtoh32(txpwridx[0]);
-		  *val = txpwridx[0];
-		  break;
+	case 4329:
+	case 43291:
+		if (wlu_iovar_getint(irh, "sslpnphy_txpwrindex", (int *)&power_index) < 0) {
+			printf("wlmPHYTxPowerIndexGet: %s\n", wlmLastError());
+			return FALSE;
+		}
+		*val = power_index;
+		break;
+	case 4325:
+		if (wlu_iovar_getint(irh, "lppphy_txpwrindex", (int *)&power_index) < 0) {
+			printf("wlmPHYTxPowerIndexGet: %s\n", wlmLastError());
+			return FALSE;
+		}
+		*val = power_index;
+		break;
+	default:
+		if (wlu_iovar_getint(irh, "phy_txpwrindex", (int *)&txpwridx[0]) < 0) {
+			printf("wlmPHYTxPowerIndexGet: %s\n", wlmLastError());
+			return FALSE;
+		}
+		txpwridx[0] = dtoh32(txpwridx[0]);
+		*val = txpwridx[0];
+		break;
 	}
 
 	return TRUE;
@@ -2323,35 +2312,35 @@ int wlmPHYTxPowerIndexGet(unsigned int *val, const char *chipid)
 int wlmPHYTxPowerIndexSet(unsigned int val, const char *chipid)
 {
 	uint32 power_index;
-	uint32 txpwridx[4] = {0};
+	uint32 txpwridx[4] = { 0 };
 	int chip = atoi(chipid);
 
 	power_index = dtoh32(val);
 	switch (chip) {
-	        case 4329:
-	        case 43291:
-		  if (wlu_iovar_setint(irh, "sslpnphy_txpwrindex", (int)power_index) < 0) {
-				printf("wlmPHYTxPowerIndexSet: %s\n", wlmLastError());
-				return FALSE;
-			}
-			break;
-	        case 4325:
-		  if (wlu_iovar_setint(irh, "lppphy_txpwrindex", (int)power_index) < 0) {
-				printf("wlmPHYTxPowerIndexSet: %s\n", wlmLastError());
-				return FALSE;
-			}
-			break;
-	        default:
-			txpwridx[0] = (int8) (power_index & 0xff);
-			txpwridx[1] = (int8) ((power_index >> 8) & 0xff);
-			txpwridx[2] = (int8) ((power_index >> 16) & 0xff);
-			txpwridx[3] = (int8) ((power_index >> 24) & 0xff);
+	case 4329:
+	case 43291:
+		if (wlu_iovar_setint(irh, "sslpnphy_txpwrindex", (int)power_index) < 0) {
+			printf("wlmPHYTxPowerIndexSet: %s\n", wlmLastError());
+			return FALSE;
+		}
+		break;
+	case 4325:
+		if (wlu_iovar_setint(irh, "lppphy_txpwrindex", (int)power_index) < 0) {
+			printf("wlmPHYTxPowerIndexSet: %s\n", wlmLastError());
+			return FALSE;
+		}
+		break;
+	default:
+		txpwridx[0] = (int8)(power_index & 0xff);
+		txpwridx[1] = (int8)((power_index >> 8) & 0xff);
+		txpwridx[2] = (int8)((power_index >> 16) & 0xff);
+		txpwridx[3] = (int8)((power_index >> 24) & 0xff);
 
-			if (wlu_var_setbuf(irh, "phy_txpwrindex", txpwridx, 4*sizeof(uint32)) < 0) {
-				printf("wlmPHYTxPowerIndexSet: %s\n", wlmLastError());
-				return FALSE;
-			}
-			break;
+		if (wlu_var_setbuf(irh, "phy_txpwrindex", txpwridx, 4 * sizeof(uint32)) < 0) {
+			printf("wlmPHYTxPowerIndexSet: %s\n", wlmLastError());
+			return FALSE;
+		}
+		break;
 	}
 
 	return TRUE;
@@ -2382,14 +2371,14 @@ int wlmRIFSEnable(int enable)
 
 #define WLM_SCAN_PARAMS_SSID_MAX  10
 #define WLM_DUMP_BUF_LEN  (127 * 1024)
-#define WLM_SCAN_PARAMS_FIXED_SIZE WL_SCAN_PARAMS_FIXED_SIZE  /* 64 */
+#define WLM_SCAN_PARAMS_FIXED_SIZE WL_SCAN_PARAMS_FIXED_SIZE    /* 64 */
 #define WLM_NUMCHANNELS WL_NUMCHANNELS
-#define WLM_SCANNETWORK_DELAY 5000 /* ms */
+#define WLM_SCANNETWORK_DELAY 5000                              /* ms */
 #define TEMP_BUF_LEN 2048
 
 /* This function uses Sleep, which is a Windows call. Need to fix. */
 #if defined(WIN32)
-int wlmScanNetworks(char* results_buf, int len)
+int wlmScanNetworks(char *results_buf, int len)
 {
 	wl_scan_params_t *params;
 	int params_size = WLM_SCAN_PARAMS_FIXED_SIZE + WLM_NUMCHANNELS * sizeof(uint16);
@@ -2411,7 +2400,7 @@ int wlmScanNetworks(char* results_buf, int len)
 
 	/* sent active scan prob request */
 	params_size += WLM_SCAN_PARAMS_SSID_MAX * sizeof(wlc_ssid_t);
-	params = (wl_scan_params_t*)malloc(params_size);
+	params = (wl_scan_params_t *)malloc(params_size);
 
 	if (params == NULL) {
 		printf("wlmScanNetwork: Error alloating %d bytes for scan params\n", params_size);
@@ -2440,26 +2429,26 @@ int wlmScanNetworks(char* results_buf, int len)
 	Sleep(WLM_SCANNETWORK_DELAY);
 
 	/* check the scan results */
-	dump_buf = dump_buf_orig = (char*) malloc(WLM_DUMP_BUF_LEN);
+	dump_buf = dump_buf_orig = (char *)malloc(WLM_DUMP_BUF_LEN);
 	if (dump_buf == NULL) {
 		printf("wlmScanNetwork: Error alloating %d bytes for dump_buf\n", WLM_DUMP_BUF_LEN);
 		return FALSE;
 	}
-	results = (wl_scan_results_t*)dump_buf;
+	results = (wl_scan_results_t *)dump_buf;
 	results->buflen = WLM_DUMP_BUF_LEN;
 	err = wlu_get(irh, WLC_SCAN_RESULTS, dump_buf, WLM_DUMP_BUF_LEN);
 
 	if (err == 0) {
 		/*
-		  printf("wlmScanNetwork: result count is %d.\n", results->count);
-		  printf("wlmScanNetwork: result version is %d.\n", results->version);
-		*/
+		 * printf("wlmScanNetwork: result count is %d.\n", results->count);
+		 * printf("wlmScanNetwork: result version is %d.\n", results->version);
+		 */
 		if (results->count == 0) {
 			printf("wlmScanNetwork: no network has been found.\n");
 			pass = FALSE;
 		} else if (results->version != WL_BSS_INFO_VERSION &&
-			results->version != LEGACY2_WL_BSS_INFO_VERSION &&
-			results->version != LEGACY_WL_BSS_INFO_VERSION) {
+			   results->version != LEGACY2_WL_BSS_INFO_VERSION &&
+			   results->version != LEGACY_WL_BSS_INFO_VERSION) {
 			printf("wlmScanNetwork: driver has bss_info_version %d "
 			       "but this program supports only version %d.\n",
 			       results->version, WL_BSS_INFO_VERSION);
@@ -2472,8 +2461,7 @@ int wlmScanNetworks(char* results_buf, int len)
 				memset(temp_buf, 0, TEMP_BUF_LEN);
 				wlm_dump_bss_info(bi, &temp_buf[0], &n);
 				offset += snprintf(results_buf + offset, n, "%s", &temp_buf[0]);
-				bi = (wl_bss_info_t*)((int8*)bi + dtoh32(bi->length));
-
+				bi = (wl_bss_info_t *)((int8 *)bi + dtoh32(bi->length));
 			}
 		}
 	} else {
@@ -2483,7 +2471,6 @@ int wlmScanNetworks(char* results_buf, int len)
 
 	free(dump_buf);
 	return pass;
-
 }
 #endif /* WIN32 */
 
@@ -2518,10 +2505,9 @@ wlm_dump_bss_info(wl_bss_info_t *bi, char *scan_dump_buf, int *len)
 	 * SNR has valid value in only 109 version.
 	 * So print SNR for 109 version only.
 	 */
-	if (dtoh32(bi->version) == WL_BSS_INFO_VERSION) {
+	if (dtoh32(bi->version) == WL_BSS_INFO_VERSION)
 		offset += sprintf(scan_dump_buf + offset,
 				  "SNR: %d dB\t", (int16)(dtoh16(bi->SNR)));
-	}
 
 	offset += sprintf(scan_dump_buf + offset, "noise: %d dBm\t", bi->phy_noise);
 
@@ -2536,7 +2522,7 @@ wlm_dump_bss_info(wl_bss_info_t *bi, char *scan_dump_buf, int *len)
 	bi->capability = dtoh16(bi->capability);
 
 	if (bi->capability & DOT11_CAP_ESS)
-		offset +=  sprintf(scan_dump_buf + offset, "ESS ");
+		offset += sprintf(scan_dump_buf + offset, "ESS ");
 	if (bi->capability & DOT11_CAP_IBSS)
 		offset += sprintf(scan_dump_buf + offset, "IBSS ");
 	if (bi->capability & DOT11_CAP_POLLABLE)
@@ -2560,7 +2546,7 @@ wlm_dump_bss_info(wl_bss_info_t *bi, char *scan_dump_buf, int *len)
 	*len = offset;
 }
 
-int wlm_format_ssid(char* buf, uint8* ssid, int ssid_len)
+int wlm_format_ssid(char *buf, uint8 *ssid, int ssid_len)
 {
 	int i;
 	uint8 c;
@@ -2582,7 +2568,7 @@ int wlm_format_ssid(char* buf, uint8* ssid, int ssid_len)
 	return p - buf;
 }
 
-static char nwm_etoa_buf[ETHER_ADDR_LEN *3];
+static char nwm_etoa_buf[ETHER_ADDR_LEN * 3];
 static char *
 wlm_ether_etoa(const struct ether_addr *n)
 {
@@ -2640,6 +2626,5 @@ wlm_wf_chspec_ntoa(chanspec_t chspec, char *buf)
 
 	/* Outputs a max of 6 chars including '\0'  */
 	snprintf(buf, 6, "%d%s%s%s", channel, band, bw, sb);
-	return (buf);
-
+	return buf;
 }

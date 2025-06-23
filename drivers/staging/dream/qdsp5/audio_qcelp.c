@@ -44,10 +44,10 @@
 #include "adsp.h"
 
 #ifdef DEBUG
-#define dprintk(format, arg...) \
-printk(KERN_DEBUG format, ## arg)
+#define dprintk(format, arg ...) \
+	printk(KERN_DEBUG format, ## arg)
 #else
-#define dprintk(format, arg...) do {} while (0)
+#define dprintk(format, arg ...) do {} while (0)
 #endif
 
 #define BUFSZ 1080 /* QCELP 13K Hold 600ms packet data = 36 * 30 */
@@ -59,63 +59,63 @@ printk(KERN_DEBUG format, ## arg)
 
 #define AUDDEC_DEC_QCELP 9
 
-#define	ROUTING_MODE_FTRT	1
-#define	ROUTING_MODE_RT		2
+#define ROUTING_MODE_FTRT       1
+#define ROUTING_MODE_RT         2
 /* Decoder status received from AUDPPTASK */
-#define	AUDPP_DEC_STATUS_SLEEP	0
-#define	AUDPP_DEC_STATUS_INIT	1
-#define	AUDPP_DEC_STATUS_CFG	2
-#define	AUDPP_DEC_STATUS_PLAY	3
+#define AUDPP_DEC_STATUS_SLEEP  0
+#define AUDPP_DEC_STATUS_INIT   1
+#define AUDPP_DEC_STATUS_CFG    2
+#define AUDPP_DEC_STATUS_PLAY   3
 
 struct buffer {
-	void *data;
-	unsigned size;
-	unsigned used;		/* Input usage actual DSP produced PCM size  */
-	unsigned addr;
+	void *		data;
+	unsigned	size;
+	unsigned	used;   /* Input usage actual DSP produced PCM size  */
+	unsigned	addr;
 };
 
 struct audio {
-	struct buffer out[BUF_COUNT];
+	struct buffer		out[BUF_COUNT];
 
-	spinlock_t dsp_lock;
+	spinlock_t		dsp_lock;
 
-	uint8_t out_head;
-	uint8_t out_tail;
-	uint8_t out_needed;	/* number of buffers the dsp is waiting for */
+	uint8_t			out_head;
+	uint8_t			out_tail;
+	uint8_t			out_needed; /* number of buffers the dsp is waiting for */
 
-	struct mutex lock;
-	struct mutex write_lock;
-	wait_queue_head_t write_wait;
+	struct mutex		lock;
+	struct mutex		write_lock;
+	wait_queue_head_t	write_wait;
 
 	/* Host PCM section - START */
-	struct buffer in[PCM_BUF_MAX_COUNT];
-	struct mutex read_lock;
-	wait_queue_head_t read_wait;    /* Wait queue for read */
-	char *read_data;        /* pointer to reader buffer */
-	dma_addr_t read_phys;   /* physical address of reader buffer */
-	uint8_t read_next;      /* index to input buffers to be read next */
-	uint8_t fill_next;      /* index to buffer that DSP should be filling */
-	uint8_t pcm_buf_count;  /* number of pcm buffer allocated */
+	struct buffer		in[PCM_BUF_MAX_COUNT];
+	struct mutex		read_lock;
+	wait_queue_head_t	read_wait;      /* Wait queue for read */
+	char *			read_data;      /* pointer to reader buffer */
+	dma_addr_t		read_phys;      /* physical address of reader buffer */
+	uint8_t			read_next;      /* index to input buffers to be read next */
+	uint8_t			fill_next;      /* index to buffer that DSP should be filling */
+	uint8_t			pcm_buf_count;  /* number of pcm buffer allocated */
 	/* Host PCM section - END */
 
 	struct msm_adsp_module *audplay;
 
-	struct audmgr audmgr;
+	struct audmgr		audmgr;
 
 	/* data allocated for various buffers */
-	char *data;
-	dma_addr_t phys;
+	char *			data;
+	dma_addr_t		phys;
 
-	uint8_t opened:1;
-	uint8_t enabled:1;
-	uint8_t running:1;
-	uint8_t stopped:1;	/* set when stopped, cleared on flush */
-	uint8_t pcm_feedback:1; /* set when non-tunnel mode */
-	uint8_t buf_refresh:1;
+	uint8_t			opened:1;
+	uint8_t			enabled:1;
+	uint8_t			running:1;
+	uint8_t			stopped:1;      /* set when stopped, cleared on flush */
+	uint8_t			pcm_feedback:1; /* set when non-tunnel mode */
+	uint8_t			buf_refresh:1;
 
-	unsigned volume;
+	unsigned		volume;
 
-	uint16_t dec_id;
+	uint16_t		dec_id;
 };
 
 static struct audio the_qcelp_audio;
@@ -187,7 +187,7 @@ static int audqcelp_disable(struct audio *audio)
 
 /* ------------------- dsp --------------------- */
 static void audqcelp_update_pcm_buf_entry(struct audio *audio,
-	uint32_t *payload)
+					  uint32_t *	payload)
 {
 	uint8_t index;
 	unsigned long flags;
@@ -195,18 +195,18 @@ static void audqcelp_update_pcm_buf_entry(struct audio *audio,
 	spin_lock_irqsave(&audio->dsp_lock, flags);
 	for (index = 0; index < payload[1]; index++) {
 		if (audio->in[audio->fill_next].addr ==
-			payload[2 + index * 2]) {
+		    payload[2 + index * 2]) {
 			dprintk("audqcelp_update_pcm_buf_entry: in[%d] ready\n",
-			audio->fill_next);
+				audio->fill_next);
 			audio->in[audio->fill_next].used =
-			payload[3 + index * 2];
+				payload[3 + index * 2];
 			if ((++audio->fill_next) == audio->pcm_buf_count)
 				audio->fill_next = 0;
 		} else {
 			pr_err(
-			"audqcelp_update_pcm_buf_entry: expected=%x ret=%x\n",
-			audio->in[audio->fill_next].addr,
-			payload[1 + index * 2]);
+				"audqcelp_update_pcm_buf_entry: expected=%x ret=%x\n",
+				audio->in[audio->fill_next].addr,
+				payload[1 + index * 2]);
 			break;
 		}
 	}
@@ -226,6 +226,7 @@ static void audplay_dsp_event(void *data, unsigned id, size_t len,
 {
 	struct audio *audio = data;
 	uint32_t msg[28];
+
 	getevent(msg, sizeof(msg));
 
 	dprintk("audplay_dsp_event: msg_id=%x\n", id);
@@ -249,34 +250,34 @@ static void audqcelp_dsp_event(void *private, unsigned id, uint16_t *msg)
 	struct audio *audio = private;
 
 	switch (id) {
-	case AUDPP_MSG_STATUS_MSG:{
-			unsigned status = msg[1];
+	case AUDPP_MSG_STATUS_MSG: {
+		unsigned status = msg[1];
 
-			switch (status) {
-			case AUDPP_DEC_STATUS_SLEEP:
-				dprintk("decoder status: sleep \n");
-				break;
+		switch (status) {
+		case AUDPP_DEC_STATUS_SLEEP:
+			dprintk("decoder status: sleep \n");
+			break;
 
-			case AUDPP_DEC_STATUS_INIT:
-				dprintk("decoder status: init \n");
-				audpp_cmd_cfg_routing_mode(audio);
-				break;
+		case AUDPP_DEC_STATUS_INIT:
+			dprintk("decoder status: init \n");
+			audpp_cmd_cfg_routing_mode(audio);
+			break;
 
-			case AUDPP_DEC_STATUS_CFG:
-				dprintk("decoder status: cfg \n");
-				break;
-			case AUDPP_DEC_STATUS_PLAY:
-				dprintk("decoder status: play \n");
-				if (audio->pcm_feedback) {
-					audqcelp_config_hostpcm(audio);
-					audqcelp_buffer_refresh(audio);
-				}
-				break;
-			default:
-				pr_err("unknown decoder status \n");
+		case AUDPP_DEC_STATUS_CFG:
+			dprintk("decoder status: cfg \n");
+			break;
+		case AUDPP_DEC_STATUS_PLAY:
+			dprintk("decoder status: play \n");
+			if (audio->pcm_feedback) {
+				audqcelp_config_hostpcm(audio);
+				audqcelp_buffer_refresh(audio);
 			}
 			break;
+		default:
+			pr_err("unknown decoder status \n");
 		}
+		break;
+	}
 	case AUDPP_MSG_CFG_MSG:
 		if (msg[0] == AUDPP_MSG_ENA_ENA) {
 			dprintk("audqcelp_dsp_event: CFG_MSG ENABLE\n");
@@ -301,11 +302,10 @@ static void audqcelp_dsp_event(void *private, unsigned id, uint16_t *msg)
 	default:
 		pr_err("audqcelp_dsp_event: UNKNOWN (%d)\n", id);
 	}
-
 }
 
 struct msm_adsp_ops audplay_adsp_ops_qcelp = {
-	.event = audplay_dsp_event,
+	.event	= audplay_dsp_event,
 };
 
 #define audplay_send_queue0(audio, cmd, len) \
@@ -320,7 +320,7 @@ static int auddec_dsp_config(struct audio *audio, int enable)
 	cmd.cmd_id = AUDPP_CMD_CFG_DEC_TYPE;
 	if (enable)
 		cmd.dec0_cfg = AUDPP_CMD_UPDATDE_CFG_DEC |
-		    AUDPP_CMD_ENA_DEC_V | AUDDEC_DEC_QCELP;
+			       AUDPP_CMD_ENA_DEC_V | AUDDEC_DEC_QCELP;
 	else
 		cmd.dec0_cfg = AUDPP_CMD_UPDATDE_CFG_DEC | AUDPP_CMD_DIS_DEC_V;
 
@@ -344,6 +344,7 @@ static void audpp_cmd_cfg_adec_params(struct audio *audio)
 static void audpp_cmd_cfg_routing_mode(struct audio *audio)
 {
 	struct audpp_cmd_routing_mode cmd;
+
 	dprintk("audpp_cmd_cfg_routing_mode()\n");
 	memset(&cmd, 0, sizeof(cmd));
 	cmd.cmd_id = AUDPP_CMD_ROUTING_MODE;
@@ -442,7 +443,7 @@ static void audqcelp_send_data(struct audio *audio, unsigned needed)
 			audio->out_needed = 0;
 		}
 	}
- done:
+done:
 	spin_unlock_irqrestore(&audio->dsp_lock, flags);
 }
 
@@ -469,7 +470,7 @@ static void audqcelp_flush_pcm_buf(struct audio *audio)
 }
 
 static long audqcelp_ioctl(struct file *file, unsigned int cmd,
-		unsigned long arg)
+			   unsigned long arg)
 {
 	struct audio *audio = file->private_data;
 	int rc = 0;
@@ -523,97 +524,97 @@ static long audqcelp_ioctl(struct file *file, unsigned int cmd,
 	case AUDIO_SET_CONFIG:
 		dprintk("AUDIO_SET_CONFIG not applicable \n");
 		break;
-	case AUDIO_GET_CONFIG:{
-			struct msm_audio_config config;
-			config.buffer_size = BUFSZ;
-			config.buffer_count = BUF_COUNT;
-			config.sample_rate = 8000;
-			config.channel_count = 1;
-			config.unused[0] = 0;
-			config.unused[1] = 0;
-			config.unused[2] = 0;
-			config.unused[3] = 0;
-			if (copy_to_user((void *)arg, &config,
-					 sizeof(config)))
-				rc = -EFAULT;
-			else
-				rc = 0;
+	case AUDIO_GET_CONFIG: {
+		struct msm_audio_config config;
+		config.buffer_size = BUFSZ;
+		config.buffer_count = BUF_COUNT;
+		config.sample_rate = 8000;
+		config.channel_count = 1;
+		config.unused[0] = 0;
+		config.unused[1] = 0;
+		config.unused[2] = 0;
+		config.unused[3] = 0;
+		if (copy_to_user((void *)arg, &config,
+				 sizeof(config)))
+			rc = -EFAULT;
+		else
+			rc = 0;
 
+		break;
+	}
+	case AUDIO_GET_PCM_CONFIG: {
+		struct msm_audio_pcm_config config;
+
+		config.pcm_feedback = 0;
+		config.buffer_count = PCM_BUF_MAX_COUNT;
+		config.buffer_size = PCM_BUFSZ_MIN;
+		if (copy_to_user((void *)arg, &config,
+				 sizeof(config)))
+			rc = -EFAULT;
+		else
+			rc = 0;
+		break;
+	}
+	case AUDIO_SET_PCM_CONFIG: {
+		struct msm_audio_pcm_config config;
+
+		if (copy_from_user(&config, (void *)arg,
+				   sizeof(config))) {
+			rc = -EFAULT;
 			break;
 		}
-	case AUDIO_GET_PCM_CONFIG:{
-			struct msm_audio_pcm_config config;
-
-			config.pcm_feedback = 0;
+		if ((config.buffer_count > PCM_BUF_MAX_COUNT) ||
+		    (config.buffer_count == 1))
 			config.buffer_count = PCM_BUF_MAX_COUNT;
+
+		if (config.buffer_size < PCM_BUFSZ_MIN)
 			config.buffer_size = PCM_BUFSZ_MIN;
-			if (copy_to_user((void *)arg, &config,
-				sizeof(config)))
-				rc = -EFAULT;
-			else
-				rc = 0;
-			break;
-		}
-	case AUDIO_SET_PCM_CONFIG:{
-			struct msm_audio_pcm_config config;
 
-			if (copy_from_user(&config, (void *)arg,
-				sizeof(config))) {
-				rc = -EFAULT;
-				break;
-			}
-			if ((config.buffer_count > PCM_BUF_MAX_COUNT) ||
-				(config.buffer_count == 1))
-				config.buffer_count = PCM_BUF_MAX_COUNT;
-
-			if (config.buffer_size < PCM_BUFSZ_MIN)
-				config.buffer_size = PCM_BUFSZ_MIN;
-
-			/* Check if pcm feedback is required */
-			if ((config.pcm_feedback) && (!audio->read_data)) {
-				dprintk(
+		/* Check if pcm feedback is required */
+		if ((config.pcm_feedback) && (!audio->read_data)) {
+			dprintk(
 				"audqcelp_ioctl: allocate PCM buf %d\n",
 				config.buffer_count * config.buffer_size);
-				audio->read_data = dma_alloc_coherent(NULL,
-				config.buffer_size * config.buffer_count,
-				&audio->read_phys, GFP_KERNEL);
-				if (!audio->read_data) {
-					pr_err(
+			audio->read_data = dma_alloc_coherent(NULL,
+							      config.buffer_size * config.buffer_count,
+							      &audio->read_phys, GFP_KERNEL);
+			if (!audio->read_data) {
+				pr_err(
 					"audqcelp_ioctl: no mem for pcm buf\n"
 					);
-					rc = -ENOMEM;
-				} else {
-					uint8_t index;
-					uint32_t offset = 0;
-
-					audio->pcm_feedback = 1;
-					audio->buf_refresh = 0;
-					audio->pcm_buf_count =
-						config.buffer_count;
-					audio->read_next = 0;
-					audio->fill_next = 0;
-
-					for (index = 0;
-					index < config.buffer_count; index++) {
-						audio->in[index].data =
-						audio->read_data + offset;
-						audio->in[index].addr =
-						audio->read_phys + offset;
-						audio->in[index].size =
-						config.buffer_size;
-						audio->in[index].used = 0;
-						offset += config.buffer_size;
-					}
-					rc = 0;
-				}
+				rc = -ENOMEM;
 			} else {
+				uint8_t index;
+				uint32_t offset = 0;
+
+				audio->pcm_feedback = 1;
+				audio->buf_refresh = 0;
+				audio->pcm_buf_count =
+					config.buffer_count;
+				audio->read_next = 0;
+				audio->fill_next = 0;
+
+				for (index = 0;
+				     index < config.buffer_count; index++) {
+					audio->in[index].data =
+						audio->read_data + offset;
+					audio->in[index].addr =
+						audio->read_phys + offset;
+					audio->in[index].size =
+						config.buffer_size;
+					audio->in[index].used = 0;
+					offset += config.buffer_size;
+				}
 				rc = 0;
 			}
-			break;
+		} else {
+			rc = 0;
 		}
+		break;
+	}
 	case AUDIO_PAUSE:
 		dprintk("%s: AUDIO_PAUSE %ld\n", __func__, arg);
-		rc = audpp_pause(audio->dec_id, (int) arg);
+		rc = audpp_pause(audio->dec_id, (int)arg);
 		break;
 	default:
 		rc = -EINVAL;
@@ -623,7 +624,7 @@ static long audqcelp_ioctl(struct file *file, unsigned int cmd,
 }
 
 static ssize_t audqcelp_read(struct file *file, char __user *buf, size_t count,
-			loff_t *pos)
+			     loff_t *pos)
 {
 	struct audio *audio = file->private_data;
 	const char __user *start = buf;
@@ -636,8 +637,8 @@ static ssize_t audqcelp_read(struct file *file, char __user *buf, size_t count,
 	dprintk("audqcelp_read() %d \n", count);
 	while (count > 0) {
 		rc = wait_event_interruptible(audio->read_wait,
-				(audio->in[audio->read_next].used > 0) ||
-				(audio->stopped));
+					      (audio->in[audio->read_next].used > 0) ||
+					      (audio->stopped));
 		if (rc < 0)
 			break;
 
@@ -648,18 +649,18 @@ static ssize_t audqcelp_read(struct file *file, char __user *buf, size_t count,
 
 		if (count < audio->in[audio->read_next].used) {
 			/* Read must happen in frame boundary. Since driver does
-			not know frame size, read count must be greater or equal
-			to size of PCM samples */
+			 * not know frame size, read count must be greater or equal
+			 * to size of PCM samples */
 			dprintk("audqcelp_read:read stop - partial frame\n");
 			break;
 		} else {
 			dprintk("audqcelp_read: read from in[%d]\n",
 				audio->read_next);
 			if (copy_to_user(buf,
-				audio->in[audio->read_next].data,
-				audio->in[audio->read_next].used)) {
+					 audio->in[audio->read_next].data,
+					 audio->in[audio->read_next].used)) {
 				pr_err("audqcelp_read: invalid addr %x \n",
-					(unsigned int)buf);
+				       (unsigned int)buf);
 				rc = -EFAULT;
 				break;
 			}
@@ -687,7 +688,7 @@ static ssize_t audqcelp_read(struct file *file, char __user *buf, size_t count,
 }
 
 static ssize_t audqcelp_write(struct file *file, const char __user *buf,
-			   size_t count, loff_t *pos)
+			      size_t count, loff_t *pos)
 {
 	struct audio *audio = file->private_data;
 	const char __user *start = buf;
@@ -723,7 +724,6 @@ static ssize_t audqcelp_write(struct file *file, const char __user *buf,
 		buf += xfer;
 
 		audqcelp_send_data(audio, 0);
-
 	}
 	mutex_unlock(&audio->write_lock);
 	if (buf > start)
@@ -749,8 +749,8 @@ static int audqcelp_release(struct inode *inode, struct file *file)
 	audio->data = NULL;
 	if (audio->read_data) {
 		dma_free_coherent(NULL,
-				 audio->in[0].size * audio->pcm_buf_count,
-				 audio->read_data, audio->read_phys);
+				  audio->in[0].size * audio->pcm_buf_count,
+				  audio->read_data, audio->read_phys);
 		audio->read_data = NULL;
 	}
 	audio->pcm_feedback = 0;
@@ -784,7 +784,7 @@ static int audqcelp_open(struct inode *inode, struct file *file)
 		goto err;
 
 	rc = msm_adsp_get("AUDPLAY0TASK", &audio->audplay,
-		&audplay_adsp_ops_qcelp, audio);
+			  &audplay_adsp_ops_qcelp, audio);
 	if (rc) {
 		pr_err("audio: failed to get audplay0 dsp module\n");
 		audmgr_close(&audio->audmgr);
@@ -801,7 +801,7 @@ static int audqcelp_open(struct inode *inode, struct file *file)
 	audio->out[1].addr = audio->phys + BUFSZ;
 	audio->out[1].size = BUFSZ;
 
-	audio->volume = 0x2000;	/* Q13 1.0 */
+	audio->volume = 0x2000; /* Q13 1.0 */
 
 	audqcelp_flush(audio);
 
@@ -818,18 +818,18 @@ err:
 }
 
 static struct file_operations audio_qcelp_fops = {
-	.owner = THIS_MODULE,
-	.open = audqcelp_open,
-	.release = audqcelp_release,
-	.read = audqcelp_read,
-	.write = audqcelp_write,
+	.owner		= THIS_MODULE,
+	.open		= audqcelp_open,
+	.release	= audqcelp_release,
+	.read		= audqcelp_read,
+	.write		= audqcelp_write,
 	.unlocked_ioctl = audqcelp_ioctl,
 };
 
 struct miscdevice audio_qcelp_misc = {
-	.minor = MISC_DYNAMIC_MINOR,
-	.name = "msm_qcelp",
-	.fops = &audio_qcelp_fops,
+	.minor	= MISC_DYNAMIC_MINOR,
+	.name	= "msm_qcelp",
+	.fops	= &audio_qcelp_fops,
 };
 
 static int __init audqcelp_init(void)

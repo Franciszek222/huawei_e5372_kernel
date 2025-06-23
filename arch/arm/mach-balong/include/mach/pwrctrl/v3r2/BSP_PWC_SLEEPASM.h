@@ -25,10 +25,10 @@
 
 
 #define _ARM_FUNCTION_CALLED_FROM_C(a) \
-    .globl a ;\
-    .code  32 ;\
-    .balign 4 ;\
-a:
+	.globl a; \
+	.code  32; \
+	.balign 4; \
+	a :
 
 
 
@@ -38,22 +38,22 @@ a:
 
 #define DM_ACC_UNCTRL               (0xFFFFFFFF)
 
-#define PBXA9_GIC_MASK	            (0xFFFFFFFF)
+#define PBXA9_GIC_MASK              (0xFFFFFFFF)
 
-#define IPC_INT_ARM_SLEEP		    (8)
+#define IPC_INT_ARM_SLEEP                   (8)
 
-#define PWC_SC_ACPU_MDDRC_ACLCK     (0x1<<25)
-#define PWC_SC_ACPU_AXILB_CLCK      (0x1<<24)
-#define PWC_SC_ACPU_DDR2X_PCLCK     (0x1<<21)
-#define PWC_SC_ACPU_MDDRC_PCLCK     (0x1<<22)
-#define ACPU_IMSAT_MASK     	    (0x1)
+#define PWC_SC_ACPU_MDDRC_ACLCK     (0x1 << 25)
+#define PWC_SC_ACPU_AXILB_CLCK      (0x1 << 24)
+#define PWC_SC_ACPU_DDR2X_PCLCK     (0x1 << 21)
+#define PWC_SC_ACPU_MDDRC_PCLCK     (0x1 << 22)
+#define ACPU_IMSAT_MASK             (0x1)
 
 #ifndef I_BIT
 #define I_BIT           (1 << 7)
 #endif
 
 #ifndef F_BIT
-#define F_BIT           (0x1<<6)
+#define F_BIT           (0x1 << 6)
 #endif
 
 /*#define MODE_MASK 				 (0x1F)*/
@@ -65,13 +65,13 @@ a:
 #define MODE_USER32             (0X10)
 #define MODE_SYSTEM32           (0x1F)
 
-#define MMUCR_W_ENABLE	        (0x1<<3)
-#define MMUCR_PROG32	        (0x1<<4)
-#define MMUCR_DATA32	        (0x1<<5)
-#define MMUCR_L_ENABLE	        (0x1<<6)
+#define MMUCR_W_ENABLE          (0x1 << 3)
+#define MMUCR_PROG32            (0x1 << 4)
+#define MMUCR_DATA32            (0x1 << 5)
+#define MMUCR_L_ENABLE          (0x1 << 6)
 
-#define MMUCR_M_ENABLE	        (0x1<<0)
-#define MMUCR_C_ENABLE	        (0x1<<2)
+#define MMUCR_M_ENABLE          (0x1 << 0)
+#define MMUCR_C_ENABLE          (0x1 << 2)
 
 
 
@@ -83,8 +83,8 @@ a:
 #define PMD_SECT_ARM926         PMD_SECT_ARM926_3 | PMD_SECT_ARM926_4
 
 /*modefied by zsc */
-#define PMD_SECT_ARMA9        	PMD_TYPE_SECT | PMD_SECT_BUFFERABLE \
-								| PMD_SECT_CACHEABLE|PMD_SECT_AP_WRITE| PMD_SECT_AP_READ
+#define PMD_SECT_ARMA9          PMD_TYPE_SECT | PMD_SECT_BUFFERABLE \
+	| PMD_SECT_CACHEABLE | PMD_SECT_AP_WRITE | PMD_SECT_AP_READ
 
 
 /*first level section address mask*/
@@ -95,8 +95,8 @@ a:
 
 /* cpsr control bits */
 #define CTRL_MMU_BIT            (0x01)
-#define CTRL_ICACHE_BIT         (1<<12)
-#define CTRL_DCACHE_BIT         (1<<2)
+#define CTRL_ICACHE_BIT         (1 << 12)
+#define CTRL_DCACHE_BIT         (1 << 2)
 #define CTRL_CACHE_BIT          CTRL_DCACHE_BIT | CTRL_ICACHE_BIT
 #define CTRL_MMU_CACHE          CTRL_MMU_BIT | CTRL_CACHE_BIT
 

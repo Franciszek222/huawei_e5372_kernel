@@ -1,4 +1,3 @@
-
 /****************************************************************************
  *  (c) Copyright 2007 Wi-Fi Alliance.  All Rights Reserved
  *
@@ -117,47 +116,47 @@ extern int xcCmdProcStaSetWMM(char *pcmdStr, BYTE *, int *);
  */
 typeNameStr_t nameStr[] =
 {
-   {0,                   "NO_USED_STRING", NULL},
-   {WFA_GET_VERSION_TLV, "ca_get_version", xcCmdProcGetVersion},
-   {WFA_TRAFFIC_SEND_PING_TLV, "traffic_send_ping", xcCmdProcAgentSendPing},
-   {WFA_TRAFFIC_STOP_PING_TLV, "traffic_stop_ping", xcCmdProcAgentStopPing},
-   {WFA_TRAFFIC_AGENT_CONFIG_TLV, "traffic_agent_config", xcCmdProcAgentConfig},
-   {WFA_TRAFFIC_AGENT_SEND_TLV, "traffic_agent_send", xcCmdProcAgentSend},
-   {WFA_TRAFFIC_AGENT_RESET_TLV, "traffic_agent_reset", xcCmdProcAgentReset},
-   {WFA_TRAFFIC_AGENT_RECV_START_TLV, "traffic_agent_receive_start", xcCmdProcAgentRecvStart},
-   {WFA_TRAFFIC_AGENT_RECV_STOP_TLV, "traffic_agent_receive_stop", xcCmdProcAgentRecvStop},
-   {WFA_STA_GET_IP_CONFIG_TLV, "sta_get_ip_config", xcCmdProcStaGetIpConfig},
-   {WFA_DEVICE_LIST_IF_TLV, "device_list_interfaces", xcCmdProcDeviceListIF},
-   {WFA_STA_SET_IP_CONFIG_TLV, "sta_set_ip_config", xcCmdProcStaSetIpConfig},
-   {WFA_STA_VERIFY_IP_CONNECTION_TLV, "sta_verify_ip_connection", xcCmdProcStaVerifyIpConnection},
-   {-1, "", NULL}
+	{ 0,				    "NO_USED_STRING",		   NULL				  },
+	{ WFA_GET_VERSION_TLV,		    "ca_get_version",		   xcCmdProcGetVersion		  },
+	{ WFA_TRAFFIC_SEND_PING_TLV,	    "traffic_send_ping",	   xcCmdProcAgentSendPing	  },
+	{ WFA_TRAFFIC_STOP_PING_TLV,	    "traffic_stop_ping",	   xcCmdProcAgentStopPing	  },
+	{ WFA_TRAFFIC_AGENT_CONFIG_TLV,	    "traffic_agent_config",	   xcCmdProcAgentConfig		  },
+	{ WFA_TRAFFIC_AGENT_SEND_TLV,	    "traffic_agent_send",	   xcCmdProcAgentSend		  },
+	{ WFA_TRAFFIC_AGENT_RESET_TLV,	    "traffic_agent_reset",	   xcCmdProcAgentReset		  },
+	{ WFA_TRAFFIC_AGENT_RECV_START_TLV, "traffic_agent_receive_start", xcCmdProcAgentRecvStart	  },
+	{ WFA_TRAFFIC_AGENT_RECV_STOP_TLV,  "traffic_agent_receive_stop",  xcCmdProcAgentRecvStop	  },
+	{ WFA_STA_GET_IP_CONFIG_TLV,	    "sta_get_ip_config",	   xcCmdProcStaGetIpConfig	  },
+	{ WFA_DEVICE_LIST_IF_TLV,	    "device_list_interfaces",	   xcCmdProcDeviceListIF	  },
+	{ WFA_STA_SET_IP_CONFIG_TLV,	    "sta_set_ip_config",	   xcCmdProcStaSetIpConfig	  },
+	{ WFA_STA_VERIFY_IP_CONNECTION_TLV, "sta_verify_ip_connection",	   xcCmdProcStaVerifyIpConnection },
+	{ -1,				    "",				   NULL				  }
 };
 
 
-/* functions to  be executed from  RWL server 
- * These control commands get executed from CA which calls Rwl client with the 
+/* functions to  be executed from  RWL server
+ * These control commands get executed from CA which calls Rwl client with the
  * required transport options
  */
 typeNameStr_t nameLocalStr[] =
 {
-   {0,                   "NO_USED_STRING", NULL},
-   {WFA_STA_ASSOCIATE_TLV, "sta_associate", xcCmdProcStaAssociate},
-   {WFA_STA_IS_CONNECTED_TLV, "sta_is_connected", xcCmdProcStaIsConnected},
-   {WFA_STA_GET_MAC_ADDRESS_TLV, "sta_get_mac_address", xcCmdProcStaGetMacAddress},
-   {WFA_STA_GET_BSSID_TLV, "sta_get_bssid", xcCmdProcStaGetBSSID},
-   {WFA_STA_GET_STATS_TLV, "sta_get_stats", xcCmdProcStaGetStats},
-   {WFA_STA_GET_INFO_TLV, "sta_get_info", xcCmdProcStaGetInfo},
-   {WFA_STA_SET_MODE_TLV, "sta_set_mode", xcCmdProcStaSetMode},
-   {WFA_STA_SET_WMM_TLV, "sta_set_wmm", xcCmdProcStaSetWMM},
-   {WFA_DEVICE_GET_INFO_TLV, "device_get_info", xcCmdProcDeviceGetInfo},
-   {WFA_STA_SET_ENCRYPTION_TLV, "sta_set_encryption", xcCmdProcStaSetEncryption},
-   {WFA_STA_SET_PSK_TLV, "sta_set_psk", xcCmdProcStaSetPSK},
-   {WFA_STA_SET_EAPTLS_TLV, "sta_set_eaptls", xcCmdProcStaSetEapTLS},
-   {WFA_STA_SET_EAPTTLS_TLV, "sta_set_eapttls", xcCmdProcStaSetEapTTLS},
-   {WFA_STA_SET_EAPSIM_TLV, "sta_set_eapsim", xcCmdProcStaSetEapSIM},
-   {WFA_STA_SET_UAPSD_TLV, "sta_set_uapsd", xcCmdProcStaSetUAPSD}, /* Added as per BRCM 1.3 ASD */
-   {WFA_STA_SET_IBSS_TLV, "sta_set_ibss", xcCmdProcStaSetIBSS},
-   {WFA_STA_SET_PEAP_TLV, "sta_set_peap", xcCmdProcStaSetPEAP},
-   {WFA_STA_DEBUG_SET_TLV, "sta_debug_set", xcCmdProcStaDebugSet},
-   {-1, "", NULL}
+	{ 0,			       "NO_USED_STRING",      NULL			},
+	{ WFA_STA_ASSOCIATE_TLV,       "sta_associate",	      xcCmdProcStaAssociate	},
+	{ WFA_STA_IS_CONNECTED_TLV,    "sta_is_connected",    xcCmdProcStaIsConnected	},
+	{ WFA_STA_GET_MAC_ADDRESS_TLV, "sta_get_mac_address", xcCmdProcStaGetMacAddress },
+	{ WFA_STA_GET_BSSID_TLV,       "sta_get_bssid",	      xcCmdProcStaGetBSSID	},
+	{ WFA_STA_GET_STATS_TLV,       "sta_get_stats",	      xcCmdProcStaGetStats	},
+	{ WFA_STA_GET_INFO_TLV,	       "sta_get_info",	      xcCmdProcStaGetInfo	},
+	{ WFA_STA_SET_MODE_TLV,	       "sta_set_mode",	      xcCmdProcStaSetMode	},
+	{ WFA_STA_SET_WMM_TLV,	       "sta_set_wmm",	      xcCmdProcStaSetWMM	},
+	{ WFA_DEVICE_GET_INFO_TLV,     "device_get_info",     xcCmdProcDeviceGetInfo	},
+	{ WFA_STA_SET_ENCRYPTION_TLV,  "sta_set_encryption",  xcCmdProcStaSetEncryption },
+	{ WFA_STA_SET_PSK_TLV,	       "sta_set_psk",	      xcCmdProcStaSetPSK	},
+	{ WFA_STA_SET_EAPTLS_TLV,      "sta_set_eaptls",      xcCmdProcStaSetEapTLS	},
+	{ WFA_STA_SET_EAPTTLS_TLV,     "sta_set_eapttls",     xcCmdProcStaSetEapTTLS	},
+	{ WFA_STA_SET_EAPSIM_TLV,      "sta_set_eapsim",      xcCmdProcStaSetEapSIM	},
+	{ WFA_STA_SET_UAPSD_TLV,       "sta_set_uapsd",	      xcCmdProcStaSetUAPSD	}, /* Added as per BRCM 1.3 ASD */
+	{ WFA_STA_SET_IBSS_TLV,	       "sta_set_ibss",	      xcCmdProcStaSetIBSS	},
+	{ WFA_STA_SET_PEAP_TLV,	       "sta_set_peap",	      xcCmdProcStaSetPEAP	},
+	{ WFA_STA_DEBUG_SET_TLV,       "sta_debug_set",	      xcCmdProcStaDebugSet	},
+	{ -1,			       "",		      NULL			}
 };

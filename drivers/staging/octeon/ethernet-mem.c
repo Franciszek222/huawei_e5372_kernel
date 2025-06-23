@@ -1,28 +1,28 @@
 /**********************************************************************
- * Author: Cavium Networks
- *
- * Contact: support@caviumnetworks.com
- * This file is part of the OCTEON SDK
- *
- * Copyright (c) 2003-2010 Cavium Networks
- *
- * This file is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License, Version 2, as
- * published by the Free Software Foundation.
- *
- * This file is distributed in the hope that it will be useful, but
- * AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
- * NONINFRINGEMENT.  See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this file; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
- * or visit http://www.gnu.org/licenses/.
- *
- * This file may also be available under a different license from Cavium.
- * Contact Cavium Networks for more information
+* Author: Cavium Networks
+*
+* Contact: support@caviumnetworks.com
+* This file is part of the OCTEON SDK
+*
+* Copyright (c) 2003-2010 Cavium Networks
+*
+* This file is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License, Version 2, as
+* published by the Free Software Foundation.
+*
+* This file is distributed in the hope that it will be useful, but
+* AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty
+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+* NONINFRINGEMENT.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this file; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+* or visit http://www.gnu.org/licenses/.
+*
+* This file may also be available under a different license from Cavium.
+* Contact Cavium Networks for more information
 **********************************************************************/
 #include <linux/kernel.h>
 #include <linux/netdevice.h>
@@ -45,13 +45,13 @@
 static int cvm_oct_fill_hw_skbuff(int pool, int size, int elements)
 {
 	int freed = elements;
-	while (freed) {
 
+	while (freed) {
 		struct sk_buff *skb = dev_alloc_skb(size + 256);
 		if (unlikely(skb == NULL)) {
 			pr_warning
-			    ("Failed to allocate skb for hardware pool %d\n",
-			     pool);
+				("Failed to allocate skb for hardware pool %d\n",
+				pool);
 			break;
 		}
 
@@ -77,7 +77,7 @@ static void cvm_oct_free_hw_skbuff(int pool, int size, int elements)
 		memory = cvmx_fpa_alloc(pool);
 		if (memory) {
 			struct sk_buff *skb =
-			    *(struct sk_buff **)(memory - sizeof(void *));
+				*(struct sk_buff **)(memory - sizeof(void *));
 			elements--;
 			dev_kfree_skb(skb);
 		}
@@ -85,10 +85,10 @@ static void cvm_oct_free_hw_skbuff(int pool, int size, int elements)
 
 	if (elements < 0)
 		pr_warning("Freeing of pool %u had too many skbuffs (%d)\n",
-		     pool, elements);
+			   pool, elements);
 	else if (elements > 0)
 		pr_warning("Freeing of pool %u is missing %d skbuffs\n",
-		       pool, elements);
+			   pool, elements);
 }
 
 /**
@@ -140,6 +140,7 @@ static void cvm_oct_free_hw_memory(int pool, int size, int elements)
 {
 	char *memory;
 	char *fpa;
+
 	do {
 		fpa = cvmx_fpa_alloc(pool);
 		if (fpa) {
@@ -152,15 +153,16 @@ static void cvm_oct_free_hw_memory(int pool, int size, int elements)
 
 	if (elements < 0)
 		pr_warning("Freeing of pool %u had too many buffers (%d)\n",
-			pool, elements);
+			   pool, elements);
 	else if (elements > 0)
 		pr_warning("Warning: Freeing of pool %u is missing %d buffers\n",
-			pool, elements);
+			   pool, elements);
 }
 
 int cvm_oct_mem_fill_fpa(int pool, int size, int elements)
 {
 	int freed;
+
 	if (USE_SKBUFFS_IN_HW && pool == CVMX_FPA_PACKET_POOL)
 		freed = cvm_oct_fill_hw_skbuff(pool, size, elements);
 	else

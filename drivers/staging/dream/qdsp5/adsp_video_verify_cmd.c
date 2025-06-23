@@ -19,20 +19,20 @@
 
 #define ADSP_DEBUG_MSGS 0
 #if ADSP_DEBUG_MSGS
-#define DLOG(fmt,args...) \
+#define DLOG(fmt, args ...) \
 	do { printk(KERN_INFO "[%s:%s:%d] "fmt, __FILE__, __func__, __LINE__, \
-	     ##args); } \
+		    ## args); } \
 	while (0)
 #else
-#define DLOG(x...) do {} while (0)
+#define DLOG(x ...) do {} while (0)
 #endif
 
 
 #include <mach/qdsp5/qdsp5vdeccmdi.h>
 #include "adsp.h"
 
-static inline void *high_low_short_to_ptr(unsigned short high,
-					  unsigned short low)
+static inline void *high_low_short_to_ptr(unsigned short	high,
+					  unsigned short	low)
 {
 	return (void *)((((unsigned long)high) << 16) | ((unsigned long)low));
 }
@@ -45,11 +45,11 @@ static inline void ptr_to_high_low_short(void *ptr, unsigned short *high,
 }
 
 static int pmem_fixup_high_low(unsigned short *high,
-				unsigned short *low,
-				unsigned short size_high,
-				unsigned short size_low,
-				struct msm_adsp_module *module,
-				unsigned long *addr, unsigned long *size)
+			       unsigned short *low,
+			       unsigned short size_high,
+			       unsigned short size_low,
+			       struct msm_adsp_module *module,
+			       unsigned long *addr, unsigned long *size)
 {
 	void *phys_addr;
 	unsigned long phys_size;
@@ -60,7 +60,7 @@ static int pmem_fixup_high_low(unsigned short *high,
 	DLOG("virt %x %x\n", phys_addr, phys_size);
 	if (adsp_pmem_fixup_kvaddr(module, &phys_addr, &kvaddr, phys_size)) {
 		DLOG("ah%x al%x sh%x sl%x addr %x size %x\n",
-			*high, *low, size_high, size_low, phys_addr, phys_size);
+		     *high, *low, size_high, size_low, phys_addr, phys_size);
 		return -1;
 	}
 	ptr_to_high_low_short(phys_addr, high, low);
@@ -88,7 +88,7 @@ static int verify_vdec_pkt_cmd(struct msm_adsp_module *module,
 	DLOG("cmd_size %d cmd_id %d cmd_data %x\n", cmd_size, cmd_id, cmd_data);
 	if (cmd_id != VIDDEC_CMD_SUBFRAME_PKT) {
 		printk(KERN_INFO "adsp_video: unknown video packet %u\n",
-			cmd_id);
+		       cmd_id);
 		return 0;
 	}
 	if (cmd_size < sizeof(viddec_cmd_subframe_pkt))
@@ -138,8 +138,8 @@ static int verify_vdec_pkt_cmd(struct msm_adsp_module *module,
 		frame_buffer_low += 2;
 	}
 	/* Patch the output buffer. */
-	frame_buffer_high += 2*skip;
-	frame_buffer_low += 2*skip;
+	frame_buffer_high += 2 * skip;
+	frame_buffer_low += 2 * skip;
 	if (pmem_fixup_high_low(frame_buffer_high, frame_buffer_low,
 				frame_buffer_size_high,
 				frame_buffer_size_low, module, NULL, NULL))
@@ -148,8 +148,8 @@ static int verify_vdec_pkt_cmd(struct msm_adsp_module *module,
 }
 
 int adsp_video_verify_cmd(struct msm_adsp_module *module,
-			 unsigned int queue_id, void *cmd_data,
-			 size_t cmd_size)
+			  unsigned int queue_id, void *cmd_data,
+			  size_t cmd_size)
 {
 	switch (queue_id) {
 	case QDSP_mpuVDecPktQueue:
@@ -160,4 +160,3 @@ int adsp_video_verify_cmd(struct msm_adsp_module *module,
 		return 0;
 	}
 }
-
