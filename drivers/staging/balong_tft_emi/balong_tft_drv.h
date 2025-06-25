@@ -1,20 +1,20 @@
 /******************************************************************
-* Copyright (C), 2005-2008, HISILICON Tech. Co., Ltd.             *
+*Copyright (C), 2005-2008, HISILICON Tech. Co., Ltd.             *
 *                                                                                           *
-* File name: balong_oledDrv.h                                                                  *
+*File name: balong_oledDrv.h                                                                  *
 *                                                                                              *
-* Description:                                                    *
+*Description:                                                    *
 *                                           *
 *                                                                 *
-* Author:                                                        *
+*Author:                                                        *
 *                                                                 *
-* Version: v0.1                                                   *
+*Version: v0.1                                                   *
 *                                                                 *
-* Function List:                                                  *                                *
+*Function List:                                                  *                               *
 *                                                                 *
-* Date:                                                           *
+*Date:                                                           *
 *                                                                 *
-* History:                                                        *
+*History:                                                        *
                                                     *
 *
 *******************************************************************/
@@ -28,22 +28,22 @@
 
 #ifdef __cplusplus
 extern "C" { /* allow C++ to use these headers */
-#endif /* __cplusplus */
+#endif /* Cplusplus */
 
 #if defined(CHIP_BB_6920ES)
-#define LCD_VEC_ID_GPIO_0 		 19		/*GPIO_1_19*/
-#define LCD_VEC_ID_GPIO_1		 20		/*GPIO_1_20*/
+#define LCD_VEC_ID_GPIO_0 		 19		/*Gpio 1 19*/
+#define LCD_VEC_ID_GPIO_1		 20		/*Gpio 1 20*/
 #elif defined(CHIP_BB_6920CS)
-#define LCD_VEC_ID_GPIO_0 		 6		/*GPIO_4_6*/
-#define LCD_VEC_ID_GPIO_1		 7		/*GPIO_4_7*/
+#define LCD_VEC_ID_GPIO_0 		 6		/*Gpio 4 6*/
+#define LCD_VEC_ID_GPIO_1		 7		/*Gpio 4 7*/
 #else
 #error "invalid defined"
 #endif
 
-#define LCD_ILITEK				0x2		/*天马LCD*/
-#define LCD_CHIMEI				0x0		/*奇美LCD*/
+#define LCD_ILITEK				0x2		/* Tianma lcd */
+#define LCD_CHIMEI				0x0		/* Chimei lcd */
 
-/*寄存器偏移*/
+/*Offsets*/
 #define EMI_IDCYR0_OFFSET       0x00
 #define EMI_WST1R0_OFFSET       0x04
 #define EMI_WST2R0_OFFSET       0x08
@@ -52,22 +52,22 @@ extern "C" { /* allow C++ to use these headers */
 #define EMI_CR0_OFFSET          0x14
 #define EMI_SR0_OFFSET          0x18
 
-#define CRG_CTRL0_OFFSET        0x0000          /*时钟使能，bit19，默认打开*/
-#define CRG_CTRL1_OFFSET        0x0004          /*时钟使能，bit19，默认无效*/
-#define CRG_CTRL2_OFFSET        0x0008          /*时钟状态，bit19，只读*/
-#define CRG_CTRL14_OFFSET       0x0038          /*复位，bit25，默认不复位*/
-#define CS_CTRL3_OFFSET         0x040c          /*LCD复位寄存器，0-复位，默认1不复位*/
-#define IOS_CTRL71_OFFSET       0x091c          /*设置复用的DC\WR\RD信号*/
-#define IOS_CTRL98_OFFSET       0x0988          /*设置复用片选和复位信号*/
-#define IOS_CTRL99_OFFSET       0x098C          /*设置复用片选和复位信号*/
+#define CRG_CTRL0_OFFSET        0x0000          /*Clock enabled, bit19, on by default*/
+#define CRG_CTRL1_OFFSET        0x0004          /*Clock enabled, bit19, invalid by default*/
+#define CRG_CTRL2_OFFSET        0x0008          /*Clock status, bit19, read only*/
+#define CRG_CTRL14_OFFSET       0x0038          /*Reset, bit25, default not reset*/
+#define CS_CTRL3_OFFSET         0x040c          /*Lcd reset register, 0 reset, default 1 does not reset*/
+#define IOS_CTRL71_OFFSET       0x091c          /*Set multiplexed dc\wr\rd signal*/
+#define IOS_CTRL98_OFFSET       0x0988          /*Set multiplexed chip selection and reset signals*/
+#define IOS_CTRL99_OFFSET       0x098C          /*Set multiplexed chip selection and reset signals*/
 
-#define IOS_CTRL92_OFFSET       0x0970          /*控制lte_rf_spi_line4*/
-#define IOS_CTRL100_OFFSET      0x0990          /*控制lte_rf_ssi_ctrl,lte_rf_ctrl,前默认0x0,后0x1,联合控制gpio3_1,控制LCD背光板*/
+#define IOS_CTRL92_OFFSET       0x0970          /*Control lte rf spi line4*/
+#define IOS_CTRL100_OFFSET      0x0990          /*Control lte rf ssi ctrl, lte rf ctrl, front default 0x0, back 0x1, joint control gpio3 1, control lcd backlight board*/
 
 #define EMI_BUF_BASE_ADDR       0x900a3000
-#define EMI_BUF_WRT_CMD         0           /*读出/写入命令,相对EMI_BUF_BASE_ADDR偏移地址*/
-#define EMI_WRT_DATA_8BIT       0x01        /*读出/写入数据, 8-bit,相对EMI_BUF_BASE_ADDR偏移地址*/
-#define EMI_WRT_DATA_16BIT      0x02        /*读出/写入数据, 16-bit,相对EMI_BUF_BASE_ADDR偏移地址*/
+#define EMI_BUF_WRT_CMD         0           /*Read/write command, offset address relative to emi buf base addr*/
+#define EMI_WRT_DATA_8BIT       0x01        /*Read/write data, 8-bit, relative EMI_BUF_BASE_ADDR offset address*/
+#define EMI_WRT_DATA_16BIT      0x02        /*Read/write data, 16-bit, relative EMI_BUF_BASE_ADDR offset address*/
 
 #define CRG_CLK_VALID           0x1 
 #define CRG_CLK_INVALID         0x0
@@ -93,7 +93,7 @@ extern "C" { /* allow C++ to use these headers */
 #define CRG_REG_SETBITS(reg,pos,bits,val)       BSP_REG_SETBITS(V7R1_SC_VA_BASE, reg, pos, bits, val)
 #define CRG_REG_GETBITS(reg,pos,bits)           BSP_REG_GETBITS(V7R1_SC_VA_BASE, reg, pos, bits)
 
-/*错误码定义*/
+/*Error code definition*/
 #define BSP_ERR_LCD_MODULE_NOT_INITED   BSP_DEF_ERR(BSP_MODU_LCD, BSP_ERR_MODULE_NOT_INITED)
 #define BSP_ERR_LCD_INVALID_PARA        BSP_DEF_ERR(BSP_MODU_LCD, BSP_ERR_INVALID_PARA)
 
@@ -105,7 +105,7 @@ extern "C" { /* allow C++ to use these headers */
 #undef LCD_WIDTH
 #define  LCD_HIGHT   (128)
 #define  LCD_WIDTH   (128)
-#define  PAGE_NUM     (8)/* BB5D02632,z67631 2009/9/16 */
+#define  PAGE_NUM     (8)/* With a cheek 02632, z67631 2009/p/16 */
 #define  BYTE_NUMBER_PER_LINE   ((LCD_WIDTH + 7)/8)
 #define  LCD_IMAGE_SIZE (LCD_HIGHT*BYTE_NUMBER_PER_LINE)
 
@@ -125,20 +125,20 @@ extern "C" { /* allow C++ to use these headers */
 #define LCD_PWR_OFF_STATE      0
 
 
-/* LCD 类型选择*/
+/* LCD type selection*/
 typedef enum tagLCD_TYPE_E
 {
     LCD_TYPE_TFT            = 0,        /* tft lcd */
-    LCD_TYPE_LCD           = 1,        /* oled */
+    LCD_TYPE_LCD           = 1,        /* Oled */
     LCD_TYPE_STN,                       /* stn lcd */
     LCD_TYPE_BUTT
 }LCD_TYPE_E;
 
-/* LCD 接口选择*/
+/* LCD interface selection*/
 typedef enum tagLCD_IF_E
 {
-    LCD_IF_EMI              = 0,        /* emi 接口，默认 */
-    LCD_IF_SPI              = 1,        /* spi 接口 */
+    LCD_IF_EMI              = 0,        /* emi interface, default */
+    LCD_IF_SPI              = 1,        /* spi interface */
     LCD_IF_BUTT
 }LCD_IF_E;
 
@@ -152,7 +152,7 @@ typedef struct tag_tft_write_data {
 	unsigned int size;
 }tft_write_data;
 
-/* RAM 参数配置 */
+/* RAM parameter configuration */
 typedef struct tagLCD_RAM_PARA_S
 {
     BSP_U16      startc;       
@@ -161,51 +161,51 @@ typedef struct tagLCD_RAM_PARA_S
     BSP_U16      endr;
 }LCD_RAM_PARA_S;
 
-/* 时序选择*/
+/* Timing selection*/
 typedef enum tagEMI_SCDUL_MODE_E
 {
-    EMI_TFT_8BIT       = 0,         /* TFT I8080时序,8-bit数据格式*/
-    EMI_TFT_9BIT,                   /* TFT I8080时序,9-bit数据格式*/
-    EMI_STN_8BIT_M6800,             /* STN M6800时序,8-bit数据格式*/
-    EMI_STN_8BIT_I8080,             /* LCD I8080时序,8-bit数据格式*/
-    EMI_LCD_8BIT,                  /* LCD M6800时序,8-bit数据格式*/
+    EMI_TFT_8BIT       = 0,         /* TFT I8080 timing, 8-bit data format*/
+    EMI_TFT_9BIT,                   /* TFT I8080 timing, 9-bit data format*/
+    EMI_STN_8BIT_M6800,             /* STN M6800 timing, 8-bit data format*/
+    EMI_STN_8BIT_I8080,             /* LCD I8080 timing, 8-bit data format*/
+    EMI_LCD_8BIT,                  /* LCD M6800 timing, 8-bit data format*/
     EMI_SCHEDULING_BUTT
 }EMI_SCDUL_MODE_E;
 
-/* 时钟选择*/
+/* Clock selection*/
 typedef enum tagEMI_CLK_MODE_E
 {
-    EMI_CLK_EN             = 0,  /* 时钟使能，该枚举表明ctrl0的bit19置1，默认值，同时代表ctrl2的状态之一 */
-    EMI_CLK_DIS,                 /* 时钟禁止，该枚举表明ctrl1的bit19置1，非默认值，同时代表ctrl2的状态之一 */
-    EMI_CLK_VALID,               /* 时钟无效，该枚举表明ctrl0/ctrl1的bit19置0 */
+    EMI_CLK_EN             = 0,  /* Clock enabled, this enumeration indicates that bit19 of ctrl0 is set to 1, the default value, and also represents one of the states of ctrl2. */
+    EMI_CLK_DIS,                 /* Clock prohibition, this enumeration indicates that bit19 of ctrl1 is set to 1, which is not the default value, and also represents one of the states of ctrl2. */
+    EMI_CLK_VALID,               /* The clock is invalid, this enumeration indicates that bit19 of ctrl0/ctrl1 is set to 0 */
     EMI_CLK_BUTT
 }EMI_CLK_MODE_E;
 
-/* 复位选择 */
+/* Reset selection */
 typedef enum tagEMI_RST_MODE_E
 {
-    EMI_RST_DIS            = 0,  /* 复位请求无效，该枚举表明ctrl14的bit25置0*/
-    EMI_RST_EN,                  /* 复位请求有效，该枚举表明ctrl14的bit25置1*/
+    EMI_RST_DIS            = 0,  /* The reset request is invalid, the enumeration indicates that bit25 of ctrl14 is set to 0.*/
+    EMI_RST_EN,                  /* The reset request is valid, and the enumeration indicates that bit25 of ctrl14 is set to 1.*/
     EMI_RST_BUTT
 }EMI_RST_MODE_E;
 
-/* 写入命令/数据选择*/
+/* Write command/data selection*/
 typedef enum tagEMI_DCX_MODE_E
 {
-    EMI_DCX_CMD          = 0,        /* 命令 */
-    EMI_DCX_DATA         = 1,        /* 数据或命令参数 */
+    EMI_DCX_CMD          = 0,        /* Order */
+    EMI_DCX_DATA         = 1,        /* Data or command parameters */
     EMI_DCX_BUTT
 }EMI_DCX_MODE_E;
 
-/* 8/16比特 类型选择*/
+/* 8/16 bit Type selection*/
 typedef enum tagEMI_IF_WDTH_E
 {
-    EMI_WDTH_8BIT            = 0,        /* 8-bit */
-    EMI_WDTH_16BIT           = 1,        /* 16-bit */
+    EMI_WDTH_8BIT            = 0,        /* 8 bit */
+    EMI_WDTH_16BIT           = 1,        /* 16 bit */
     EMI_WDTH_BUTT
 }EMI_IF_WDTH_E;
 
-/* 时序参数配置 */
+/* Timing parameter configuration */
 typedef struct tagEMI_SCDUL_PARA_S
 {
     BSP_U32      u32Wst1;       
@@ -223,29 +223,29 @@ typedef struct tagEMI_SCDUL_PARA_S
 
 
 /*****************************************************************************
-* 函 数 名  : emiInit
+*Function name: emiInit
 *
-* 功能描述  : EMI初始化
+*Function description: EMI initialization
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : 初始化成功或者失败
+*Return Value: Initialization succeeds or fails
 *****************************************************************************/
 BSP_S32 emiInit(BSP_VOID);
 
 
 /*****************************************************************************
-* 函 数 名  : emiSetBackLight
+*Function Name: emisetBackLight
 *
-* 功能描述  : LCD背光板控制
+*Function description: LCD backlight panel control
 *
-* 输入参数  : 
+*Input parameters: 
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : 设置成功或者失败
+*Return Value: Setting successful or failed
 *****************************************************************************/
 BSP_S32 emiSetBackLight(BSP_BOOL bOn);
 
@@ -255,7 +255,7 @@ BSP_S32 balong_tft_ioctl(struct file *file, BSP_U32 cmd, unsigned long arg);
 BSP_VOID tftStringDisplay(UINT8 ucX, UINT8 ucY, UINT8 *pucStr);
 #ifdef __cplusplus
 } /* allow C++ to use these headers */
-#endif /* __cplusplus */
+#endif /* Cplusplus */
 
 #endif    /* End of LCD_DRV_H */
 
