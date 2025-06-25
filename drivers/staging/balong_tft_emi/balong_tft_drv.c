@@ -45,7 +45,7 @@
 #include <mach/powerExchange.h>
 #endif
 
-#define LCD_TFT_DATA_LGTH  0x0f
+#define LCD_TFT_DATA_LGTH  0x0f   
 
 #define emiCmdOut8(cmd)		(iowrite8(cmd, emi_buf_base_addr_v + EMI_BUF_WRT_CMD))
 #define emiCmdOut16(cmd)		(iowrite16(cmd, emi_buf_base_addr_v + EMI_BUF_WRT_CMD))
@@ -1800,7 +1800,8 @@ BSP_S32 balong_tft_ioctl(struct file *file, BSP_U32 cmd, unsigned long arg)
 
 	switch (cmd)
 	{
-		case OLED_LIGHT: /*Light up the LCD backlight*/     
+		case OLED_LIGHT:
+		    /*Light up the LCD backlight*/     
 			/* Pwrctrl lcd lowpower exit(); */
 			tftLight();
 			break;
@@ -1833,12 +1834,7 @@ BSP_S32 balong_tft_ioctl(struct file *file, BSP_U32 cmd, unsigned long arg)
 			emiCmdOut8(value);//second byte.
 
 			break;
-		case OLED_BRIGHTNESS:/*Adjust brightness*/
-			/* not support now */
-			/*
-			emiCmdOut8(0x82);
-			emiCmdOut8(value);
-			*/
+		case OLED_BRIGHTNESS:
 			break;
 		case OLED_POWER_ON:/*Power on Lcd*/
 			/* Pwrctrl lcd lowpower exit(); */
@@ -1999,8 +1995,7 @@ BSP_S32 balong_tft_ioctl(struct file *file, BSP_U32 cmd, unsigned long arg)
             break;
 		default:
 		    return -1;
-	/*BEGIN:y00206456 2012-04-26 Modified for pclint e527*/
-    /*END:y00206456 2012-04-26 Modified for pclint e527*/
+
 	}
 
 	/* disable the EMI clock gating */
@@ -2350,11 +2345,7 @@ static ssize_t balong_tft_store(struct device *dev, struct device_attribute *att
 	UINT32 y_from_user = 0;
 	BSP_S32 ret = 0;
 
-	/* for pclint */
-	if (NULL == dev && NULL == attr)
-	{
-		;
-	}
+	
 
 	command = kzalloc(64, GFP_KERNEL);
 	if (NULL == command)
@@ -2435,13 +2426,7 @@ static ssize_t balong_tft_store(struct device *dev, struct device_attribute *att
 		{
 			hitft_error("cancel_delayed_work_sync failed.");
 		}
-		#if 0
-		    memcpy(buffer_s,buffer_t,BUFFER_SIZE);
-		    tftClear(0, 0, 128, 64);
-		    msleep(1000);
-		    tftRefresh(0, 0, LCD_X_OFFSET_128, 64, buffer_s);
-
-		#endif
+		
 	}
 	else if (!strncmp(command, "cancel_poweroff_work", strlen("cancel_poweroff_work")))
 	{
@@ -2510,7 +2495,7 @@ static const struct file_operations balong_tft_fops = {
 	.owner		= THIS_MODULE,
 	.llseek		= balong_tft_lseek,
 	.write		= balong_tft_write,
-	.unlocked_ioctl	= balong_tft_ioctl,/*lint !e64*/
+	.unlocked_ioctl	= balong_tft_ioctl,
 	.open		= balong_tft_open,
 	.release		= balong_tft_release,
 };
@@ -2582,13 +2567,9 @@ static BSP_S32 __init balong_tft_init(BSP_VOID)
 		destroy_workqueue(tft_queue);
 		return ret;
 	}
-	/* BEIGN ,Deleted by xuchao,2012/2/14 */
-    //LcdInit();
-	/* END   ,Deleted by xuchao,2012/2/14 */
+
     tftPwrOn();
-	/*BEGIN: HanJiuping 00122021 2012-02-15 removed*/
-    /*Tft clear whole screen();*/
-	/*END: HanJiuping 00122021 2012-02-15 removed*/
+
 	
 	/*In the case of trickle charging, if the M-core starts shutdown charging animation earlier than the LCD initialization,
 	LCDStart the shutdown charging display task during initialization*/	

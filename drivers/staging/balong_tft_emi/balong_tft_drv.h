@@ -115,9 +115,7 @@ extern "C" { /* allow C++ to use these headers */
 #define LCD_128x48_SIZE        (LCD_IMAGE_SIZE-LCD_128_48_OFFSET)
 #define LCD_X_OFFSET_128    128
 #define LCD_Y_OFFSET_48    48
-/* BEIGN ,Added by xuchao,2012/2/14 */
 #define LCD_Y_OFFSET_128    128
-/* END   ,Added by xuchao,2012/2/14 */
 #define MAX_OFF_CHARGING_ANI    (5)
 #define MAX_POWER_ON_ANIMATON   (5)
 
