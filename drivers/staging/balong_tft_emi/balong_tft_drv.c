@@ -209,9 +209,6 @@ static unsigned char * g_power_on_display_image[6] =
 
 };
 
-
-#endif
-
 BSP_VOID emi_reg_set_bit(unsigned offset,unsigned bit)
 {
   unsigned long flag = readl(V3R2_SC_VA_BASE + offset);

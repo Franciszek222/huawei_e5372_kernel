@@ -16,4 +16,4 @@ fi
 
 	git clean -dffx
 	git reset --hard
-	exec build.sh
+	exec ./build.sh
