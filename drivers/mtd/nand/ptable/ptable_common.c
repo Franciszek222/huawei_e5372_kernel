@@ -1,29 +1,21 @@
 /*******************************************************************************
-* Copyright (C), 2008-2011, HUAWEI Tech. Co., Ltd.
+*Copyright (C), 2008-2011, HUAWEI Tech. Co., Ltd.
 *
-* Module name: flash partition table
+*Module name: flash partition table
 *
-* Version: v1.0
+*Version: v1.0
 *
-* Filename:    ptable_common.c
-* Description:  Balong plantform flash partition table common functions
+*Filename:    ptable_common.c
+*Description:  Balong plantform flash partition table common functions
 *
-* Function List:
+*Function List:
 *
-* History:
+*History:
 1.date:2011-11-19
  question number:
  modify reasion:         create
 *******************************************************************************/
-/******************************************************************************
-*    Copyright (c) 2009-2011 by  Hisilicon Tech. Co., Ltd.
-*    All rights reserved.
-* ***
-*
-******************************************************************************/
-/*******************************问题单修改记录********************************
-日期            问题单号            修改人          修改内容
-******************************************************************************/
+
 
 #ifdef __cplusplus
 extern "C"
@@ -45,17 +37,17 @@ extern int ptable_size(void);
 extern void ptable_mark_default(void);
 
 /**********************************************************************************
- * FUNC NAME:  
- * nand_get_spec() - external API: for get flash table ram address
+ *FUNC NAME:  
+ *nand_get_spec() -external API: for get flash table ram address
  *
  * PARAMETER:
- * @none
+ *@none
  *
  * DESCRIPTION:
- * this function get flash table address WITH TABLE HEAD, whitch description flash useage 
- *      information
+ *this function get flash table address WITH TABLE HEAD, whitch description flash useage 
+ *     information
  *
- * CALL FUNC:
+ *CALL FUNC:
  * 
  *********************************************************************************/
 struct ST_PART_TBL * ptable_get_ram_head(void)
@@ -65,17 +57,17 @@ struct ST_PART_TBL * ptable_get_ram_head(void)
 }
 
 /**********************************************************************************
- * FUNC NAME:  
- * nand_get_spec() - external API: for get flash table ram address
+ *FUNC NAME:  
+ *nand_get_spec() -external API: for get flash table ram address
  *
  * PARAMETER:
- * @none
+ *@none
  *
  * DESCRIPTION:
- * this function get flash table address WITHOUT TABLE HEAD, 
- *    whitch description flash useage information.
+ *this function get flash table address WITHOUT TABLE HEAD, 
+ *   whitch description flash useage information.
  *
- * CALL FUNC:
+ *CALL FUNC:
  * 
  *********************************************************************************/
 struct ST_PART_TBL * ptable_get_ram_data(void)
@@ -84,17 +76,17 @@ struct ST_PART_TBL * ptable_get_ram_data(void)
 }
 
 /**********************************************************************************
- * FUNC NAME:  
- * ptable_ensure() - external API: make sure there is a ptable to be use
+ *FUNC NAME:  
+ *ptable_ensure() -external API: make sure there is a ptable to be use
  *
  * PARAMETER:
- * @none
+ *@none
  *
  * DESCRIPTION:
- *    check the flash ram table, and use symbol table when ram table not exist
+ *   check the flash ram table, and use symbol table when ram table not exist
  *      
  *
- * CALL FUNC:
+ *CALL FUNC:
  * 
  *********************************************************************************/
 u32 ptable_ensure(void)
@@ -105,8 +97,8 @@ u32 ptable_ensure(void)
 #if (FEATURE_HANDSET_DOWNLOAD == FEATURE_ON)
 #else
 #if (!defined(PTABLE_AXI_USE_BSPMEMORY_H) && defined (BSP_IMAGE_BOOTROM))
-    /*不使用 bsp_memory.h定义的话需要使用.data区的符号表地址作为ram地址,*/
-    /*bootrom需要填充bootload.s读取的0block表数据*/
+    /*If you do not use the bsp_memory.h definition, you need to use the symbol table address of the .data area as the ram address.*/
+    /*Bootrom needs to fill in the 0block table data read by bootload.s*/
     memcpy(ram_parts , PTABLE_BOOT_LOAD_AXI_ADDR , PTABLE_RAM_TABLE_SIZE);
     
 #endif
@@ -146,17 +138,17 @@ u32 ptable_ensure(void)
 }
 
 /**********************************************************************************
- * FUNC NAME:  
- * ptable_show() - external API: show flash partition table in shell
+ *FUNC NAME:  
+ *ptable_show() -external API: show flash partition table in shell
  *
  * PARAMETER:
- * @part -[input] if "part" is not NULL, show flash partition info in "part",else
- *                get default flash partition info and show.
+ *@part -[input] if "part" is not NULL, show flash partition info in "part",else
+ *               get default flash partition info and show.
  *
  * DESCRIPTION:
- *     show flash partition table in shell
+ *    show flash partition table in shell
  *      
- * CALL FUNC:
+ *CALL FUNC:
  * 
  *********************************************************************************/
 u32 ptable_show(struct ST_PART_TBL *part)
@@ -169,7 +161,7 @@ u32 ptable_show(struct ST_PART_TBL *part)
     }
 
     BSPLOGSTR("Partition Table list(HEX):");
-	/*分区表的版本号偏移*/
+	/*Partition table version number offset*/
     BSPLOGSTR((u8 *)((char*)part + PTABLE_BOOTROM_VER_OFFSET));    
     BSPLOGSTR((u8 *)((char*)part + PTABLE_NAME_OFFSET));   
     BSPLOGSTR("\r\n");    
@@ -210,18 +202,18 @@ u32 ptable_show(struct ST_PART_TBL *part)
 }
 
 /**********************************************************************************
- * FUNC NAME:  
- * ptable_parse_mtd_partitions() - external API: get mtd partitions from flash table
+ *FUNC NAME:  
+ *ptable_parse_mtd_partitions() -external API: get mtd partitions from flash table
  *
  * PARAMETER:
- * @mtd_parts -[output] pointer to mtd partitions
- * @nr_parts - [output] number of mtd partitions
+ *@mtd_parts -[output] pointer to mtd partitions
+ *@nr_parts -[output] number of mtd partitions
  *                
  *
  * DESCRIPTION:
- *     get mtd partitions from flash table
+ *    get mtd partitions from flash table
  *      
- * CALL FUNC:
+ *CALL FUNC:
  * 
  *********************************************************************************/
 u32 ptable_parse_mtd_partitions(struct mtd_partition** mtd_parts, u32* nr_parts)
@@ -274,13 +266,13 @@ u32 ptable_parse_mtd_partitions(struct mtd_partition** mtd_parts, u32* nr_parts)
 
     /*lint -e613*/
     *mtd_parts = parts; 
-    /*lint +e613*/
+    /*Lint + E613*/
     *nr_parts  = npart;
 
     /*get address again*/
     ptable = ptable_get_ram_data();
 
-    /*置0以后重新计算实际转移到MTD的分区数*/
+    /*After setting 0, recalculate the number of partitions actually transferred to mtd*/
     npart = 0;
 
     /*form flash table to mtd partitions */
@@ -332,24 +324,24 @@ ERRO:
 }
 
 /****************************************************************************************
- * FUNC NAME:  
- * ptable_find_by_type() - external API: find one partition address in flash partition 
- *                           table 
+ *FUNC NAME:  
+ *ptable_find_by_type() -external API: find one partition address in flash partition 
+ *table 
  *
  * PARAMETER:
- * @part_type -[input] which type of partition to find
- * @ptable    -[input] form which partition table to find
+ *@part_type -[input] which type of partition to find
+ *@ptable -[input] form which partition table to find
  *                
  *
  * DESCRIPTION:
- *     find partition description by type，找到最新的分区(有效)用于加载和读取
+ *find partition description by type, find the latest partition (valid) for loading and reading
  *      
- * CALL FUNC:
+ *CALL FUNC:
  * 
  ***************************************************************************************/
 struct ST_PART_TBL * ptable_find_by_type(u32 type_idx, struct ST_PART_TBL * ptable)
 {
-    struct ST_PART_TBL * the_newer = NULL; /*保存最新的分区*/
+    struct ST_PART_TBL * the_newer = NULL; /*Save the latest partition*/
 
     if(NULL == ptable)
     {
@@ -371,7 +363,7 @@ struct ST_PART_TBL * ptable_find_by_type(u32 type_idx, struct ST_PART_TBL * ptab
             {
                 if(DATA_VALID == ptable_get_validity(ptable))
                 {
-                    /*保存较新的分区*/
+                    /*Save newer partitions*/
                     the_newer = (the_newer->count < ptable->count) ? ptable : the_newer ;
                 }
             }
@@ -386,19 +378,19 @@ EXIT:
 }
 
 /****************************************************************************************
- * FUNC NAME:  
- * ptable_find_theother_by_type() - external API: find the other partition address in flash partition 
- *                           table 
+ *FUNC NAME:  
+ *ptable_find_theother_by_type() -external API: find the other partition address in flash partition 
+ *table 
  *
  * PARAMETER:
- * @part_type -[input] which type of partition to find
- * @ptable    -[input] the partition want to find the other
+ *@part_type -[input] which type of partition to find
+ *@ptable -[input] the partition wants to find the other
  *                
  *
  * DESCRIPTION:
- *     find partition description by type，找到该分区(有效)另外一个分区用于加载和读取
+ *find partition description by type, find the partition (valid) and another partition is used for loading and reading
  *      
- * CALL FUNC:
+ *CALL FUNC:
  * 
  ***************************************************************************************/
 struct ST_PART_TBL * ptable_find_theother_by_type(u32 type_idx, struct ST_PART_TBL * part)
@@ -415,7 +407,7 @@ struct ST_PART_TBL * ptable_find_theother_by_type(u32 type_idx, struct ST_PART_T
     {
         if(type_idx == ptable->image)
         {
-            /* 另外一个 */
+            /* Another */
             if(part != ptable)
             {
                 if(DATA_VALID == ptable_get_validity(ptable))
@@ -435,18 +427,18 @@ EXIT:
 }
 
 /****************************************************************************************
- * FUNC NAME:  
- * ptable_set_validity() - external API: find if the  partition data is valid or invalid
+ *FUNC NAME:  
+ *ptable_set_validity() -external API: find if the partition data is valid or invalid
  *
  * PARAMETER:
- * @part_type -[input] which type of partition to find
- * @ptable    -[input] form which partition table to find
+ *@part_type -[input] which type of partition to find
+ *@ptable -[input] form which partition table to find
  *                
  *
  * DESCRIPTION:
- *    设置分区表数据的有效性
+ *Set the validity of partition table data
  *      
- * CALL FUNC:
+ *CALL FUNC:
  * 
  ***************************************************************************************/
 void ptable_set_validity(struct ST_PART_TBL * ptable, u32 set_valid)
@@ -463,19 +455,19 @@ void ptable_set_validity(struct ST_PART_TBL * ptable, u32 set_valid)
 }
 
 /****************************************************************************************
- * FUNC NAME:  
- * ptable_get_validity() - external API:  find if the  partition data's validity
+ *FUNC NAME:  
+ *ptable_get_validity() -external API: find if the partition data's validity
  *                           
  *
  * PARAMETER:
- * @part_type -[input] which type of partition to find
- * @ptable    -[input] form which partition table to find
+ *@part_type -[input] which type of partition to find
+ *@ptable -[input] form which partition table to find
  *                
  *
  * DESCRIPTION:
- *     获得分区表数据的有效性
+ *Obtain the validity of partition table data
  *      
- * CALL FUNC:
+ *CALL FUNC:
  * 
  ***************************************************************************************/
 u32 ptable_get_validity(struct ST_PART_TBL * ptable)
@@ -484,17 +476,17 @@ u32 ptable_get_validity(struct ST_PART_TBL * ptable)
 }
 
 /*****************************************************************************
-* 函 数 名  : ptable_check_integrality
+*Function name: ptable_check_integrality
 *
-* 功能描述  : 检查软加载标志是否为0,  0表示有效，可以完整加载，1表示上次升级失败，强制进入bootrom
+*Function description: Check whether the soft loading flag is 0. 0 means valid and can be fully loaded. 1 means the last upgrade failed and forced to enter bootrom.
 *
-* 输入参数  : BSP_VOID  
-* 输出参数  : 无
+*Input parameters: BSP_VOID  
+*Output parameters: None
 *
-* 返 回 值  : BSP_TRUE  :下载过程中意外终止
-*            BSP_FALSE :下载顺利结束
+*Return Value: BSP_TRUE: Unexpected termination during downloading
+*BSP_FALSE: The download ended successfully
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 u32 ptable_check_integrality(BSP_VOID)
@@ -512,16 +504,16 @@ u32 ptable_check_integrality(BSP_VOID)
 }
 
 /*****************************************************************************
-* 函 数 名  : ptable_mark_default
+*Function name: ptable_mark_default
 *
-* 功能描述  : 设置分区表是否为默认值
+*Function Description: Set whether the partition table is the default value
 *
-* 输入参数  : bDefault  
-* 输出参数  : 无
+*Input parameters: bDefault  
+*Output parameters: None
 *
-* 返 回 值  : BSP_VOID
+*Return Value: BSP_VOID
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 void ptable_mark_default(void)
@@ -533,16 +525,16 @@ void ptable_mark_default(void)
 
 #if !defined(__BOOTLOADER__) 
 /*****************************************************************************
-* 函 数 名  : ptable_set_integrality
+*Function name: ptable_set_integrality
 *
-* 功能描述  : 设置分区表全局完整性
+*Function Description: Set the global integrity of the partition table
 *
-* 输入参数  : BSP_VOID  
-* 输出参数  : 无
+*Input parameters: BSP_VOID  
+*Output parameters: None
 *
-* 返 回 值  : BSP_VOID
+*Return Value: BSP_VOID
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 void ptable_set_integrality(u32 integrality)
@@ -555,24 +547,24 @@ void ptable_set_integrality(u32 integrality)
 }    
 
 /****************************************************************************************
- * FUNC NAME:  
- * ptable_find_by_type() - external API: find one partition address in flash partition 
- *                           table 
+ *FUNC NAME:  
+ *ptable_find_by_type() -external API: find one partition address in flash partition 
+ *table 
  *
  * PARAMETER:
- * @name_to_find -[input] which name of partition to find
- * @ptable    -[input] form which partition table to find
+ *@name_to_find -[input] which name of partition to find
+ *@ptable -[input] form which partition table to find
  *                
  *
  * DESCRIPTION:
- *     find partition description by name,找到最新的分区,不识别分区有效性
+ *find partition description by name, find the latest partition, and the partition validity is not recognized
  *      
- * CALL FUNC:
+ *CALL FUNC:
  * 
  ***************************************************************************************/
 struct ST_PART_TBL * ptable_find_by_name(char* name_to_find, struct ST_PART_TBL * ptable)
 {
-    struct ST_PART_TBL * the_newer = NULL; /*保存最新的分区*/
+    struct ST_PART_TBL * the_newer = NULL; /*Save the latest partition*/
 
     if(NULL == ptable)
     {
@@ -589,7 +581,7 @@ struct ST_PART_TBL * ptable_find_by_name(char* name_to_find, struct ST_PART_TBL 
             }
             else
             {
-                /*保存较新的分区*/
+                /*Save newer partitions*/
                 the_newer = (the_newer->count < ptable->count) ? ptable : the_newer ;
             }
         }
@@ -604,19 +596,19 @@ EXIT:
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_read_by_type() - external API:  
+ *FUNC NAME:  
+ *ptable_read_by_type() -external API:  
  *                           
  * PARAMETER: 
- * @flash_addr  -[input] the flash address to read from             
- * @data_buf    -[input] the ram buffer to store flash data          
- * @image_type  -[input] the flash data type           
- * @length      -[input] how much data to be read             
+ *@flash_addr  -[input] the flash address to read from             
+ *@data_buf    -[input] the ram buffer to store flash data          
+ *@image_type  -[input] the flash data type           
+ *@length      -[input] how much data to be read             
  *
  * DESCRIPTION:
- *     read data from nand ，识别分区有效性
+ *    read data from nand ，识别分区有效性
  *      
- * CALL FUNC:
+ *CALL FUNC:
  * 
  *****************************************************************************************/
 u32 ptable_read_by_type(FSZ flash_addr, u32 data_buf, u32 image_type, u32 length, u32* skip_length)
@@ -657,19 +649,19 @@ ERRO:
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_write_by_type() - external API:  
+ *FUNC NAME:  
+ *ptable_write_by_type() -external API:  
  *                           
  * PARAMETER: 
- * @flash_addr  -[input] the flash address to be write to             
- * @data_buf    -[input] the ram buffer to store data          
- * @image_type  -[input] the flash data type           
- * @length      -[input] how much data to be write             
+ *@flash_addr  -[input] the flash address to be write to             
+ *@data_buf    -[input] the ram buffer to store data          
+ *@image_type  -[input] the flash data type           
+ *@length      -[input] how much data to be write             
  *
  * DESCRIPTION:
- *     write data to nand
+ *    write data to nand
  *      
- * CALL FUNC:
+ *CALL FUNC:
  * 
  *****************************************************************************************/
 u32 ptable_write_by_type(FSZ flash_addr ,u32 data_buf, u32 image_type,  u32 length, u32 *skip_len)
@@ -710,19 +702,19 @@ ERRO:
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_erase_partition() - external API:  
+ *FUNC NAME:  
+ *ptable_erase_partition() -external API:  
  *                           
  * PARAMETER: 
- * @name_or_id  -[input] indicate witch parititon to be erase, can be name of partitin or   
- *                        type of partition.          
- * @is_force    -[input] set this parameter TRUE to erase bad block.                 
+ *@name_or_id -[input] indicates witch parititon to be erase, can be name of partitin or   
+ *type of partition.          
+ *@is_force -[input] set this parameter TRUE to erase bad block.                 
  *
  * DESCRIPTION:
- *     erase one partition, from partition start to partition end
+ *erase one partition, from partition start to partition end
  *      
- *     注意，这个函数只能作为测试调试用，严禁代码内部调用!!!!!
- * CALL FUNC:
+ *Note that this function can only be used for testing and debugging, and internal code calls are strictly prohibited!!!
+ *CALL FUNC:
  * 
  *****************************************************************************************/
 int ptable_erase_partition( char * name_or_id ,u32 is_force)
@@ -782,16 +774,16 @@ int ptable_erase_partition( char * name_or_id ,u32 is_force)
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_quary_partition() - external API: scan a flash partition and find bad block
+ *FUNC NAME:  
+ *ptable_quary_partition() -external API: scan a flash partition and find bad block
  *                           
  * PARAMETER: 
- * @name_or_id  -[input] indicate witch parititon to quary, type of partition.                          
+ *@name_or_id -[input] indicates witch parititon to quary, type of partition.                          
  *
  * DESCRIPTION:
- *        注意，这个函数只能作为测试调试用，严禁代码内部调用!!!!!
+ *Note that this function can only be used for testing and debugging, and internal code calls are strictly prohibited!!!
  *
- * CALL FUNC:
+ *CALL FUNC:
  * 
  *****************************************************************************************/
 int ptable_quary_partition(char * name_or_id)
@@ -823,6 +815,7 @@ int ptable_quary_partition(char * name_or_id)
     /*calculate block number*/
     start_block = (part->offset)/(spec.blocksize);
     end_block = (part->offset + part->capacity)/spec.blocksize - 1; // Make it smaller
+
       
     for(i = start_block ; i <= end_block ; i++)
     {
@@ -846,17 +839,17 @@ int ptable_quary_partition(char * name_or_id)
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_get_range() - external API: get one start partition's start and end address 
+ *FUNC NAME:  
+ *ptable_get_range() -external API: get one start partition's start and end address 
  *                           
  * PARAMETER: 
- * @part_type  -[input] indicate witch parititon to quary.            
- * @start      -[output] store start address of quary flash partition.           
- * @end        -[output] store end address of quary flash partition .            
+ *@part_type  -[input] indicate witch parititon to quary.            
+ *@start      -[output] store start address of quary flash partition.           
+ *@end        -[output] store end address of quary flash partition .            
  *
  * DESCRIPTION:
  *      
- * CALL FUNC:
+ *CALL FUNC:
  * 
  *****************************************************************************************/
 u32 ptable_get_range(u32 part_type, u32* start , u32* end)
@@ -891,7 +884,7 @@ u32 ptable_get_range(u32 part_type, u32* start , u32* end)
 #endif
 
 #ifdef __KERNEL__
-/*获取CDROM MTD名称*/
+/*Get CDROM MTD name*/
 u32 ptable_get_cdromiso_mtdname(char * ptable_name, int len)
 {
 #define MTDBLK_BASE_NAME "/dev/block/mtdblock"

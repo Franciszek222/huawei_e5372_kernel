@@ -1,13 +1,13 @@
 /*************************************************************************
-*   版权所有(C) 1987-2011, 深圳华为技术有限公司.
+*Copyright (C) 1987-2011, Shenzhen Huawei Technologies Co., Ltd.
 *
-*   文 件 名 :  DrvInterface.h
+*File name: DrvInterface.h
 *
-*   作    者 :  yangzhi
+*Author: yangzhi
 *
-*   描    述 :  本文件命名为"DrvInterface.h", 给出V7R1底软和协议栈之间的API接口统计
+*Description: This file is named "DrvInterface.h", which gives the API interface statistics between V7R1 bottom soft and protocol stack
 *
-*   修改记录 :  2011年1月18日  v1.00  yangzhi创建
+*Modify record: January 18, 2011 v1.00 yangzhi created
 *************************************************************************/
 
 #ifndef __DRV_INTERFACE_H__
@@ -35,12 +35,12 @@
 #endif
 
 
-/*此文件默认是4字节对齐，关闭下述两个lint告警*/
+/*This file is 4 bytes aligned by default, close the following two lint alarms*/
 /*lint -e958 -e959*/
 #pragma pack(4)
 
 /*************************GLOBAL BEGIN*****************************/
-/* 基本数据类型定义 */
+/* Basic data type definition */
 #ifndef _WIN32_COMPILE
 typedef signed long long    BSP_S64;
 #else
@@ -163,8 +163,8 @@ typedef BSP_VOID (*VOIDFUNCPTR)(BSP_U32);
 #endif
 
 
-/* 错误码宏定义 */
-#define BSP_ERR_MODULE_OFFSET (0x1000)    /* 防止和系统的错误码重叠 */
+/* Error code macro definition */
+#define BSP_ERR_MODULE_OFFSET (0x1000)    /* Prevent overlapping with system error codes */
 #define BSP_DEF_ERR( mod, errid) \
     ((((BSP_U32) mod + BSP_ERR_MODULE_OFFSET) << 16) | (errid))
 
@@ -186,11 +186,11 @@ typedef BSP_VOID (*VOIDFUNCPTR)(BSP_U32);
 #endif
 
 /*****************************************************************************
-  1 GU侧驱动对外接口，GUPorting项目添加.
+  1 GU side driver external interface, GUPorting project is added.
 *****************************************************************************/
 
 /*****************************************************************************
-  2 宏定义
+  2 Macro definition
 *****************************************************************************/
 
 #define DRV_OK                          (0)
@@ -199,7 +199,7 @@ typedef BSP_VOID (*VOIDFUNCPTR)(BSP_U32);
 #define BSP_BBP_OK   0x1
 #define BSP_BBP_ERROR    0xffff
 
-/* 基本数据类型定义 */
+/* Basic data type definition */
 typedef void (*PVOIDFUNC)(void);
 
 typedef int  (*pFUNCPTR)(void);
@@ -208,34 +208,34 @@ typedef unsigned long (*pFUNCPTR2)( unsigned long ulPara1, unsigned long ulPara2
 
 typedef unsigned int tagUDI_DEVICE_ID_UINT32;
 
-/*需要移到别的头文件中 start*/
-/*升级Flash信息*/
+/*Need to move to another header file to start*/
+/*Upgrade flash information*/
 typedef struct
 {
-    BSP_U32 ulblockCount;    /*Block个数*/
-    BSP_U32 ulpageSize;    /*page页大小*/
-    BSP_U32 ulpgCntPerBlk;    /*一个Block中的page个数*/
+    BSP_U32 ulblockCount;    /*Block number*/
+    BSP_U32 ulpageSize;    /*Page page size*/
+    BSP_U32 ulpgCntPerBlk;    /*Number of pages in a block*/
 }DLOAD_FLASH_STRU;
-/*需要移到别的头文件中 end*/
+/*Need to move to another header file end*/
 
-/* 上行线路收包函数指针 */
+/* Uplink package function pointer */
 typedef BSP_VOID (*UpLinkRxFunc)(BSP_U8 *buf, BSP_U32 len);
 
-/* 包封装释放函数指针 */
+/* Package package release function pointer */
 typedef BSP_VOID (*FreePktEncap)(BSP_VOID *PktEncap);
 
-/* GMAC调用者枚举 */
+/* Gmac caller enumeration */
 typedef enum tagGMAC_OWNER_E
 {
-    GMAC_OWNER_VXWORKS = 0, /* Vxworks网络协议栈 */
-    GMAC_OWNER_PS,          /* LTE网络协议栈 */
-    GMAC_OWNER_MSP,         /* MSP */
-    GMAC_OWNER_MAX          /* 边界值 */
+    GMAC_OWNER_VXWORKS = 0, /* Vxworks network protocol stack */
+    GMAC_OWNER_PS,          /* Lte network protocol stack */
+    GMAC_OWNER_MSP,         /* Msp */
+    GMAC_OWNER_MAX          /* Boundary value */
 }GMAC_OWNER_E;
 
 typedef enum tagWDT_TIMEOUT_E
 {
-    WDT_TIMEOUT_1   = 0,        /*0xFFFF000/WDT_CLK_FREQ,  about 3657ms*/      /*WDT_CLK_FREQ = ARM_FREQ/6 = 70M*/
+    WDT_TIMEOUT_1   = 0,        /*0xFFFF000/WDT_CLK_FREQ,  about 3657ms*/     /*WDT_CLK_FREQ = ARM_FREQ/6 = 70M*/
     WDT_TIMEOUT_2,              /*0x1FFFE000/WDT_CLK_FREQ, about 7314ms*/
     WDT_TIMEOUT_3,              /*0x3FFFC000/WDT_CLK_FREQ, about 14628ms*/
     WDT_TIMEOUT_4,              /*0x7FFF8000/WDT_CLK_FREQ, about 29257ms*/
@@ -248,38 +248,38 @@ extern int ddmPhaseScoreBoot(const char * phaseName, unsigned int param);
 /*************************GLOBAL END****************************/
 
 /*************************VERSION START*****************************/
-/* 硬件产品信息适配 */
+/* Hardware product information adaptation */
 #define HW_VER_INVALID              (BSP_U16)0xFFFF
 
-/* Porting板和P500板兼容 */
+/* Porting board and p500 board compatible */
 #define HW_VER_PRODUCT_PORTING      (BSP_U16)0xFFFE
 #define HW_VER_PRODUCT_PV500        (BSP_U16)0xFFFD
 
-/* 测试板 */
+/* Test board */
 #define HW_VER_PRODUCT_UDP          (BSP_U16)0xFFFC
 
 /* Stick */
 #define HW_VER_PRODUCT_E392S_U      (BSP_U16)HW_VER_INVALID
 #define HW_VER_PRODUCT_E3276S_150   (BSP_U16)0x0201
 
-/* E5 */
+/* brother */
 #define HW_VER_PRODUCT_E5_SBM       (BSP_U16)0x0001
 
-/*E5776*/
+/*Lame*/
 #define HW_VER_PRODUCT_E5776_EM     (BSP_U16)0x0000
 
 #define HW_VER_PRODUCT_E5_CMCC   	(BSP_U16)0x0003
 
-/*E5371-DCM*/
+/*E5371 dcm*/
 #define HW_VER_PRODUCT_E5371_DCM     (BSP_U16)0x0100
 
-/*E5372-32*/
+/*I am*/
 #define HW_VER_PRODUCT_E5372_32      (BSP_U16)0x0103
 
-/*E5375*/
+/*Pumping*/
 #define HW_VER_PRODUCT_E5375          (BSP_U16)0x0104
 
-/*E5375 第二版*/
+/*E5375 Second Edition*/
 #define HW_VER_PRODUCT_E5375_SEC      (BSP_U16)0x0106
 
 #define HW_VER_PRODUCT_E5775S_925     (BSP_U16)0x0107
@@ -287,7 +287,7 @@ extern int ddmPhaseScoreBoot(const char * phaseName, unsigned int param);
 #define HW_VER_PRODUCT_E5372TS_32     (BSP_U16)0x0903
 #define HW_VER_PRODUCT_E5372S_22     (BSP_U16)0x0900
 #define HW_VER_PRODUCT_R215      (BSP_U16)0x0901
-/* CMCC 贴错BOM的硬件标识*/
+/* CMCC The hardware logo of the wrong BOM is posted*/
 #define HW_VER_PRODUCT_E5_CMCC_BOM_ERR  (BSP_U16)0x0603
 /*BEGIN DST2012092001529 liangshukun 20121025 ADDED*/
 
@@ -309,6 +309,7 @@ extern int ddmPhaseScoreBoot(const char * phaseName, unsigned int param);
 #define HW_VER_PRODUCT_S10_101L     (BSP_U16)0x0501
 #define HW_VER_PRODUCT_S10_101L_1   HW_VER_PRODUCT_S10_101L
 //#define HW_VER_PRODUCT_S10_101L_2   (BSP_U16)0x0502
+
 #define HW_VER_PRODUCT_S10_103L     (BSP_U16)0x0502
 #define HW_VER_PRODUCT_S10_101L_3   (BSP_U16)0x0503
 #define HW_VER_PRODUCT_S10_101L_4   (BSP_U16)0x0504
@@ -329,23 +330,23 @@ extern int ddmPhaseScoreBoot(const char * phaseName, unsigned int param);
 #define HW_VER_PRODUCT_S10_TEMP     (BSP_U16)0x0005
 
 /*****************************************************************************
-* 函 数 名  : BSP_HwGetVerMain
-* 功能描述  : 获取产品版本号
-* 输入参数  : 无
-* 输出参数  : 产品版本号
-* 返 回 值  : 0：正确，非0: 失败
-* 修改记录  : 2011-3-30 wuzechun creat
+*Function Name: BSP_HwGetVerMain
+*Function Description: Get the product version number
+*Input parameters: None
+*Output parameters: Product version number
+*Return Value: 0: Correct, non-0: Failed
+*Modification record: 2011-3-30 wuzechun creat
 *****************************************************************************/
 BSP_U16 BSP_HwGetVerMain( BSP_VOID );
 
 /*****************************************************************************
-* 函 数 名  : BSP_GetProductName
-* 功能描述  : 获取产品名称
-* 输入参数  : char* pProductName,字符串指针，保证不小于32字节
-*             BSP_U32 ulLength,缓冲区长度
-* 输出参数  : 无
-* 返 回 值  : 0：正确，非0: 失败
-* 修改记录  : 2011-3-30 wuzechun creat
+*Function Name: BSP_GetProductName
+*Function Description: Get the product name
+*Input parameters: char*pProductName, string pointer, guaranteed to be no less than 32 bytes
+*BSP_U32 ulLength, buffer length
+*Output parameters: None
+*Return Value: 0: Correct, non-0: Failed
+*Modification record: 2011-3-30 wuzechun creat
 *****************************************************************************/
 BSP_S32 BSP_GetProductName (char * pProductName, unsigned int ulLength);
 
@@ -355,24 +356,24 @@ BSP_S32 BSP_GetProductName (char * pProductName, unsigned int ulLength);
 /*************************MMI START*****************************/
 
 /***************************************************************
-*  函数名        :   BSP_MMI_TestResultSet
-*  函数功能      :   本接口是将MMI的测试标志写入NV
-                     若ulFlag == 1 则写入 “ST P”
-                     若ulFlag == 0 则写入 “ST F”
-*  输入参数      :   BSP_U32 ulFlag
-*  输出参数      :   无
-*  返回值        :   成功(0)  失败(-1)
+*Function name: BSP_MMI_TestResultSet
+*Function function: This interface writes the MMI test flag to NV
+                     If ulFlag == 1, write "ST P"
+                     If ulFlag == 0, write "ST F"
+*Input parameters: BSP_U32 ulFlag
+*Output parameters: None
+*Return value: Success (0) Failed (-1)
 ***************************************************************/
 int BSP_MMI_TestResultSet(unsigned int ulFlag);
 #define DVR_MMI_TEST_RESULT_SET(ulFlag) BSP_MMI_TestResultSet(ulFlag)
 
 /***************************************************************
-*  函数名        :   BSP_MMI_TestResultGet
-*  函数功能      :   本接口比较MMI NV中的是否是“ST P”
-                                  是返回1   不是返回0
-*  输入参数      :   无
-*  输出参数      :   无
-*  返回值        :   成功(1)  失败(0)
+*Function name: BSP_MMI_TestResultGet
+*Function function: This interface compares whether the MMI NV is "ST P"
+                                  Yes Return 1 Not Return 0
+*Input parameters: None
+*Output parameters: None
+*Return value: Success (1) Failure (0)
 ***************************************************************/
 unsigned int BSP_MMI_TestResultGet(void);
 #define DVR_MMI_TEST_RESULT_GET() BSP_MMI_TestResultGet()
@@ -382,63 +383,63 @@ unsigned int BSP_MMI_TestResultGet(void);
 /*************************OLED START**************************/
 
 /*****************************************************************************
-*  Function:  DRV_OLED_CLEAR_WHOLE_SCREEN
-*  Description: oled clear *
-*  Called By:AP
-*  Table Accessed:
-*  Table Updated:
-*  Input:
-*         N/A
-*  Output:
-*         N/A
-*  Return:
-*         N/A
+* Function:  DRV_OLED_CLEAR_WHOLE_SCREEN
+* Description: oled clear *
+* Called By:AP
+* Table Accessed:
+* Table Updated:
+* Input:
+*        N/A
+* Output:
+*        N/A
+* Return:
+*        N/A
 *****************************************************************************/
 extern BSP_VOID DRV_OLED_CLEAR_WHOLE_SCREEN(BSP_VOID);
 
 /*****************************************************************************
-*  Function:  DRV_OLED_UPDATE_STATE_DISPLAY
-*  Description: oled display right or not right  *
-*  Called By:AP
-*  Table Accessed:
-*  Table Updated:
-*  Input:
-*         N/A
-*  Output:
-*         N/A
-*  Return:
-*         N/A
+* Function:  DRV_OLED_UPDATE_STATE_DISPLAY
+* Description: oled display right or not right  *
+* Called By:AP
+* Table Accessed:
+* Table Updated:
+* Input:
+*        N/A
+* Output:
+*        N/A
+* Return:
+*        N/A
 *****************************************************************************/
 extern  void DRV_OLED_UPDATE_STATE_DISPLAY(int UpdateStatus);
 
 /*****************************************************************************
- 函 数 名  : DRV_OLED_UPDATE_DISPLAY
- 功能描述  : SD卡烧片版本升级，OLED显示
- 输入参数  : BOOL UpdateStatus
- 输出参数  : 无。
- 返回值：   无
- 其它:  升级成功，NV备份完成后调用该函数打勾
-        升级失败后调用该函数打叉
+ Function Name: DRV_OLED_UPDATE_DISPLAY
+ Function description: SD card burning version upgrade, OLED display
+ Input parameters: BOOL UpdateStatus
+ Output parameters: None.
+ Return value: None
+ Others: After the upgrade is successful, call this function and check it after the NV backup is completed.
+        After the upgrade failed, call the function and make a cross
 *****************************************************************************/
 extern void DRV_OLED_UPDATE_DISPLAY(int UpdateStatus);
 
 /*****************************************************************************
- 函 数 名  : DRV_OLED_STRING_DISPLAY
- 功能描述  : oled字符串显示函数
- 输入参数  :
- *           要显示字符串的起始坐标
- *           要显示的字符串
- 输出参数  : none
- 返 回 值  : void
+ Function Name: DRV_OLED_STRING_DISPLAY
+ Function Description: Oled string display function
+ Input parameters:
+ *To display the starting coordinates of the string
+ *String to display
+ Output parameters: none
+ Return Value: void
 *****************************************************************************/
 extern BSP_VOID DRV_OLED_STRING_DISPLAY(UINT8 ucX, UINT8 ucY, UINT8 *pucStr);
 
 /*****************************************************************************
- 函 数 名  : DRV_OLED_POWER_OFF
- 功能描述  : oled下电函数
- 输入参数  :
- 输出参数  : None
- 返 回 值  : void
+ Function Name: DRV_OLED_POWER_OFF
+ Function description: oled power down function
+ Input parameters:
+ Output parameters: None
+ Return Value: void
 *****************************************************************************/
 extern BSP_VOID DRV_OLED_POWER_OFF(BSP_VOID);
 
@@ -474,25 +475,25 @@ typedef enum
 
 
 /*****************************************************************************
- 函 数 名  : lcdRefresh
- 功能描述  : lcd在指定位置刷屏函数
- 输入参数  :
- 输出参数  :
-*          UINT32 ulXStart, UINT32 ulYStart－－起始坐标
-*          UINT32 ulXOffset, UINT32 ulYOffset－－横向纵向偏移量
-*          UINT8 *pucBuffer－－显示数据
- 返 回 值  : void
+ Function Name: lcdRefresh
+ Function description: lcd flushing function at the specified position
+ Input parameters:
+ Output parameters:
+*UINT32 ulXStart, UINT32 ulYStart---Start coordinates
+*UINT32 ulXOffset, UINT32 ulYOffset---horizontal vertical offset
+*UINT8 *pucBuffer－Display data
+ Return Value: void
 *****************************************************************************/
 extern int lcdRefresh(unsigned char x0,unsigned char y0,unsigned char x1,unsigned char y1,const unsigned char * test_buf);
 
 /*****************************************************************************
- 函 数 名  : balong_lcd_ioctl
- 功能描述  : lcd ioctl
- 输入参数  :
-*            int cmd --command ID
-*            arg--para
- 输出参数  : none
- 返 回 值  : BSP_S32
+ Function name: balong_lcd_ioctl
+ Function description: lcd ioctl
+ Input parameters:
+*int cmd --command ID
+*arg--para
+ Output parameters: none
+ Return Value: BSP_S32
 *****************************************************************************/
 extern BSP_S32 balong_lcd_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
 
@@ -516,230 +517,230 @@ typedef enum tagSCI_CARD_STATE_E
 } SCI_CARD_STATE_E;
 
 /*****************************************************************************
-* 函 数 名  : BSP_SCI_Reset
+*Function Name: BSP_SCI_Reset
 *
-* 功能描述  : 本接口用于复位SCI（Smart Card Interface）驱动和USIM（Universal
-*           Subscriber Identity Module）卡
+*Function description: This interface is used to reset SCI (Smart Card Interface) driver and USIM (Universal)
+*Subscriber Identity Module) card
 *
-* 输入参数  : BSP_VOID
-* 输出参数  : 无
+*Input parameters: BSP_VOID
+*Output parameters: None
 *
-* 返 回 值  : OK  复位成功
+*Return Value: OK Reset successfully
 *
-* 修改记录  : 2009年6月29日   liumengcun  creat
+*Modified record: June 29, 2009 liumengcun creat
 *
 *****************************************************************************/
 BSP_U32 BSP_SCI_Reset(BSP_VOID);
 #define DRV_USIMMSCI_RST()    BSP_SCI_Reset()
 
 /********************************************************************************************************************
- 函 数 名  : BSP_GUSCI_GetCardStatus
- 功能描述  : 本接口用于获得卡当前的状态，目前LTE提供接口参数类型不一致
- 输入参数  : 无。
- 输出参数  :
- 返 回 值  : 0:  卡处于Ready；
-             -1：卡未处于Ready。
- 注意事项  ：有效调用BSP_SCI_Reset()函数后，再调用此函数。
+ Function Name: BSP_GUSCI_GetCardStatus
+ Function description: This interface is used to obtain the current status of the card. Currently, the interface parameter types provided by LTE are inconsistent.
+ Input parameters: None.
+ Output parameters:
+ Return Value: 0: The card is in Ready;
+             -1: The card is not in Ready.
+ Note: After effectively calling the BSP_SCI_Reset() function, call this function again.
 ********************************************************************************************************************/
 extern int BSP_GUSCI_GetCardStatus(BSP_VOID);
 #define DRV_USIMMSCI_GET_CARD_STAU()    BSP_GUSCI_GetCardStatus()
 
 /*****************************************************************************
-* 函 数 名  : DRV_USIMMSCI_SND_DATA
+*Function Name: DRV_USIMMSCI_SND_DATA
 *
-* 功能描述  : 本接口用于发送一段数据到USIM卡
+*Function description: This interface is used to send a piece of data to the USIM card
 *
-* 输入参数  : BSP_U32 u32DataLength 发送数据的有效长度。取值范围1～256，单位为字节
-*             BSP_U8 *pu8DataBuffer 发送数据所在内存的首地址，如是动态分配，调用接口
-*                                   后不能立即释放，依赖于硬件发完数据
-* 输出参数  : 无
+*Input parameters: BSP_U32 u32DataLength The effective length of the data sent. Value range is 1 to 256, units are bytes
+*BSP_U8 *pu8DataBuffer The first address of the memory where the data is sent, if it is dynamically allocated, the interface is called
+*Cannot be released immediately afterwards, and the data is sent by hardware
+*Output parameters: None
 *
-* 返 回 值  : OK
-*           BSP_ERR_SCI_NOTINIT
-*           BSP_ERR_SCI_INVALIDPARA
-*           BSP_ERR_SCI_DISABLED
-*           BSP_ERR_SCI_NOCARD
-*           BSP_ERR_SCI_NODATA
+*Return Value: OK
+*BSP_ERR_SCI_NOTINIT
+*BSP_ERR_SCI_INVALIDPARA
+*BSP_ERR_SCI_DISABLED
+*BSP_ERR_SCI_NOCARD
+*BSP_ERR_SCI_NODATA
 *
-* 修改记录  : 2009年6月29日   liumengcun  creat
+*Modified record: June 29, 2009 liumengcun creat
 *
 *****************************************************************************/
 BSP_S32 DRV_USIMMSCI_SND_DATA(BSP_U32 u32DataLength, BSP_U8 *pu8DataBuffer);
 
 /*****************************************************************************
-* 函 数 名  : DRV_USIMMSCI_RCV
+*Function Name: DRV_USIMMSCI_RCV
 *
-* 功能描述  : 本接口用于USIM Manager读取来自SCI Driver的卡返回数据
-*             该接口为阻塞接口，只有SCI接收到足够的数据量后才会返回；
-*             该接口的超时门限为1s
+*Function description: This interface is used by USIM Manager to read card return data from SCI Driver
+*This interface is a blocking interface, and it will return only after SCI receives sufficient data;
+*The timeout threshold of this interface is 1s
 *
-* 输入参数  : BSP_U32 u32DataLength USIM Manager欲从SCI Driver读取的数据长度。
-* 输出参数  : BSP_U8 *pu8DataBuffer USIM Manager指定的Buffer，SCI Driver将数据拷贝到本Buffer。
-* 返 回 值  : OK
-*             BSP_ERR_SCI_NOTINIT
-*             BSP_ERR_SCI_INVALIDPARA
+*Input parameters: BSP_U32 u32DataLength The length of data that USIM Manager wants to read from SCI Driver.
+*Output parameters: BSP_U8 *pu8DataBuffer The Buffer specified by USIM Manager, SCI Driver copies the data to this Buffer.
+*Return Value: OK
+*BSP_ERR_SCI_NOTINIT
+*BSP_ERR_SCI_INVALIDPARA
 *
-* 修改记录  : 2009年6月29日   liumengcun  creat
+*Modified record: June 29, 2009 liumengcun creat
 *
 *****************************************************************************/
 BSP_S32 DRV_USIMMSCI_RCV(BSP_U32 u32Length,BSP_U8 *pu8Data);
 
 /*****************************************************************************
-* 函 数 名  : DRV_USIMMSCI_GET_ATR
+*Function Name: DRV_USIMMSCI_GET_ATR
 *
-* 功能描述  : 本接口用于将Driver层缓存的ATR数据和数据个数返回给USIM Manager层
+*Function description: This interface is used to return the ATR data and data cached by the Driver layer to the USIM Manager layer
 *
-* 输入参数  : BSP_VOID
-* 输出参数  : unsigned long *u8DataLength  Driver读取的ATR数据长度，返回给USIM Manager。
-*                                   取值范围0～32，单位是字节
-*           BSP_U8 *pu8ATR          USIM Manager指定的Buffer，SCI Driver将ATR
-*                                   数据拷贝到本Buffer。一般为操作系统函数动态分配
-*                                   或者静态分配的地址
+*Input parameters: BSP_VOID
+*Output parameters: unsigned long *u8DataLength The ATR data length read by the Driver, returned to the USIM Manager.
+*Value range is 0 to 32, unit is bytes
+*BSP_U8 *pu8ATR The Buffer specified by USIM Manager, SCI Driver will ATR
+*Copy the data to this Buffer. Generally dynamic allocation of operating system functions
+*or statically allocated address
 *
 *
-* 返 回 值  : OK
-*          BSP_ERR_SCI_NOTINIT
-*          BSP_ERR_SCI_INVALIDPARA
+*Return Value: OK
+*BSP_ERR_SCI_NOTINIT
+*BSP_ERR_SCI_INVALIDPARA
 *
-* 修改记录  : 2009年6月29日   liumengcun  creat
+*Modified record: June 29, 2009 liumengcun creat
 *
 *****************************************************************************/
 BSP_S32 DRV_USIMMSCI_GET_ATR (unsigned long *u32DataLength, BSP_U8 *pu8ATR);
 
 /*****************************************************************************
-* 函 数 名  : DRV_USIMMSCI_CLASS_SWITCH
+*Function Name: DRV_USIMMSCI_CLASS_SWITCH
 *
-* 功能描述  : 本接口用于支持PS对卡的电压类型进行切换，从1.8V切换到3V
+*Function description: This interface is used to support PS to switch the voltage type of the card, from 1.8V to 3V
 *
-* 输入参数  : BSP_VOID
-* 输出参数  : 无
+*Input parameters: BSP_VOID
+*Output parameters: None
 *
-* 返 回 值  :  OK    当前电压不是最高的，进行电压切换操作
-*           BSP_ERR_SCI_CURRENT_STATE_ERR 切换失败 current SCI driver state is ready/rx/tx
-*           BSP_ERR_SCI_VLTG_HIGHEST   当前电压已经是最高电压，没有进行电压切换
-*           BSP_ERR_SCI_NOTINIT
-*           BSP_ERR_SCI_CURRENT_VLTG_ERR 当前电压值异常（非class B或者C）
+*Return Value: OK The current voltage is not the highest, perform voltage switching operation
+*BSP_ERR_SCI_CURRENT_STATE_ERR Switching failed Current SCI driver state is ready/rx/tx
+*BSP_ERR_SCI_VLTG_HIGHEST The current voltage is already the highest voltage, and no voltage switching is performed
+*BSP_ERR_SCI_NOTINIT
+*BSP_ERR_SCI_CURRENT_VLTG_ERR The current voltage value is abnormal (not class B or C)
 *
-* 修改记录  : 2009年6月29日   liumengcun  creat
+*Modified record: June 29, 2009 liumengcun creat
 *
 *****************************************************************************/
 BSP_S32 DRV_USIMMSCI_CLASS_SWITCH(BSP_VOID);
 
 /*****************************************************************************
-* 函 数 名  : DRV_USIMMSCI_TM_STOP
+*Function Name: DRV_USIMMSCI_TM_STOP
 *
-* 功能描述  : 本接口用于支持PS关闭SIM卡时钟
+*Function description: This interface is used to support PS to turn off the SIM card clock
 *
-* 输入参数  :
-*           SCI_CLK_STOP_TYPE_E enTimeStopCfg 时钟停止模式
+*Input parameters:
+*SCI_CLK_STOP_TYPE_E enTimeStopCfg Clock Stop Mode
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : OK - successful completion
-*               ERROR - failed
-*               BSP_ERR_SCI_NOTINIT
-*               BSP_ERR_SCI_INVALIDPARA - invalid mode specified
-*               BSP_ERR_SCI_UNSUPPORTED - not support such a operation
-* 修改记录  : 2009年6月29日   liumengcun  creat
+*Return Value: OK -successful completion
+*ERROR -failed
+*BSP_ERR_SCI_NOTINIT
+*BSP_ERR_SCI_INVALIDPARA -invalid mode specified
+*BSP_ERR_SCI_UNSUPPORTED -not support such a operation
+*Modified record: June 29, 2009 liumengcun creat
 *
 *****************************************************************************/
 BSP_VOID DRV_USIMMSCI_TM_STOP(BSP_U32 ulStopType);
 
 /*****************************************************************************
-* 函 数 名  : BSP_SCI_Deactive
+*Function Name: BSP_SCI_Deactive
 *
-* 功能描述  : 本接口用于对SIM卡的去激活操作
+*Function description: This interface is used to deactivate the SIM card
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : OK
-*             BSP_ERR_SCI_NOTINIT
-* 修改记录  : 2009年6月29日   liumengcun  creat
+*Return Value: OK
+*BSP_ERR_SCI_NOTINIT
+*Modified record: June 29, 2009 liumengcun creat
 *
 *****************************************************************************/
 BSP_U32 BSP_SCI_Deactive(BSP_VOID);
 #define DRV_USIMMSCI_DEACT()    BSP_SCI_Deactive()
 
 /*****************************************************************************
-* 函 数 名  : BSP_SCI_GetClkStatus
+*Function Name: BSP_SCI_GetClkStatus
 *
-* 功能描述  : 本接口用于获取当前SIM卡时钟状态
+*Function description: This interface is used to obtain the current SIM card clock status
 *
-* 输入参数  : BSP_U32 *pu32SciClkStatus   变量指针，用于返回SIM卡时钟状态：
-*                                       0：时钟已打开；
-*                                       1：时钟停止
-* 输出参数  : 无
+*Input parameters: BSP_U32 *pu32SciClkStatus variable pointer, used to return the SIM card clock status:
+*0: The clock is on;
+*1: The clock stops
+*Output parameters: None
 *
-* 返 回 值  : OK    操作成功
-*          BSP_ERR_SCI_INVALIDPARA
-* 修改记录  : 2009年6月29日   liumengcun  creat
+*Return Value: OK Operation was successful
+*BSP_ERR_SCI_INVALIDPARA
+*Modified record: June 29, 2009 liumengcun creat
 *
 *****************************************************************************/
 BSP_U32 BSP_SCI_GetClkStatus(BSP_U32 *pu32SciClkStatus);
 #define DRV_USIMMSCI_GET_CLK_STAU(pulSciClkStatus)    BSP_SCI_GetClkStatus(pulSciClkStatus)
 
 /*****************************************************************************
-* 函 数 名  : BSP_SCI_GetClkFreq
+*Function Name: BSP_SCI_GetClkFreq
 *
-* 功能描述  : 本接口用于获取当前SIM卡时钟频率
+*Function description: This interface is used to obtain the current SIM card clock frequency
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : unsigned long *pLen   时钟频率数据的长度
-*             BSP_U8 *pBuf    时钟频率数据
-* 返 回 值  : OK    操作成功
-*             BSP_ERR_SCI_INVALIDPARA
-* 修改记录  : 2010年8月24日   zhouluojun  creat
+*Output parameters: unsigned long *pLen The length of clock frequency data
+*BSP_U8 *pBuf Clock Frequency Data
+*Return Value: OK Operation was successful
+*BSP_ERR_SCI_INVALIDPARA
+*Modified record: August 24, 2010 zhouluojun creat
 *
 *****************************************************************************/
 BSP_U32 BSP_SCI_GetClkFreq(unsigned long *pLen, BSP_U8 *pBuf);
 #define DRV_PCSC_GET_CLK_FREQ(pDataLen, Buffer)    BSP_SCI_GetClkFreq(pDataLen, Buffer)
 
 /*****************************************************************************
-* 函 数 名  : BSP_SCI_GetBaudRate
+*Function Name: BSP_SCI_GetBaudRate
 *
-* 功能描述  : 本接口用于获取当前SIM卡时钟频率
+*Function description: This interface is used to obtain the current SIM card clock frequency
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : unsigned long *pLen   波特率数据的长度
-*             BSP_U8 *pBuf    波特率数据
+*Output parameters: unsigned long *pLen The length of the baud rate data
+*BSP_U8 *pBuf baud rate data
 *
-* 返 回 值  : OK    操作成功
-*             BSP_ERR_SCI_INVALIDPARA
-* 修改记录  : 2010年8月24日   zhouluojun  creat
+*Return Value: OK Operation was successful
+*BSP_ERR_SCI_INVALIDPARA
+*Modified record: August 24, 2010 zhouluojun creat
 *
 *****************************************************************************/
 BSP_U32 BSP_SCI_GetBaudRate(unsigned long *pLen, BSP_U8 *pBuf);
 #define DRV_PCSC_GET_BAUD_RATE(pDataLen, Buffer)    BSP_SCI_GetBaudRate(pDataLen, Buffer)
 
 /*****************************************************************************
-* 函 数 名  : BSP_SCI_GetPCSCParameter
+*Function Name: BSP_SCI_GetPCSCParameter
 *
-* 功能描述  : 本接口用于获取当前SIM卡的PCSC相关参数
+*Function description: This interface is used to obtain PCSC-related parameters of the current SIM card
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : BSP_U8 *pBuf    PCSC相关参数
+*Output parameters: BSP_U8 *pBuf PCSC related parameters
 *
-* 返 回 值  : OK    操作成功
-*             BSP_ERR_SCI_INVALIDPARA
-* 修改记录  : 2010年8月24日   zhouluojun  creat
+*Return Value: OK Operation was successful
+*BSP_ERR_SCI_INVALIDPARA
+*Modified record: August 24, 2010 zhouluojun creat
 *
 *****************************************************************************/
 BSP_U32 BSP_SCI_GetPCSCParameter(BSP_U8 *pBuf);
 #define DRV_PCSC_GET_SCI_PARA(Para)    BSP_SCI_GetPCSCParameter(Para)
 
 /*****************************************************************************
- 函 数 名  : sciRecordDataSave
- 功能描述  : 本接口用于获取当前SIM卡交互数据。属于异常处理模块，V7先打桩
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 0:  操作成功；
-             -1：操作失败，指针参数为空。
- 注意事项  ：
+ Function Name: sciRecordDataSave
+ Function Description: This interface is used to obtain the current SIM card interactive data. Belongs to the exception handling module, V7 first drives piles
+ Input parameters: None.
+ Output parameters: None
+ Return Value: 0: The operation was successful;
+             -1: The operation failed, the pointer parameter is empty.
+ Notes:
 *****************************************************************************/
 /*extern int sciRecordDataSave(void);*/
 extern int BSP_USIMMSCI_STUB(void);
@@ -754,14 +755,14 @@ typedef enum
 typedef void (*OMSCIFUNCPTR)(unsigned int ulVal);
 
 /*****************************************************************************
-* 函 数 名  : BSP_SCIFuncRegister
+*Function Name: BSP_SCIFuncRegister
 *
-* 功能描述  : 本接口用于注册OAM的回调函数
+*Function description: This interface is used to register OAM callback functions
 *
-* 输入参数  : omSciFuncPtr
-* 输出参数  : 无
+*Input parameters: omSciFuncPtr
+*Output parameters: None
 *
-* 返 回 值  : NA
+*Return Value: NA
 *
 *
 *****************************************************************************/
@@ -773,28 +774,28 @@ void BSP_SCIFuncRegister(OMSCIFUNCPTR omSciFuncPtr);
 /*************************PMU BEGIN***********************************/
 
 /*****************************************************************************
- 函 数 名  : DRV_GET_PMU_STATE
- 功能描述  : 获取PMU模块开机方式、充电状态、电池电量、电池在位状态。
- 输入参数  : 无。
- 输出参数  : Pmu_State :开机方式、充电状态、电池电量、电池在位状态。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
- 注意事项　：该接口仅在PS的PC工程中使用，目前没有应用，暂保留。
+ Function Name: DRV_GET_PMU_STATE
+ Function description: Obtain the PMU module power-on mode, charging status, battery power, and battery in position.
+ Input parameters: None.
+ Output parameters: Pmu_State: Power-on mode, charging status, battery power, and battery in position.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
+ Note: This interface is only used in PS PC projects and is not currently used and is reserved for the time being.
 *****************************************************************************/
 extern unsigned int DRV_GET_PMU_STATE(void*  Pmu_State);
 
 /*****************************************************************************
- 函 数 名  : BSP_PMU_UsbEndRegActionFunc
- 功能描述  : 本接口是USB插入/拔出回调注册函数。
- 输入参数  : srcFunc：注册的USB插入或拔出动作发生时的回调函数指针。
-             actionIndex：动作指示。
-                          0：参数srcFunc是注册的USB插入动作的回调函数；
-                          1：参数srcFunc是注册的USB拔出动作的回调函数。
+ Function Name: BSP_PMU_UsbEndRegActionFunc
+ Function Description: This interface is a USB plug-in/unplug callback registration function.
+ Input parameters: srcFunc: The callback function pointer when the registered USB insertion or unplugging action occurs.
+             actionIndex: Action Indication.
+                          0: The parameter srcFunc is a registered callback function for USB insertion action;
+                          1: The parameter srcFunc is a registered callback function for USB pull-out action.
 
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
- 注意事项  ：调用此接口，将所要执行的函数指针传入，即在USB插入或拔出时调用所要执行的函数。
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
+ Note: Call this interface and pass in the function pointer to be executed, that is, call the function to be executed when USB is inserted or unplugged.
 *****************************************************************************/
 extern int BSP_PMU_UsbEndRegActionFunc(pFUNCPTR srcFunc, unsigned char actionIndex);
 #define DRV_USB_ENDREGACTION_FUNC(srcFunc,actionIndex) \
@@ -802,80 +803,80 @@ extern int BSP_PMU_UsbEndRegActionFunc(pFUNCPTR srcFunc, unsigned char actionInd
 
 
 /*****************************************************************************
-函数名：   BSP_USB_PortTypeValidCheck
-功能描述:  提供给上层查询设备端口形态配置合法性接口
-           1、端口为已支持类型，2、包含PCUI口，3、无重复端口，4、端点数不超过16，
-           5、第一个设备不为MASS类
-输入参数： pucPortType  端口形态配置
-           ulPortNum    端口形态个数
-返回值：   0:    端口形态合法
-           其他：端口形态非法
+Function name: BSP_USB_PortTypeValidCheck
+Function description: Provided to the upper layer query device port form configuration legality interface
+           1. The port is supported, 2. It contains PCUI port, 3. There are no duplicate ports, 4. The number of endpoints does not exceed 16.
+           5. The first device is not a MASS class
+Input parameters: pucPortType port form configuration
+           ulPortNum Number of port patterns
+Return value: 0: Port form is legal
+           Others: Illegal port form
 *****************************************************************************/
 unsigned int BSP_USB_PortTypeValidCheck(unsigned char *pucPortType, unsigned long ulPortNum);
 #define DRV_USB_PORT_TYPE_VALID_CHECK(pucPortType, ulPortNum)  \
                     BSP_USB_PortTypeValidCheck(pucPortType, ulPortNum)
 
 /*****************************************************************************
-函数名：   BSP_USB_GetAvailabePortType
-功能描述:  提供给上层查询当前设备支持端口形态列表接口
-输入参数： ulPortMax    协议栈支持最大端口形态个数
-输出参数:  pucPortType  支持的端口形态列表
-           pulPortNum   支持的端口形态个数
-返回值：   0:    获取端口形态列表成功
-           其他：获取端口形态列表失败
+Function name: BSP_USB_GetAvailabePortType
+Function description: Provided to the upper layer to query the current device to support port form list interface
+Input parameters: ulPortMax protocol stack supports the maximum number of port patterns
+Output parameters: pucPortType Supported port patterns list
+           pulPortNum supports the number of port patterns
+Return value: 0: Acquisition of port form list successfully
+           Others: Failed to get the port pattern list
 *****************************************************************************/
 unsigned int BSP_USB_GetAvailabePortType(unsigned char *pucPortType,
                             unsigned long *pulPortNum, unsigned long ulPortMax);
 #define DRV_USB_GET_AVAILABLE_PORT_TYPE(pucPortType, pulPortNum, ulPortMax)  \
                 BSP_USB_GetAvailabePortType(pucPortType, pulPortNum, ulPortMax)
 
-/*************************PMU END*************************************/
+/*************************PMU End *************************************/
 
 /*************************INT BEGIN***********************************/
 
 /*****************************************************************************
-* 函 数 名  : BSP_INT_Enable
+*Function Name: BSP_INT_Enable
 *
-* 功能描述  : 使能某个中断
+*Function Description: Enable an interrupt
 *
-* 输入参数  : INT32 ulLvl 要使能的中断号，取值范围0～40
-* 输出参数  : 无
+*Input parameters: INT32 ulLvl Interrupt number to be enabled, the value range is 0 to 40
+*Output parameters: None
 *
-* 返 回 值  : OK&ERROR
+*Return Value: OK&ERROR
 *
-* 修改记录  : 2009年3月5日   zhanghailun  creat
+*Modified record: March 5, 2009 zhanghailun creat
 *****************************************************************************/
 BSP_S32 BSP_INT_Enable ( BSP_S32 s32Lvl);
 #define DRV_VICINT_ENABLE(ulLvl)    BSP_INT_Enable(ulLvl)
 
 /*****************************************************************************
- * 函 数 名  : BSP_INT_Disable
+ *Function Name: BSP_INT_Disable
  *
- * 功能描述  : 去使能某个中断
+ *Function Description: Deactivate an interrupt
  *
- * 输入参数  : INT32 ulLvl 要使能的中断号，取值范围0～40
- * 输出参数  : 无
+ *Input parameters: INT32 ulLvl Interrupt number to be enabled, the value range is 0 to 40
+ *Output parameters: None
  *
- * 返 回 值  : OK&ERROR
+ *Return Value: OK&ERROR
  *
- * 修改记录  : 2009年3月5日   zhanghailun  creat
+ *Modified record: March 5, 2009 zhanghailun creat
  *****************************************************************************/
 BSP_S32 BSP_INT_Disable ( BSP_S32 s32Lvl);
 #define  DRV_VICINT_DISABLE(ulLvl)    BSP_INT_Disable(ulLvl)
 
 /*****************************************************************************
- * 函 数 名  : BSP_INT_Connect
+ *Function Name: BSP_INT_Connect
  *
- * 功能描述  : 注册某个中断
+ *Function Description: Register an interrupt
  *
- * 输入参数  : VOIDFUNCPTR * vector 中断向量号，取值范围0～40
- *           VOIDFUNCPTR routine  中断服务程序
- *           INT32 parameter      中断服务程序参数
- * 输出参数  : 无
+ *Input parameters: VOIDFUNCPTR *vector interrupt vector number, value range 0~40
+ *VOIDFUNCPTR routine interrupt service program
+ *INT32 parameter interrupt service program parameters
+ *Output parameters: None
  *
- * 返 回 值  : OK&ERROR
+ *Return Value: OK&ERROR
  *
- * 修改记录  : 2009年3月5日   zhanghailun  creat
+ *Modified record: March 5, 2009 zhanghailun creat
  *****************************************************************************/
 BSP_S32 BSP_INT_Connect  (VOIDFUNCPTR * vector,VOIDFUNCPTR routine, BSP_S32 parameter);
 #define DRV_VICINT_CONNECT(vector,routine,parameter)    BSP_INT_Connect(vector,routine,parameter)
@@ -884,70 +885,70 @@ BSP_S32 BSP_INT_Connect  (VOIDFUNCPTR * vector,VOIDFUNCPTR routine, BSP_S32 para
 
 #if defined(BSP_CORE_MODEM) || defined(PRODUCT_CFG_CORE_TYPE_MODEM)
 
-/*************************WDT BEGIN***********************************/
+/*************************WDT starts ***********************************
 
 /*****************************************************************************
-* 函 数 名  : BSP_WDT_Init
+*Function Name: BSP_WDT_Init
 *
-* 功能描述  : 初始化定制看门狗，设置超时时间，挂接中断服务函数
+*Function description: Initialize the custom watchdog, set the timeout time, and attach the interrupt service function
 *
-* 输入参数  : wdtId         看门狗ID,芯片提供1个看门狗，ID可以为0
-*             wdtTimeOuts   看门狗超时时间，单位秒,时间最大不能超过51秒
+*Input parameters: wdtId Watchdog ID, the chip provides 1 watchdog, the ID can be 0
+*wdtTimeOuts Watchdog timeout time, unit seconds, maximum time cannot exceed 51 seconds
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : OK& ERROR
+*Return Value: OK& ERROR
 *
-* 修改记录 :  2009年3月5日  v1.00  wangxuesong  创建
+*Modify record: March 5, 2009 v1.00 wangxuesong created
 *****************************************************************************/
 BSP_S32 BSP_WDT_Init(BSP_U8 wdtId , BSP_U32 wdtTimeOuts);
 #define DRV_WDT_INIT(wdtId,wdtTimeOutms)      BSP_WDT_Init(wdtId,wdtTimeOutms)
 
 /*****************************************************************************
-* 函 数 名  : BSP_WDT_EnableWdt
+*Function Name: BSP_WDT_EnableWdt
 *
-* 功能描述  : 开启看门狗
+*Function Description: Turn on the watchdog
 *
-* 输入参数  : wdtId  看门狗ID
+*Input parameters: wdtId Watchdog ID
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : OK& ERROR
+*Return Value: OK& ERROR
 *
-* 修改记录 :  2009年3月5日  v1.00  wangxuesong  创建
+*Modify record: March 5, 2009 v1.00 wangxuesong created
 *****************************************************************************/
 BSP_S32 BSP_WDT_Enable(BSP_U8 wdtId);
 #define DRV_WDT_ENABLE(wdtId)    BSP_WDT_Enable(wdtId)
 
 /*****************************************************************************
-* 函 数 名  : BSP_WDT_Disable
+*Function Name: BSP_WDT_Disable
 *
-* 功能描述  : 关闭看门狗
+*Function Description: Close the watchdog
 *
-* 输入参数  : wdtId  看门狗ID
+*Input parameters: wdtId Watchdog ID
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : OK& ERROR
+*Return Value: OK& ERROR
 *
-* 修改记录 :  2009年3月5日  v1.00  wangxuesong  创建
+*Modify record: March 5, 2009 v1.00 wangxuesong created
 *****************************************************************************/
 BSP_S32 BSP_WDT_Disable(BSP_U8 wdtId);
 #define DRV_WDT_DISABLE(wdtId)    BSP_WDT_Disable(wdtId)
 #endif
 
 /*****************************************************************************
-* 函 数 名  : BSP_WDT_HardwareFeed
+*Function Name: BSP_WDT_HardwareFeed
 *
-* 功能描述  : 重置看门狗计数寄存器（喂狗）
+*Function Description: Reset the watchdog count register (feed the dog)
 *
-* 输入参数  : wdtId  看门狗ID
+*Input parameters: wdtId Watchdog ID
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : OK& ERROR
+*Return Value: OK& ERROR
 *
-* 修改记录 :  2009年3月5日  v1.00  wangxuesong  创建
+*Modify record: March 5, 2009 v1.00 wangxuesong created
 *****************************************************************************/
 BSP_S32 BSP_WDT_HardwareFeed(BSP_U8 wdtId);
 #define DRV_WDT_FEED(wdtId)    BSP_WDT_HardwareFeed(wdtId)
@@ -960,8 +961,8 @@ BSP_S32 BSP_WDT_HardwareFeed(BSP_U8 wdtId);
 
 typedef enum
 {
-    TFUP_FAIL = 0,  /*打叉*/
-    TFUP_OK         /*打勾*/
+    TFUP_FAIL = 0,  /*Try a fork*/
+    TFUP_OK         /*Tick*/
 }TFUP_DISPLAY_TYPE;
 
 enum SD_MMC_OPRT_ENUM
@@ -977,7 +978,7 @@ enum SD_MMC_OPRT_ENUM
 typedef unsigned int SD_MMC_OPRT_ENUM_UINT32;
 
 
-/*SD卡设备类型*/
+/*Sd card device type*/
 typedef struct _sd_dev_type_str
 {
     unsigned long   devNameLen;
@@ -985,33 +986,33 @@ typedef struct _sd_dev_type_str
 }SD_DEV_TYPE_STR;
 
 /*****************************************************************************
- 函 数 名  : BSP_SDMMC_ATProcess
- 功能描述  : at^sd,SD卡操作，写，擦除，格式化操作
- 输入参数  : 操作类型 ulOp:
-            0  格式化SD卡
-            1  擦除整个SD卡内容；
-            2  用于指定地址内容的擦除操作，指定擦除的内容长度为512字节。擦除后的地址中写全1
-            3  写数据到SD卡的指定地址中，需要带第二个和第三个参数
-            4  读取ulAddr指定的地址(ulAddr*512)的512个字节的内容到pucBuffer中
+ Function Name: BSP_SDMMC_ATProcess
+ Function description: at^sd, SD card operation, write, erase, format operation
+ Input parameters: Operation type ulOp:
+            0 Format SD card
+            1 Erase the entire SD card content;
+            2 Used to specify the erase operation of the content of the address, and the specified erase content length is 512 bytes. Write all 1 in the erased address
+            3 Write data to the specified address of the SD card, and the second and third parameters need to be included.
+            4 Read the 512 bytes of the address specified by ulAddr (ulAddr*512) into the pucBuffer
 
-            ulAddr < address >  地址，以512BYTE为一个单位，用数字n表示
+            ulAddr < address > address, in 512BYTE as a unit, represented by the number n
 
             ulData
-             < data >            数据内容，表示512BYTE的内容，每个字节的内容均相同。
-             0       字节内容为0x00
-             1       字节内容为0x55
-             2       字节内容为0xAA
-             3       字节内容为0xFF
+             < data > data content, representing the content of 512BYTE, and the content of each byte is the same.
+             0 byte content is 0x00
+             1 byte content is 0x55
+             2 bytes content is 0xAA
+             3 bytes of content is 0xFF
 
- 输出参数  : pulErr
- 返 回 值  : 0 ：OK  非 0 ：Error
+ Output parameters: pulErr
+ Return Value: 0: OK Non 0: Error
 
-            具体的错误值填充在*pulErr中
-            0 表示SD卡不在位
-            1 表示SD卡初始化失败
-            2 表示<opr>参数非法，对应操作不支持(该错误由AT使用,不需要底软使用)
-            3 表示<address>地址非法，超过SD卡本身容量
-            4 其他未知错误
+            The specific error value is filled in *pulErr
+            0 means that the SD card is not in place
+            1 indicates that the SD card initialization failed
+            2 means that the <opr> parameter is illegal and the corresponding operation is not supported (this error is used by AT and does not require soft use)
+            3 means that the <address> address is illegal and exceeds the capacity of the SD card itself.
+            4 Other unknown errors
 *****************************************************************************/
 extern  unsigned long  BSP_SDMMC_ATProcess(SD_MMC_OPRT_ENUM_UINT32 ulOp,
                 unsigned long ulAddr,  unsigned long ulData,unsigned char *pucBuffer,unsigned long *pulErr);
@@ -1021,183 +1022,185 @@ extern  unsigned long  BSP_SDMMC_ATProcess(SD_MMC_OPRT_ENUM_UINT32 ulOp,
 #if defined(BSP_CORE_MODEM) || defined(PRODUCT_CFG_CORE_TYPE_MODEM)
 #else
 /*****************************************************************************
-* 函 数 名  : sd_mmc_blk_w
+*Function name: sd_mmc_blk_w
 *
-* 功能描述  :写卡接口
+*Function description: Card writing interface
 *
-* 输入参数  : u32StartBlk 起始块
-				  pu8DataBuf  写数据缓存
-				  u32Len 写数据大小，必须为512字节的整数倍
-* 输出参数  : NA
+*Input parameters: u32StartBlk Start block
+				  pu8DataBuf write data cache
+				  u32Len The write data size must be an integer multiple of 512 bytes.
+*Output parameters: NA
 *
-* 返 回 值  :  成功返回0
+*Return Value: Return 0 successfully
 *
-* 其它说明  : NA
+*Other Instructions: NA
 *
 *****************************************************************************/
 extern BSP_S32 sd_mmc_blk_w(BSP_U32 u32StartBlk,BSP_U8 *pu8DataBuf,BSP_U32 u32Len);
 /*****************************************************************************
-* 函 数 名  : sd_mmc_blk_r
+*Function name: sd_mmc_blk_r
 *
-* 功能描述  : 读卡接口
+*Function description: Card reading interface
 *
-* 输入参数  : u32StartBlk 起始块
-				  pu8DataBuf  读数据缓存
-				  u32Len  读数据大小，必须为512字节的整数倍
-* 输出参数  : NA
+*Input parameters: u32StartBlk Start block
+				  pu8DataBuf read data cache
+				  u32Len The read data size must be an integer multiple of 512 bytes.
+*Output parameters: NA
 *
-* 返 回 值  :  成功返回0
+*Return Value: Return 0 successfully
 *
-* 其它说明  : NA
+*Other Instructions: NA
 *
 *****************************************************************************/
 extern BSP_S32 sd_mmc_blk_r(BSP_U32 u32StartBlk,BSP_U8 *pu8DataBuf,BSP_U32 u32Len);
 /*****************************************************************************
-* 函 数 名  : sd_mmc_blk_erase
+*Function name: sd_mmc_blk_erase
 *
-* 功能描述  : 卡块擦除接口
+*Function description: Block erase interface
 *
-* 输入参数  : u32StartBlk 起始块
-				  u32EndBlk  终止块
-* 输出参数  : NA
+*Input parameters: u32StartBlk Start block
+				  u32EndBlk Terminate Block
+*Output parameters: NA
 *
-* 返 回 值  :  成功返回0
+*Return Value: Return 0 successfully
 *
-* 其它说明  : NA
+*Other Instructions: NA
 *
 *****************************************************************************/
 extern BSP_S32 sd_mmc_blk_erase(BSP_U32 u32StartBlk,BSP_U32 u32EndBlk);
 /*****************************************************************************
-* 函 数 名  : sd_mmc_get_status
+*Function name: sd_mmc_get_status
 *
-* 功能描述  : 卡在位查询
+*Function Description: Card in-location query
 *
-* 输入参数  : void
-* 输出参数  : NA
+*Input parameters: void
+*Output parameters: NA
 *
-* 返 回 值  : 0 : 在位；-1: 不在位
+*Return Value: 0: In position; -1: Not in position
 *
-* 其它说明  : NA
+*Other Instructions: NA
 *
 *****************************************************************************/
 extern BSP_S32 sd_mmc_get_status(BSP_VOID);
 #endif
 
 /*****************************************************************************
- 函 数 名  : BSP_SDMMC_GetOprtStatus
- 功能描述  : at^sd,SD卡当前操作状态
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  :
-            0: 未操作或操作已经完成;
-            1: 操作中
-            2: 上次操作失败
+ Function Name: BSP_SDMMC_GetOprtStatus
+ Function description: at^sd, the current operating status of the SD card
+ Input parameters: None
+ Output parameters: None
+ Return Value:
+            0: No operation or operation has been completed;
+            1: In operation
+            2: The last operation failed
 *****************************************************************************/
 extern unsigned long BSP_SDMMC_GetOprtStatus(void);
 #define DRV_SDMMC_GET_OPRT_STATUS()    BSP_SDMMC_GetOprtStatus()
 
 /*****************************************************************************
- 函 数 名  : BSP_SDMMC_AddHook
- 功能描述  : TF模块钩子函数注册。
- 输入参数  : hookType：回调函数类型，
-                       0：获得升级文件信息后调用的回调函数；
-                       1：TF卡插入通知OM的回调函数；
-                       2：TF卡拔出通知OM的回调函数；
-                       3； TF卡初始化后通知U盘的回调函数。
-             p：回调函数指针。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
- 注意事项  ：对于同一类型回调函数，重复注册会覆盖以前设置。
+ Function Name: BSP_SDMMC_AddHook
+ Function description: TF module hook function registration.
+ Input parameters: hookType: callback function type,
+                       0: The callback function called after obtaining the upgrade file information;
+                       1: Insert the callback function of the notification OM in the TF card;
+                       2: Unplug the callback function of the TF card to notify OM;
+                       3; The callback function of the U disk notifies the TF card after initialization.
+             p: callback function pointer.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
+ Note: For callback functions of the same type, repeated registration will override the previous settings.
 *****************************************************************************/
 //#if defined(BSP_CORE_MODEM) || defined(PRODUCT_CFG_CORE_TYPE_MODEM)
+
 extern int sdmmcAddHook (int hookType , void * p);/*y00186965 for sd_update*/
 #define DRV_SDMMC_ADD_HOOK(hookType,p)    sdmmcAddHook(hookType,p)
 //#else
-//extern int BSP_SDMMC_AddHook(int hookType, void * p);
+//extern int BSP_SDMMC_AddHook(int hookType, void *p);
 //#define DRV_SDMMC_ADD_HOOK(hookType,p)    BSP_SDMMC_AddHook(hookType,p)
 //#endif
 
+
 /*****************************************************************************
- 函 数 名  : BSP_SDMMC_UsbGetStatus
- 功能描述  : 返回SD卡状态
- 输入参数  : 无。
- 输出参数  : 无。
- 返回值：   0  为可用
-           非0 不可用
+ Function Name: BSP_SDMMC_UsbGetStatus
+ Function Description: Return to SD card status
+ Input parameters: None.
+ Output parameters: None.
+ Return value: 0 is available
+           Non-0 Not available
 
 *****************************************************************************/
 extern unsigned int BSP_SDMMC_UsbGetStatus(void);
 #define DRV_SDMMC_USB_STATUS()    BSP_SDMMC_UsbGetStatus();
 
 /*****************************************************************************
-* 函 数 名  : sdmmc_ClearWholeScreen
-* 功能描述  : SD卡升级NV恢复后的显示，清屏
-* 输入参数  : 无
-* 输出参数  : 无
-* 返 回 值  :无
-* 其它说明  : 无
+*Function name: sdmmc_ClearWholeScreen
+*Function description: Display after SD card upgrade NV recovery, clear the screen
+*Input parameters: None
+*Output parameters: None
+*Return Value: None
+*Other Instructions: None
 *****************************************************************************/
 extern void sdmmc_ClearWholeScreen(void);
 #define DRV_SDMMC_CLEAR_WHOLE_SCREEN()    sdmmc_ClearWholeScreen()
 
 /*****************************************************************************
-* 函 数 名  : sdmmc_UpdateDisplay
-* 功能描述  : SD卡升级NV恢复后的显示，显示
-* 输入参数  : BOOL UpdateStatus
-* 输出参数  : 无
-* 返 回 值  :无
-* 其它说明  : 升级成功，NV备份完成后调用该函数打勾
-              升级失败后调用该函数打叉
+*Function name: sdmmc_UpdateDisplay
+*Function description: Display after SD card upgrade NV recovery, display
+*Input parameters: BOOL UpdateStatus
+*Output parameters: None
+*Return Value: None
+*Other instructions: After the upgrade is successful, call this function and check it after the NV backup is completed.
+              After the upgrade failed, call the function and make a cross
 *****************************************************************************/
 extern void sdmmc_UpdateDisplay(int UpdateStatus);
 #define DRV_SDMMC_UPDATE_DISPLAY(state)    sdmmc_UpdateDisplay(state)
 
 /*****************************************************************************
-* 函 数 名  : DRV_SD_GET_STATUS
+*Function Name: DRV_SD_GET_STATUS
 *
-* 功能描述  : 卡在位查询
+*Function Description: Card in-location query
 *
-* 输入参数  : void
-* 输出参数  : NA
+*Input parameters: void
+*Output parameters: NA
 *
-* 返 回 值  : 0 : 在位；-1: 不在位
+*Return Value: 0: In position; -1: Not in position
 *
-* 其它说明  : NA
+*Other Instructions: NA
 *
 *****************************************************************************/
 extern int DRV_SD_GET_STATUS(void);
 
 /*****************************************************************************
-* 函 数 名  : DRV_SD_GET_CAPACITY
+*Function Name: DRV_SD_GET_CAPACITY
 *
-* 功能描述  : 卡容量查询
+*Function description: Card capacity query
 *
-* 输入参数  : void
-* 输出参数  : NA
+*Input parameters: void
+*Output parameters: NA
 *
-* 返 回 值  : 0 : 失败；>0: 卡容量
+*Return Value: 0: Failed; >0: Card Capacity
 *
-* 其它说明  : NA
+*Other Instructions: NA
 *
 *****************************************************************************/
 extern int DRV_SD_GET_CAPACITY(void);
 
 /*****************************************************************************
-* 函 数 名  : DRV_SD_TRANSFER
+*Function Name: DRV_SD_TRANSFER
 *
-* 功能描述  : 数据传输
+*Function description: Data transmission
 *
-* 输入参数  : struct scatterlist *sg    待传输数据结构体指针
-                            unsigned dev_addr   待写入的SD block 地址
-                            unsigned blocks    待写入的block个数
-                            unsigned blksz      每个block的大小，单位字节
-                            int wrflags    读写标志位，写:WRFlAG ; 读:RDFlAG
-* 输出参数  : NA
+*Input parameters: struct scatterlist *sg Pointer for data structure to be transferred
+                            unsigned dev_addr SD block address to be written
+                            unsigned blocks The number of blocks to be written
+                            unsigned blksz The size of each block, unit bytes
+                            int wrflags read and write flag bit, write: WRFlAG; read: RDFlAG
+*Output parameters: NA
 *
-* 返 回 值  : 0 : 成功；其它: 失败
+*Return Value: 0: Success; Other: Failed
 *
-* 其它说明  : NA
+*Other Instructions: NA
 *
 *****************************************************************************/
 #if defined(BSP_CORE_MODEM) || defined(PRODUCT_CFG_CORE_TYPE_MODEM)
@@ -1205,17 +1208,17 @@ extern int DRV_SD_GET_CAPACITY(void);
 extern int DRV_SD_TRANSFER(struct scatterlist *sg, unsigned dev_addr,unsigned blocks, unsigned blksz, int wrflags);
 #endif
 /*****************************************************************************
-* 函 数 名  : DRV_SD_SG_INIT_TABLE
+*Function Name: DRV_SD_SG_INIT_TABLE
 *
-* 功能描述  : SD多块数据传输sg list初始化
+*Function description: SD multi-block data transmission sg list initialization
 *
-* 输入参数  : const void *buf		待操作的buffer地址
-				  unsigned int buflen	待操作的buffer大小，小于32K, 大小为512B的整数倍
-				  					大于32K, 大小为32KB的整数倍，最大buffer为128K
-* 输出参数  : NA
+*Input parameters: const void *buf The buffer address to be operated
+				  unsigned int buflen The buffer size to be operated is less than 32K, an integer multiple of 512B
+				  					Greater than 32K, size is an integer multiple of 32KB, maximum buffer is 128K
+*Output parameters: NA
 *
-* 返 回 值  :  0 : 成功;  其它:失败
-* 其它说明  : NA
+*Return Value: 0: Success; Other: Failed
+*Other Instructions: NA
 *
 *****************************************************************************/
 #if defined(BSP_CORE_MODEM) || defined(PRODUCT_CFG_CORE_TYPE_MODEM)
@@ -1223,18 +1226,18 @@ extern int DRV_SD_TRANSFER(struct scatterlist *sg, unsigned dev_addr,unsigned bl
 extern int DRV_SD_SG_INIT_TABLE(const void *buf,unsigned int buflen);
 #endif
 /*****************************************************************************
-* 函 数 名  : DRV_SD_MULTI_TRANSFER
+*Function Name: DRV_SD_MULTI_TRANSFER
 *
-* 功能描述  : SD多块数据传输
+*Function description: SD multi-block data transmission
 *
-* 输入参数  : unsigned dev_addr	待写入的SD block地址
-				  unsigned blocks		待写入的block 个数
-				  unsigned blksz		每个block 的大小，单位字节
-				  int write			读写标志位，写:1;	读:0
-* 输出参数  : NA
+*Input parameters: unsigned dev_addr SD block address to be written
+				  unsigned blocks The number of blocks to be written
+				  unsigned blksz The size of each block, unit bytes
+				  int write read and write flag bit, write: 1; read: 0
+*Output parameters: NA
 *
-* 返 回 值  :  0 : 成功;  其它:失败
-* 其它说明  : NA
+*Return Value: 0: Success; Other: Failed
+*Other Instructions: NA
 *
 *****************************************************************************/
 #if defined(BSP_CORE_MODEM) || defined(PRODUCT_CFG_CORE_TYPE_MODEM)
@@ -1244,11 +1247,11 @@ extern int DRV_SD_MULTI_TRANSFER(unsigned dev_addr,unsigned blocks,unsigned blks
 /*************************SD END**************************************/
 
 
-/*************************DLOAD BEGIN*****************************/
+/*************************Dload beginning *************************************
 /*--------------------------------------------------------------*
- * 宏定义                                                       *
+ *Macro definition *
  *--------------------------------------------------------------*/
-/* 错误码 */
+/* Error code */
 #define DLOAD_OK                    BSP_OK
 #define DLOAD_ERROR                 BSP_ERROR
 #define DLOAD_ERR_NOT_INITED        BSP_DEF_ERR(BSP_MODU_DLOAD,BSP_ERR_MODULE_NOT_INITED)
@@ -1258,12 +1261,12 @@ extern int DRV_SD_MULTI_TRANSFER(unsigned dev_addr,unsigned blocks,unsigned blks
 #define DLOAD_ERR_FREE_FAILED       BSP_DEF_ERR(BSP_MODU_DLOAD,BSP_ERR_BUF_FREE_FAILED)
 #define DLOAD_ERR_RETRY_TIMEOUT     BSP_DEF_ERR(BSP_MODU_DLOAD,BSP_ERR_RETRY_TIMEOUT)
 
-#define DLOAD_ERR_NO_BACKUP         BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 1)  /* 无备份版本 */
-#define DLOAD_ERR_OPEN_FAILED       BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 2)  /* 虚拟串口打开失败 */
-#define DLOAD_ERR_SEM_CREAT         BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 3)  /* 信号量创建失败 */
-#define DLOAD_ERR_ABORT             BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 4)  /* 升级终止 */
-#define DLOAD_ERR_MODE_MISMATCH     BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 5)  /* 工作模式不匹配 */
-#define DLOAD_ERR_INVALID_ATSTRING  BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 6)  /* AT字符串非法 */
+#define DLOAD_ERR_NO_BACKUP         BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 1)  /* No backup version */
+#define DLOAD_ERR_OPEN_FAILED       BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 2)  /* Virtual serial port failed to open */
+#define DLOAD_ERR_SEM_CREAT         BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 3)  /* Semaphore creation failed */
+#define DLOAD_ERR_ABORT             BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 4)  /* Upgrade termination */
+#define DLOAD_ERR_MODE_MISMATCH     BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 5)  /* Working mode mismatch */
+#define DLOAD_ERR_INVALID_ATSTRING  BSP_DEF_ERR(BSP_MODU_DLOAD, BSP_ERR_SPECIAL + 6)  /* At string illegal */
 
 
 #define MODE_GSM      0x01
@@ -1272,7 +1275,7 @@ extern int DRV_SD_MULTI_TRANSFER(unsigned dev_addr,unsigned blocks,unsigned blks
 
 
 /*--------------------------------------------------------------*
- * 枚举定义                                                     *
+ *Enumeration definition *
  *--------------------------------------------------------------*/
 enum UPDATE_STATUS_I
 {
@@ -1282,11 +1285,11 @@ enum UPDATE_STATUS_I
 
 typedef enum
 {
-	NORMAL_DLOAD = 0,	/*正常升级模式*/
-	FORCE_DLOAD = 1    /*强制升级模式*/
+	NORMAL_DLOAD = 0,	/*Normal upgrade mode*/
+	FORCE_DLOAD = 1    /*Forced upgrade mode*/
 }DLOAD_TYPE;
 
-/* 下载模式枚举 */
+/* Download mode enumeration */
 typedef enum tagDLOAD_MODE_E
 {
     DLOAD_MODE_DOWNLOAD = 0,
@@ -1296,421 +1299,421 @@ typedef enum tagDLOAD_MODE_E
 }DLOAD_MODE_E;
 
 /*--------------------------------------------------------------*
- * 函数指针类型定义                                             *
+ *Function pointer type definition *
  *--------------------------------------------------------------*/
 typedef BSP_U32 (*BSP_DLOAD_AtCallBack)( BSP_VOID* pDataIn, BSP_U32 ulLen);
 typedef BSP_U32 (*BSP_DLOAD_NVGetInfoCb)( BSP_VOID* pDataOut, BSP_U32 ulLen);
 typedef BSP_U32 (*BSP_DLOAD_NVSetInfoCb)( BSP_VOID* pDataIn, BSP_U32 ulLen);
 
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_GetProductId
+*Function Name: BSP_DLOAD_GetProductId
 *
-* 功能描述  : 获取产品名称字符串
+*Function Description: Get the product name string
 *
-* 输入参数  : BSP_S8 *str   :字符串缓冲区
-*             BSP_S32 len   :字符串长度
-* 输出参数  : BSP_S8 *str   :字符串缓冲区
+*Input parameters: BSP_S8 *str: String buffer
+*BSP_S32 len: string length
+*Output parameters: BSP_S8 *str: String buffer
 *
-* 返 回 值  : DLOAD_ERR_INVALID_PARA    :输入参数非法
-*             DLOAD_ERROR               :失败
-*             其它                      :返回字符串长度
+*Return Value: DLOAD_ERR_INVALID_PARA: Input parameter is illegal
+*DLOAD_ERROR : Failed
+*Others: Return the string length
 *
-* 其它说明  : AT模块调用
-*             正常模式支持
-*             下载模式支持
+*Other instructions: AT module call
+*Normal mode support
+*Download mode support
 *
 *****************************************************************************/
 BSP_S32 BSP_DLOAD_GetProductId(BSP_CHAR *str, BSP_U32 len);
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_GetDloadType
+*Function Name: BSP_DLOAD_GetDloadType
 *
-* 功能描述  : 获取下载类型
+*Function Description: Get the download type
 *
-* 输入参数  : BSP_VOID
-* 输出参数  : 无
+*Input parameters: BSP_VOID
+*Output parameters: None
 *
-* 返 回 值  : 0 :正常模式
-*             1 :强制模式
+*Return Value: 0: Normal mode
+*1: Forced mode
 *
-* 其它说明  : AT模块调用
-*             正常模式支持
-*             下载模式支持
+*Other instructions: AT module call
+*Normal mode support
+*Download mode support
 *
 *****************************************************************************/
 BSP_S32 BSP_DLOAD_GetDloadType(BSP_VOID);
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_GetCurMode
+*Function Name: BSP_DLOAD_GetCurMode
 *
-* 功能描述  : 设置当前工作模式
+*Function Description: Set the current working mode
 *
-* 输入参数  : BSP_VOID
-* 输出参数  : DLOAD_MODE_NORMAL     :正常模式
-*             DLOAD_MODE_DATA       :数据模式
-*             DLOAD_MODE_DOWNLOAD   :下载模式
+*Input parameters: BSP_VOID
+*Output parameters: DLOAD_MODE_NORMAL:Normal mode
+*DLOAD_MODE_DATA : Data mode
+*DLOAD_MODE_DOWNLOAD :Download mode
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 其它说明  : AT模块调用
-*             正常模式支持的有:
-*                 BSP_DLOAD_GetCurMode(DLOAD_MODE_DOWNLOAD)
-*             下载模式支持的有:
-*                 BSP_DLOAD_GetCurMode(DLOAD_MODE_DATA)
+*Other instructions: AT module call
+*Normal mode supports:
+*BSP_DLOAD_GetCurMode(DLOAD_MODE_DOWNLOAD)
+*The download mode supports:
+*BSP_DLOAD_GetCurMode(DLOAD_MODE_DATA)
 *
 *****************************************************************************/
 BSP_VOID BSP_DLOAD_SetCurMode(DLOAD_MODE_E eDloadMode);
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_GetCurMode
+*Function Name: BSP_DLOAD_GetCurMode
 *
-* 功能描述  : 获取当前工作模式
+*Function Description: Get the current working mode
 *
-* 输入参数  : BSP_VOID
-* 输出参数  : 无
+*Input parameters: BSP_VOID
+*Output parameters: None
 *
-* 返 回 值  : DLOAD_MODE_NORMAL     :正常模式
-*             DLOAD_MODE_DATA       :数据模式
-*             DLOAD_MODE_DOWNLOAD   :下载模式
+*Return Value: DLOAD_MODE_NORMAL:Normal Mode
+*DLOAD_MODE_DATA : Data mode
+*DLOAD_MODE_DOWNLOAD :Download mode
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 DLOAD_MODE_E BSP_DLOAD_GetCurMode(BSP_VOID);
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_SetSoftLoad
+*Function Name: BSP_DLOAD_SetSoftLoad
 *
-* 功能描述  : 设置启动标志
+*Function Description: Set the startup flag
 *
-* 输入参数  : BSP_BOOL bSoftLoad  :
-*             BSP_FALSE :从vxWorks启动
-*             BSP_TRUE  :从bootrom启动
-* 输出参数  : 无
+*Input parameters: BSP_BOOL bSoftLoad:
+*BSP_FALSE: Started from vxWorks
+*BSP_TRUE: Start from bootrom
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 BSP_VOID BSP_DLOAD_SetSoftLoad (BSP_BOOL bSoftLoad);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_GetSoftLoad
+*Function Name: BSP_DLOAD_GetSoftLoad
 *
-* 功能描述  : 获取启动标志
+*Function Description: Get the Startup Flag
 *
-* 输入参数  : BSP_VOID
-* 输出参数  : 无
+*Input parameters: BSP_VOID
+*Output parameters: None
 *
-* 返 回 值  : BSP_TRUE  :从bootrom启动
-*             BSP_FALSE :从vxWorks启动
+*Return Value: BSP_TRUE: Started from bootrom
+*BSP_FALSE: Started from vxWorks
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 BSP_BOOL BSP_DLOAD_GetSoftLoad (BSP_VOID);
 
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_SendData
+*Function Name: BSP_DLOAD_SendData
 *
-* 功能描述  : 通过虚拟串口向PC端发送数据
+*Function description: Send data to the PC via the virtual serial port
 *
-* 输入参数  : pBuf      :数据缓冲区
-*             u32Len    :数据缓冲区长度
-* 输出参数  : pBuf      :数据缓冲区
+*Input parameters: pBuf: Data buffer
+*u32Len: Data buffer length
+*Output parameters: pBuf: Data buffer
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 其它说明  : pBuf必须保证cache line(32字节)对齐
+*Other instructions: pBuf must ensure that cache line (32 bytes) is aligned
 *
 *****************************************************************************/
 BSP_S32 BSP_DLOAD_SendData(BSP_CHAR *pBuf, BSP_U32 u32Len);
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_AtProcReg
+*Function Name: BSP_DLOAD_AtProcReg
 *
-* 功能描述  : 注册AT处理函数
+*Function description: Register AT processing function
 *
-* 输入参数  : pFun
-* 输出参数  : 无
+*Input parameters: pFun
+*Output parameters: None
 *
-* 返 回 值  : DLOAD_OK:成功
+*Return Value: DLOAD_OK: Success
 *
 *****************************************************************************/
 BSP_S32 BSP_DLOAD_AtProcReg (BSP_DLOAD_AtCallBack pFun);
 
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_GetSoftwareVer
+*Function Name: BSP_DLOAD_GetSoftwareVer
 *
-* 功能描述  : 获取软件版本号
+*Function Description: Get the software version number
 *
-* 输入参数  : BSP_S8 *str   :字符串缓冲区
-*             BSP_S32 len   :字符串长度
-* 输出参数  : BSP_S8 *str   :字符串缓冲区
+*Input parameters: BSP_S8 *str: String buffer
+*BSP_S32 len: string length
+*Output parameters: BSP_S8 *str: String buffer
 *
-* 返 回 值  : DLOAD_ERROR   :输入参数非法
-*             其它          :返回字符串长度
+*Return Value: DLOAD_ERROR: Input parameter is illegal
+*Others: Return the string length
 *
-* 其它说明  : AT模块调用
-*             正常模式支持
-*             下载模式支持
+*Other instructions: AT module call
+*Normal mode support
+*Download mode support
 *
 *****************************************************************************/
 BSP_S32 BSP_DLOAD_GetSoftwareVer(BSP_CHAR *str, BSP_U32 len);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_GetDloadVer
+*Function Name: BSP_DLOAD_GetDloadVer
 *
-* 功能描述  : 查询下载协议版本号。该信息BSP固定写为2.0。
+*Function Description: Query the version number of the download protocol. This information BSP is fixedly written to 2.0.
 *
-* 输入参数  : BSP_S8 *str   :字符串缓冲区
-*             BSP_S32 len   :字符串长度
-* 输出参数  : BSP_S8 *str   :字符串缓冲区
+*Input parameters: BSP_S8 *str: String buffer
+*BSP_S32 len: string length
+*Output parameters: BSP_S8 *str: String buffer
 *
-* 返 回 值  : DLOAD_ERROR   :输入参数非法
-*             其它          :返回字符串长度
+*Return Value: DLOAD_ERROR: Input parameter is illegal
+*Others: Return the string length
 *
-* 其它说明  : AT模块调用
-*             正常模式支持
-*             下载模式支持
+*Other instructions: AT module call
+*Normal mode support
+*Download mode support
 *****************************************************************************/
 BSP_S32 BSP_DLOAD_GetDloadVer(BSP_CHAR *str, BSP_U32 len);
 
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_GetISOVer
+*Function Name: BSP_DLOAD_GetISOVer
 *
-* 功能描述  : 获取后台版本号字符串
+*Function description: Get the background version number string
 *
-* 输入参数  : BSP_S8 *str   :字符串缓冲区
-*             BSP_S32 len   :字符串长度
-* 输出参数  : BSP_S8 *str   :字符串缓冲区
+*Input parameters: BSP_S8 *str: String buffer
+*BSP_S32 len: string length
+*Output parameters: BSP_S8 *str: String buffer
 *
-* 返 回 值  : DLOAD_ERROR   :输入参数非法
-*             其它          :返回字符串长度
+*Return Value: DLOAD_ERROR: Input parameter is illegal
+*Others: Return the string length
 *
-* 其它说明  : AT模块调用
-*             正常模式支持
-*             下载模式支持
+*Other instructions: AT module call
+*Normal mode support
+*Download mode support
 *
 *****************************************************************************/
 BSP_S32 BSP_DLOAD_GetISOVer(BSP_CHAR *str, BSP_U32 len);
 #define DRV_GET_CDROM_VERSION(pVersionInfo,ulLength)    BSP_DLOAD_GetISOVer(pVersionInfo, ulLength)
 
 /*****************************************************************************
- 函 数 名  : DRV_SET_UPDATA_FLAG
- 功能描述  : 设置升级加载标志。
- 输入参数  : flag：升级加载标志，
-                   0：启动后进入bootrom，进行升级加载。
-                   1：启动后不进入bootrom，正常启动。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: DRV_SET_UPDATA_FLAG
+ Function Description: Set the upgrade loading flag.
+ Input parameters: flag: Upgrade loading flag,
+                   0: After startup, enter bootrom and upgrade and load.
+                   1: After startup, do not enter bootrom and start normally.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int DRV_SET_UPDATA_FLAG(int flag);
 
 
 /*****************************************************************************
- 函 数 名  : DRV_USB_DISCONNECT
- 功能描述  : 升级时断开USB连接
- 输入参数  : 无
+ Function Name: DRV_USB_DISCONNECT
+ Function Description: Disconnect the USB connection during upgrade
+ Input parameters: None
                   
- 输出参数  : 无
- 返 回 值  : 无
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 BSP_VOID DRV_USB_DISCONNECT();
 	
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_SetCdromMarker
+*Function Name: BSP_DLOAD_SetCdromMarker
 *
-* 功能描述  : 设置设备形态标志
+*Function description: Set the device form mark
 *
-* 输入参数  : BSP_BOOL bCdromMarker  :
-*             BSP_TRUE  :设置正常设备形态
-*             BSP_FALSE :设置bootrom设备形态
-* 输出参数  : 无
+*Input parameters: BSP_BOOL bCdromMarker:
+*BSP_TRUE: Set the normal device form
+*BSP_FALSE: Set the bootrom device form
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 其它说明  : 当升级后台文件时，设置为上报正常设备形态，不恢复NV；
-*             当升级前台文件时，设置为上报bootrom设备形态，恢复NV；
+*Other instructions: When upgrading the background file, set to report the normal device form and do not restore NV;
+*When upgrading the front desk file, set to report bootrom device form and restore NV;
 *
 *****************************************************************************/
 BSP_VOID BSP_DLOAD_SetCdromMarker(BSP_BOOL bCdromMarker);
 #define DRV_SET_CDROM_FLAG(flag)    BSP_DLOAD_SetCdromMarker(flag)
 
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_GetCdromMarker
+*Function Name: BSP_DLOAD_GetCdromMarker
 *
-* 功能描述  : 获取设备形态标志
+*Function description: Obtain the device form mark
 *
-* 输入参数  : BSP_VOID
-* 输出参数  : 无
+*Input parameters: BSP_VOID
+*Output parameters: None
 *
-* 返 回 值  : BSP_TRUE  :上报正常设备形态
-*             BSP_FALSE :上报bootrom设备形态
+*Return value: BSP_TRUE: Report normal device form
+*BSP_FALSE: Report bootrom device form
 *
-* 其它说明  : 当升级后台文件时，设置为上报正常设备形态，不恢复NV；
-*             当升级前台文件时，设置为上报bootrom设备形态，恢复NV；
+*Other instructions: When upgrading the background file, set to report the normal device form and do not restore NV;
+*When upgrading the front desk file, set to report bootrom device form and restore NV;
 *
 *****************************************************************************/
 BSP_BOOL BSP_DLOAD_GetCdromMarker (BSP_VOID);
 #define DRV_GET_CDROM_FLAG()    BSP_DLOAD_GetCdromMarker()
 
 /********************************************************************************************************
- 函 数 名  : BSP_DLOAD_NVBackupRead
- 功能描述  : 从Flash中的NV项备份区读取数据，实现NV项的恢复功能。
- 输入参数  : len：从NV项备份区起始处开始，需要读取的NV项长度（字节数），不超过1Block。
- 输出参数  : pRamAddr：目的RAM地址，用于存放读出的NV项数据。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_DLOAD_NVBackupRead
+ Function description: Read data from the NV item backup area in Flash to realize the NV item recovery function.
+ Input parameters: len: Starting from the start of the NV item backup area, the length (number of bytes) that needs to be read shall not exceed 1Block.
+ Output parameters: pRamAddr: Destination RAM address, used to store read NV item data.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 ********************************************************************************************************/
 extern int BSP_DLOAD_NVBackupRead(unsigned char *pRamAddr, unsigned int len);
 #define DRV_NVBACKUP_READ(pRamAddr,len)    BSP_DLOAD_NVBackupRead(pRamAddr, len)
 
 /********************************************************************************************************
- 函 数 名  : BSP_DLOAD_NVBackupWrite
- 功能描述  : 将特定数据写入Flash中的NV项备份区，实现NV项的备份功能。
- 输入参数  : pRamAddr：源RAM地址，用于存放需要写入的NV项数据。
-             len：从NV项备份区起始处开始，需要写入的NV项长度（字节数），不超过1Block。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_DLOAD_NVBackupWrite
+ Function description: Write specific data to the NV item backup area in Flash to realize the NV item backup function.
+ Input parameters: pRamAddr: source RAM address, used to store NV item data to be written.
+             len: Starting from the start of the NV item backup area, the length (number of bytes) that needs to be written shall not exceed 1Block.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 ********************************************************************************************************/
 extern int BSP_DLOAD_NVBackupWrite(unsigned char *pRamAddr, unsigned int len);
 #define DRV_NVBACKUP_WRITE(pRamAddr, len)   BSP_DLOAD_NVBackupWrite(pRamAddr, len)
 
 
 /********************************************************************************************************
- 函 数 名  : NVBackupFlashDataWrite
- 功能描述  : 实现FLASH 中NV备份恢复区从指定位置读功能。
- 输入参数  : pRamAddr:源RAM地址
-*         offset :从NV备份区0地址开始的偏移
-*         len: 需要写入的长度
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: NVBackupFlashDataWrite
+ Function Description: Implements the function of reading NV backup and recovery area from the specified location in FLASH.
+ Input parameters: pRamAddr: Source RAM address
+*offset: Offset starting from address 0 of NV backup area
+*len: length required to write
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 ********************************************************************************************************/
 extern int NVBackupFlashDataWrite(unsigned char* pRamAddr, unsigned int offset,unsigned int len);
 #define DRV_NV_FLASH_WRITE(pRamAddr, offset,len) NVBackupFlashDataWrite(pRamAddr, offset,len)
 
 
 /*****************************************************************************
- 函 数 名  : BSP_DLOAD_GetTFUpdateFlag
- 功能描述  : 判断是否是TF卡升级
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : 返回1是TF升级，NV恢复成功，需要点蓝灯
-             返回0不是TF升级，NV恢复成功，不需要点蓝灯
+ Function Name: BSP_DLOAD_GetTFUpdateFlag
+ Function Description: Determine whether it is a TF card upgrade
+ Input parameters: None
+ Output parameters: None
+ Return Value: Return 1 is TF upgrade, NV recovery is successful, and blue light needs to be lit
+             Returning 0 is not a TF upgrade, NV recovery is successful, no need to light a blue light
 
 *****************************************************************************/
 extern int BSP_DLOAD_GetTFUpdateFlag(void);
 #define DRV_GET_TFUPDATE_FLAG()    BSP_DLOAD_GetTFUpdateFlag()
 
 /*****************************************************************************
- 函 数 名  : DRV_GET_DLOAD_VERSION
- 功能描述  : Get dload version
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: DRV_GET_DLOAD_VERSION
+ Function description: Get dload version
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern BSP_S32 DRV_GET_DLOAD_VERSION(BSP_U8 *str, int len);
 
 
 /*****************************************************************************
- 函 数 名  : DRV_GET_DLOAD_INFO
- 功能描述  : Get dload infomation
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: DRV_GET_DLOAD_INFO
+ Function description: Get dload information
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 
 extern BSP_S32 DRV_GET_DLOAD_INFO(unsigned char atCmdBuf[], unsigned int dloadType);
 
 /*****************************************************************************
- 函 数 名  : DRV_GET_AUTHORITY_VERSION
- 功能描述  : Get Authority version
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: DRV_GET_AUTHORITY_VERSION
+ Function description: Get Authority version
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern BSP_S32 DRV_GET_AUTHORITY_VERSION(BSP_U8 *str, BSP_S32 len);
 
 /*****************************************************************************
- 函 数 名  : DRV_GET_AUTHORITY_ID
- 功能描述  : 获取下载鉴权协议Id
- 输入参数  : unsigned char *buf
+ Function Name: DRV_GET_AUTHORITY_ID
+ Function Description: Obtain the download authentication protocol Id
+ Input parameters: unsigned char *buf
                           int len
- 输出参数  : 无
- 返 回 值  : 0:  操作成功；
-                      -1：操作失败。
+ Output parameters: None
+ Return Value: 0: The operation was successful;
+                      -1: The operation failed.
 *****************************************************************************/
 extern BSP_S32 DRV_GET_AUTHORITY_ID(unsigned char *buf, BSP_S32 len);
 
 /*****************************************************************************
- 函 数 名  : BSP_DLOAD_GetDloadNetMode
- 功能描述  : Get net mode
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_DLOAD_GetDloadNetMode
+ Function description: Get net mode
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern BSP_S32  BSP_DLOAD_GetDloadNetMode(BSP_U32 *netMode);
 #define DRV_GET_DLOAD_NETMODE(netMode)    BSP_DLOAD_GetDloadNetMode (netMode)
 
 /*****************************************************************************
- 函 数 名  : BSP_DLOAD_GetDloadFlashInfo
- 功能描述  : Get dload flash infomation
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_DLOAD_GetDloadFlashInfo
+ Function description: Get dload flash information
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern BSP_S32 BSP_DLOAD_GetDloadFlashInfo(DLOAD_FLASH_STRU* pFlashInfo);
 #define DRV_GET_DLOAD_FLASHINFO(pFlashInfo)    BSP_DLOAD_GetDloadFlashInfo(pFlashInfo)
 
 
 /*****************************************************************************
- 函 数 名  : BSP_DLOAD_GetWebUIVersion
- 功能描述  : 获得WEBUI 版本信息
- 输入参数  : pVersionInfo: 存放返回的版本信息的内存地址
-                           ulLength: 存放返回的版本信息的内存长度，目前固定
+ Function Name: BSP_DLOAD_GetWebUIVersion
+ Function Description: Obtain WEBUI version information
+ Input parameters: pVersionInfo: The memory address that stores the returned version information
+                           ulLength: The memory length of the returned version information, currently fixed
                            128
- 输出参数  : pVersionInfo: 返回的版本信息的内存地址
- 返 回 值  :  0:  操作成功；
-             -1：操作失败。
+ Output parameter: pVersionInfo: The memory address of the returned version information
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern BSP_S32 BSP_DLOAD_GetWebUIVersion(BSP_CHAR *pVersionInfo, BSP_U32 u32Length);
 #define DRV_GET_WEBUI_VERSION(pVersionInfo, u32Length) BSP_DLOAD_GetWebUIVersion(pVersionInfo,u32Length)
 
 /*****************************************************************************
- 函 数 名  : BSP_TFUP_CompleteDeal
- 功能描述  : TF卡升级完成后处理
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : 无
+ Function Name: BSP_TFUP_CompleteDeal
+ Function description: After the TF card is upgraded, processed
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 extern void BSP_TFUP_CompleteDeal(void);
 #define DRV_TFUP_COMPLETEDEAL() BSP_TFUP_CompleteDeal()
 
 /*****************************************************************************
- 函 数 名  : BSP_TFUP_CompleteDeal
- 功能描述  : 在线升级完成后处理
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : 无
+ Function Name: BSP_TFUP_CompleteDeal
+ Function description: After the online upgrade is completed
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 void BSP_ONUP_CompleteDeal(void);
 #define DRV_ONUP_COMPLETEDEAL() BSP_ONUP_CompleteDeal()
 
 /*****************************************************************************
-* 函 数 名  : BSP_DLOAD_GetNVBackupFlag
+*Function Name: BSP_DLOAD_GetNVBackupFlag
 *
-* 功能描述  : 获取升级前是否进行NV备份标志
+*Function description: Get whether to perform NV backup flag before upgrading
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : BSP_TRUE  :备份NV
-*            BSP_FALSE :不备份NV
+*Return Value: BSP_TRUE: Backup NV
+*BSP_FALSE: NV not backed up
 *
-* 其它说明  : 此接口只对非一键式升级方式（SD升级/在线升级）有效，一键式升级会发AT命令设置
+*Other instructions: This interface is only valid for non-one-click upgrade mode (SD upgrade/online upgrade). One-click upgrade will issue AT commands to set
 *
 *****************************************************************************/
 BSP_BOOL BSP_DLOAD_GetNVBackupFlag(BSP_VOID);
@@ -1723,20 +1726,20 @@ BSP_BOOL BSP_DLOAD_GetNVBackupFlag(BSP_VOID);
 typedef unsigned int GPIO_OPRT_ENUM_UINT32;
 
 /*****************************************************************************
- 函 数 名  : BSP_GPIO_Oprt
- 功能描述  : at^GPIOPL,设置和查询GPIO的电平
- 输入参数  : 操作类型 ulOp:
-             0  设置各GPIO的PL值
-             1  查询当前各GPIO的PL值
+ Function Name: BSP_GPIO_Oprt
+ Function description: at^GPIOPL, set and query the level of GPIO
+ Input parameters: Operation type ulOp:
+             0 Set the PL value of each GPIO
+             1 Query the PL value of the current GPIO
 
-             pucPL 对应20Byte的数组,每个BYTE代表一个8个管脚的值
+             pucPL corresponds to an array of 20Bytes, each BYTE represents a value of 8 pins
 
-             设置操作时,pucPL为设置的20的Byte
-             查询操作时,pucPL为当前获取到的PL的实际值组成的16进制数据
-             例如用户设置at^GPIOPL = ABCDEF,则对应pucPL的数组值为{A,B,C,D,E,F,0,0,...}
+             When setting the operation, pucPL is set to 20 Byte
+             During query operation, pucPL is the hexadecimal data composed of the actual value of the currently obtained PL.
+             For example, if the user sets at^GPIOPL = ABCDEF, the array value corresponding to pucPL is {A,B,C,D,E,F,0,0,...}
 
- 输出参数  : 无
- 返 回 值  :  0 ：OK  非 0 ：Error
+ Output parameters: None
+ Return Value: 0: OK Non 0: Error
 
 *****************************************************************************/
 extern unsigned long BSP_GPIO_Oprt(unsigned long ulOp, unsigned char *pucPL);
@@ -1744,18 +1747,18 @@ extern unsigned long BSP_GPIO_Oprt(unsigned long ulOp, unsigned char *pucPL);
 
 /*************************GPIO END************************************/
 
-/*************************IPCM BEGIN**********************************/
+/*************************IPCM Beginning **********************************/
 
-/* 处理器类型*/
+/* Processor Type*/
 typedef enum tagIPC_INT_CORE_E
 {
-    IPC_CORE_ARM11 = 0x0,   /* P500上的IPC */
+    IPC_CORE_ARM11 = 0x0,   /* IPC on P500 */
     IPC_CORE_A9,
     IPC_CORE_CEVA,
     IPC_CORE_TENS0,
     IPC_CORE_TENS1,
     IPC_CORE_DSP,
-    IPC_CORE_APPARM = 0x0,  /* V7R1/V3R2上的IPC */
+    IPC_CORE_APPARM = 0x0,  /* ipc on V7 r1/v3 r2 */
     IPC_CORE_COMARM,
     IPC_CORE_LTEDSP,
     IPC_CORE_VDSP,
@@ -1777,20 +1780,20 @@ typedef enum tagIPC_INT_LEV_E
     IPC_INT_MEDDSP_MODEM = 5,
     IPC_INT_DICC_USRDATA = 6,
     IPC_INT_DICC_RELDATA = 7,
-    IPC_INT_DSP_HALT =8,  /*DSP通知ARM睡眠*/
-    IPC_INT_DSP_RESUME,   /*DSP通知ARM完成唤醒后的恢复操作*/
-    IPC_INT_DSP_WAKE,     /*ARM唤醒DSP*/
+    IPC_INT_DSP_HALT =8,  /*Dsp Notify arm to sleep*/
+    IPC_INT_DSP_RESUME,   /*Dsp notifies the arm to complete the recovery operation after wake-up*/
+    IPC_INT_DSP_WAKE,     /*Arm wake up dsp*/
     IPC_INT_ARM_SLEEP = 8,
-    IPC_INT_WAKE_GU =11,     /*主模唤醒从模中断*/
-    IPC_INT_SLEEP_GU,     /*从模睡眠中断*/
-    IPC_INT_CDRX_DSP_HALT,	/*DSP通知MSP进入CDRX流程*/
+    IPC_INT_WAKE_GU =11,     /*Master mode wakes up slave mode interrupt*/
+    IPC_INT_SLEEP_GU,     /*Sleep interrupted from model*/
+    IPC_INT_CDRX_DSP_HALT,	/*Dsp notify msp to enter the cdrx process*/
 	IPC_INT_TDSDSP_HALT =14,
 	IPC_INT_TDSDSP_IDLE =15,
 	IPC_INT_TDSDSP_RESUME =16,
-	IPC_INT_WAKE_TDS = 17,  /*唤醒TDS从模中断*/
-	IPC_INT_WAKE_LTE = 18,  /*唤醒LTE从模中断*/
-	IPC_INT_SLEEP_TDS = 19, /*TDS从模睡眠中断*/
-	IPC_INT_TDSDSP_MSP = 20, /*用于TDS DSP 给 MSP 发中断*/
+	IPC_INT_WAKE_TDS = 17,  /*Wake up tds interrupt from mode*/
+	IPC_INT_WAKE_LTE = 18,  /*Wake up lte interrupt*/
+	IPC_INT_SLEEP_TDS = 19, /*Tds from model sleep interruption*/
+	IPC_INT_TDSDSP_MSP = 20, /*Used to send interrupts to MSP by TDS DSP*/
 	IPC_INT_HIFI_FULL = 27,
     IPC_INT_HIFI_ON,
     IPC_INT_HIFI_OFF,
@@ -1805,7 +1808,7 @@ typedef enum tagIPC_SEM_ID_E
     IPC_SEM_NAND,
     IPC_SEM_MEM,
     IPC_SEM_DICC,
-    IPC_SEM_RFILE_LOG,          /*用于flashless可维可测*/
+    IPC_SEM_RFILE_LOG,          /*Used for flashless surveillance*/
     IPC_SEM_SYNC = 25,
     IPC_SEM_SYSCTRL = 30,
     IPC_SEM_ZSP_HALT = 31,
@@ -1816,191 +1819,191 @@ typedef enum tagIPC_SEM_ID_E
 #define INTSRC_NUM                     32
 
 /*****************************************************************************
-* 函 数 名  : BSP_DRV_IPCIntInit
+*Function Name: BSP_DRV_IPCIntInit
 *
-* 功能描述  : IPC模块初始化
+*Function description: IPC module initialization
 *
-* 输入参数  : 无
-* 输出参数  : 无
+*Input parameters: None
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 修改记录  : 2009年3月5日   wangjing  creat
+*Modified record: March 5, 2009 wangjing creat
 *****************************************************************************/
 BSP_S32 BSP_DRV_IPCIntInit(void);
 
 
 /*****************************************************************************
-* 函 数 名  : DRV_IPC_SEMCREATE
+*Function Name: DRV_IPC_SEMCREATE
 *
-* 功能描述  : 信号量创建函数
+*Function Description: Semaphore creation function
 *
-* 输入参数  : 无
-* 输出参数  : 无
+*Input parameters: None
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 修改记录  : 2011年4月11日 wangjing creat
+*Modified record: April 11, 2011 wangjing creat
 *****************************************************************************/
 BSP_S32 BSP_IPC_SemCreate(BSP_U32 u32SignalNum);
 extern BSP_S32 DRV_IPC_SEMCREATE(BSP_U32 u32SignalNum);
 
 /*****************************************************************************
-* 函 数 名  : DRV_IPC_SEMDELETE
+*Function Name: DRV_IPC_SEMDELETE
 *
-* 功能描述  : 删除信号量
+*Function Description: Delete semaphore
 *
-* 输入参数  :   BSP_U32 u32SignalNum 要删除的信号量编号
+*Input parameters: BSP_U32 u32SignalNum semaphore number to be deleted
 
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : OK&ERROR
+*Return Value: OK&ERROR
 *
-* 修改记录  : 2011年4月11日 wangjing creat
+*Modified record: April 11, 2011 wangjing creat
 *****************************************************************************/
 BSP_S32 BSP_IPC_SemDelete(BSP_U32 u32SignalNum);
 extern BSP_S32 DRV_IPC_SEMDELETE(BSP_U32 u32SignalNum);
 
 /*****************************************************************************
-* 函 数 名  : BSP_IPC_IntEnable
+*Function Name: BSP_IPC_IntEnable
 *
-* 功能描述  : 使能某个中断
+*Function Description: Enable an interrupt
 *
-* 输入参数  :
-                BSP_U32 ulLvl 要使能的中断号，取值范围0～31
-* 输出参数  : 无
+*Input parameters:
+                BSP_U32 ulLvl Interrupt number to be enabled, value range 0 to 31
+*Output parameters: None
 *
-* 返 回 值  : OK&ERROR
+*Return Value: OK&ERROR
 *
-* 修改记录  : 2011年4月11日 wangjing creat
+*Modified record: April 11, 2011 wangjing creat
 *****************************************************************************/
 BSP_S32 BSP_IPC_IntEnable (IPC_INT_LEV_E ulLvl);
 extern BSP_S32 DRV_IPC_INTENABLE(IPC_INT_LEV_E ulLvl);
 
 /*****************************************************************************
-* 函 数 名  : DRV_IPC_INTDISABLE
+*Function Name: DRV_IPC_INTDISABLE
 *
-* 功能描述  : 去使能某个中断
+*Function Description: Deactivate an interrupt
 *
-* 输入参数  :
-            BSP_U32 ulLvl 要使能的中断号，取值范围0～31
-* 输出参数  : 无
+*Input parameters:
+            BSP_U32 ulLvl Interrupt number to be enabled, value range 0 to 31
+*Output parameters: None
 *
-* 返 回 值  : OK&ERROR
+*Return Value: OK&ERROR
 *
-* 修改记录  : 2011年4月11日 wangjing creat
+*Modified record: April 11, 2011 wangjing creat
 *****************************************************************************/
 BSP_S32 BSP_IPC_IntDisable (IPC_INT_LEV_E ulLvl);
 extern BSP_S32 DRV_IPC_INTDISABLE(IPC_INT_LEV_E ulLvl);
 
 /*****************************************************************************
-* 函 数 名  : BSP_IPC_IntConnect
+*Function Name: BSP_IPC_IntConnect
 *
-* 功能描述  : 注册某个中断
+*Function Description: Register an interrupt
 *
-* 输入参数  :
-           BSP_U32 ulLvl 要使能的中断号，取值范围0～31
-           VOIDFUNCPTR routine 中断服务程序
-*             BSP_U32 parameter      中断服务程序参数
-* 输出参数  : 无
+*Input parameters:
+           BSP_U32 ulLvl Interrupt number to be enabled, value range 0 to 31
+           VOIDFUNCPTR routine interrupt service program
+*BSP_U32 parameter interrupt service program parameters
+*Output parameters: None
 *
-* 返 回 值  : OK&ERROR
+*Return Value: OK&ERROR
 *
-* 修改记录  : 2011年4月11日 wangjing creat
+*Modified record: April 11, 2011 wangjing creat
 *****************************************************************************/
 BSP_S32 BSP_IPC_IntConnect  (IPC_INT_LEV_E ulLvl,VOIDFUNCPTR routine, BSP_U32 parameter);
 extern BSP_S32 DRV_IPC_INTCONNECT(IPC_INT_LEV_E ulLvl,VOIDFUNCPTR routine, BSP_U32 parameter);
 
 /*****************************************************************************
-* 函 数 名  : BSP_IPC_IntDisonnect
+*Function Name: BSP_IPC_IntDisonnect
 *
-* 功能描述  : 取消注册某个中断
+*Function Description: Unregister an interrupt
 *
-* 输入参数  :
-*              BSP_U32 ulLvl 要使能的中断号，取值范围0～31
-*              VOIDFUNCPTR routine 中断服务程序
-*             BSP_U32 parameter      中断服务程序参数
-* 输出参数  : 无
+*Input parameters:
+*BSP_U32 ulLvl Interrupt number to be enabled, value range 0 to 31
+*VOIDFUNCPTR routine interrupt service program
+*BSP_U32 parameter interrupt service program parameters
+*Output parameters: None
 *
-* 返 回 值  : OK&ERROR
+*Return Value: OK&ERROR
 *
-* 修改记录  : 2011年4月11日 wangjing creat
+*Modified record: April 11, 2011 wangjing creat
 *****************************************************************************/
 BSP_S32 BSP_IPC_IntDisonnect  (IPC_INT_LEV_E ulLvl,VOIDFUNCPTR routine, BSP_U32 parameter);
 
 /*****************************************************************************
-* 函 数 名  : DRV_IPC_INTSEND
+*Function Name: DRV_IPC_INTSEND
 *
-* 功能描述  : 发送中断
+*Function Description: Send Interrupt
 *
-* 输入参数  :
-                IPC_INT_CORE_E enDstore 要接收中断的core
-                BSP_U32 ulLvl 要发送的中断号，取值范围0～31
-* 输出参数  : 无
+*Input parameters:
+                IPC_INT_CORE_E enDstore core to receive interrupts
+                BSP_U32 ulLvl Interrupt number to be sent, value range 0 to 31
+*Output parameters: None
 *
-* 返 回 值  : OK&ERROR
+*Return Value: OK&ERROR
 *
-* 修改记录  : 2011年4月11日 wangjing creat
+*Modified record: April 11, 2011 wangjing creat
 *****************************************************************************/
 BSP_S32 BSP_IPC_IntSend(IPC_INT_CORE_E enDstCore, IPC_INT_LEV_E ulLvl);
 extern BSP_S32 DRV_IPC_INTSEND(IPC_INT_CORE_E enDstCore, IPC_INT_LEV_E ulLvl);
 
 /*****************************************************************************
-* 函 数 名  : DRV_IPC_SEMTAKE
+*Function Name: DRV_IPC_SEMTAKE
 *
-* 功能描述  : 获取信号量
+*Function Description: Get semaphore
 *
-* 输入参数  : 无
-* 输出参数  : 无
+*Input parameters: None
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 修改记录  : 2011年4月11日 wangjing creat
+*Modified record: April 11, 2011 wangjing creat
 *****************************************************************************/
 BSP_S32 BSP_IPC_SemTake(BSP_U32 u32SignalNum,BSP_S32 s32timeout);
 extern BSP_S32 DRV_IPC_SEMTAKE(BSP_U32 u32SignalNum, BSP_S32 s32timeout);
 
 /*****************************************************************************
-* 函 数 名  : DRV_IPC_SEMGIVE
+*Function Name: DRV_IPC_SEMGIVE
 *
-* 功能描述  : 释放信号量
+*Function description: Release semaphore
 *
-* 输入参数  : 无
-* 输出参数  : 无
+*Input parameters: None
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 修改记录  : 2011年4月11日 wangjing creat
+*Modified record: April 11, 2011 wangjing creat
 *****************************************************************************/
 BSP_VOID BSP_IPC_SemGive(BSP_U32 u32SignalNum);
 extern BSP_VOID DRV_IPC_SEMGIVE(BSP_U32 u32SignalNum);
 
 /*****************************************************************************
-* 函 数 名  : BSP_IPC_SpinLock
+*Function Name: BSP_IPC_SpinLock
 *
-* 功能描述  : 获取信号量
+*Function Description: Get semaphore
 *
-* 输入参数  : 无
-* 输出参数  : 无
+*Input parameters: None
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 修改记录  : 2011年4月11日 wangjing creat
+*Modified record: April 11, 2011 wangjing creat
 *****************************************************************************/
 BSP_VOID BSP_IPC_SpinLock (BSP_U32 u32SignalNum);
 extern BSP_VOID DRV_SPIN_LOCK (BSP_U32 u32SignalNum);
 
 /*****************************************************************************
-* 函 数 名  : DRV_SPIN_UNLOCK
+*Function Name: DRV_SPIN_UNLOCK
 *
-* 功能描述  : 释放信号量
+*Function description: Release semaphore
 *
-* 输入参数  : 无
-* 输出参数  : 无
+*Input parameters: None
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 修改记录  : 2011年4月11日 wangjing creat
+*Modified record: April 11, 2011 wangjing creat
 *****************************************************************************/
 BSP_VOID BSP_IPC_SpinUnLock (BSP_U32 u32SignalNum);
 extern BSP_VOID DRV_SPIN_UNLOCK(BSP_U32 u32SignalNum);
@@ -2009,34 +2012,34 @@ extern BSP_VOID DRV_SPIN_UNLOCK(BSP_U32 u32SignalNum);
 BSP_S32 BSP_SGI_Connect(BSP_U32 ulLvl,VOIDFUNCPTR routine, BSP_U32 parameter);
 BSP_S32 BSP_SGI_IntSend(BSP_U32 ulLvl);
 
-/*************************IPCM END************************************/
+/*************************IPCM END ************************************/
 
 
 /*************************UDI START***********************************/
 
 /**************************************************************************
-  宏定义
+  Macro definition
 **************************************************************************/
 #define UDI_INVALID_HANDLE     (-1)
 
-#define UDI_CAPA_BLOCK_READ    ((BSP_U32)(1<<0)) /* 该设备的read接口为阻塞接口 */
-#define UDI_CAPA_BLOCK_WRITE   ((BSP_U32)(1<<1)) /* 该设备的write接口为阻塞接口 */
-#define UDI_CAPA_READ_CB       ((BSP_U32)(1<<2)) /* 该设备支持read 回调函数 */
-#define UDI_CAPA_WRITE_CB      ((BSP_U32)(1<<3)) /* 该设备支持write 回调函数 */
-#define UDI_CAPA_BUFFER_LIST   ((BSP_U32)(1<<4)) /* 该设备的读写buffer为内存链表结构(默认为普通内存块) */
-#define UDI_CAPA_CTRL_OPT      ((BSP_U32)(1<<5)) /* 该设备支持控制操作 */
+#define UDI_CAPA_BLOCK_READ    ((BSP_U32)(1<<0)) /* The read interface of the device is a blocking interface */
+#define UDI_CAPA_BLOCK_WRITE   ((BSP_U32)(1<<1)) /* The write interface of the device is a blocking interface */
+#define UDI_CAPA_READ_CB       ((BSP_U32)(1<<2)) /* This device supports read callback function */
+#define UDI_CAPA_WRITE_CB      ((BSP_U32)(1<<3)) /* This device supports write callback function */
+#define UDI_CAPA_BUFFER_LIST   ((BSP_U32)(1<<4)) /* The read and write buffer of this device is a memory linked list structure (default is normal memory block) */
+#define UDI_CAPA_CTRL_OPT      ((BSP_U32)(1<<5)) /* This device supports control operation */
 
 #define MIN_UDI_HANDLE     0x5a0000
 #define MAX_UDI_HANDLE     0x5a003f
 
 /**************************************************************************
-  结构定义
+  Structural definition
 **************************************************************************/
 #define UDI_BUILD_DEV_ID(dev, type) (((BSP_U32)(dev) << 8) | ((BSP_U32)(type) & 0x00ff))
 #define UDI_BUILD_CMD_ID(dev, cmd) (((BSP_U32)(dev) << 8) | ((BSP_U32)(cmd) & 0xffff))
 
 
-/* 主设备定义 */
+/* Master device definition */
 typedef enum tagUDI_DEVICE_MAIN_ID
 {
     UDI_DEV_USB_ACM = 0,
@@ -2044,11 +2047,11 @@ typedef enum tagUDI_DEVICE_MAIN_ID
     UDI_DEV_ICC,
     UDI_DEV_UART,
 
-    UDI_DEV_MAX                 /* 必须在最后, 用于边界值 */
+    UDI_DEV_MAX                 /* Must be used at the end, for boundary values */
 }UDI_DEVICE_MAIN_ID;
 
-/* 各设备类型定义(要和 usb 多设备形态统一起来) */
-/* ACM */
+/* Definition of each device type (to be unified with usb multi-device form) */
+/* Acm */
 typedef enum tagUDI_ACM_DEV_TYPE
 {
     UDI_USB_ACM_CTRL,
@@ -2057,10 +2060,10 @@ typedef enum tagUDI_ACM_DEV_TYPE
     UDI_USB_ACM_LTE_DIAG,
     UDI_USB_ACM_OM,
     UDI_USB_ACM_MODEM,
-    UDI_USB_ACM_GPS,      /*HISO*/
-    UDI_USB_ACM_3G_GPS,   /*ashell*/
-    UDI_USB_ACM_3G_PCVOICE, /*预留*/
-    UDI_USB_ACM_PCVOICE,    /*预留*/
+    UDI_USB_ACM_GPS,      /*Hiso*/
+    UDI_USB_ACM_3G_GPS,   /*Ashell*/
+    UDI_USB_ACM_3G_PCVOICE, /*Reservation*/
+    UDI_USB_ACM_PCVOICE,    /*Reservation*/
     /*UDI_USB_ACM_3G_AT,    //3G AT*/
     /*UDI_USB_ACM_3G_MODEM, //3G PPP*/
     UDI_USB_HSIC_ACM0,
@@ -2078,10 +2081,10 @@ typedef enum tagUDI_ACM_DEV_TYPE
     UDI_USB_HSIC_ACM12,
     UDI_USB_HSIC_ACM13,
 	UDI_USB_HSIC_ACM14,
-    UDI_USB_ACM_MAX                /* 必须在最后, 用于边界值 */
+    UDI_USB_ACM_MAX                /* Must be used at the end, for boundary values */
 }UDI_ACM_DEV_TYPE;
 
-/* NCM */
+/* Ncm */
 typedef enum tagUDI_NCM_DEV_TYPE
 {
     UDI_USB_NCM_NDIS,
@@ -2090,10 +2093,10 @@ typedef enum tagUDI_NCM_DEV_TYPE
     UDI_USB_HSIC_NCM1,
     UDI_USB_HSIC_NCM2,
 
-    UDI_USB_NCM_MAX                /* 必须在最后, 用于边界值 */
+    UDI_USB_NCM_MAX                /* Must be used at the end, for boundary values */
 }UDI_NCM_DEV_TYPE;
 
-/* ICC */
+/* Icc */
 typedef enum tagUDI_ICC_DEV_TYPE
 {
     UDI_ICC_GUOM0 = 16,
@@ -2103,11 +2106,11 @@ typedef enum tagUDI_ICC_DEV_TYPE
     UDI_ICC_GUOM4,
     UDI_ICC_GUOM5,
 
-    UDI_ICC_MAX                /* 必须在最后, 用于边界值 */
+    UDI_ICC_MAX                /* Must be used at the end, for boundary values */
 }UDI_ICC_DEV_TYPE;
 
 
-/* 设备ID号定义 */
+/* Device ID number definition */
 typedef enum tagUDI_DEVICE_ID
 {
     /* USB ACM */
@@ -2117,10 +2120,10 @@ typedef enum tagUDI_DEVICE_ID
     UDI_ACM_LTE_DIAG_ID = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_LTE_DIAG),
     UDI_ACM_OM_ID = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_OM),
     UDI_ACM_MODEM_ID = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_MODEM),
-    UDI_ACM_GPS_ID      = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_GPS),     /*HISO*/
-    UDI_ACM_3G_GPS_ID   = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_3G_GPS),  /*ashell*/
-    UDI_ACM_3G_PCVOICE_ID = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_3G_PCVOICE), /*预留*/
-    UDI_ACM_PCVOICE_ID    = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_PCVOICE),    /*预留*/
+    UDI_ACM_GPS_ID      = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_GPS),     /*Hiso*/
+    UDI_ACM_3G_GPS_ID   = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_3G_GPS),  /*Ashell*/
+    UDI_ACM_3G_PCVOICE_ID = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_3G_PCVOICE), /*Reservation*/
+    UDI_ACM_PCVOICE_ID    = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_PCVOICE),    /*Reservation*/
     /*UDI_ACM_3G_AT_ID      = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_3G_AT),    //3G AT*/
     /*UDI_ACM_3G_MODEM_ID   = UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_3G_MODEM), //3G PPP*/
     UDI_ACM_HSIC_ACM0_ID=UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_HSIC_ACM0),
@@ -2146,11 +2149,11 @@ typedef enum tagUDI_DEVICE_ID
     UDI_NCM_HSIC_NCM1_ID =  UDI_BUILD_DEV_ID(UDI_DEV_USB_NCM, UDI_USB_HSIC_NCM1),
     UDI_NCM_HSIC_NCM2_ID =  UDI_BUILD_DEV_ID(UDI_DEV_USB_NCM, UDI_USB_HSIC_NCM2),
 
-    /* UART */
+    /* Uart */
     UDI_UART_0_ID =  UDI_BUILD_DEV_ID(UDI_DEV_UART, 0),
     UDI_UART_1_ID =  UDI_BUILD_DEV_ID(UDI_DEV_UART, 1),
 
-    /* ICC */
+    /* Icc */
     UDI_ICC_IFC_ID  =  UDI_BUILD_DEV_ID(UDI_DEV_ICC, 0),
     UDI_ICC_IPM_ID  =  UDI_BUILD_DEV_ID(UDI_DEV_ICC, 1),
     UDI_ICC_LMSP_ID =  UDI_BUILD_DEV_ID(UDI_DEV_ICC, 2),
@@ -2167,101 +2170,101 @@ typedef enum tagUDI_DEVICE_ID
 } UDI_DEVICE_ID;
 
 
-/* 设备的打开参数 */
+/* Device opening parameters */
 typedef struct tagUDI_OPEN_PARAM
 {
-    UDI_DEVICE_ID devid;                        /* 设备ID */
-    void   *pPrivate;                            /* 模块特有的数据 */
+    UDI_DEVICE_ID devid;                        /* Device ID */
+    void   *pPrivate;                            /* Module-specific data */
 } UDI_OPEN_PARAM;
 
-/* IOCTL 命令码,需要的命令码在此添加 */
+/* IOCTL command code, the required command code is added here */
 typedef enum tagUDI_IOCTL_CMD_TYPE
 {
-    UDI_IOCTL_SET_WRITE_CB = 0xF001,            /* 设置一个起始码值防止与系统定义冲突 */
+    UDI_IOCTL_SET_WRITE_CB = 0xF001,            /* Set a start code value to prevent conflicts with system definitions */
     UDI_IOCTL_SET_READ_CB,
 
     UDI_IOCTL_INVAL_CMD = 0xFFFFFFFF
 } UDI_IOCTL_CMD_TYPE;
 
 /**************************************************************************
-  函数声明
+  Function declaration
 **************************************************************************/
 /*****************************************************************************
-* 函 数 名  : udi_get_capability
+*Function name: udi_get_capability
 *
-* 功能描述  : 根据设备ID获取当前设备支持的特性
+*Function Description: Obtain the current device supported features according to the device ID
 *
-* 输入参数  : devId: 设备ID
-* 输出参数  : 无
-* 返 回 值  : 支持的特性值
+*Input parameters: devId: Device ID
+*Output parameters: None
+*Return Value: Supported Feature Value
 *****************************************************************************/
 BSP_S32 udi_get_capability(UDI_DEVICE_ID devId);
 
 /*****************************************************************************
-* 函 数 名  : udi_open
+*Function name: udi_open
 *
-* 功能描述  : 打开设备(数据通道)
+*Function Description: Open the device (data channel)
 *
-* 输入参数  : pParam: 设备的打开配置参数
-* 输出参数  : 无
-* 返 回 值  : -1:失败 / 其他:成功
+*Input parameters: pParam: Device opening configuration parameters
+*Output parameters: None
+*Return Value: -1: Failed /Other: Success
 *****************************************************************************/
 UDI_HANDLE udi_open(UDI_OPEN_PARAM *pParam);
 #define DRV_UDI_OPEN(pParam)    udi_open(pParam)
 
 /*****************************************************************************
-* 函 数 名  : udi_close
+*Function name: udi_close
 *
-* 功能描述  : 关闭设备(数据通道)
+*Function description: Turn off the device (data channel)
 *
-* 输入参数  : handle: 设备的handle
-* 输出参数  : 无
-* 返 回 值  : 成功/失败
+*Input parameters: handle: device handle
+*Output parameters: None
+*Return Value: Success/Failed
 *****************************************************************************/
 BSP_S32 udi_close(UDI_HANDLE handle);
 #define DRV_UDI_CLOSE(handle)    udi_close(handle)
 
 /*****************************************************************************
-* 函 数 名  : udi_write
+*Function name: udi_write
 *
-* 功能描述  : 数据写
+*Function description: Data writing
 *
-* 输入参数  : handle:  设备的handle
-*             pMemObj: buffer内存 或 内存链表对象
-*             u32Size: 数据写尺寸 或 内存链表对象可不设置
-* 输出参数  :
+*Input parameters: handle: device handle
+*pMemObj: buffer memory or memory linked list object
+*u32Size: Data write size or memory linked list object can not be set
+*Output parameters:
 *
-* 返 回 值  : 完成字节数 或 成功/失败
+*Return Value: Completed bytes or Success/Failed
 *****************************************************************************/
 BSP_S32 udi_write(UDI_HANDLE handle, void* pMemObj, BSP_U32 u32Size);
 #define  DRV_UDI_WRITE(handle,pMemObj,u32Size)     udi_write (handle,pMemObj,u32Size)
 
 /*****************************************************************************
-* 函 数 名  : udi_read
+*Function name: udi_read
 *
-* 功能描述  : 数据读
+*Function description: Data reading
 *
-* 输入参数  : handle:  设备的handle
-*             pMemObj: buffer内存 或 内存链表对象
-*             u32Size: 数据读尺寸 或 内存链表对象可不设置
-* 输出参数  :
+*Input parameters: handle: device handle
+*pMemObj: buffer memory or memory linked list object
+*u32Size: Data read size or memory linked list object can not be set
+*Output parameters:
 *
-* 返 回 值  : 完成字节数 或 成功/失败
+*Return Value: Completed bytes or Success/Failed
 *****************************************************************************/
 BSP_S32 udi_read(UDI_HANDLE handle, void* pMemObj, BSP_U32 u32Size);
 #define DRV_UDI_READ(handle,pMemObj,u32Size)  udi_read(handle,pMemObj,u32Size)
 
 /*****************************************************************************
-* 函 数 名  : udi_ioctl
+*Function name: udi_ioctl
 *
-* 功能描述  : 数据通道属性配置
+*Function Description: Data Channel Attribute Configuration
 *
-* 输入参数  : handle: 设备的handle
-*             u32Cmd: IOCTL命令码
-*             pParam: 操作参数
-* 输出参数  :
+*Input parameters: handle: device handle
+*u32Cmd: IOCTL command code
+*pParam: Operation parameters
+*Output parameters:
 *
-* 返 回 值  : 成功/失败
+*Return Value: Success/Failed
 *****************************************************************************/
 BSP_S32 udi_ioctl(UDI_HANDLE handle, BSP_U32 u32Cmd, BSP_VOID* pParam);
 #define DRV_UDI_IOCTL(handle,u32Cmd,pParam)    udi_ioctl(handle,u32Cmd,pParam)
@@ -2271,9 +2274,9 @@ BSP_S32 udi_ioctl(UDI_HANDLE handle, BSP_U32 u32Cmd, BSP_VOID* pParam);
 /*************************MEMORY START********************************/
 
 /**************************************************************************
-  宏定义
+  Macro definition
 **************************************************************************/
-/* 内存池类型, Flags标记用 */
+/* Memory pool type, for Flags tagging */
 typedef enum tagMEM_POOL_TYPE
 {
     MEM_NORM_DDR_POOL = 0,
@@ -2283,7 +2286,7 @@ typedef enum tagMEM_POOL_TYPE
 }MEM_POOL_TYPE;
 
 /**************************************************************************
-  接口声明
+  Interface statement
 **************************************************************************/
 BSP_VOID* BSP_Malloc(BSP_U32 u32Size, MEM_POOL_TYPE enFlags);
 BSP_VOID* BSP_MallocDbg(BSP_U32 u32Size, MEM_POOL_TYPE enFlags, BSP_U8* pFileName, BSP_U32 u32Line);
@@ -2291,14 +2294,14 @@ BSP_VOID  BSP_Free(BSP_VOID* pMem);
 BSP_VOID  BSP_FreeDbg(BSP_VOID* pMem, BSP_U8* pFileName, BSP_U32 u32Line);
 
 /*****************************************************************************
-* 函 数 名  : BSP_MALLOC
+*Function Name: BSP_MALLOC
 *
-* 功能描述  : BSP 动态内存分配
+*Function description: BSP dynamic memory allocation
 *
-* 输入参数  : sz: 分配的大小(byte)
-*             flags: 内存属性(暂不使用,预留)
-* 输出参数  : 无
-* 返 回 值  : 分配出来的内存指针
+*Input parameters: sz: allocated size (byte)
+*flags: memory attributes (not used for the time being, reserved)
+*Output parameters: None
+*Return Value: Allocated memory pointer
 *****************************************************************************/
 #ifdef __BSP_DEBUG__
 #define BSP_MALLOC(sz, flags) BSP_MallocDbg(sz, flags, __FILE__, __LINE__)
@@ -2307,13 +2310,13 @@ BSP_VOID  BSP_FreeDbg(BSP_VOID* pMem, BSP_U8* pFileName, BSP_U32 u32Line);
 #endif
 
 /*****************************************************************************
-* 函 数 名  : BSP_FREE
+*Function Name: BSP_FREE
 *
-* 功能描述  : BSP 动态内存释放
+*Function description: BSP dynamic memory release
 *
-* 输入参数  : ptr: 动态内存指针
-* 输出参数  : 无
-* 返 回 值  : 无
+*Input parameters: ptr: Dynamic memory pointer
+*Output parameters: None
+*Return Value: None
 *****************************************************************************/
 #ifdef __BSP_DEBUG__
 #define BSP_FREE(ptr) BSP_FreeDbg(ptr, __FILE__, __LINE__)
@@ -2324,24 +2327,24 @@ BSP_VOID  BSP_FreeDbg(BSP_VOID* pMem, BSP_U8* pFileName, BSP_U32 u32Line);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_SFree
+*Function Name: BSP_SFree
 *
-* 功能描述  : BSP 动态内存释放(加spin lock保护,多核场景使用)
+*Function description: BSP dynamic memory release (add spin lock protection, used in multi-core scenarios)
 *
-* 输入参数  : pMem: 动态内存指针
-* 输出参数  : 无
-* 返 回 值  : 无
+*Input parameters: pMem: Dynamic memory pointer
+*Output parameters: None
+*Return Value: None
 *****************************************************************************/
 BSP_VOID  BSP_SFree(BSP_VOID* pMem);
 /*****************************************************************************
-* 函 数 名  : BSP_SMalloc
+*Function Name: BSP_SMalloc
 *
-* 功能描述  : BSP 动态内存分配(加spin lock保护,多核场景使用)
+*Function description: BSP dynamic memory allocation (add spin lock protection, used in multi-core scenarios)
 *
-* 输入参数  : u32Size: 分配的大小(byte)
-*             enFlags: 内存属性(暂不使用,预留)
-* 输出参数  : 无
-* 返 回 值  : 分配出来的内存指针
+*Input parameters: u32Size: allocated size (byte)
+*enFlags: Memory attributes (not used for the time being, reserved)
+*Output parameters: None
+*Return Value: Allocated memory pointer
 *****************************************************************************/
 BSP_VOID* BSP_SMalloc(BSP_U32 u32Size, MEM_POOL_TYPE enFlags);
 
@@ -2361,35 +2364,35 @@ extern BSP_S32 cacheDmaFree(BSP_VOID*  pBuf);
 #endif
 
 /************************************************************************
- * FUNCTION
- *       vmEnable
- * DESCRIPTION
- *       内存读写保护功能使能函数
- * INPUTS
- *       NONE
- * OUTPUTS
- *       NONE
+ *FUNCTION
+ *vmEnable
+ *DESCRIPTION
+ *Memory read and write protection function enable function
+ *INPUTS
+ *NONE
+ *OUTPUTS
+ *NONE
  *************************************************************************/
 extern int vmEnable(int enable);
 #define DRV_VM_ENABLE(flag)   vmEnable(flag)
 
 /*****************************************************************************
- 函 数 名  : vmStateSet
- 功能描述  : 设置地址空间状态
- 输入参数  : 无
+ Function Name: vmStateSet
+ Function Description: Set the address space status
+ Input parameters: None
 
- 输出参数  : 无。
- 返 回 值  : 无
- 注意事项  ：
+ Output parameters: None.
+ Return Value: None
+ Notes:
 *****************************************************************************/
 #define DRV_VM_STATESET(context, virtAdrs, len, stateMask, state) vmStateSet(context, virtAdrs, len, stateMask, state)
 
 /*****************************************************************************
- 函 数 名  : BSP_CACHE_DATA_FLUSH
- 功能描述  :
- 输入参数  :
- 输出参数  : None
- 返 回 值  : void
+ Function Name: BSP_CACHE_DATA_FLUSH
+ Function description:
+ Input parameters:
+ Output parameters: None
+ Return Value: void
 *****************************************************************************/
 extern void BSP_CACHE_DATA_FLUSH(void * addr, int size);
 
@@ -2398,7 +2401,7 @@ extern void BSP_CACHE_DATA_FLUSH(void * addr, int size);
 /*************************SOCP START**********************************/
 
 /**************************************************************************
-  宏定义
+  Macro definition
 **************************************************************************/
 #define SOCP_CODER_SRC_CHAN                 0x00
 #define SOCP_CODER_DEST_CHAN                0x01
@@ -2432,7 +2435,7 @@ extern void BSP_CACHE_DATA_FLUSH(void * addr, int size);
 #define SOCP_DECODER_DEST_CHAN_BASE         0x00030000
 
 /**************************************************************************
-  错误码定义
+  Error code definition
 **************************************************************************/
 #define BSP_ERR_SOCP_BASE            BSP_DEF_ERR(BSP_MODU_SOCP, 0)
 #define BSP_ERR_SOCP_NULL            (BSP_ERR_SOCP_BASE + 0x1)
@@ -2451,195 +2454,195 @@ extern void BSP_CACHE_DATA_FLUSH(void * addr, int size);
 #define BSP_ERR_SOCP_DEST_CHAN       (BSP_ERR_SOCP_BASE + 0xe)
 #define BSP_ERR_SOCP_DECSRC_SET      (BSP_ERR_SOCP_BASE + 0xf)
 /**************************************************************************
-  结构定义
+  Structural definition
 **************************************************************************/
 
 
 typedef enum tagSOCP_EVENT_E
 {
-    SOCP_EVENT_PKT_HEADER_ERROR         = 0x1,    /* 包头检测错误，"HISI" */
-    SOCP_EVENT_OUTBUFFER_OVERFLOW       = 0x2,    /* 目的buffer上溢 */
-    SOCP_EVENT_RDBUFFER_OVERFLOW        = 0x4,    /* RDbuffer上溢 */
-    SOCP_EVENT_DECODER_UNDERFLOW        = 0x8,    /* 解码源buffer下溢 */
-    SOCP_EVENT_PKT_LENGTH_ERROR         = 0x10,   /* 解码包长度检测错误 */
-    SOCP_EVENT_CRC_ERROR                = 0x20,   /* 解码CRC校验错误 */
-    SOCP_EVENT_DATA_TYPE_ERROR          = 0x40,   /* 解码数据类型错误*/
-    SOCP_EVENT_HDLC_HEADER_ERROR        = 0x80,   /* 解码HDLC检测错误 */
+    SOCP_EVENT_PKT_HEADER_ERROR         = 0x1,    /* Baotou detection error, "hisi" */
+    SOCP_EVENT_OUTBUFFER_OVERFLOW       = 0x2,    /* Purpose buffer overflow */
+    SOCP_EVENT_RDBUFFER_OVERFLOW        = 0x4,    /* R dbuffer overflow */
+    SOCP_EVENT_DECODER_UNDERFLOW        = 0x8,    /* Decode source buffer underflow */
+    SOCP_EVENT_PKT_LENGTH_ERROR         = 0x10,   /* Decode packet length detection error */
+    SOCP_EVENT_CRC_ERROR                = 0x20,   /* Decode CRC verification error */
+    SOCP_EVENT_DATA_TYPE_ERROR          = 0x40,   /* Decoded data type error*/
+    SOCP_EVENT_HDLC_HEADER_ERROR        = 0x80,   /* Decode HDLC detection error */
     SOCP_EVENT_BUTT
 }SOCP_EVENT_E;
 
-/* 编码源的数据结构模式 */
+/* Data structure pattern of encoded source */
 typedef enum tagSOCP_ENCSRC_CHNMODE_E
 {
-    SOCP_ENCSRC_CHNMODE_CTSPACKET       = 0,    /* 连续数据包环形缓冲区 */
-    SOCP_ENCSRC_CHNMODE_FIXPACKET,              /* 固定长度数据包环形缓冲区 */
-    SOCP_ENCSRC_CHNMODE_LIST,                   /* 链式环形缓冲区 */
+    SOCP_ENCSRC_CHNMODE_CTSPACKET       = 0,    /* Continuous packet ring buffer */
+    SOCP_ENCSRC_CHNMODE_FIXPACKET,              /* Fixed-length packet ring buffer */
+    SOCP_ENCSRC_CHNMODE_LIST,                   /* Chain ring buffer */
     SOCP_ENCSRC_CHNMODE_BUTT
 }SOCP_ENCSRC_CHNMODE_E;
 
-/* 解码源的数据结构模式 */
+/* Data structure pattern of decode source */
 typedef enum tagSOCP_DECSRC_CHNMODE_E
 {
-    SOCP_DECSRC_CHNMODE_BYTES        = 0,       /* 连续字节环形缓冲区 */
-    SOCP_DECSRC_CHNMODE_LIST,                   /* 链式环形缓冲区 */
+    SOCP_DECSRC_CHNMODE_BYTES        = 0,       /* Continuous byte ring buffer */
+    SOCP_DECSRC_CHNMODE_LIST,                   /* Chain ring buffer */
     SOCP_DECSRC_CHNMODE_BUTT
 }SOCP_DECSRC_CHNMODE_E;
 
-/* 超时选择及使能数据结构体 */
+/* Timeout selection and enable data structure */
 typedef enum tagSOCP_TIMEOUT_EN_E
 {
-    SOCP_TIMEOUT_BUFOVF_DISABLE        = 0,       /* buffer溢出，不上报中断 */
-    SOCP_TIMEOUT_BUFOVF_ENABLE,                   /* buffer溢出，超时计数上报中断 */
-    SOCP_TIMEOUT_TRF,                             /* 传输中断超时计数 */
+    SOCP_TIMEOUT_BUFOVF_DISABLE        = 0,       /* Buffer overflows, no interruption is reported */
+    SOCP_TIMEOUT_BUFOVF_ENABLE,                   /* Buffer overflow, timeout count reporting interrupt */
+    SOCP_TIMEOUT_TRF,                             /* Transmission interrupt timeout count */
     SOCP_TIMEOUT_BUTT
 }SOCP_TIMEOUT_EN_E;
 
-/* 同一类型的通道不同优先级枚举值*/
+/* Enumerate values ??of different priority levels for channels of the same type*/
 typedef enum tagSOCP_CHAN_PRIORITY_E
 {
-    SOCP_CHAN_PRIORITY_0     = 0,               /* 最低优先级*/
-    SOCP_CHAN_PRIORITY_1,                       /* 次低优先级*/
-    SOCP_CHAN_PRIORITY_2,                       /* 次高优先级*/
-    SOCP_CHAN_PRIORITY_3,                       /* 最高优先级*/
+    SOCP_CHAN_PRIORITY_0     = 0,               /* Minimum priority*/
+    SOCP_CHAN_PRIORITY_1,                       /* Next Lower Priority*/
+    SOCP_CHAN_PRIORITY_2,                       /* Next-high priority*/
+    SOCP_CHAN_PRIORITY_3,                       /* Highest priority*/
     SOCP_CHAN_PRIORITY_BUTT
 }SOCP_CHAN_PRIORITY_E;
 
-/* 数据类型枚举值*/
+/* Data type enumeration value*/
 typedef enum tagSOCP_DATA_TYPE_E
 {
-    SOCP_DATA_TYPE_0            = 0,            /* LTE OAM数据 */
-    SOCP_DATA_TYPE_1,                           /* GU OAM数据 */
-    SOCP_DATA_TYPE_2,                           /* 保留 */
-    SOCP_DATA_TYPE_3,                           /* 保留 */
+    SOCP_DATA_TYPE_0            = 0,            /* LTE OAM data */
+    SOCP_DATA_TYPE_1,                           /* GU OAM data */
+    SOCP_DATA_TYPE_2,                           /* reserve */
+    SOCP_DATA_TYPE_3,                           /* reserve */
     SOCP_DATA_TYPE_BUTT
 }SOCP_DATA_TYPE_E;
 
 
-/* BBP 数采模式，数据丢弃或覆盖 */
+/* BBP digital acquisition mode, data discarding or overwriting */
 typedef enum tagSOCP_BBP_DS_MODE_E
 {
-    SOCP_BBP_DS_MODE_DROP           = 0,        /* 数据丢弃 */
-    SOCP_BBP_DS_MODE_OVERRIDE,                  /* 数据覆盖 */
+    SOCP_BBP_DS_MODE_DROP           = 0,        /* Data discard */
+    SOCP_BBP_DS_MODE_OVERRIDE,                  /* Data coverage */
     SOCP_BBP_DS_MODE_BUTT
 }SOCP_BBP_DS_MODE_E;
 
-/* 编码源通道data type 使能位 */
+/* Encoding source channel data type enable bit */
 typedef enum tagSOCP_DATA_TYPE_EN_E
 {
-    SOCP_DATA_TYPE_EN           = 0,        /* data type 使能，默认值 */
-    SOCP_DATA_TYPE_DIS,                     /* data type 不使能 */
+    SOCP_DATA_TYPE_EN           = 0,        /* data type enabled, default value */
+    SOCP_DATA_TYPE_DIS,                     /* data type not enabled */
     SOCP_DATA_TYPE_EN_BUTT
 }SOCP_DATA_TYPE_EN_E;
 
-/* 编码源通道debug 使能位 */
+/* Encoding source channel debug enable bit */
 typedef enum tagSOCP_ENC_DEBUG_EN_E
 {
-    SOCP_ENC_DEBUG_DIS          = 0,       /* debug 不使能，默认值 */
-    SOCP_ENC_DEBUG_EN,                     /* debug 使能 */
+    SOCP_ENC_DEBUG_DIS          = 0,       /* debug is not enabled, default value */
+    SOCP_ENC_DEBUG_EN,                     /* debug enable */
     SOCP_ENC_DEBUG_EN_BUTT
 }SOCP_ENC_DEBUG_EN_E;
 
-/* 解码通路包长配置结构体 */
+/* Decode path packet length configuration structure */
 typedef struct tagSOCP_DEC_PKTLGTH_S
 {
-    BSP_U32                 u32PktMax;         /*包长度最大值*/
-    BSP_U32                 u32PktMin;         /*包长度最小值*/
+    BSP_U32                 u32PktMax;         /*Maximum package length*/
+    BSP_U32                 u32PktMin;         /*Minimum package length value*/
 }SOCP_DEC_PKTLGTH_S;
 
 
-/* 通用源通道buffer结构体定义*/
+/* General source channel buffer structure definition*/
 typedef struct tagSOCP_SRC_SETBUF_S
 {
-    BSP_U32                 u32InputStart;      /* 输入通道起始地址*/
-    BSP_U32                 u32InputEnd;        /* 输入通道结束地址*/
-    BSP_U32                 u32RDStart;         /* RD buffer起始地址*/
-    BSP_U32                 u32RDEnd;           /* RD buffer结束地址*/
-    BSP_U32                 u32RDThreshold;     /* RD buffer数据上报阈值*/
+    BSP_U32                 u32InputStart;      /* Enter the channel start address*/
+    BSP_U32                 u32InputEnd;        /* Enter the channel end address*/
+    BSP_U32                 u32RDStart;         /* RD buffer start address*/
+    BSP_U32                 u32RDEnd;           /* RD buffer end address*/
+    BSP_U32                 u32RDThreshold;     /* RD buffer data reporting threshold*/
 }SOCP_SRC_SETBUF_S;
 
-/* 通用目的通道buffer结构体定义*/
+/* General purpose channel buffer structure definition*/
 typedef struct tagSOCP_DST_SETBUF_S
 {
-    BSP_U32                 u32OutputStart;     /* 输出通道起始地址*/
-    BSP_U32                 u32OutputEnd;       /* 输出通道结束地址*/
-    BSP_U32                 u32Threshold;       /* 输出通道门限值 */
+    BSP_U32                 u32OutputStart;     /* Output channel start address*/
+    BSP_U32                 u32OutputEnd;       /* Output channel end address*/
+    BSP_U32                 u32Threshold;       /* Output channel threshold value */
 }SOCP_DST_SETBUF_S;
 
-/* 编码源通道结构体定义*/
+/* Encoding source channel structure definition*/
 typedef struct tagSOCP_CODER_SRC_CHAN_S
 {
-    BSP_U32                 u32DestChanID;      /* 目标通道ID*/
-    BSP_U32                 u32BypassEn;        /* 通道bypass使能*/
-    SOCP_DATA_TYPE_E        eDataType;          /* 数据类型，指明数据封装协议，用于复用多平台*/
+    BSP_U32                 u32DestChanID;      /* Target channel id*/
+    BSP_U32                 u32BypassEn;        /* Channel bypass enable*/
+    SOCP_DATA_TYPE_E        eDataType;          /* Data type, specifying the data encapsulation protocol, used to multiplex multiple platforms*/
 #if defined (CHIP_BB_6920CS)
-    SOCP_DATA_TYPE_EN_E     eDataTypeEn;        /* 数据类型使能位*/
-    SOCP_ENC_DEBUG_EN_E     eDebugEn;           /* 调试位使能*/
+    SOCP_DATA_TYPE_EN_E     eDataTypeEn;        /* Data type enable bit*/
+    SOCP_ENC_DEBUG_EN_E     eDebugEn;           /* Debug bit enable*/
 #endif
-    SOCP_ENCSRC_CHNMODE_E   eMode;              /* 通道数据模式*/
-    SOCP_CHAN_PRIORITY_E    ePriority;          /* 通道优先级*/
+    SOCP_ENCSRC_CHNMODE_E   eMode;              /* Channel data mode*/
+    SOCP_CHAN_PRIORITY_E    ePriority;          /* Channel priority*/
     SOCP_SRC_SETBUF_S       sCoderSetSrcBuf;
 }SOCP_CODER_SRC_CHAN_S;
 
-/* 编码目的配置结构体定义*/
+/* Definition of the configuration structure of the encoding purpose*/
 typedef struct tagSOCP_CODER_DEST_CHAN_S
 {
 #if defined (CHIP_BB_6920CS)
-    BSP_U32                 u32EncDstThrh;     /* 编码目的通道阈值门限，仲裁通道时使用*/
+    BSP_U32                 u32EncDstThrh;     /* Encode the threshold threshold of the destination channel, used when arbitrating the channel*/
 #endif
     SOCP_DST_SETBUF_S       sCoderSetDstBuf;
 }SOCP_CODER_DEST_CHAN_S;
 
-/* 解码源通道结构体定义*/
+/* Decode the source channel structure definition*/
 typedef struct tagSOCP_DECODER_SRC_CHAN_S
 {
 #if defined (CHIP_BB_6920CS)
-    SOCP_DATA_TYPE_EN_E     eDataTypeEn;        /* 数据类型使能位*/
+    SOCP_DATA_TYPE_EN_E     eDataTypeEn;        /* Data type enable bit*/
 #endif
-    SOCP_DECSRC_CHNMODE_E   eMode;              /* 通道模式*/
+    SOCP_DECSRC_CHNMODE_E   eMode;              /* Channel Mode*/
     SOCP_SRC_SETBUF_S       sDecoderSetSrcBuf;
 }SOCP_DECODER_SRC_CHAN_S;
 
-/* 解码目的通道结构体定义*/
+/* Decode the destination channel structure definition*/
 typedef struct tagSOCP_DECODER_DEST_CHAN_S
 {
-    BSP_U32                 u32SrcChanID;       /* 数据来源通道ID*/
-    SOCP_DATA_TYPE_E        eDataType;          /* 数据类型，指明数据封装协议，用于复用多平台*/
+    BSP_U32                 u32SrcChanID;       /* Data source channel id*/
+    SOCP_DATA_TYPE_E        eDataType;          /* Data type, specifying the data encapsulation protocol, used to multiplex multiple platforms*/
     SOCP_DST_SETBUF_S       sDecoderDstSetBuf;
 }SOCP_DECODER_DEST_CHAN_S;
 
-/* 通用buffer描述结构体定义*/
+/* General buffer description structure definition*/
 typedef struct tagSOCP_BUFFER_RW_S
 {
-    BSP_CHAR   *pBuffer;                        /* buffer指针*/
-    BSP_U32     u32Size;                        /* 可用buffer大小*/
-    BSP_CHAR   *pRbBuffer;                      /* 回卷buffer指针*/
-    BSP_U32     u32RbSize;                      /* 回卷buffer大小*/
+    BSP_CHAR   *pBuffer;                        /* Buffer pointer*/
+    BSP_U32     u32Size;                        /* Available buffer size*/
+    BSP_CHAR   *pRbBuffer;                      /* Rewind buffer pointer*/
+    BSP_U32     u32RbSize;                      /* Rewind buffer size*/
 }SOCP_BUFFER_RW_S;
 
-/* 解码源通道错误计数结构体定义*/
+/* Decode the source channel error count structure definition*/
 typedef struct tagSOCP_DECODER_ERROR_CNT_S
 {
-    BSP_U32     u32PktlengthCnt;                /* 包长检测错误计数*/
-    BSP_U32     u32CrcCnt;                      /* CRC校验错误计数*/
-    BSP_U32     u32DataTypeCnt;                 /* 解码数据类型检验错误计数*/
-    BSP_U32     u32HdlcHeaderCnt;               /* 0x7E校验错误*/
+    BSP_U32     u32PktlengthCnt;                /* Packet length detection error count*/
+    BSP_U32     u32CrcCnt;                      /* Crc verification error count*/
+    BSP_U32     u32DataTypeCnt;                 /* Decoded data type verification error count*/
+    BSP_U32     u32HdlcHeaderCnt;               /* 0x7 eCheck error*/
 }SOCP_DECODER_ERROR_CNT_S;
 
-/* 解码通路包长配置结构体 */
+/* Decode path packet length configuration structure */
 typedef struct tagSOCP_ENCSRC_RSVCHN_SCOPE_S
 {
-    BSP_U32                 u32RsvIDMin;        /*编码源保留通道ID最小值*/
-    BSP_U32                 u32RsvIDMax;        /*编码源保留通道ID最大值*/
+    BSP_U32                 u32RsvIDMin;        /*The minimum value of the encoding source reserved channel id*/
+    BSP_U32                 u32RsvIDMax;        /*The maximum value of the channel id of the encoding source is retained*/
 }SOCP_ENCSRC_RSVCHN_SCOPE_S;
 
 #define SOCP_OM_CHANNEL_CNT    3
 /*******************************************************************************
- 结构名    : SOCP_LOG_EXC_INFO_STRU
- 协议表格  :
- ASN.1描述 :
- 结构说明  : LOG2.0 OM数据复位信息保存
- 特殊说明:   在双核共享内存分配了该结构长度的空间
-             改动该结构时请确保同步更新excdrv.h中EXCH_A_C_SOCP_LOG_SIZE
+ Structure name: SOCP_LOG_EXC_INFO_STRU
+ Agreement Form:
+ ASN.1 Description:
+ Structure description: LOG2.0 OM data reset information saving
+ Special Note: Space for the structure length is allocated in dual-core shared memory
+             When changing this structure, please make sure to update EXCH_A_C_SOCP_LOG_SIZE in excdrv.h synchronously.
 *******************************************************************************/
 typedef struct
 {
@@ -2652,11 +2655,11 @@ typedef struct
 
 typedef struct SOCP_ENC_DST_BUF_LOG_CFG
 {
-    BSP_U32     guWaterMark;    /* SOCP编码目的通道数据传输水线，GU通道 */
-    BSP_U32     lWaterMark;     /* SOCP编码目的通道数据传输水线，L通道 */
-    BSP_U32     overTime;       /* SOCP编码目的通道数据传输超时时间 */
-    BSP_U32     flushFlag;      /* SOCP编码目的通道数据立即输出标志 */
-    BSP_U32     logOnFlag;      /* LOG2.0功能启动标志 */
+    BSP_U32     guWaterMark;    /* Socp encoding destination channel data transmission waterline, gu channel */
+    BSP_U32     lWaterMark;     /* Socp encoding destination channel data transmission waterline, l channel */
+    BSP_U32     overTime;       /* Socp encoding destination channel data transmission timeout time */
+    BSP_U32     flushFlag;      /* Socp encoding destination channel data output flag immediately */
+    BSP_U32     logOnFlag;      /* Lo g2.0 function startup flag */
 } SOCP_ENC_DST_BUF_LOG_CFG_STRU;
 
 typedef BSP_S32 (*socp_event_cb)(BSP_U32 u32ChanID, SOCP_EVENT_E u32Event, BSP_U32 u32Param);
@@ -2664,412 +2667,412 @@ typedef BSP_S32 (*socp_read_cb)(BSP_U32 u32ChanID);
 typedef BSP_S32 (*socp_rd_cb)(BSP_U32 u32ChanID);
 
 /**************************************************************************
-  函数声明
+  Function declaration
 **************************************************************************/
 /*****************************************************************************
- 函 数 名  : BSP_SOCP_SleepIn
- 功能描述  : SOCP进入睡眠
- 输入参数  : pu32SrcChanID:编码源通道ID列表
-             uSrcChanNum:  编码源通道个数
-             pu32DstChanID:编码目的通道ID列表
-             uSrcChanNum:  编码目的通道个数
- 输出参数  : 无。
- 返 回 值  : SOCP_OK:进入睡眠成功。
-             其他:   进入睡眠失败
+ Function Name: BSP_SOCP_SleepIn
+ Function Description: SOCP enters sleep
+ Input parameters: pu32SrcChanID: encoded source channel ID list
+             uSrcChanNum: Number of encoded source channels
+             pu32DstChanID: encoded destination channel ID list
+             uSrcChanNum: Number of encoding destination channels
+ Output parameters: None.
+ Return Value: SOCP_OK: Sleep successfully.
+             Others: Failed to enter sleep
 *****************************************************************************/
 extern BSP_U32 DRV_SOCP_SLEEPIN(BSP_U32 *pu32SrcChanID, BSP_U32 uSrcChanNum, BSP_U32 *pu32DstChanID, BSP_U32 uDstChanNum);
 
 /*****************************************************************************
- 函 数 名  : DRV_SOCP_SLEEPOUT
- 功能描述  : SOCP退出睡眠
- 输入参数  : pu32SrcChanID:编码源通道ID列表
-             uSrcChanNum:  编码源通道个数
-             pu32DstChanID:编码目的通道ID列表
-             uSrcChanNum:  编码目的通道个数
- 输出参数  : 无。
- 返 回 值  : SOCP_OK:进入睡眠成功。
-             其他:   进入睡眠失败
+ Function Name: DRV_SOCP_SLEEPOUT
+ Function description: SOCP exits sleep
+ Input parameters: pu32SrcChanID: encoded source channel ID list
+             uSrcChanNum: Number of encoded source channels
+             pu32DstChanID: encoded destination channel ID list
+             uSrcChanNum: Number of encoding destination channels
+ Output parameters: None.
+ Return Value: SOCP_OK: Sleep successfully.
+             Others: Failed to enter sleep
 *****************************************************************************/
 extern BSP_U32 DRV_SOCP_SLEEPOUT(BSP_U32 *pu32SrcChanID, BSP_U32 uSrcChanNum, BSP_U32 *pu32DstChanID, BSP_U32 uDstChanNum);
 
 /*****************************************************************************
- 函 数 名  : BSP_SOCP_CoderAllocSrcChan
- 功能描述  : 此接口完成SOCP编码器源通道的分配，根据编码器源通道参数设置通道属性，连接目标通道，返回函数执行结果。
- 输入参数  : pSrcAttr:编码器源通道参数结构体指针。
-             pSrcChanID:申请到的源通道ID。
- 输出参数  : 无。
- 返 回 值  : SOCP_OK:编码源通道分配成功。
-             SOCP_ERROR:编码源通道分配失败。
+ Function Name: BSP_SOCP_CoderAllocSrcChan
+ Function Description: This interface completes the allocation of the SOCP encoder source channel, sets the channel properties according to the encoder source channel parameters, connects to the target channel, and returns the function execution result.
+ Input parameters: pSrcAttr: Encoder source channel parameter structure pointer.
+             pSrcChanID: The source channel ID applied for.
+ Output parameters: None.
+ Return Value: SOCP_OK: The encoding source channel is allocated successfully.
+             SOCP_ERROR: Encoding source channel allocation failed.
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_CoderAllocSrcChan(SOCP_CODER_SRC_CHAN_S *pSrcAttr, BSP_U32 *pSrcChanID);
 #define DRV_SOCP_CoderAllocSrcChan(pSrcAttr, pSrcChanID)    BSP_SOCP_CoderAllocSrcChan(pSrcAttr, pSrcChanID)
 
 /*****************************************************************************
- 函 数 名  : BSP_SOCP_CoderSetDestChanAttr
- 功能描述  : 此接口完成某一编码目标通道的配置，返回函数执行的结果。
- 输入参数  : u32DestChanID:SOCP编码器的目标通道ID。
-             pDestAttr:SOCP编码器目标通道参数结构体指针。
- 输出参数  : 无。
- 返 回 值  : SOCP_OK:编码目的通道设置成功。
-             SOCP_ERROR:编码目的通道设置失败。
+ Function Name: BSP_SOCP_CoderSetDestChanAttr
+ Function Description: This interface completes the configuration of a certain encoding target channel and returns the result of function execution.
+ Input parameters: u32DestChanID: The target channel ID of the SOCP encoder.
+             pDestAttr: SOCP encoder target channel parameter structure pointer.
+ Output parameters: None.
+ Return Value: SOCP_OK: The encoding destination channel is set successfully.
+             SOCP_ERROR: The encoding destination channel setting failed.
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_CoderSetDestChanAttr(BSP_U32 u32DestChanID, SOCP_CODER_DEST_CHAN_S *pDestAttr);
 #define DRV_SOCP_CoderSetDestChanAttr(u32DestChanID, pDestAttr)    BSP_SOCP_CoderSetDestChanAttr(u32DestChanID, pDestAttr)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_DecoderAllocDestChan
- 功能描述  :此接口完成SOCP解码器目标通道的分配，
-                根据解码目标通道参数设置通道属性，
-                并连接源通道，返回函数执行结果。
- 输入参数  : pAttr:解码器目标通道参数结构体指针
-                         pDestChanID:申请到的目标通道ID
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:解码目的通道分配成功。
-                             SOCP_ERROR:解码目的通道设置失败。
+ Function Name: BSP_SOCP_DecoderAllocDestChan
+ Function description: This interface completes the allocation of the target channel of the SOCP decoder.
+                Set the channel properties according to the decoding target channel parameters.
+                And connect the source channel to return the function execution result.
+ Input parameters: pAttr: Decoder target channel parameter structure pointer
+                         pDestChanID: The target channel ID applied for
+ Output parameters: None.
+ Return Value: SOCP_OK: The decoding destination channel is assigned successfully.
+                             SOCP_ERROR: The decoding destination channel setting failed.
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_DecoderAllocDestChan (SOCP_DECODER_DEST_CHAN_S *pAttr, BSP_U32 *pDestChanID);
 #define  DRV_SOCP_DecoderAllocDestChan(pAttr ,pDestChanID)  BSP_SOCP_DecoderAllocDestChan(pAttr ,pDestChanID)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_DecoderSetSrcChanAttr
- 功能描述  :此接口完成某一解码源通道的配置，返回函数执行的结果。
- 输入参数  : u32SrcChanID:解码器源通道ID
-                         pInputAttr:解码器源通道参数结构体指针
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:解码源通道设置成功
-                             SOCP_ERROR:解码源通道设置失败
+ Function Name: BSP_SOCP_DecoderSetSrcChanAttr
+ Function Description: This interface completes the configuration of a certain decoding source channel and returns the result of function execution.
+ Input parameters: u32SrcChanID: Decoder source channel ID
+                         pInputAttr: Decoder source channel parameter structure pointer
+ Output parameters: None.
+ Return Value: SOCP_OK: The decoding source channel is set successfully
+                             SOCP_ERROR: Decoding source channel setting failed
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_DecoderSetSrcChanAttr ( BSP_U32 u32SrcChanID,SOCP_DECODER_SRC_CHAN_S *pInputAttr);
 #define  DRV_SOCP_DecoderSetSrcChanAttr(u32SrcChanID, pInputAttr)   BSP_SOCP_DecoderSetSrcChanAttr(u32SrcChanID, pInputAttr)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_DecoderGetErrCnt
- 功能描述  :此接口给出解码通道中四种异常情况的计数值。
- 输入参数  : u32ChanID:解码器通道ID
-                         pErrCnt:解码器异常计数结构体指针
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:返回异常计数成功
-                             SOCP_ERROR:返回异常计数失败
+ Function Name: BSP_SOCP_DecoderGetErrCnt
+ Function Description: This interface gives the count value of four abnormal situations in the decoding channel.
+ Input parameters: u32ChanID: Decoder channel ID
+                         pErrCnt: Decoder exception count structure pointer
+ Output parameters: None.
+ Return Value: SOCP_OK: Return exception count successfully
+                             SOCP_ERROR: Returns exception count failed
 *****************************************************************************/
 extern  BSP_S32 BSP_SOCP_DecoderGetErrCnt (BSP_U32 u32ChanID, SOCP_DECODER_ERROR_CNT_S *pErrCnt);
 #define  DRV_SOCP_DecoderGetErrCnt(u32ChanID, pErrCnt)   BSP_SOCP_DecoderGetErrCnt ( u32ChanID, pErrCnt)
 
 /*****************************************************************************
- 函 数 名  : BSP_SOCP_FreeChannel
- 功能描述  : 此接口根据通道ID释放分配的编解码通道。
- 输入参数  : u32ChanID:通道ID。
- 输出参数  : 无。
- 返 回 值  : SOCP_OK:通道释放成功。
-             SOCP_ERROR:通道释放失败。
+ Function Name: BSP_SOCP_FreeChannel
+ Function Description: This interface releases the assigned codec channel according to the channel ID.
+ Input parameters: u32ChanID:ChanID.
+ Output parameters: None.
+ Return Value: SOCP_OK: Channel release was successfully released.
+             SOCP_ERROR: Channel release failed.
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_FreeChannel(BSP_U32 u32ChanID);
 #define  DRV_SOCP_FreeChannel(u32ChanID)  BSP_SOCP_FreeChannel(u32ChanID)
 
 /*****************************************************************************
- 函 数 名  : BSP_SOCP_RegisterEventCB
- 功能描述  : 此接口为给定通道注册事件回调函数。
- 输入参数  : u32ChanID:通道ID。
-             EventCB:事件回调函数，参考socp_event_cb函数定义
- 输出参数  : 无。
- 返 回 值  : SOCP_OK:注册事件回调函数成功。
-             SOCP_ERROR:注册事件回调函数失败。
+ Function Name: BSP_SOCP_RegisterEventCB
+ Function Description: This interface registers event callback functions for a given channel.
+ Input parameters: u32ChanID:ChanID.
+             EventCB: Event callback function, refer to the socp_event_cb function definition
+ Output parameters: None.
+ Return Value: SOCP_OK: The event callback function was registered successfully.
+             SOCP_ERROR: The registration event callback function failed.
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_RegisterEventCB(BSP_U32 u32ChanID, socp_event_cb EventCB);
 #define  DRV_SOCP_RegisterEventCB( u32ChanID,  EventCB) BSP_SOCP_RegisterEventCB( u32ChanID,  EventCB)
 
 /*****************************************************************************
- 函 数 名  : BSP_SOCP_Start
- 功能描述  : 此接口用于源通道，启动编码或者解码。
- 输入参数  : u32SrcChanID:源通道ID。
- 输出参数  : 无。
- 返 回 值  : SOCP_OK:编码或解码启动成功。
-             SOCP_ERROR:编码或解码启动失败。
+ Function Name: BSP_SOCP_Start
+ Function Description: This interface is used for source channels, start encoding or decoding.
+ Input parameters: u32SrcChanID: Source channel ID.
+ Output parameters: None.
+ Return Value: SOCP_OK: Encoding or decoding is started successfully.
+             SOCP_ERROR: Encoding or decoding failed to start.
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_Start(BSP_U32 u32SrcChanID);
 #define  DRV_SOCP_Start( u32SrcChanID)   BSP_SOCP_Start( u32SrcChanID)
 
 /*****************************************************************************
- 函 数 名  : BSP_SOCP_Stop
- 功能描述  : 此接口用于源通道，停止编码或者解码。
- 输入参数  : u32SrcChanID:源通道ID。
- 输出参数  : 无。
- 返 回 值  : SOCP_OK:编码或解码停止成功。
-             SOCP_ERROR:编码或解码停止失败。
+ Function Name: BSP_SOCP_Stop
+ Function Description: This interface is used for source channels, stop encoding or decoding.
+ Input parameters: u32SrcChanID: Source channel ID.
+ Output parameters: None.
+ Return Value: SOCP_OK: Encoding or decoding has stopped successfully.
+             SOCP_ERROR: Encoding or decoding stop failed.
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_Stop(BSP_U32 u32SrcChanID);
 #define DRV_SOCP_Stop( u32SrcChanID)  BSP_SOCP_Stop( u32SrcChanID)
 
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_SetTimeout
- 功能描述  :此接口设置超时阈值。
- 输入参数  : u32Timeout:超时阈值
+ Function Name: BSP_SOCP_SetTimeout
+ Function Description: This interface sets the timeout threshold.
+ Input parameters: u32Timeout: Timeout threshold
 
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:设置超时时间阈值成功。
-                             SOCP_ERROR:设置超时时间阈值失败
+ Output parameters: None.
+ Return Value: SOCP_OK: Set the timeout threshold successfully.
+                             SOCP_ERROR: Failed to set the timeout threshold
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_SetTimeout (SOCP_TIMEOUT_EN_E eTmOutEn, BSP_U32 u32Timeout);
 #define DRV_SOCP_SetTimeout(eTmOutEn,u32Timeout)   BSP_SOCP_SetTimeout(eTmOutEn,u32Timeout)
 
 /*****************************************************************************
- 函 数 名   : BSP_SOCP_SetDecPktLgth
- 功能描述  :设置解码包长度极限值
- 输入参数  : pPktlgth:解码包长度极值
+ Function Name: BSP_SOCP_SetDecPktLgth
+ Function description: Set the limit value of the decoding packet length
+ Input parameters: pPktlgth: Extreme value of the decoded packet length
 
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:设置成功。
-                    其他值:设置失败
+ Output parameters: None.
+ Return Value: SOCP_OK: Set successfully.
+                    Other values: Setting failed
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_SetDecPktLgth(SOCP_DEC_PKTLGTH_S *pPktlgth);
 #define DRV_SOCP_SetDecPktLgth(pPktlgth)   BSP_SOCP_SetDecPktLgth(SOCP_DEC_PKTLGTH_S *pPktlgth)
 
 /*****************************************************************************
- 函 数 名   : BSP_SOCP_SetDebug
- 功能描述  :设置解码源通道的debug模式
- 输入参数  : u32ChanID:通道ID
-                  u32DebugEn: debug标识
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:设置成功。
-                     其他值:设置失败
+ Function Name: BSP_SOCP_SetDebug
+ Function description: Set the debug mode of the decoding source channel
+ Input parameters: u32ChanID:ChanID
+                  u32DebugEn: debug logo
+ Output parameters: None.
+ Return Value: SOCP_OK: Set successfully.
+                     Other values: Setting failed
 *****************************************************************************/
 BSP_S32 BSP_SOCP_SetDebug(BSP_U32 u32DestChanID, BSP_U32 u32DebugEn);
 #define DRV_SOCP_SetDebug(u32ChanID, u32DebugEn)   BSP_SOCP_SetDebug(BSP_U32 u32DestChanID, BSP_U32 u32DebugEn)
 
 /*****************************************************************************
- 函 数 名   : BSP_SOCP_ChnSoftReset
- 功能描述  : 源通道软复位
- 输入参数  : u32ChanID:通道ID
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:设复位成功。
-                     其他值:复位失败
+ Function Name: BSP_SOCP_ChnSoftReset
+ Function Description: Source Channel Soft Reset
+ Input parameters: u32ChanID:ChanID
+ Output parameters: None.
+ Return Value: SOCP_OK: Set the reset is successful.
+                     Other values: Reset failed
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_ChnSoftReset(BSP_U32 u32ChanID);
 #define DRV_SOCP_ChnSoftReset(u32ChanID)   BSP_SOCP_ChnSoftReset(BSP_U32 u32ChanID)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_GetWriteBuff
- 功能描述  :此接口用于获取写数据buffer。
- 输入参数  : u32SrcChanID:源通道ID
-                  pBuff:           :写数据buffer
+ Function Name: BSP_SOCP_GetWriteBuff
+ Function Description: This interface is used to obtain a write data buffer.
+ Input parameters: u32SrcChanID: Source channel ID
+                  pBuff: :Write data buffer
 
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:获取写数据buffer成功。
-                             SOCP_ERROR:获取写数据buffer失败
+ Output parameters: None.
+ Return Value: SOCP_OK: Get the buffer to write data successfully.
+                             SOCP_ERROR: Failed to get the data write buffer
 *****************************************************************************/
 extern  BSP_S32 BSP_SOCP_GetWriteBuff( BSP_U32 u32SrcChanID, SOCP_BUFFER_RW_S *pBuff);
 #define  DRV_SOCP_GetWriteBuff( u32SrcChanID, pBuff)  BSP_SOCP_GetWriteBuff( u32SrcChanID, pBuff)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_WriteDone
- 功能描述  :该接口用于数据的写操作，提供写入数据的长度。
- 输入参数  : u32SrcChanID:源通道ID
-                  u32WrtSize:   已写入数据的长度
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:写入数据成功。
-                             SOCP_ERROR:写入数据失败
+ Function Name: BSP_SOCP_WriteDone
+ Function Description: This interface is used for writing data and provides the length of the data written.
+ Input parameters: u32SrcChanID: Source channel ID
+                  u32WrtSize: length of the written data
+ Output parameters: None.
+ Return Value: SOCP_OK: The data was successfully written.
+                             SOCP_ERROR: Failed to write data
 *****************************************************************************/
 extern   BSP_S32  BSP_SOCP_WriteDone(BSP_U32 u32SrcChanID, BSP_U32 u32WrtSize);
 #define  DRV_SOCP_WriteDone(u32SrcChanID, u32WrtSize)  BSP_SOCP_WriteDone(u32SrcChanID, u32WrtSize)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_RegisterRdCB
- 功能描述  :该接口用于注册从RD缓冲区中读取数据的回调函数。
- 输入参数  : u32SrcChanID:源通道ID
-                  RdCB:  事件回调函数
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:注册RD环形缓冲区读数据回调函数成功。
-                             SOCP_ERROR:注册RD环形缓冲区读数据回调函数失败
+ Function Name: BSP_SOCP_RegisterRdCB
+ Function Description: This interface is used to register a callback function for reading data from the RD buffer.
+ Input parameters: u32SrcChanID: Source channel ID
+                  RdCB: Event callback function
+ Output parameters: None.
+ Return Value: SOCP_OK: The RD ring buffer read data callback function was successfully registered.
+                             SOCP_ERROR: Registering RD ring buffer read data callback function failed
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_RegisterRdCB(BSP_U32 u32SrcChanID, socp_rd_cb RdCB);
 #define DRV_SOCP_RegisterRdCB( u32SrcChanID,  RdCB) BSP_SOCP_RegisterRdCB( u32SrcChanID,  RdCB)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_GetRDBuffer
- 功能描述  :该此接口用于获取RD buffer的数据指针。
- 输入参数  : u32SrcChanID:源通道ID
-                  pBuff:  RD buffer
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:获取RD环形缓冲区成功
-                             SOCP_ERROR:获取RD环形缓冲区失败
+ Function Name: BSP_SOCP_GetRDBuffer
+ Function description: This interface is used to obtain the data pointer of the RD buffer.
+ Input parameters: u32SrcChanID: Source channel ID
+                  pBuff: RD buffer
+ Output parameters: None.
+ Return Value: SOCP_OK: Getting the RD ring buffer successfully
+                             SOCP_ERROR: Failed to obtain RD ring buffer
 *****************************************************************************/
 extern  BSP_S32 BSP_SOCP_GetRDBuffer( BSP_U32 u32SrcChanID,SOCP_BUFFER_RW_S *pBuff);
 #define DRV_SOCP_GetRDBuffer(  u32SrcChanID,pBuff)  BSP_SOCP_GetRDBuffer(  u32SrcChanID,pBuff)
 
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_ReadRDDone
- 功能描述  :此接口用于上层通知SOCP驱动，从RD buffer中实际读取的数据。
- 输入参数  : u32SrcChanID:源通道ID
-                  u32RDSize:  从RD buffer中实际读取的数据长度
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:读取RDbuffer中的数据成功
-                             SOCP_ERROR:读取RDbuffer中的数据失败
+ Function Name: BSP_SOCP_ReadRDDone
+ Function Description: This interface is used to notify the SOCP driver of the upper layer to actually read data from the RD buffer.
+ Input parameters: u32SrcChanID: Source channel ID
+                  u32RDSize: The actual data length read from the RD buffer
+ Output parameters: None.
+ Return Value: SOCP_OK: Read data in RDbuffer successfully
+                             SOCP_ERROR: Failed to read data in RDbuffer
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_ReadRDDone(BSP_U32 u32SrcChanID, BSP_U32 u32RDSize);
 #define DRV_SOCP_ReadRDDone( u32SrcChanID,  u32RDSize)   BSP_SOCP_ReadRDDone( u32SrcChanID,  u32RDSize)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_RegisterReadCB
- 功能描述  :该接口用于注册读数据的回调函数。
- 输入参数  : u32DestChanID:目标通道ID
-                  ReadCB: 事件回调函数
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:注册读数据回调函数成功
-                             SOCP_ERROR:注册读数据回调函数失败
+ Function Name: BSP_SOCP_RegisterReadCB
+ Function Description: This interface is used to register a callback function for reading data.
+ Input parameters: u32DestChanID: Target channel ID
+                  ReadCB: Event callback function
+ Output parameters: None.
+ Return Value: SOCP_OK: Registered data read callback function successfully
+                             SOCP_ERROR: Registering the read data callback function failed
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_RegisterReadCB( BSP_U32 u32DestChanID, socp_read_cb ReadCB);
 #define   DRV_SOCP_RegisterReadCB(  u32DestChanID,  ReadCB)  BSP_SOCP_RegisterReadCB(  u32DestChanID,  ReadCB)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_RegisterReadCB
- 功能描述  :该此接口用于获取读数据缓冲区指针。
- 输入参数  : u32DestChanID:目标通道ID
-                  ReadCB: 读数据buffer
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:获取读数据缓冲区成功。
-                             SOCP_ERROR:获取读数据缓冲区成功。
+ Function Name: BSP_SOCP_RegisterReadCB
+ Function Description: This interface is used to obtain the read data buffer pointer.
+ Input parameters: u32DestChanID: Target channel ID
+                  ReadCB: Read data buffer
+ Output parameters: None.
+ Return Value: SOCP_OK: The read data buffer was successfully obtained.
+                             SOCP_ERROR: The read data buffer was successfully obtained.
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_GetReadBuff( BSP_U32 u32DestChanID,SOCP_BUFFER_RW_S *pBuffer);
 #define   DRV_SOCP_GetReadBuff(  u32DestChanID,  pBuffer)  BSP_SOCP_GetReadBuff(  u32DestChanID,  pBuffer)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_ReadDataDone
- 功能描述  :该接口用于上层告诉SOCP驱动，从目标通道中读走的实际数据。
- 输入参数  : u32DestChanID:目标通道ID
-                  u32ReadSize: 已读出数据的长度
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:读数据成功。
-                             SOCP_ERROR:读数据失败
+ Function Name: BSP_SOCP_ReadDataDone
+ Function Description: This interface is used by the upper layer to tell the SOCP driver to read the actual data from the target channel.
+ Input parameters: u32DestChanID: Target channel ID
+                  u32ReadSize: The length of the read data
+ Output parameters: None.
+ Return Value: SOCP_OK: Read data successfully.
+                             SOCP_ERROR: failed to read data
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_ReadDataDone(BSP_U32 u32DestChanID,BSP_U32 u32ReadSize);
 #define  DRV_SOCP_ReadDataDone( u32DestChanID, u32ReadSize)  BSP_SOCP_ReadDataDone( u32DestChanID, u32ReadSize)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_SetBbpEnable
- 功能描述  :使能或停止BBP通道。
- 输入参数  : bEnable:通道ID
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:设置成功。
-                   其他值:设置失败
+ Function Name: BSP_SOCP_SetBbpEnable
+ Function Description: Enable or stop the BBP channel.
+ Input parameters: bEnable:Channel ID
+ Output parameters: None.
+ Return Value: SOCP_OK: Set successfully.
+                   Other values: Setting failed
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_SetBbpEnable(BSP_BOOL bEnable);
 #define  DRV_SOCP_SetBbpEnable( bEnable)  BSP_SOCP_SetBbpEnable(BSP_BOOL bEnable)
 
 /*****************************************************************************
- 函 数 名      : BSP_SOCP_SetBbpDsMode
- 功能描述  :设置BBP DS通道数据溢出处理模式。
- 输入参数  : eDsMode:DS通道数据溢出时处理模式设置
- 输出参数  : 无。
- 返 回 值      : SOCP_OK:设置成功。
-                   其他值:设置失败
+ Function Name: BSP_SOCP_SetBbpDsMode
+ Function description: Set the BBP DS channel data overflow processing mode.
+ Input parameters: eDsMode: Processing mode setting when DS channel data overflow
+ Output parameters: None.
+ Return Value: SOCP_OK: Set successfully.
+                   Other values: Setting failed
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_SetBbpDsMode(SOCP_BBP_DS_MODE_E eDsMode);
 #define  DRV_SOCP_SetBbpDsMode( eDsMode)  BSP_SOCP_SetBbpDsMode(SOCP_BBP_DS_MODE_E eDsMode)
 
 /*****************************************************************************
-* 函 数 名  : BSP_SOCP_GetRsvChnScope
-* 功能描述  : 获得保留通道ID的范围
-* 输入参数  : 无
-* 输出参数  : pScope,编码源保留通道的ID范围
-* 返 回 值  :
+*Function Name: BSP_SOCP_GetRsvChnScope
+*Function Description: Obtain the range of reserved channel ID
+*Input parameters: None
+*Output parameters: pScope, the ID range of the encoding source reserved channel
+*Return value:
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_GetRsvChnScope(SOCP_ENCSRC_RSVCHN_SCOPE_S *pScope);
 #define  DRV_SOCP_GetRsvChnScope(pScope)  BSP_SOCP_GetRsvChnScope(SOCP_ENCSRC_RSVCHN_SCOPE_S *pScope)
 
 /*****************************************************************************
-* 函 数 名  : DRV_SOCP_SET_HIFICHAN
-* 功能描述  : 分配固定通道
-* 输入参数  : 目的通道ID
-* 输出参数  : 无
-* 返 回 值  :
+*Function Name: DRV_SOCP_SET_HIFICHAN
+*Function Description: Assign fixed channels
+*Input parameters: Destination channel ID
+*Output parameters: None
+*Return value:
 *****************************************************************************/
 extern BSP_S32 DRV_SOCP_SET_HIFICHAN(BSP_U32 u32DestChanID);
 
 /*****************************************************************************
-* 函 数 名  : DRV_SOCP_START_HIFICHAN
-* 功能描述  : 启动固定通道
-* 输入参数  : 无
-* 输出参数  : 无
-* 返 回 值  :
+*Function Name: DRV_SOCP_START_HIFICHAN
+*Function Description: Start the fixed channel
+*Input parameters: None
+*Output parameters: None
+*Return value:
 *****************************************************************************/
 extern BSP_VOID DRV_SOCP_START_HIFICHAN(BSP_VOID);
 
 /*****************************************************************************
-* 函 数 名  : BSP_SOCP_StartDsp
-* 功能描述  :enable DSP channel
-* 输入参数  : 
-* 输出参数  : 无
-* 返 回 值  :
+*Function Name: BSP_SOCP_StartDsp
+*Function description:enable DSP channel
+*Input parameters: 
+*Output parameters: None
+*Return value:
 *****************************************************************************/
 BSP_VOID BSP_SOCP_StartDsp(BSP_VOID);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_SOCP_StopDsp
-* 功能描述  :disable DSP channel
-* 输入参数  : 
-* 输出参数  : 无
-* 返 回 值  :
+*Function Name: BSP_SOCP_StopDsp
+*Function description:disable DSP channel
+*Input parameters: 
+*Output parameters: None
+*Return value:
 *****************************************************************************/
 BSP_S32 BSP_SOCP_StopDsp(BSP_VOID);
 
 /*****************************************************************************
-* 函 数 名  : BSP_SOCP_StartTdDsp
-* 功能描述  :enable Tds DSP channel
-* 输入参数  : 
-* 输出参数  : 无
-* 返 回 值  :
+*Function Name: BSP_SOCP_StartTdDsp
+*Function description:enable Tds DSP channel
+*Input parameters: 
+*Output parameters: None
+*Return value:
 *****************************************************************************/
 BSP_VOID BSP_SOCP_StartTdDsp(BSP_VOID);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_SOCP_StopTdDsp
-* 功能描述  :disable Tds DSP channel
-* 输入参数  : 
-* 输出参数  : 无
-* 返 回 值  :
+*Function Name: BSP_SOCP_StopTdDsp
+*Function description:disable Tds DSP channel
+*Input parameters: 
+*Output parameters: None
+*Return value:
 *****************************************************************************/
 BSP_S32 BSP_SOCP_StopTdDsp(BSP_VOID);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_SOCP_GetLogCfg
+*Function name: BSP_SOCP_GetLogCfg
 *
-* 功能描述  : 读取LOG2.0配置
+*Function Description: Read LOG2.0 configuration
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : SOCP_ENC_DST_BUF_LOG_CFG_STRU *
+*Return Value: SOCP_ENC_DST_BUF_LOG_CFG_STRU *
 *****************************************************************************/
 extern SOCP_ENC_DST_BUF_LOG_CFG_STRU * BSP_SOCP_GetLogCfg();
 
 /*****************************************************************************
-* 函 数 名  : BSP_SOCP_EncDstBufFlush
+*Function Name: BSP_SOCP_EncDstBufFlush
 *
-* 功能描述  : SOCP编码目的buffer缓存数据立即输出
+*Function description: SOCP encoding purpose buffer cache data is output immediately
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : BSP_S32 BSP_OK:成功 BSP_ERROR:失败 
+*Return Value: BSP_S32 BSP_OK:Success BSP_ERROR:Failed 
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_EncDstBufFlush();
 #define DRV_SOCP_EncDstBufFlush() BSP_SOCP_EncDstBufFlush()
 /*****************************************************************************
-* 函 数 名  : BSP_SOCP_SaveEncDstBufInfo
+*Function Name: BSP_SOCP_SaveEncDstBufInfo
 *
-* 功能描述  : 保存SOCP编码目的buffer缓存数据信息
+*Function description: Save the buffer cache data information for SOCP encoding purpose
 *
-* 输入参数  : SOCP_LOG_EXC_INFO_STRU * logExcInfo
+*Input parameters: SOCP_LOG_EXC_INFO_STRU *logExcInfo
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : BSP_S32 BSP_OK:成功 BSP_ERROR:失败 
+*Return Value: BSP_S32 BSP_OK:Success BSP_ERROR:Failed 
 *****************************************************************************/
 extern BSP_S32 BSP_SOCP_SaveEncDstBufInfo(SOCP_LOG_EXC_INFO_STRU * logExcInfo);
 
@@ -3078,53 +3081,59 @@ extern BSP_S32 BSP_SOCP_SaveEncDstBufInfo(SOCP_LOG_EXC_INFO_STRU * logExcInfo);
 
 /*************************CIPHER START**********************************/
 
-/* 错误码 */
+/* Error code */
 #define CIPHER_SUCCESS                  0
 
 #define CHN_BUSY                    0
 #define CHN_FREE                    1
 
-/* CIPHER支持的算法种类,注意枚举值与寄存器设置值一致 */
+/* Cipher supports the types of algorithms, please note that the enum value is consistent with the register setting value. */
 typedef enum tagCIPHER_ALGORITHM_E
 {
-    CIPHER_ALG_NULL = 0,        /* 无算法 */
-    CIPHER_ALG_SNOW3G  = 1,     /* SNOW3G算法 */
-    CIPHER_ALG_AES_128 = 2,     /* AES128算法 */
-    CIPHER_ALG_AES_192 = 3,     /* AES192算法 */
-    CIPHER_ALG_AES_256 = 4,     /* AES256算法 */
+    CIPHER_ALG_NULL = 0,        /* No algorithm */
+    CIPHER_ALG_SNOW3G  = 1,     /* Sno w3 g algorithm */
+    CIPHER_ALG_AES_128 = 2,     /* Ae s128 algorithm */
+    CIPHER_ALG_AES_192 = 3,     /* Ae s192 algorithm */
+    CIPHER_ALG_AES_256 = 4,     /* Ae s256 algorithm */
     CIPHER_ALG_BUTTOM
 }CIPHER_ALGORITHM_E;
 
 typedef enum tagKDF_SHA_KEY_SOURCE_E
 {
-    SHA_KEY_SOURCE_DDR,             //sha_key来源于input point指定的地址空间
-    SHA_KEY_SOURCE_KEYRAM,          //sha_key来源于内部KeyRam
-    SHA_KEY_SOURCE_FOLLOW,          //sha_key来源于上次KDF操作的sha_key
-    SHA_KEY_SOURCE_RESULT,          //sha_key来源于上一次KDF操作的结果
+    SHA_KEY_SOURCE_DDR,             //sha_key comes from the address space specified by input point
+
+    SHA_KEY_SOURCE_KEYRAM,          //Sha key comes from internal key ram
+
+    SHA_KEY_SOURCE_FOLLOW,          //Sha key comes from the sha key of the last kdf operation
+
+    SHA_KEY_SOURCE_RESULT,          //Sha key comes from the result of the last kdf operation
+
     SHA_KEY_SOURCE_MAX
 }KDF_SHA_KEY_SOURCE_E;
 
 typedef enum tagKDF_SHA_S_SOURCE_E
 {
-    SHA_S_SOURCE_DDR,               //sha_s来源于input point指定的地址空间
-    SHA_S_SOURCE_KEYRAM,            //sha_s来源于内部KeyRam
+    SHA_S_SOURCE_DDR,               //sha_s comes from the address space specified by input point
+
+    SHA_S_SOURCE_KEYRAM,            //Sha s comes from internal key ram
+
     SHA_S_SOURCE_MAX
 }KDF_SHA_S_SOURCE_E;
 
 /**************************************************************************
-  枚举定义
+  Enumeration definition
 **************************************************************************/
 enum CIPHER_SECURITY_CHANNEL_ENUM
 {
-    CIPHER_SECURITY_CHANNEL_0            = 0,                /*通道0*/
-    CIPHER_SECURITY_CHANNEL_1            = 1,                /*通道1*/
-    CIPHER_SECURITY_CHANNEL_2            = 2,                /*通道2*/
-    CIPHER_SECURITY_CHANNEL_3            = 3,                /*通道3*/
+    CIPHER_SECURITY_CHANNEL_0            = 0,                /*Channel 0*/
+    CIPHER_SECURITY_CHANNEL_1            = 1,                /*Channel 1*/
+    CIPHER_SECURITY_CHANNEL_2            = 2,                /*Channel 2*/
+    CIPHER_SECURITY_CHANNEL_3            = 3,                /*Channel 3*/
 
     CIPHER_SECURITY_CHANNEL_BUTT
 };
 
-/* 通道号*/
+/* Channel number*/
 #define LTE_SECURITY_CHANNEL_NAS    CIPHER_SECURITY_CHANNEL_2
 #define LTE_SECURITY_CHANNEL_RRC    CIPHER_SECURITY_CHANNEL_2
 #define LTE_SECURITY_CHANNEL_UL_SRB CIPHER_SECURITY_CHANNEL_1
@@ -3132,172 +3141,182 @@ enum CIPHER_SECURITY_CHANNEL_ENUM
 #define LTE_SECURITY_CHANNEL_UL_DRB CIPHER_SECURITY_CHANNEL_0
 #define LTE_SECURITY_CHANNEL_DL_DRB CIPHER_SECURITY_CHANNEL_3
 
-/* CIPHER单独操作分类 */
+/* Cipher operation classification */
 typedef enum tagCIPHER_SINGLE_OPT_E
 {
-    /* 单独操作类型,单独枚举值与寄存器设置值一致 */
-    CIPHER_OPT_ENCRYPT = 0x0,   /* 加密 */
-    CIPHER_OPT_DECRYPT = 0x1,   /* 解密 */
-    CIPHER_OPT_PROTECT_SMAC = 0x2,   /* 保护操作，输出MAC长度为2Byte */
-    CIPHER_OPT_PROTECT_LMAC = 0x3,   /* 保护操作，输出MAC长度为4Byte */
-    CIPHER_OPT_CHECK_PRE_SMAC  = 0x4,   /* 检查操作，MAC长度为2Byte，位置在数据前面 */
-    CIPHER_OPT_CHECK_POST_SMAC = 0x5,   /* 检查操作，MAC长度为2Byte，位置在数据后面 */
-    CIPHER_OPT_CHECK_PRE_LMAC  = 0x6,   /* 检查操作，MAC长度为4Byte，位置在数据前面 */
-    CIPHER_OPT_CHECK_POST_LMAC = 0x7,   /* 检查操作，MAC长度为4Byte，位置在数据后面 */
+    /* Individual operation type, individual enumeration values ??are consistent with register settings */
+    CIPHER_OPT_ENCRYPT = 0x0,   /* encryption */
+    CIPHER_OPT_DECRYPT = 0x1,   /* Decryption */
+    CIPHER_OPT_PROTECT_SMAC = 0x2,   /* Protection operation, output mac length is 2 byte */
+    CIPHER_OPT_PROTECT_LMAC = 0x3,   /* Protection operation, output mac length is 4 byte */
+    CIPHER_OPT_CHECK_PRE_SMAC  = 0x4,   /* Check operation, the length of the mac is 2 byte, the position is in front of the data */
+    CIPHER_OPT_CHECK_POST_SMAC = 0x5,   /* Check operation, the length of mac is 2 byte, the position is behind the data */
+    CIPHER_OPT_CHECK_PRE_LMAC  = 0x6,   /* Check operation, the mac length is 4 byte, the position is in front of the data */
+    CIPHER_OPT_CHECK_POST_LMAC = 0x7,   /* Check operation, the length of mac is 4 byte, the position is behind the data */
     CIPHER_SINGLE_OPT_BUTTOM
 }CIPHER_SINGLE_OPT_E;
 
 
-/* CIPHER关联操作分类 */     //PDCP 关联操作随意组合
+/* CIPHER related operations classification *///PDCP related operations are arbitrary combination
+
 typedef enum tagCHPHER_RELA_OPT_E
 {
-    /*  关联操作类型 */
-    CIPHER_PDCP_PRTCT_ENCY,     /*PDCP保护加密(上行)*/
-    CIPHER_PDCP_DECY_CHCK,      /*PDCP解密检查(下行)*/
+    /*  Associated operation type */
+    CIPHER_PDCP_PRTCT_ENCY,     /*Pdcp protection encryption (uplink)*/
+    CIPHER_PDCP_DECY_CHCK,      /*Pdcp decryption check (down line)*/
 
-    CIPHER_NAS_ENCY_PRTCT,      /* NAS层加密保护(上行) */
-    CIPHER_NAS_CHCK_DECY,       /* NAS层检查解密(下行) */
+    CIPHER_NAS_ENCY_PRTCT,      /* Nas layer encryption protection (uplink) */
+    CIPHER_NAS_CHCK_DECY,       /* Nas layer check decryption (down line) */
 
 	CIPHER_RELA_OPT_BUTTOM
 }CIPHER_RELA_OPT_E;
 
 
-/* CIPHER密钥长度, 注意枚举值与寄存器设置值一致 */
+/* CIPHER key length, note that the enum value is consistent with the register setting value */
 typedef enum tagCIPHER_KEY_LEN_E
 {
-    CIPHER_KEY_L128 = 0,        /* 密钥长度128 bit */
-    CIPHER_KEY_L192 = 1,        /* 密钥长度192 bit */
-    CIPHER_KEY_L256 = 2,        /* 密钥长度256 bit */
+    CIPHER_KEY_L128 = 0,        /* Key length 128 bit */
+    CIPHER_KEY_L192 = 1,        /* Key length 192 bit */
+    CIPHER_KEY_L256 = 2,        /* Key length 256 bit */
     CIPHER_KEY_LEN_BUTTOM
 }CIPHER_KEY_LEN_E;
 
 
-/* CIPHER操作提交类型 */
+/* Cipher operation submission type */
 typedef enum tagCIPHER_SUBMIT_TYPE_E
 {
-    CIPHER_SUBM_NONE = 0,           /* 不作任何通知 */
-    CIPHER_SUBM_BLK_HOLD = 1,       /* 循环查询等待完成 */
-    CIPHER_SUBM_CALLBACK = 2,       /* 回调函数通知 */
+    CIPHER_SUBM_NONE = 0,           /* No notice */
+    CIPHER_SUBM_BLK_HOLD = 1,       /* Loop query waiting for completion */
+    CIPHER_SUBM_CALLBACK = 2,       /* Callback function notification */
     CIPHER_SUBM_BUTTOM
 }CIPHER_SUBMIT_TYPE_E;
 
-/* CIPHER通知类型 */
+/* Cipher notification type */
 typedef enum tagCIPHER_NOTIFY_STAT_E
 {
-    CIPHER_STAT_OK = 0,           /* 成功完成 */
-    CIPHER_STAT_CHECK_ERR = 1,    /* 完整性检查错误 */
+    CIPHER_STAT_OK = 0,           /* Completed successfully */
+    CIPHER_STAT_CHECK_ERR = 1,    /* Integrity check error */
     CIPHER_STAT_BUTTOM
 }CIPHER_NOTIFY_STAT_E;
 
 typedef enum CIPHER_HDR_BIT_ENUM
 {
-    CIPHER_HDR_BIT_TYPE_0              = 0,     /*对应的头或附加头字节长度为0，即不启动此功能*/
-    CIPHER_HDR_BIT_TYPE_5              = 1,     /*对应的头或附加头字节长度为1，即启动此功能，对应附加头的内容是Count值的低5位，参与保护*/
-    CIPHER_HDR_BIT_TYPE_7              = 2,     /*对应的头或附加头字节长度为1，即启动此功能，对应附加头的内容是Count值的低7位，参与保护*/
-    CIPHER_HDR_BIT_TYPE_12             = 3,     /*对应的头或附加头字节长度为2，即启动此功能，对应附加头的内容是Count值的低12位，参与保护*/
+    CIPHER_HDR_BIT_TYPE_0              = 0,     /*The corresponding header or additional header byte length is 0, which means that this function is not activated.*/
+    CIPHER_HDR_BIT_TYPE_5              = 1,     /*The corresponding header or additional header byte length is 1, which means that this function is activated. The content of the corresponding additional header is the lower 5 bits of the count value, which participates in the protection.*/
+    CIPHER_HDR_BIT_TYPE_7              = 2,     /*The corresponding header or additional header byte length is 1, which means that this function is activated. The content of the corresponding additional header is the lower 7 bits of the count value, which participates in the protection.*/
+    CIPHER_HDR_BIT_TYPE_12             = 3,     /*The corresponding header or additional header byte length is 2, which means that this function is activated. The content of the corresponding additional header is the lower 12 bits of the count value, which participates in the protection.*/
 
-    CIPHER_APPEND_HDR_BIT_TYPE_5       = 4,     /*对应的头或附加头字节长度为1，即启动此功能，对应附加头的内容是Count值的低5位，不参与保护，只搬移*/
-    CIPHER_APPEND_HDR_BIT_TYPE_7       = 5,     /*对应的头或附加头字节长度为1，即启动此功能，对应附加头的内容是Count值的低7位，不参与保护，只搬移*/
-    CIPHER_APPEND_HDR_BIT_TYPE_12      = 6,     /*对应的头或附加头字节长度为2，即启动此功能，对应附加头的内容是Count值的低12位，不参与保护，只搬移*/
+    CIPHER_APPEND_HDR_BIT_TYPE_5       = 4,     /*The corresponding header or additional header byte length is 1, which means that this function is activated. The content of the corresponding additional header is the lower 5 digits of the count value. It does not participate in the protection, only moves*/
+    CIPHER_APPEND_HDR_BIT_TYPE_7       = 5,     /*The corresponding header or additional header byte length is 1, which means that this function is activated. The content of the corresponding additional header is the lower 7 bits of the count value. It does not participate in the protection, only moves*/
+    CIPHER_APPEND_HDR_BIT_TYPE_12      = 6,     /*The corresponding header or additional header byte length is 2, which means that this function is activated. The content of the corresponding additional header is the lower 12 bits of the count value. It does not participate in the protection, only moves*/
 
     CIPHER_HDR_BIT_TYPE_BUTT
 }CIPHER_HDR_E;
 
-/* 算法配置信息 */
+/* Algorithm configuration information */
 typedef struct tagCIHPER_ALG_INFO_S
 {
     BSP_U32 u32KeyIndexSec;
     BSP_U32 u32KeyIndexInt;
-    CIPHER_ALGORITHM_E enAlgSecurity;          /* 安全操作算法选择，AEC算法还是SNOW3G算法 */
-    CIPHER_ALGORITHM_E enAlgIntegrity;         /* 完整性操作算法选择，AEC算法还是SNOW3G算法 */
+    CIPHER_ALGORITHM_E enAlgSecurity;          /* Selection of safe operation algorithm, aec algorithm or sno w3 g algorithm */
+    CIPHER_ALGORITHM_E enAlgIntegrity;         /* Selection of integrity operation algorithm, aec algorithm or sno w3 g algorithm */
 }CIHPER_ALGKEY_INFO_S;
 
 
-/*组包加速配置信息*/
+/*Package acceleration configuration information*/
 typedef struct tagACC_SINGLE_CFG_S
 {
     BSP_U32 u32BearId;
     BSP_U32 u32AppdHeaderLen;
     BSP_U32 u32HeaderLen;
     BSP_U32 u32Count;
-    BSP_BOOL bMemBlock;                 /* 是否是单内存块 */
-    BSP_U32 u32BlockLen;                /* 如果是单块内存，需要知道长度*/
-    BSP_U32 u32Offset;                  /* 使用数据距离数据包起始地址偏移*/
-    BSP_U32 u32OutLen;                  /* 使用到的数据长度*/
-    BSP_U32 u32Aph;                      /*附加包头域*/
-    CIHPER_ALGKEY_INFO_S stAlgKeyInfo;  /* 单独操作的算法密钥配置信息 */
+    BSP_BOOL bMemBlock;                 /* Is it a single memory block? */
+    BSP_U32 u32BlockLen;                /* If it is a single memory, you need to know the length*/
+    BSP_U32 u32Offset;                  /* Use data to offset the packet start address*/
+    BSP_U32 u32OutLen;                  /* Data length used*/
+    BSP_U32 u32Aph;                      /*Attached Baotou Domain*/
+    CIHPER_ALGKEY_INFO_S stAlgKeyInfo;  /* Algorithm key configuration information for individual operation */
 } ACC_SINGLE_CFG_S;
 
-/* CIPHER配置信息设置 */
+/* Cipher configuration information settings */
 typedef struct tagCIHPER_SINGLE_CFG_S
 {
-    CIPHER_SINGLE_OPT_E enOpt;          /* 单独操作类型(纯DMA操作忽略下面的算法配置) */
+    CIPHER_SINGLE_OPT_E enOpt;          /* Individual operation type (pure dma operation ignores the following algorithm configuration) */
     BSP_U8 u8BearId;
     BSP_U8 u8Direction;
     CIPHER_HDR_E enAppdHeaderLen;
     CIPHER_HDR_E enHeaderLen;
     BSP_U32 u32Count;
-    BSP_BOOL bMemBlock;                 /* 是否是单内存块 */
-	BSP_U32 u32BlockLen;                /* 如果是单块内存，需要知道长度*/
-    CIHPER_ALGKEY_INFO_S stAlgKeyInfo;  /* 单独操作的算法密钥配置信息 */
+    BSP_BOOL bMemBlock;                 /* Is it a single memory block? */
+	BSP_U32 u32BlockLen;                /* If it is a single memory, you need to know the length*/
+    CIHPER_ALGKEY_INFO_S stAlgKeyInfo;  /* Algorithm key configuration information for individual operation */
 } CIHPER_SINGLE_CFG_S;
 
 typedef struct tagCIHPER_RELA_CFG_S
 {
-    CIPHER_RELA_OPT_E enOpt;             /* 关联操作类型(纯DMA操作忽略下面的算法配置) */
+    CIPHER_RELA_OPT_E enOpt;             /* Associated operation type (pure dma operation ignores the following algorithm configuration) */
     BSP_U8 u8BearId;
     BSP_U8 u8Direction;
     CIPHER_HDR_E enAppdHeaderLen;
     CIPHER_HDR_E enHeaderLen;
     BSP_U32 u32Count;
-    BSP_BOOL bMemBlock;                 /* 是否是单内存块 */
-	BSP_U32 u32BlockLen;                /* 如果是单块内存，需要知道长度*/
-    CIHPER_ALGKEY_INFO_S stAlgKeyInfo;  /* 关联操作第一步的算法密钥配置信息 */
+    BSP_BOOL bMemBlock;                 /* Is it a single memory block? */
+	BSP_U32 u32BlockLen;                /* If it is a single memory, you need to know the length*/
+    CIHPER_ALGKEY_INFO_S stAlgKeyInfo;  /* Algorithm key configuration information for the first step of association operation */
 
 } CIHPER_RELA_CFG_S;
 
 
 typedef struct tagS_CONFIG_INFO_S
 {
-    KDF_SHA_S_SOURCE_E   enShaSSource;      //sha_s来源
-    BSP_U32              u32ShaSIndex;       //sha_s来源于KeyRam时，其在keyRam中的索引
-    BSP_U32              u32ShaSLength;     //sha_s的长度
+    KDF_SHA_S_SOURCE_E   enShaSSource;      //Sha s Source
+
+    BSP_U32              u32ShaSIndex;       //When Sha s comes from key ram, its index in key ram
+
+    BSP_U32              u32ShaSLength;     //The length of Sha s
+
     BSP_VOID             *pSAddr;           //
 }S_CONFIG_INFO_S;
 
 typedef enum tagCIPHER_KEY_OUTPUT_E
 {
-    CIPHER_KEY_NOT_OUTPUT,    //不输出密钥
-    CIPHER_KEY_OUTPUT,        //输出密钥
+    CIPHER_KEY_NOT_OUTPUT,    //No key output
+
+    CIPHER_KEY_OUTPUT,        //Output key
+
     CIPHER_KEY_OUTPUT_BUTTOM
 }CIPHER_KEY_OUTPUT_E;
 
 typedef BSP_U32 CIPHER_KEY_LEN_E_U32;
 typedef BSP_U32 CIPHER_KEY_OUTPUT_E_U32;
 
-/* 获取Key长度和Key内容的结构体*/
+/* Get the structure of key length and key content*/
 typedef struct
 {
-    CIPHER_KEY_LEN_E_U32    enKeyLen;//要读取的Key的长度，由上层传入
-    BSP_VOID                *pKeyAddr;//Key值存放地址
-    CIPHER_KEY_LEN_E_U32    *penOutKeyLen;//该地址用于存放实际返回的Key的长度
+    CIPHER_KEY_LEN_E_U32    enKeyLen;//The length of the key to be read is passed in from the upper layer
+
+    BSP_VOID                *pKeyAddr;//Key value storage address
+
+    CIPHER_KEY_LEN_E_U32    *penOutKeyLen;//This address is used to store the length of the actual returned key
+
 }KEY_GET_S;
 
-/* KeyMake时，获取Key的长度和Key值*/
+/* When Key makes, get the length and key value of the key*/
 typedef struct
 {
-    CIPHER_KEY_OUTPUT_E_U32 enKeyOutput; //指示是否输出Key到stKeyGet中
+    CIPHER_KEY_OUTPUT_E_U32 enKeyOutput; //Indicates whether to output key into st key get
+
     KEY_GET_S stKeyGet;
 }KEY_MAKE_S;
 
 
-/* 完成回调函数类型定义 */
+/* Complete callback function type definition */
 /*
-u32ChNum   :  通道号;
-u32SourAddr:  源地址
-u32DestAddr:  目的地址
-enStatus   :  通知的状态,比如: 完成 / 数据传输出错 / 数据完成性检查出错
-u32Private   :  用户私有数据;
+u32ChNum: channel number;
+u32SourAddr: Source address
+u32DestAddr: Destination address
+enStatus: The status of the notification, such as: Completed /Data transmission error /Data completion check error
+u32Private: User private data;
 */
 typedef BSP_VOID (*CIPHER_NOTIFY_CB_T)(BSP_U32 u32ChNum, BSP_U32 u32SourAddr,
               BSP_U32 u32DestAddr, CIPHER_NOTIFY_STAT_E enStatus, BSP_U32 u32Private);
@@ -3305,284 +3324,286 @@ typedef BSP_VOID (*CIPHER_NOTIFY_CB_T)(BSP_U32 u32ChNum, BSP_U32 u32SourAddr,
 typedef BSP_VOID (*CIPHER_FREEMEM_CB_T)(BSP_VOID* pMemAddr);
 
 /**************************************************************************
-  KDF相关
+  KDF related
 **************************************************************************/
 
 typedef struct tagKEY_CONFIG_INFO_S
 {
-    KDF_SHA_KEY_SOURCE_E enShaKeySource;    //sha_key来源
-    BSP_U32              u32ShaKeyIndex;     //sha_key来源于KeyRam时，其在keyRam中的索引
+    KDF_SHA_KEY_SOURCE_E enShaKeySource;    //Sha key source
+
+    BSP_U32              u32ShaKeyIndex;     //When Sha key comes from key ram, its index in key ram
+
     BSP_VOID             *pKeySourceAddr;   //
 }KEY_CONFIG_INFO_S;
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_Accelerator_DMA
+*Function Name: BSP_Accelerator_DMA
 *
-* 功能描述  : 为指定通道配置描述符，用于单纯的DMA搬移
+*Function Description: Configuration descriptor for the specified channel, used for simple DMA transfer
 *
-* 输入参数  : u32BdFifoAddr: BDFIFO首地址
-*             pInMemMgr    : 输入buffer首地址
-*             pOutMemMgr   : 输出buffer首地址
-* 输出参数  : 无
-* 返 回 值  : 成功/失败
+*Input parameters: u32BdFifoAddr: BDFIFO home address
+*pInMemMgr: Enter the buffer home address
+*pOutMemMgr: Output buffer home address
+*Output parameters: None
+*Return Value: Success/Failed
 *****************************************************************************/
 BSP_S32 BSP_Accelerator_DMA(BSP_U32 u32BdFifoAddr, const BSP_VOID* pInMemMgr, const BSP_VOID* pOutMemMgr,ACC_SINGLE_CFG_S *pstCfg);
 
 /*****************************************************************************
-* 函 数 名  : BSP_Accelerator_Cipher
+*Function Name: BSP_Accelerator_Cipher
 *
-* 功能描述  : 为指定通道配置描述符，用于需要Cipher进行加密的操作
+*Function Description: Configure the descriptor for the specified channel, used for operations that require Cipher to perform encryption.
 *
-* 输入参数  : u32BdFifoAddr: BDFIFO首地址
-*             pInMemMgr    : 输入buffer首地址
-*             pOutMemMgr   : 输出buffer首地址
-*             pstCfg       : Cipher配置信息
-* 输出参数   : 无
-* 返 回 值  : 成功/失败
+*Input parameters: u32BdFifoAddr: BDFIFO home address
+*pInMemMgr: Enter the buffer home address
+*pOutMemMgr: Output buffer home address
+*pstCfg: Cipher configuration information
+*Output parameters: None
+*Return Value: Success/Failed
 *****************************************************************************/
 BSP_S32 BSP_Accelerator_Cipher(BSP_U32 u32BdFifoAddr, const BSP_VOID* pInMemMgr, const BSP_VOID* pOutMemMgr,
                ACC_SINGLE_CFG_S *pstCfg);
 
 
 /**************************************************************************
- 函数声明
+ Function declaration
 **************************************************************************/
 
 /*****************************************************************************
-* 函 数 名  : BSP_CIPHER_RegistNotifyCB
+*Function Name: BSP_CIPHER_RegistNotifyCB
 *
-* 功能描述  : 注册通知回调函数
+*Function Description: Register notification callback function
 *
-* 输入参数  : pFunNotifyCb: 通知回调函数
+*Input parameters: pFunNotifyCb: ??Notification callback function
 *
-* 输出参数  : 无
-* 返 回 值  : 成功:CIPHER_SUCCESS
-*           : 失败:CIPHER_NOT_INIT
+*Output parameters: None
+*Return Value: Success: CIPHER_SUCCESS
+*: Failed:CIPHER_NOT_INIT
 *****************************************************************************/
 BSP_S32 BSP_CIPHER_RegistNotifyCB(CIPHER_NOTIFY_CB_T pFunNotifyCb);
 
 /*****************************************************************************
-* 函 数 名  : BSP_CIPHER_FreeMemCB
+*Function Name: BSP_CIPHER_FreeMemCB
 *
-* 功能描述  : 注册Memory释放回调函数
+*Function description: Register Memory release callback function
 *
-* 输入参数  : u32Chn: 通道号
-*             bSrc:   0:输入Buffer / 1:输出Bufffer
-*             pFunFreeMemCb: Memory释放回调函数
+*Input parameters: u32Chn: Channel number
+*bSrc: 0: Input Buffer /1: Output Buffer
+*pFunFreeMemCb: Memory releases callback function
 *
-* 输出参数  : 无
-* 返 回 值  : 成功:CIPHER_SUCCESS
-*           : 失败:CIPHER_NOT_INIT
-*           :      CIPHER_INVALID_CHN
+*Output parameters: None
+*Return Value: Success: CIPHER_SUCCESS
+*: Failed:CIPHER_NOT_INIT
+*: CIPHER_INVALID_CHN
 *****************************************************************************/
 BSP_S32 BSP_CIPHER_RegistFreeMemCB(BSP_U32 u32Chn, BSP_BOOL bSrc, CIPHER_FREEMEM_CB_T pFunFreeMemCb);
 
 /*****************************************************************************
-* 函 数 名  : BSP_CIPHER_Purge
+*Function Name: BSP_CIPHER_Purge
 *
-* 功能描述  : 清除所有当前指定通道的CIPHER任务(阻塞接口,完成purge后返回)
+*Function description: Clear all CIPHER tasks of currently specified channels (blocking the interface, returning after completing the purge)
 *
-* 输入参数  : u32Chn: 要清除的通道号
-* 输出参数  : 无
-* 返 回 值  : 成功:CIPHER_SUCCESS
-*           : 失败:CIPHER_NOT_INIT
-*           :      CIPHER_INVALID_CHN
-*           :      CIPHER_TIME_OUT
+*Input parameter: u32Chn: Channel number to be cleared
+*Output parameters: None
+*Return Value: Success: CIPHER_SUCCESS
+*: Failed:CIPHER_NOT_INIT
+*: CIPHER_INVALID_CHN
+*: CIPHER_TIME_OUT
 *****************************************************************************/
 BSP_S32 BSP_CIPHER_Purge(BSP_U32 u32Chn);
 
 /*****************************************************************************
-* 函 数 名  : BSP_CIPHER_SingleSubmitTask
+*Function Name: BSP_CIPHER_SingleSubmitTask
 *
-* 功能描述  : 开始CIPHER 指定通道的工作，用于单独操作。
+*Function Description: Starts the operation of the CIPHER specified channel for separate operation.
 *
-* 输入参数  : u32Chn: 通道号
-*             pInMemMgr: 输入buffer内存管理结构指针
-*             pOutMemMgr:输出buffer内存管理结构指针
-*             pstCfg: Cipher操作配置属性
-*             pstSubmAttr:提交的属性
-*             u32Private:私有数据
-* 输出参数  : 无
-* 返 回 值  : 成功:CIPHER_SUCCESS
-*             失败:CIPHER_NOT_INIT
-*             CIPHER_INVALID_CHN
-*             CIPHER_NULL_PTR
-*             CIPHER_ALIGN_ERROR
-*             CIPHER_INVALID_ENUM
-*             CIPHER_PURGING
-*             CIPHER_FIFO_FULL
-*             CIPHER_TIME_OUT
+*Input parameters: u32Chn: Channel number
+*pInMemMgr: Enter buffer memory management structure pointer
+*pOutMemMgr: Output buffer memory management structure pointer
+*pstCfg: Cipher operation configuration properties
+*pstSubmAttr: Submitted properties
+*u32Private:Private data
+*Output parameters: None
+*Return Value: Success: CIPHER_SUCCESS
+*Failed:CIPHER_NOT_INIT
+*CIPHER_INVALID_CHN
+*CIPHER_NULL_PTR
+*CIPHER_ALIGN_ERROR
+*CIPHER_INVALID_ENUM
+*            CIPHER_PURGING
+*            CIPHER_FIFO_FULL
+*            CIPHER_TIME_OUT
 *****************************************************************************/
 BSP_S32 BSP_CIPHER_SingleSubmitTask(BSP_U32 u32Chn, const BSP_VOID* pInMemMgr, const BSP_VOID* pOutMemMgr,
                    CIHPER_SINGLE_CFG_S *pstCfg, CIPHER_SUBMIT_TYPE_E enSubmAttr, BSP_U32 u32Private);
 
 /*****************************************************************************
-* 函 数 名  : BSP_CIPHER_RelaSubmitTask
+*Function Name: BSP_CIPHER_RelaSubmitTask
 *
-* 功能描述  : 开始CIPHER 指定通道的工作，用于关联操作。
+*Function Description: Starts the work of the CIPHER specified channel for associated operations.
 *
-* 输入参数  : u32Chn: 通道号
-*             pInMemMgr: 输入buffer内存管理结构指针
-*             pOutMemMgr:输出buffer内存管理结构指针
-*             pstCfg: Cipher操作配置属性
-*             enSubmAttr:提交的属性
-*             u32Private:私有数据
-* 输出参数  : 无
-* 返 回 值  : 成功:CIPHER_SUCCESS
-*             失败:CIPHER_NOT_INIT
-*             CIPHER_INVALID_CHN
-*             CIPHER_NULL_PTR
-*             CIPHER_ALIGN_ERROR
-*             CIPHER_INVALID_ENUM
-*             CIPHER_PURGING
-*             CIPHER_FIFO_FULL
-*             CIPHER_TIME_OUT
+*Input parameters: u32Chn: Channel number
+*pInMemMgr: Enter buffer memory management structure pointer
+*pOutMemMgr: Output buffer memory management structure pointer
+*pstCfg: Cipher operation configuration properties
+*enSubmAttr: Submitted properties
+*u32Private:Private data
+*Output parameters: None
+*Return Value: Success: CIPHER_SUCCESS
+*Failed:CIPHER_NOT_INIT
+*CIPHER_INVALID_CHN
+*CIPHER_NULL_PTR
+*CIPHER_ALIGN_ERROR
+*CIPHER_INVALID_ENUM
+*            CIPHER_PURGING
+*            CIPHER_FIFO_FULL
+*            CIPHER_TIME_OUT
 *****************************************************************************/
 BSP_S32 BSP_CIPHER_RelaSubmitTask(BSP_U32 u32Chn, const BSP_VOID* pInMemMgr, const BSP_VOID* pOutMemMgr,
                    CIHPER_RELA_CFG_S *pstCfg, CIPHER_SUBMIT_TYPE_E enSubmAttr, BSP_U32 u32Private);
 
 /*****************************************************************************
-* 函 数 名  : BSP_CIPHER_SetKeyIndex
+*Function Name: BSP_CIPHER_SetKeyIndex
 *
-* 功能描述  : 设置密钥值
+*Function Description: Set the key value
 *
-* 输入参数  : pKeyAddr   : 密钥地址
-*             enKeyLen   : 密钥长度
-*             u32KeyIndex: 密钥索引
-* 输出参数  : 无
-* 返 回 值  : 成功:CIPHER_SUCCESS
-*           : 失败:CIPHER_NOT_INIT
-*           :      CIPHER_NULL_PTR
-*           :      CIPHER_INVALID_ENUM
-*           :      CIPHER_INVALID_KEY
+*Input parameters: pKeyAddr: Key address
+*enKeyLen : Key length
+*u32KeyIndex: Key Index
+*Output parameters: None
+*Return Value: Success: CIPHER_SUCCESS
+*: Failed:CIPHER_NOT_INIT
+*: CIPHER_NULL_PTR
+*: CIPHER_INVALID_ENUM
+*: CIPHER_INVALID_KEY
 *****************************************************************************/
 BSP_S32 BSP_CIPHER_SetKey(const BSP_VOID* pKeyAddr,CIPHER_KEY_LEN_E enKeyLen,BSP_U32 u32KeyIndex);
 
 /*****************************************************************************
-* 函 数 名  : BSP_CIPHER_GetKey
+*Function Name: BSP_CIPHER_GetKey
 *
-* 功能描述  : 根据KeyIndex获取Key的地址
+*Function description: Obtain the address of the Key according to KeyIndex
 *
-* 输入参数  : u32KeyIndex: 密钥索引
-* 输出参数  : 无
-* 返 回 值  : 成功:根据KeyIndex得到的Key的地址
-*           : 失败:获取Key值所在地址失败,返回0
+*Input parameters: u32KeyIndex: Key index
+*Output parameters: None
+*Return Value: Success: The address of the Key obtained by KeyIndex
+*: Failed: Failed to obtain the address where the Key value is located, return 0
 *****************************************************************************/
 BSP_S32 BSP_CIPHER_GetKey(BSP_U32 u32KeyIndex, KEY_GET_S *pstKeyGet);
 
 /*****************************************************************************
-* 函 数 名  : CIPHER_DataBuffPara
+*Function Name: CIPHER_DataBuffPara
 *
-* 功能描述  : 获取上层数据信息并设置信息
+*Function description: Obtain upper-level data information and set the information
 *
-* 输入参数  : u32Chn        : 通道号
-*             bSrc          : TRUE:源地址的属性配置 / FALSE:目的地址属性配置
-*             u32BufOft     : 数据buffer指针偏移
-*             u32LenOft     : Buffer长度偏移
-*             NextOft       : 下一节点偏移
-* 输出参数  : 无
-* 返 回 值  : 成功:CIPHER_SUCCESS
-*           : 失败:CIPHER_NOT_INIT
-*           :      CIPHER_INVALID_CHN
+*Input parameters: u32Chn: Channel number
+*bSrc: TRUE: The attribute configuration of the source address /FALSE: The attribute configuration of the destination address
+*u32BufOft: Data buffer pointer offset
+*u32LenOft: Buffer length offset
+*NextOft: Next node offset
+*Output parameters: None
+*Return Value: Success: CIPHER_SUCCESS
+*: Failed:CIPHER_NOT_INIT
+*: CIPHER_INVALID_CHN
 *****************************************************************************/
 BSP_S32 BSP_CIPHER_SetDataBufPara(BSP_U32 u32Chn, BSP_BOOL bSrc, BSP_U32 u32BufOft,
                                  BSP_U32 u32LenOft, BSP_U32 u32NextOft);
 
 /*****************************************************************************
-* 函 数 名  : CIPHER_GetCmplSrcBuff
+*Function Name: CIPHER_GetCmplSrcBuff
 *
-* 功能描述  : 获取已经操作完成的源数据地址
+*Function description: Get the source data address that has been completed
 *
-* 输入参数  : u32ChNum     : 通道号
-* 输出参数  : pu32SourAddr : 操作完成的源地址;
-*             pu32DestAddr : 操作完成的目的地址
-*             penStatus    : 操作完成的状态
-*             pu32Private  : 返回的私有数据
-* 返 回 值  : 成功:CIPHER_SUCCESS
-*           : 失败:CIPHER_NOT_INIT
-*           :      CIPHER_INVALID_CHN
-*           :      CIPHER_NULL_PTR
-*           :      CIPHER_INVALID_RD
+*Input parameters: u32ChNum: Channel number
+*Output parameters: pu32SourAddr: The source address for the operation completed;
+*pu32DestAddr: The destination address for the operation to be completed
+*penStatus: The state of operation completion
+*pu32Private: Returned private data
+*Return Value: Success: CIPHER_SUCCESS
+*: Failed:CIPHER_NOT_INIT
+*: CIPHER_INVALID_CHN
+*: CIPHER_NULL_PTR
+*: CIPHER_INVALID_RD
 *****************************************************************************/
 BSP_S32 BSP_CIPHER_GetCmplSrcBuff(BSP_U32 u32Chn, BSP_U32 *pu32SourAddr,
              BSP_U32 *pu32DestAddr, CIPHER_NOTIFY_STAT_E *penStatus, BSP_U32 *pu32Private);
 
 /*****************************************************************************
-* 函 数 名  : BSP_Accelerator_GetBdFifoAddr
+*Function Name: BSP_Accelerator_GetBdFifoAddr
 *
-* 功能描述  : 用于获取当前可用的BDFIFO首地址
+*Function description: Used to obtain the currently available BDFIFO home address
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : 无
-* 返 回 值  : BDFIFO首地址
+*Output parameters: None
+*Return Value: BDFIFO home address
 *****************************************************************************/
 BSP_U32 BSP_Accelerator_GetBdFifoAddr(void);
 
 /*****************************************************************************
-* 函 数 名  : BSP_Accelerator_GetStatus
+*Function Name: BSP_Accelerator_GetStatus
 *
-* 功能描述  : 获取当前通道状态
+*Function Description: Get the current channel status
 *
-* 输入参数  :  无
-* 输出参数   : 无
-* 返 回 值  : 通道忙/空闲
+*Input parameters: None
+*Output parameters: None
+*Return Value: Channel is free/idle
 *****************************************************************************/
 BSP_S32 BSP_Accelerator_GetStatus(void);
 
 /*****************************************************************************
-* 函 数 名  : BSP_Accelerator_Enable
+*Function Name: BSP_Accelerator_Enable
 *
-* 功能描述  : 使能组包加速
+*Function Description: Enable Packet Group Acceleration
 *
-* 输入参数  : u32BdFifoAddr: BDFIFO首地址
+*Input parameters: u32BdFifoAddr: BDFIFO home address
 *
-* 输出参数  : 无
-* 返 回 值  : 成功/失败
+*Output parameters: None
+*Return Value: Success/Failed
 *****************************************************************************/
 BSP_S32 BSP_Accelerator_Enable(BSP_U32 u32BdFifoAddr);
 
 /*****************************************************************************
-* 函 数 名  : BSP_KDF_KeyRamRead()
+*Function Name: BSP_KDF_KeyRamRead()
 *
-* 功能描述  : 从Key Ram中读取数据
+*Function Description: Read data from Key Ram
 *
-* 输入参数  : enKeyIndex: Key索引，从该索引处开始读取数据
-*             u32Length : 读取数据长度，以Byte为单位
-* 输出参数  : pDestAddr : 目的地址，将从KeyRam中读取的数据存储到该位置
-* 返 回 值  : 成功: BSP_OK
-*           : 失败: BSP_ERROR
+*Input parameter: enKeyIndex: Key index, start reading data from this index
+*u32Length: Read data length, in units of Byte
+*Output parameters: pDestAddr: Destination address, store the data read from KeyRam to this location
+*Return Value: Success: BSP_OK
+*: Failed: BSP_ERROR
 *****************************************************************************/
 BSP_S32 BSP_KDF_KeyRamRead(BSP_VOID *pDestAddr, BSP_U32 u32KeyIndex ,BSP_U32 u32ReadLength);
 
 /*****************************************************************************
-* 函 数 名  : BSP_KDF_KeyRamWrite
+*Function Name: BSP_KDF_KeyRamWrite
 *
-* 功能描述  : 向KeyRam中写入数据
+*Function Description: Write data to KeyRam
 *
-* 输入参数  : enKeyIndex: Key索引，从该索引处开始写入数据
-*             pSourAddr : 源地址，写入到KeyRam中的数据地址
-*             u32Length : 数据长度
+*Input parameters: enKeyIndex: Key index, start writing data from this index
+*pSourAddr: Source address, data address written to KeyRam
+*u32Length: Data length
 *
-* 输出参数  : 无
-* 返 回 值  : 成功: BSP_OK
-*           : 失败: BSP_ERROR
+*Output parameters: None
+*Return Value: Success: BSP_OK
+*: Failed: BSP_ERROR
 *****************************************************************************/
 BSP_S32 BSP_KDF_KeyRamWrite(BSP_U32 u32KeyIndex, BSP_VOID *pSourAddr, BSP_U32 u32Length);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_KDF_KeyMake
+*Function Name: BSP_KDF_KeyMake
 *
-* 功能描述  : KDF计算，用于产生新的Key
+*Function description: KDF calculation, used to generate new Keys
 *
-* 输入参数  : stKeyCfgInfo: KDF运算时参数sha_key属性配置
-            : stKeyCfgInfo: KDF运算时参数sha_s属性配置
-            : enDestIndex : KDF运算产生的Key放置在KeyRam中的位置
-* 输出参数  : 无
-* 返 回 值  : 成功:BSP_OK
-*           : 失败:BSP_ERROR
+*Input parameters: stKeyCfgInfo: Parameter sha_key attribute configuration during KDF operation
+            : stKeyCfgInfo: Parameter sha_s attribute configuration during KDF operation
+            : enDestIndex : The position where the Key generated by the KDF operation is placed in KeyRam
+*Output parameters: None
+*Return Value: Success: BSP_OK
+*: Failed:BSP_ERROR
 *****************************************************************************/
 BSP_S32 BSP_KDF_KeyMake(KEY_CONFIG_INFO_S *pstKeyCfgInfo, S_CONFIG_INFO_S *pstSCfgInfo,
                         BSP_U32 u32DestIndex, KEY_MAKE_S *pstKeyMake);
@@ -3590,16 +3611,16 @@ BSP_S32 BSP_KDF_KeyMake(KEY_CONFIG_INFO_S *pstKeyCfgInfo, S_CONFIG_INFO_S *pstSC
 
 
 /**************************************************************************
-  宏定义
+  Macro definition
 **************************************************************************/
 
-/* 打印级别 */
-#define CIPHER_PRNT_NOT           BSP_LOG_LEVEL_MAX       /* 不打印任何信息 */
-#define CIPHER_PRNT_ERR           BSP_LOG_LEVEL_ERROR     /* 只打印错误信息 */
-#define CIPHER_PRNT_WAR           BSP_LOG_LEVEL_WARNING   /* 只打印错误, 告警信息*/
-#define CIPHER_PRNT_LOG           BSP_LOG_LEVEL_DEBUG     /* 打印调试, 告警, 错误信息 */
+/* Print Level */
+#define CIPHER_PRNT_NOT           BSP_LOG_LEVEL_MAX       /* No information is printed */
+#define CIPHER_PRNT_ERR           BSP_LOG_LEVEL_ERROR     /* Print only error messages */
+#define CIPHER_PRNT_WAR           BSP_LOG_LEVEL_WARNING   /* Print only errors, alarm messages*/
+#define CIPHER_PRNT_LOG           BSP_LOG_LEVEL_DEBUG     /* Print debugging, alarms, error messages */
 
-/* 注意CIPHER错误码要为负值 */
+/* Note that the cipher error code must be negative */
 #define CIPHER_ERROR_BASE               0x80000800
 
 typedef enum tagCIPHER_ERR_CODE_E
@@ -3651,162 +3672,162 @@ typedef enum tagCIPHER_ERR_CODE_E
 /*************************WIFI START**********************************/
 
 /*****************************************************************************
- 函 数 名  : WifiCalDataLen
- 功能描述  : WIFI计算需要数据块内存
- 输入参数  : usLen - 用户申请数据长度Len
- 输出参数  : 无
- 返 回 值  : 申请的数据区的总长度
- 调用函数  :
- 被调函数  :
+ Function Name: WifiCalDataLen
+ Function description: WIFI calculation requires data block memory
+ Input parameters: usLen -User application data length Len
+ Output parameters: None
+ Return Value: Total length of the applied data area
+ Calling the function:
+ Called function:
 
- 修改历史      :
-  1.日    期   : 2011年12月22日
-    修改内容   : 新生成函数
+ Modify history:
+  1. Date: December 22, 2011
+    Modify content: New generated function
 
 *****************************************************************************/
 extern unsigned short BSP_WifiCalDataLen(unsigned short usLen);
 #define DRV_WifiCalDataLen(usLen) BSP_WifiCalDataLen(usLen)
 
 /*****************************************************************************
- 函 数 名  : WIFI_TEST_CMD
- 功能描述  : 测试命令
- 输入参数  : cmdStr；命令字符串
- 输出参数  : 无
- 返回值    ：无
+ Function Name: WIFI_TEST_CMD
+ Function Description: Test Command
+ Input parameters: cmdStr; command string
+ Output parameters: None
+ Return value: None
 *****************************************************************************/
 extern void WIFI_TEST_CMD(char * cmdStr);
 
 /*****************************************************************************
- 函 数 名  : WIFI_GET_TCMD_MODE
- 功能描述  : 获取测试命令的模式
- 输入参数  : 无
- 输出参数  : 16：校准测试模式
-             17：表示处于发射模式
-             18：表示接收模式
- 返回值    ：函数执行的状态结果值
+ Function Name: WIFI_GET_TCMD_MODE
+ Function Description: Get the mode of the test command
+ Input parameters: None
+ Output parameters: 16: Calibration test mode
+             17: Indicates that it is in transmit mode
+             18: Indicates the reception mode
+ Return value: The state result value of the function execution
 *****************************************************************************/
 extern int WIFI_GET_TCMD_MODE(void);
 
 /*****************************************************************************
- 函 数 名  : WIFI_POWER_START
- 功能描述  : WIFI上电
- 输入参数  : 无
- 输出参数  : 无
- 返回值    ： 0: execute ok
-              1: execute failed
+ Function Name: WIFI_POWER_START
+ Function description: Power on WIFI
+ Input parameters: None
+ Output parameters: None
+ Return value: 0: execute ok
+              1: executed failed
 *****************************************************************************/
 extern int WIFI_POWER_START(void);
 
 /*****************************************************************************
- 函 数 名  : WIFI_POWER_SHUTDOWN
- 功能描述  : WIFI下电
- 输入参数  : 无
- 输出参数  : 无
- 返回值    ： 0: execute ok
-              1: execute failed
+ Function Name: WIFI_POWER_SHUTDOWN
+ Function description: Power off by WIFI
+ Input parameters: None
+ Output parameters: None
+ Return value: 0: execute ok
+              1: executed failed
 *****************************************************************************/
 extern int WIFI_POWER_SHUTDOWN(void);
 
 /*****************************************************************************
- 函 数 名  : WIFI_GET_STATUS
- 功能描述  : WIFI状态获取
- 输入参数  : 无
- 输出参数  : 无
- 返回值    ： 0: wifi is off
+ Function Name: WIFI_GET_STATUS
+ Function description: WIFI status acquisition
+ Input parameters: None
+ Output parameters: None
+ Return value: 0: wifi is off
               1: wifi is in normal mode
               2: wifi is in tcmd mode
 *****************************************************************************/
 extern int WIFI_GET_STATUS(void);
 
 /*****************************************************************************
- 函 数 名  : WIFI_GET_RX_DETAIL_REPORT
- 功能描述  : get result of rx report: totalPkt, GoodPkt, ErrorPkt
- 输入参数  : 无
- 输出参数  : totalPkt、goodPkt、badPkt
- 返回值    ：无
+ Function Name: WIFI_GET_RX_DETAIL_REPORT
+ Function description: get result of rx report: totalPkt, GoodPkt, ErrorPkt
+ Input parameters: None
+ Output parameters: totalPkt, goodPkt, badPkt
+ Return value: None
 *****************************************************************************/
 extern void WIFI_GET_RX_DETAIL_REPORT(int* totalPkt,int* goodPkt,int* badPkt);
 
 /*****************************************************************************
- 函 数 名  : WIFI_GET_RX_PACKET_REPORT
- 功能描述  : get result of rx ucast&mcast packets
- 输入参数  : 无
- 输出参数  : ucastPkts、mcastPkts
- 返回值    ：无
+ Function Name: WIFI_GET_RX_PACKET_REPORT
+ Function description: get result of rx ucast&mcast packets
+ Input parameters: None
+ Output parameters: ucastPkts, mcastPkts
+ Return value: None
 *****************************************************************************/
 extern void  WIFI_GET_RX_PACKET_REPORT(unsigned int *ucastPkts, unsigned int *mcastPkts);
 
 /*****************************************************************************
- 函 数 名  : WIFI_GET_PA_CUR_MODE
- 功能描述  : get the currrent PA mode of the wifi chip
- 输入参数  : 无
- 输出参数  : 无
- 返回值    ：0:  (WIFI_ONLY_PA_MODE) WIFI chip is in PA mode
-             1:  (WIFI_ONLY_NOPA_MODE) WIFI chip is in no PA mode
-             -1: wifi chip is in abnormal mode
+ Function Name: WIFI_GET_PA_CUR_MODE
+ Function description: get the current PA mode of the wifi chip
+ Input parameters: None
+ Output parameters: None
+ Return value: 0: (WIFI_ONLY_PA_MODE) WIFI chip is in PA mode
+             1: (WIFI_ONLY_NOPA_MODE) WIFI chip is in no PA mode
+             -1: wifi chip is in absolute mode
 *****************************************************************************/
 extern int WIFI_GET_PA_CUR_MODE(void);
 
 /*****************************************************************************
- 函 数 名  : WIFI_GET_PA_MODE
- 功能描述  : get the support PA mode of wifi chip
- 输入参数  : 无
- 输出参数  : 无
- 返回值    ：0:  (WIFI_ONLY_PA_MODE) WIFI suppport only PA mode
-             1:  (WIFI_ONLY_NOPA_MODE) WIFI suppport only no PA mode
-             2:  (WIFI_PA_NOPA_MODE) WIFI suppport both PA &  no PA mode
+ Function Name: WIFI_GET_PA_MODE
+ Function description: get the support PA mode of wifi chip
+ Input parameters: None
+ Output parameters: None
+ Return value: 0: (WIFI_ONLY_PA_MODE) WIFI support only PA mode
+             1: (WIFI_ONLY_NOPA_MODE) WIFI support only no PA mode
+             2: (WIFI_PA_NOPA_MODE) WIFI support both PA & no PA mode
              -1: failed
 *****************************************************************************/
 extern int WIFI_GET_PA_MODE(void);
 
 /*****************************************************************************
- 函 数 名  : WIFI_SET_PA_MODE
- 功能描述  : set the PA mode of wifi chip
- 输入参数  : 0:  (WIFI_ONLY_PA_MODE) WIFI suppport only PA mode
-             1:  (WIFI_ONLY_NOPA_MODE) WIFI suppport only no PA mode
-             2:  (WIFI_PA_NOPA_MODE) WIFI suppport both PA &  no PA mode
- 输出参数  : 无
- 返回值    ：0: success
+ Function Name: WIFI_SET_PA_MODE
+ Function description: set the PA mode of wifi chip
+ Input parameters: 0: (WIFI_ONLY_PA_MODE) WIFI support only PA mode
+             1: (WIFI_ONLY_NOPA_MODE) WIFI support only no PA mode
+             2: (WIFI_PA_NOPA_MODE) WIFI support both PA & no PA mode
+ Output parameters: None
+ Return value: 0: success
              -1: failed
 *****************************************************************************/
 extern int WIFI_SET_PA_MODE(int wifiPaMode);
 
 /*****************************************************************************
- 函 数 名  : DRV_WIFI_DATA_RESERVED_TAIL
- 功能描述  : WIFI计算需要数据块内存
- 输入参数  : usLen - 用户申请数据长度Len
- 输出参数  : 无
- 返 回 值  : 数据区的尾部预留的长度
+ Function Name: DRV_WIFI_DATA_RESERVED_TAIL
+ Function description: WIFI calculation requires data block memory
+ Input parameters: usLen -User application data length Len
+ Output parameters: None
+ Return Value: The length reserved at the end of the data area
 *****************************************************************************/
 extern unsigned int DRV_WIFI_DATA_RESERVED_TAIL(unsigned int len);
 
-/*h00106354 20120201 合入流控接口 add start */
+/*h00106354 20120201 Incoming flow control interface add start */
 /*****************************************************************************
- 函 数 名  : DRV_WIFI_SET_RX_FCTL
- 功能描述  : 设置WIFI接收流控标识
- 输入参数  : para1、para2
- 输出参数  : 无
- 返 回 值  : BSP_OK/BSP_ERROR
+ Function Name: DRV_WIFI_SET_RX_FCTL
+ Function description: Set the WIFI receiving flow control identifier
+ Input parameters: para1, para2
+ Output parameters: None
+ Return Value: BSP_OK/BSP_ERROR
 *****************************************************************************/
 extern unsigned long DRV_WIFI_SET_RX_FCTL(unsigned long para1, unsigned long para2);
 
 /*****************************************************************************
- 函 数 名  : DRV_WIFI_CLR_RX_FCTL
- 功能描述  : 清除WIFI接收流控标识
- 输入参数  : para1、para2
- 输出参数  : 无
- 返 回 值  : 1 : 有
-             0 : 无
+ Function Name: DRV_WIFI_CLR_RX_FCTL
+ Function description: Clear the WIFI receiving flow control identifier
+ Input parameters: para1, para2
+ Output parameters: None
+ Return Value: 1: Yes
+             0: None
 *****************************************************************************/
 extern unsigned long DRV_WIFI_CLR_RX_FCTL(unsigned long para1, unsigned long para2);
 
 /*****************************************************************************
- 函 数 名  : DRV_AT_GET_USER_EXIST_FLAG
- 功能描述  : 返回当前是否有USB连接或者WIFI用户连接(C核调用)
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : 1 : 有
-             0 : 无
+ Function Name: DRV_AT_GET_USER_EXIST_FLAG
+ Function description: Returns whether there is currently a USB connection or a WIFI user connection (C core call)
+ Input parameters: None
+ Output parameters: None
+ Return Value: 1: Yes
+             0: None
 *****************************************************************************/
 extern unsigned long  DRV_AT_GET_USER_EXIST_FLAG(void);
 
@@ -3818,13 +3839,13 @@ unsigned long USB_ETH_DrvSetDeviceAssembleParam(unsigned long ulEthTxMinNum,
 											    unsigned long ulEthTxTimeout,
 											    unsigned long ulEthRxMinNum,
 											    unsigned long ulEthRxTimeout);
-/*h00106354 20120201 合入流控接口 add end */
+/*h00106354 20120201 Incoming flow control interface add end */
 
 /*************************WIFI END************************************/
 
 /*************************AUDIO START*********************************/
 
-/*AUDIO IOCTL接口命令字*/
+/*AUDIO IOCTL interface command word*/
 #define AUDIO_IOCTL_BASE                    (0x30000000)
 #define IOCTL_AUDIO_SAMPLE_RATE_SET         (AUDIO_IOCTL_BASE+1)
 #define IOCTL_AUDIO_PCM_MODE_SET            (AUDIO_IOCTL_BASE+7)
@@ -3858,27 +3879,27 @@ typedef enum
 
 
 /********************************************************************************************************
- 函 数 名  : BSP_AUDIO_CodecOpen
- 功能描述  : 打开一个audio设备，并对codec进行初始化。
- 输入参数  : devname：该参数固定为"/dev/codec0"。
-                           flags：该参数表示读写方式，固定为0。
-                           mode：该参数表示新建文件方式，固定为0。。
-  输出参数  : 无。
- 返 回 值  : 非负值:  设备句柄；
-             -1：操作失败。
+ Function Name: BSP_AUDIO_CodecOpen
+ Function Description: Open an audio device and initialize codec.
+ Input parameter: devname: This parameter is fixed to "/dev/codec0".
+                           flags: This parameter indicates read and write mode, fixed to 0.
+                           mode: This parameter indicates the new file creation method, fixed to 0. .
+  Output parameters: None.
+ Return Value: Non-negative Value: Device Handle;
+             -1: The operation failed.
 ********************************************************************************************************/
 extern int BSP_AUDIO_CodecOpen(const char *devname, int flags, int mode);
 #define DRV_CODEC_OPEN(devname, flags, mode)    BSP_AUDIO_CodecOpen(devname, flags, mode)
 
 /********************************************************************************************************
- 函 数 名  : BSP_AUDIO_Codec_ioctl
- 功能描述  : codec设备命令字控制。
- 输入参数  : devid：设备句柄。
-                           cmd：命令字。
-                           arg：命令参数。
-  输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_AUDIO_Codec_ioctl
+ Function description: codec device command word control.
+ Enter parameters: devid: device handle.
+                           cmd: command word.
+                           arg: Command parameter.
+  Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 ********************************************************************************************************/
 extern int BSP_AUDIO_Codec_ioctl(int devid, int cmd, int arg);
 #define DRV_CODEC_IOCTL(devid, cmd, arg)   BSP_AUDIO_Codec_ioctl(devid, cmd, arg)
@@ -3886,39 +3907,39 @@ extern int BSP_AUDIO_Codec_ioctl(int devid, int cmd, int arg);
 /*************************AUDIO END***********************************/
 
 /*************************USB START***********************************/
-/* 设备枚举最大端口个数 */
+/* The maximum number of ports enumerated */
 #define DYNAMIC_PID_MAX_PORT_NUM        17
 
 typedef  enum
 {
-    FLOW_CON,     /* 流控        */
-    PDP_STATUS,   /* PDP激活结果 */
-    SIGNAL_LEVEL, /* 信号强度    */
-    PKT_STATICS,  /* 流量统计    */
-    AT_CMD,       /* AT命令      */
-    PS_NOTIFY,    /* Notify命令  */
-    RESERVE       /* 保留        */
+    FLOW_CON,     /* Flow control        */
+    PDP_STATUS,   /* Pdp activation results */
+    SIGNAL_LEVEL, /* Signal strength    */
+    PKT_STATICS,  /* Traffic statistics    */
+    AT_CMD,       /* At command      */
+    PS_NOTIFY,    /* Notify command  */
+    RESERVE       /* reserve        */
 }NDIS_NOTICE;
 
 typedef unsigned long (*pPCSCFUNC)(unsigned long CmdType, unsigned char *pApdu, unsigned long ApduLen);
 
-/* NV项50091结构，代表设备将要枚举的端口形态 */
+/* Nv item 50091 structure, representing the port form to be enumerated by the device */
 typedef struct
 {
     unsigned long ulStatus;
-    unsigned char aucFirstPortStyle[DYNAMIC_PID_MAX_PORT_NUM];  /* 设备切换前端口形态 */
-    unsigned char aucRewindPortStyle[DYNAMIC_PID_MAX_PORT_NUM]; /* 设备切换后端口形态 */
+    unsigned char aucFirstPortStyle[DYNAMIC_PID_MAX_PORT_NUM];  /* Device switch front port pattern */
+    unsigned char aucRewindPortStyle[DYNAMIC_PID_MAX_PORT_NUM]; /* After switching device port pattern */
     unsigned char reserved[22];
 }DRV_DYNAMIC_PID_TYPE_STRU;
 
 typedef enum
 {
-    WWAN_WCDMA    = 1,/*WCDMA模式*/
-    WWAN_CDMA    = 2  /*CDMA模式*/
+    WWAN_WCDMA    = 1,/*Wcdma mode*/
+    WWAN_CDMA    = 2  /*Cdma mode*/
 }NDIS_WWAN_MODE;
 
 
-/*管脚信号的定义*/
+/*Definition of pin signals*/
 #define IO_CTRL_FC                      (0x02)
 #define IO_CTRL_DSR                     (0x20)
 #define IO_CTRL_DTR                     (0x01)
@@ -3937,7 +3958,7 @@ typedef long  (*pUsbState)(unsigned char ucStatus);
 
 typedef int  (*pComStatusNotify)(unsigned char uStatus);
 
-/* MODEM 管角信号结构体定义*/
+/* MODEM pipe angle signal structure definition*/
 typedef struct tagMODEM_MSC_STRU
 {
     BSP_U32 OP_Dtr     :    1;          /*DTR CHANGE FLAG*/
@@ -3948,7 +3969,7 @@ typedef struct tagMODEM_MSC_STRU
     BSP_U32 OP_Dcd     :    1;          /*DCD CHANGE FLAG*/
     BSP_U32 OP_Fc      :    1;          /*FC CHANGE FLAG*/
     BSP_U32 OP_Brk     :    1;          /*BRK CHANGE FLAG*/
-    BSP_U32 OP_Spare   :    24;         /*reserve*/
+    BSP_U32 OP_Spare   :    24;         /*Reserve*/
     BSP_U8   ucDtr;                     /*DTR  VALUE*/
     BSP_U8   ucDsr;                     /*DSR  VALUE*/
     BSP_U8   ucCts;                     /*DTS VALUE*/
@@ -3960,33 +3981,33 @@ typedef struct tagMODEM_MSC_STRU
     BSP_U8   ucBrkLen;                  /*BRKLEN VALUE*/
 } MODEM_MSC_STRU, *PMODEM_MSC_STRU,AT_DCE_MSC_STRU;
 
-/*协议栈BULK数据接收回调函数类型定义*/
+/*Protocol stack bulk data reception callback function type definition*/
 typedef int (*USB_MODEM_RECV_CALL)
 (
-    unsigned char ucPortType,          /*端口号*/
-    unsigned char ucDlci,                 /*链路号*/
-    unsigned char *pData,               /*数据指针*/
-    unsigned short usLen                /*数据长度*/
+    unsigned char ucPortType,          /*Port number*/
+    unsigned char ucDlci,                 /*Link number*/
+    unsigned char *pData,               /*Data pointer*/
+    unsigned short usLen                /*Data length*/
 );
 
 
-/*协议栈消息通道状态变化数据接收回调函数定义*/
+/*Definition of callback function for protocol stack message channel state change data reception*/
 typedef int (*USB_MODEM_AT_Sig)
 (
-    unsigned char ucPortType,          /*端口号*/
-    unsigned char ucDlci,                   /*链路号*/
-    MODEM_MSC_STRU* data  /*指向MODEM 管角信号结构体的指针*/
+    unsigned char ucPortType,          /*Port number*/
+    unsigned char ucDlci,                   /*Link number*/
+    MODEM_MSC_STRU* data  /*Pointer to the MODEM tube angle signal structure*/
 );
 
 
-/*协议栈断链、建链回调函数*/
+/*Protocol stack chain breakage and chain building callback function*/
 typedef int (*USB_MODEM_IN_OUT)
 (
-    unsigned char ucPortType,           /*端口号*/
-    unsigned char ucDlci                   /*链路号*/
+    unsigned char ucPortType,           /*Port number*/
+    unsigned char ucDlci                   /*Link number*/
 );
 
-/*协议栈高性能复制函数定义*/
+/*Definition of high-performance copy function of protocol stack*/
 typedef void (*USB_MODEM_COPY)
 (
     unsigned char   *pDest,
@@ -3997,42 +4018,42 @@ typedef void (*USB_MODEM_COPY)
 
 typedef struct
 {
-    unsigned int    GateWayIpAddr;  /* PDP激活获取到的远程网关IP地址      */
-    unsigned int    LocalIpAddr;    /* PDP激活获取到的分配到MODEM的IP地址 */
-    unsigned int    MaskAddr;       /* 子网掩码 */
-    unsigned int    speed;          /* 连接速度，单位bps */
-    unsigned char   ActiveSatus;    /* 激活结果，0为成功，其他为失败 */
+    unsigned int    GateWayIpAddr;  /* Pdp activation to obtain remote gateway IP address      */
+    unsigned int    LocalIpAddr;    /* Pdp activation to obtain IP address assigned to modem */
+    unsigned int    MaskAddr;       /* Subnet mask */
+    unsigned int    speed;          /* Connection speed, unit bps */
+    unsigned char   ActiveSatus;    /* Activation result, 0 is successful, others are failure */
 }NDIS_PDP_STRU,*pNDIS_PDP_STRU;
 
 
 typedef struct
 {
-    unsigned int    currentTx;    /* CURRENT_TX */
-    unsigned int    currentRx;    /* CURRENT_RX */
-    unsigned int    maxTx;        /* MAX_TX */
-    unsigned int    maxRx;        /* MAX_RX */
+    unsigned int    currentTx;    /* Current tx */
+    unsigned int    currentRx;    /* Current rx */
+    unsigned int    maxTx;        /* Max tx */
+    unsigned int    maxRx;        /* Max rx */
 }NDIS_RATE_STRU,*pNDIS_RATE_STRU;
 
 
 typedef struct
 {
-    unsigned int     TxOKCount;         /*发送包数*/
-    unsigned int     RxOKCount;         /*接收包数*/
-    unsigned int     TxErrCount;        /*发送错误*/
-    unsigned int     RxErrCount;        /*接收错误*/
-    unsigned int     TxOverFlowCount;   /*发送溢出丢包*/
-    unsigned int     RxOverFlowCount;   /*接收溢出丢包*/
-    unsigned int     MaxTx;         /*发送速率*/
-    unsigned int     MaxRx;         /*接收速率*/
+    unsigned int     TxOKCount;         /*Number of packets sent*/
+    unsigned int     RxOKCount;         /*Number of packets received*/
+    unsigned int     TxErrCount;        /*Send error*/
+    unsigned int     RxErrCount;        /*Receive error*/
+    unsigned int     TxOverFlowCount;   /*Send overflow and lost packets*/
+    unsigned int     RxOverFlowCount;   /*Receive overflow and lost packets*/
+    unsigned int     MaxTx;         /*Send rate*/
+    unsigned int     MaxRx;         /*Receive rate*/
 } NDIS_PKT_STATISTICS, *pNDIS_PKT_STATISTICS;
 
 typedef struct
 {
-    unsigned char   *pucAtCmd;          /*指向AT命令的指针*/
-    unsigned short   usLen;             /*AT命令的长度*/
+    unsigned char   *pucAtCmd;          /*Pointer to the at command*/
+    unsigned short   usLen;             /*The length of the At command*/
 }NDIS_AT_CMD_STRU, *pNDIS_AT_CMD_STRU;
 
-/* 信号上报函数使用的结构体*/
+/* The structure used by the signal reporting function*/
 typedef struct
 {
     NDIS_NOTICE                 type;
@@ -4040,7 +4061,7 @@ typedef struct
     {
         NDIS_PDP_STRU           pdp;
         NDIS_PKT_STATISTICS     pktStatics;
-        unsigned char           flowFlag;   /*  1:流控，0：解流控 */
+        unsigned char           flowFlag;   /*  1: Flow control, 0: De-flow control */
         int                     dbm;
         NDIS_AT_CMD_STRU        atCmd;
     }NDIS_STATUS_DATA;
@@ -4049,8 +4070,8 @@ typedef struct
 
 typedef int (*USB_NDIS_RECV_CALL)
 (
-    unsigned char *pData, /* 接收缓冲区指针,内容为IP报文 */
-    unsigned short usLen  /* 数据长度 */
+    unsigned char *pData, /* Receive buffer pointer, content is IP message */
+    unsigned short usLen  /* Data length */
 );
 
 typedef int (*USB_NDIS_BRK)
@@ -4060,12 +4081,12 @@ typedef int (*USB_NDIS_BRK)
 
 typedef int (*USB_NDIS_EST)
 (
-    unsigned char *pData /* 接收缓冲区指针，内容为连接配置管理参数 */
+    unsigned char *pData /* Receive buffer pointer, the content is the connection configuration management parameters */
 );
 
 typedef int (*USB_NDIS_PKT_STATISTICS_PERIOD)
 (
-    unsigned int period /*单位S */
+    unsigned int period /*Units */
 );
 
 typedef int (*USB_NDIS_GET_RATE)
@@ -4075,11 +4096,11 @@ typedef int (*USB_NDIS_GET_RATE)
 
 typedef int (*USB_NDIS_AT_CMD_RECV)
 (
-    unsigned char *pBuff,   /*指向AT命令指针*/
-    unsigned short usLen    /*AT命令长度*/
+    unsigned char *pBuff,   /*Pointer to the at command*/
+    unsigned short usLen    /*At command length*/
 );
 
-typedef unsigned int (*USB_NDIS_GET_WWAN_MODE)  /*获取当前网络模式cdma/wcdma*/
+typedef unsigned int (*USB_NDIS_GET_WWAN_MODE)  /*Get the current network mode cdma/wcdma*/
 (
     void
 );
@@ -4097,48 +4118,48 @@ typedef unsigned long (*MNTN_ERRLOGREGFUN)(char * cFileName,unsigned int ulFileI
                 unsigned int ulErrNo, void * pBuf, unsigned int ulLen);
 
 /*****************************************************************************
- 函 数 名  : BSP_USB_SetPid
- 功能描述  :
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_USB_SetPid
+ Function description:
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern int BSP_USB_SetPid(unsigned char u2diagValue);
 #define DRV_SET_PID(u2diagValue)    BSP_USB_SetPid(u2diagValue)
 
 /*****************************************************************************
-函数名：   BSP_USB_PortTypeQuery
-功能描述:  查询当前的设备枚举的端口形态值
-输入参数： stDynamicPidType  端口形态
-输出参数： stDynamicPidType  端口形态
-返回值：   0:    查询成功
-           其他：查询失败
+Function name: BSP_USB_PortTypeQuery
+Function description: Query the port form value of the current device enumeration
+Input parameters: stDynamicPidType Port pattern
+Output parameters: stDynamicPidType Port pattern
+Return value: 0: Query successful
+           Others: Query failed
 *****************************************************************************/
 unsigned int BSP_USB_PortTypeQuery(DRV_DYNAMIC_PID_TYPE_STRU *pstDynamicPidType);
 #define DRV_SET_PORT_QUIRY(a)   BSP_USB_PortTypeQuery(a)
 
 /*****************************************************************************
-函数名：   BSP_USB_PortTypeValidCheck
-功能描述:  提供给上层查询设备端口形态配置合法性接口
-           1、端口为已支持类型，2、包含PCUI口，3、无重复端口，4、端点数不超过16，
-           5、第一个设备不为MASS类
-输入参数： pucPortType  端口形态配置
-           ulPortNum    端口形态个数
-返回值：   0:    端口形态合法
-           其他：端口形态非法
+Function name: BSP_USB_PortTypeValidCheck
+Function description: Provided to the upper layer query device port form configuration legality interface
+           1. The port is supported, 2. It contains PCUI port, 3. There are no duplicate ports, 4. The number of endpoints does not exceed 16.
+           5. The first device is not a MASS class
+Input parameters: pucPortType port form configuration
+           ulPortNum Number of port patterns
+Return value: 0: Port form is legal
+           Others: Illegal port form
 *****************************************************************************/
 unsigned int BSP_USB_PortTypeValidCheck(unsigned char *pucPortType, unsigned long ulPortNum);
 #define DRV_USB_PORT_TYPE_VALID_CHECK(pucPortType, ulPortNum)  \
                     BSP_USB_PortTypeValidCheck(pucPortType, ulPortNum)
 
 /*****************************************************************************
-函数名：   BSP_USB_GetAvailabePortType
-功能描述:  提供给上层查询当前设备支持端口形态列表接口
-输入参数： ulPortMax    协议栈支持最大端口形态个数
-输出参数:  pucPortType  支持的端口形态列表
-           pulPortNum   支持的端口形态个数
-返回值：   0:    获取端口形态列表成功
-           其他：获取端口形态列表失败
+Function name: BSP_USB_GetAvailabePortType
+Function description: Provided to the upper layer to query the current device to support port form list interface
+Input parameters: ulPortMax protocol stack supports the maximum number of port patterns
+Output parameters: pucPortType Supported port patterns list
+           pulPortNum supports the number of port patterns
+Return value: 0: Acquisition of port form list successfully
+           Others: Failed to get the port pattern list
 *****************************************************************************/
 unsigned int BSP_USB_GetAvailabePortType(unsigned char *pucPortType,
                             unsigned long *pulPortNum, unsigned long ulPortMax);
@@ -4146,24 +4167,24 @@ unsigned int BSP_USB_GetAvailabePortType(unsigned char *pucPortType,
                 BSP_USB_GetAvailabePortType(pucPortType, pulPortNum, ulPortMax)
 
 /*****************************************************************************
- 函 数 名  : BSP_USB_ATProcessRewind2Cmd
- 功能描述  : rewind2 CMD 处理。
- 输入参数  : pData：数据。
- 输出参数  : 无
- 返 回 值  : false(0):处理失败
-             tool(1):处理成功
+ Function Name: BSP_USB_ATProcessRewind2Cmd
+ Function description: rewind2 CMD processing.
+ Input parameters: pData: Data.
+ Output parameters: None
+ Return Value: false(0): Processing failed
+             tool(1): Processing successfully
 *****************************************************************************/
 extern int BSP_USB_ATProcessRewind2Cmd(unsigned char *pData);
 #define DRV_PROCESS_REWIND2_CMD(pData)    BSP_USB_ATProcessRewind2Cmd(pData)
 
 /*****************************************************************************
- 函 数 名  : BSP_USB_GetDiagModeValue
- 功能描述  : 获得设备类型。
- 输入参数  : 无。
- 输出参数  : ucDialmode:  0 - 使用Modem拨号; 1 - 使用NDIS拨号; 2 - Modem和NDIS共存
-              ucCdcSpec:   0 - Modem/NDIS都符合CDC规范; 1 - Modem符合CDC规范;
-                           2 - NDIS符合CDC规范;         3 - Modem/NDIS都符合CDC规范
- 返 回 值  : VOS_OK/VOS_ERR
+ Function Name: BSP_USB_GetDiagModeValue
+ Function Description: Obtain the device type.
+ Input parameters: None.
+ Output parameters: ucDialmode: 0 -Dialing with Modem; 1 -Dialing with NDIS; 2 -Modem and NDIS coexist
+              ucCdcSpec: 0 -Modem/NDIS complies with CDC specifications; 1 -Modem complies with CDC specifications;
+                           2 -NDIS complies with CDC specifications; 3 -Modem/NDIS complies with CDC specifications
+ Return Value: VOS_OK/VOS_ERR
 *****************************************************************************/
 extern BSP_S32 BSP_USB_GetDiagModeValue(unsigned char *pucDialmode,
                              unsigned char *pucCdcSpec);
@@ -4171,112 +4192,113 @@ extern BSP_S32 BSP_USB_GetDiagModeValue(unsigned char *pucDialmode,
                              BSP_USB_GetDiagModeValue(pucDialmode, pucCdcSpec)
 
 /*****************************************************************************
- 函 数 名  : BSP_USB_GetPortMode
- 功能描述  : 获取端口形态模式，网关对接需求，打桩。
- 输入参数  : 。
- 输出参数  :
- 返 回 值  :
+ Function Name: BSP_USB_GetPortMode
+ Function description: Obtain port pattern mode, gateway docking requirements, and pile driving.
+ Enter parameters: .
+ Output parameters:
+ Return Value:
 *****************************************************************************/
 extern unsigned char BSP_USB_GetPortMode(char*PsBuffer, unsigned long*Length );
 #define DRV_GET_PORT_MODE(PsBuffer, Length)    BSP_USB_GetPortMode(PsBuffer,Length)
 
 /*****************************************************************************
- 函 数 名  : BSP_USB_GetU2diagDefaultValue
- 功能描述  : 获得端口默认u2diag值
- 输入参数  : 无。
- 输出参数  : 无。
- 返回值：   u2diag值
+ Function Name: BSP_USB_GetU2diagDefaultValue
+ Function description: Obtain the default u2diag value of the port
+ Input parameters: None.
+ Output parameters: None.
+ Return value: u2diag value
 
 *****************************************************************************/
 extern BSP_U32 BSP_USB_GetU2diagDefaultValue(void);
 #define DRV_GET_U2DIAG_DEFVALUE()    BSP_USB_GetU2diagDefaultValue()
 
 /*****************************************************************************
- 函 数 名  : ErrlogRegFunc
- 功能描述  : USB MNTN注册异常日志接口，Porting项目中打桩
- 输入参数  : 无。
- 输出参数  : 无。
- 返回值：   无
+ Function Name: ErrlogRegFunc
+ Function description: USB MNTN registration exception log interface, pile driving in Porting project
+ Input parameters: None.
+ Output parameters: None.
+ Return value: None
 
 *****************************************************************************/
 //extern void ErrlogRegFunc(MNTN_ERRLOGREGFUN pRegFunc);
+
 extern void MNTN_ERRLOG_REG_FUNC(MNTN_ERRLOGREGFUN pRegFunc);
 
 /*****************************************************************************
- 函 数 名  : getSystemResetInfo
- 功能描述  : 获取系统复位信息
- 输入参数  : 无
+ Function Name: getSystemResetInfo
+ Function Description: Obtain system reset information
+ Input parameters: None
 
- 输出参数  : 无。
- 返 回 值  : 无
- 注意事项  ：
+ Output parameters: None.
+ Return Value: None
+ Notes:
 *****************************************************************************/
 extern void * GET_SYSTEM_RESET_INFO(void);
 
 /*****************************************************************************
-* 函 数 名  : DRV_DSP_AHB_RESET
-* 功能描述  : ZSP AHB总线复位
-* 输入参数  : 无
-* 输出参数  : 无
-* 返 回 值  : 无
-* 其它说明  : 无
+*Function Name: DRV_DSP_AHB_RESET
+*Function Description: ZSP AHB bus reset
+*Input parameters: None
+*Output parameters: None
+*Return Value: None
+*Other Instructions: None
 *****************************************************************************/
 extern void DRV_DSP_AHB_RESET(void);
 
 /*****************************************************************************
-* 函 数 名  : DRV_DSP_AHB_RESET_CANCEL
-* 功能描述  : ZSP AHB总线解复位
-* 输入参数  : 无
-* 输出参数  : 无
-* 返 回 值  : 无
-* 其它说明  : 无
+*Function Name: DRV_DSP_AHB_RESET_CANCEL
+*Function Description: ZSP AHB bus dereset
+*Input parameters: None
+*Output parameters: None
+*Return Value: None
+*Other Instructions: None
 *****************************************************************************/
 extern void DRV_DSP_AHB_RESET_CANCEL(void);
 
 
 /*****************************************************************************
- 函 数 名  : BSP_USB_UdiagValueCheck
- 功能描述  : 本接口用于检查NV项中USB形态值的合法性.
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 0：OK；
-            -1：ERROR
+ Function Name: BSP_USB_UdiagValueCheck
+ Function description: This interface is used to check the legality of USB morphological values ??in NV items.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: 0: OK;
+            -1: ERROR
 *****************************************************************************/
 extern int BSP_USB_UdiagValueCheck(unsigned long DiagValue);
 #define DRV_UDIAG_VALUE_CHECK(DiagValue)     BSP_USB_UdiagValueCheck(DiagValue)
 #define DRV_U2DIAG_VALUE_CHECK(DiagValue)     BSP_USB_UdiagValueCheck(DiagValue)
 
 /*****************************************************************************
- 函 数 名  : BSP_USB_GetLinuxSysType
- 功能描述  : 本接口用于检查PC侧是否为Linux，以规避Linux后台二次拨号失败的问题.
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 0：Linux；
-            -1：非Linux。
+ Function Name: BSP_USB_GetLinuxSysType
+ Function description: This interface is used to check whether the PC side is Linux to avoid the problem of failure of secondary dialing in the Linux background.
+ Input parameters: None.
+ Output parameters: None.
+ Return value: 0: Linux;
+            -1: Non-Linux.
 *****************************************************************************/
 extern int BSP_USB_GetLinuxSysType(void) ;
 #define DRV_GET_LINUXSYSTYPE()    BSP_USB_GetLinuxSysType()
 
 /********************************************************
-函数说明： 返回当前设备列表中支持(sel=1)或者不支持(sel=0)PCSC的设备形态值
-函数功能:
-输入参数：sel
-          0: 通过参数dev_type返回当前不带PCSC是设备形态值
-          1：通过参数dev_type返回当前带PCSC是设备形态值
-输出参数：dev_type 写入需要的设备形态值，如果没有则不写入值。
-          NV中存储的设备形态值
-输出参数：pulDevType 与ulCurDevType对应的设备形态值，如果没有返回值1。
-返回值：
-          0：查询到相应的设备形态值；
-          1：没有查询到响应的设备形态值。
+Function description: Returns the device form value that supports (sel=1) or does not support (sel=0) PCSC in the current device list
+Function function:
+Input parameters: sel
+          0: Return the current device form value without PCSC through parameter dev_type
+          1: Return the current value with PCSC as the device form through the parameter dev_type
+Output parameters: dev_type Writes the required device form value, and if not, the value will not be written.
+          Device form values ??stored in NV
+Output parameters: pulDevType The device form value corresponding to ulCurDevType, if no return value is 1.
+Return value:
+          0: Query the corresponding device form value;
+          1: No response device form value was found.
 ********************************************************/
 int BSP_USB_PcscInfoSet(unsigned int  ulSel, unsigned int  ulCurDevType, unsigned int *pulDevType);
 #define DRV_USB_PCSC_INFO_SET(ulSel, ulCurDevType, pulDevType)    BSP_USB_PcscInfoSet(ulSel, ulCurDevType, pulDevType)
 
-/*TCP/IP协议栈可维可测捕获的消息标识*/
+/*The message identification that can be used to capture the Tcp/ip protocol stack*/
 enum IPS_MNTN_TRACE_IP_MSG_TYPE_ENUM
 {
-    /* IP 数据包可维可测上报 */
+    /* IP packets can be maintained and measured and reported */
     ID_IPS_TRACE_IP_ADS_UL                  = 0xD030,
     ID_IPS_TRACE_IP_ADS_DL                  = 0xD031,
     ID_IPS_TRACE_IP_USB_UL                  = 0xD032,
@@ -4286,149 +4308,149 @@ enum IPS_MNTN_TRACE_IP_MSG_TYPE_ENUM
 };
 
 /********************************************************
-函数说明：协议栈注册USB将SKB关键信息上报到SDT回调函数
-函数功能:
-输入参数：pFunc: SKB关键信息上报到SDT回调函数指针
-输出参数：无
-输出参数：无
-返回值：  0：成功
-          1：失败
+Function description: Protocol stack registration USB reports SKB key information to SDT callback function
+Function function:
+Input parameters: pFunc: SKB key information report to SDT callback function pointer
+Output parameters: None
+Output parameters: None
+Return value: 0: Success
+          1: Failure
 ********************************************************/
 typedef void (*USB_IPS_MNTN_TRACE_CB_T)(struct sk_buff *skb,unsigned short usType);
 extern unsigned int BSP_USB_RegIpsTraceCB(USB_IPS_MNTN_TRACE_CB_T pFunc);
 #define DRV_USB_REG_IPS_TRACECB(x) BSP_USB_RegIpsTraceCB(x)
 
 /********************************************************
-函数说明：协议栈注册USB使能通知回调函输
-函数功能:
-输入参数：pFunc: USB使能回调函输指针
-输出参数：无
-输出参数：无
-返回值：  0：成功
-          1：失败
+Function description: Protocol stack registration USB enable notification callback function input
+Function function:
+Input parameters: pFunc: USB enable callback function input pointer
+Output parameters: None
+Output parameters: None
+Return value: 0: Success
+          1: Failure
 ********************************************************/
 typedef void (*USB_UDI_ENABLE_CB_T)(void);
 extern unsigned int BSP_USB_RegUdiEnableCB(USB_UDI_ENABLE_CB_T pFunc);
 #define DRV_USB_REGUDI_ENABLECB(x) BSP_USB_RegUdiEnableCB(x)
 
 /********************************************************
-函数说明：协议栈注册USB去使能通知回调函输
-函数功能:
-输入参数：pFunc: USB使能回调函输指针
-输出参数：无
-输出参数：无
-返回值：  0：成功
-          1：失败
+Function description: Register USB to enable notification callback function input
+Function function:
+Input parameters: pFunc: USB enable callback function input pointer
+Output parameters: None
+Output parameters: None
+Return value: 0: Success
+          1: Failure
 ********************************************************/
 typedef void (*USB_UDI_DISABLE_CB_T)(void);
 extern unsigned int BSP_USB_RegUdiDisableCB(USB_UDI_DISABLE_CB_T pFunc);
 #define DRV_USB_REGUDI_DISABLECB(x) BSP_USB_RegUdiDisableCB(x)
 
 /********************************************************
-函数说明：协议栈注册HSIC使能通知回调函输
-函数功能:
-输入参数：pFunc: HSIC使能回调函输指针
-输出参数：无
-输出参数：无
-返回值：  0：成功
-          1：失败
+Function description: Protocol stack registration HSIC enable notification callback function input
+Function function:
+Input parameters: pFunc: HSIC enable callback function input pointer
+Output parameters: None
+Output parameters: None
+Return value: 0: Success
+          1: Failure
 ********************************************************/
 typedef void (*HSIC_UDI_ENABLE_CB_T)(void);
 extern unsigned int BSP_HSIC_RegUdiEnableCB(HSIC_UDI_ENABLE_CB_T pFunc);
 #define DRV_HSIC_REGUDI_ENABLECB(x) BSP_HSIC_RegUdiEnableCB(x)
 
 /********************************************************
-函数说明：协议栈注册HSIC去使能通知回调函输
-函数功能:
-输入参数：pFunc: HSIC去使能回调函输指针
-输出参数：无
-输出参数：无
-返回值：  0：成功
-          1：失败
+Function description: Protocol stack registration HSIC to enable notification callback function input
+Function function:
+Input parameters: pFunc: HSIC enable callback function input pointer
+Output parameters: None
+Output parameters: None
+Return value: 0: Success
+          1: Failure
 ********************************************************/
 typedef void (*HSIC_UDI_DISABLE_CB_T)(void);
 extern unsigned int BSP_HSIC_RegUdiDisableCB(HSIC_UDI_DISABLE_CB_T pFunc);
 #define DRV_HSIC_REGUDI_DISABLECB(x) BSP_HSIC_RegUdiDisableCB(x)
 /********************************************************
-函数说明：协议栈查询HSIC枚举状态
-函数功能:
-输入参数：无
-输出参数：无
-输出参数：无
-返回值：  1：枚举完成
-          0：枚举未完成
+Function description: Protocol stack query HSIC enumeration status
+Function function:
+Input parameters: None
+Output parameters: None
+Output parameters: None
+Return value: 1: Enumeration is completed
+          0: Enumeration not completed
 ********************************************************/
 extern unsigned int BSP_GetHsicEnumStatus(void);
 #define DRV_GET_HSIC_ENUM_STATUS() BSP_GetHsicEnumStatus()
 
 /********************************************************
-函数说明：协议栈查询HSIC是否支持NCM
-函数功能:
-输入参数：无
-输出参数：无
-输出参数：无
-返回值：  1：支持NCM
-          0：不支持NCM
+Function description: Protocol stack query whether HSIC supports NCM
+Function function:
+Input parameters: None
+Output parameters: None
+Output parameters: None
+Return value: 1: Support NCM
+          0: NCM is not supported
 ********************************************************/
 extern int BSP_USB_HSIC_SupportNcm(void);
 #define DRV_USB_HSIC_SUPPORT_NCM() BSP_USB_HSIC_SupportNcm()
 
 /********************************************************
-函数说明：TTF查询预申请SKB Num
-函数功能:
-输入参数：无
-输出参数：无
-输出参数：无
-返回值：  SKB Num
+Function description: TTF query pre-application SKB Num
+Function function:
+Input parameters: None
+Output parameters: None
+Output parameters: None
+Return value: SKB Num
 ********************************************************/
 extern BSP_U32 BSP_AcmPremallocSkbNum(void);
 #define DRV_GET_PREMALLOC_SKB_NUM() BSP_AcmPremallocSkbNum()
 
 /********************************************************
-函数名：   BSP_UDI_FindVcom
-功能描述： 查询当前设备形态下指定的UDI虚拟串口端口是否存在
-输入参数： UDI_DEVICE_ID枚举值，即待查询的虚拟串口端口ID
-输出参数： 无
-返回值：
-           0：当前设备形态不支持查询的虚拟串口端口；
-           1：当前设备形态支持查询的虚拟串口端口。
-注意事项： 无
+Function name: BSP_UDI_FindVcom
+Function description: Query whether the specified UDI virtual serial port exists in the current device form
+Input parameters: UDI_DEVICE_ID enumeration value, that is, the virtual serial port ID to be queried
+Output parameters: None
+Return value:
+           0: The current device form does not support querying virtual serial ports;
+           1: The current device form supports querying virtual serial port.
+Notes: None
 ********************************************************/
 extern int BSP_UDI_FindVcom(UDI_DEVICE_ID enVCOM);
 
 /*****************************************************************************
-* 函 数 名  : DRV_USB_RegEnumDoneForMsp
-* 功能描述  : 提供给 MSP 注册 USB 枚举完成后通知函数
-* 输入参数  : pFunc: 枚举完成回调函数指针
-* 输出参数  : 无
-* 返 回 值  : 0: 成功注册,等待枚举完成通知;
-*             1: USB 已经枚举完成, 可以直接初始化 USB 部分;
-*             -1: 失败, 非USB形态,没有USB驱动
+*Function Name: DRV_USB_RegEnumDoneForMsp
+*Function Description: Provided to MSP to register the notification function after USB enumeration is completed
+*Input parameters: pFunc: Enumeration completion callback function pointer
+*Output parameters: None
+*Return Value: 0: Successfully registered, waiting for the enumeration completion notification;
+*1: The USB has been enumerated and the USB part can be initialized directly;
+*-1: Failed, non-USB form, no USB driver
 *****************************************************************************/
 extern signed int BSP_USB_RegEnumDoneForMsp(void *pFunc);
 #define DRV_USB_RegEnumDoneForMsp   BSP_USB_RegEnumDoneForMsp
 
 /*****************************************************************************
-* 函 数 名  : BSP_USB_RegEnumDoneForPs
-* 功能描述  : 提供给 PS 注册 USB 枚举完成后通知函数
-* 输入参数  : pFunc: 枚举完成回调函数指针
-* 输出参数  : 无
-* 返 回 值  : 0: 成功注册,等待枚举完成通知;
-*             1: USB 已经枚举完成, 可以直接初始化 USB 部分;
-*             -1: 失败, 非USB形态,没有USB驱动
+*Function Name: BSP_USB_RegEnumDoneForPs
+*Function description: Provided to PS to register the notification function after USB enumeration is completed
+*Input parameters: pFunc: Enumeration completion callback function pointer
+*Output parameters: None
+*Return Value: 0: Successfully registered, waiting for the enumeration completion notification;
+*1: The USB has been enumerated and the USB part can be initialized directly;
+*-1: Failed, non-USB form, no USB driver
 *****************************************************************************/
 extern signed int BSP_USB_RegEnumDoneForPs(void *pFunc);
 #define DRV_USB_RegEnumDoneForPs    BSP_USB_RegEnumDoneForPs
 
 /********************************************************
-函数说明： 返回当前NV项中的设备形态值，是否支持PCSC
-函数功能:
-输入参数： dev_type是设备形态值（OAM从NV中读出）
+Function description: Returns the device form value in the current NV item, whether PCSC is supported
+Function function:
+Input parameters: dev_type is the device morphology value (OAM reads from NV)
 
-输出参数： 无。
-返回值：
-          0: dev_type不支持PCSC设备；
-          1：dev_type支持PCSC设备
+Output parameters: None.
+Return value:
+          0: dev_type does not support PCSC devices;
+          1: dev_type supports PCSC devices
 ********************************************************/
 /*unsigned int pcsc_info_quiry(unsigned int ulDevType);*/
 #define DRV_USB_PCSC_INFO_QUIRY(a)            DRV_OK
@@ -4443,73 +4465,73 @@ typedef struct
 }BSP_CCID_REGFUNC;
 
 /*****************************************************************************
- 函 数 名  : pcsc_usim_int
- 功能描述  : 注册PCSC命令接收函数
- 输入参数  :
- 输出参数  : None
- 返 回 值  : void
+ Function name: pcsc_usim_int
+ Function Description: Register PCSC command receiving function
+ Input parameters:
+ Output parameters: None
+ Return Value: void
 *****************************************************************************/
 extern void pcsc_usim_int(pFunAPDUProcess pFun1, GetCardStatus pFun2);
 #define DRV_PCSC_REG_CALLBACK(pFun1, pFun2) pcsc_usim_int((pFun1), (pFun2))
 
 
 /*****************************************************************************
- 函 数 名  : pcsc_usim_ctrl_cmd
- 功能描述  : PCSC命令回复函数
- 输入参数  :
- 输出参数  : None
- 返 回 值  : void
+ Function name: pcsc_usim_ctrl_cmd
+ Function Description: PCSC command reply function
+ Input parameters:
+ Output parameters: None
+ Return Value: void
 *****************************************************************************/
 extern unsigned long pcsc_usim_ctrl_cmd(unsigned long CmdTpye, unsigned long Result,
                                         unsigned char *Buf, unsigned long Length);
 #define DRV_PCSC_SEND_DATA(CmdType, Result, Buffer, Length) pcsc_usim_ctrl_cmd(CmdType, Result, Buffer, Length)
 
-/* Porting联编，暂时定义为空 */
+/* Porting is temporarily defined as empty */
 #define DRV_COM_RCV_CALLBACK_REGI(uPortNo,pCallback)    DRV_OK
 
 
 /*****************************************************************************
- 函 数 名  : pcsc_usim_ctrl_cmd
- 功能描述  : PCSC命令回复函数
- 输入参数  :
- 输出参数  : None
- 返 回 值  : void
+ Function name: pcsc_usim_ctrl_cmd
+ Function Description: PCSC command reply function
+ Input parameters:
+ Output parameters: None
+ Return Value: void
 *****************************************************************************/
 
 
-/*闪电卡还未开发 先暂时API 打桩begin*/
+/*Lightning card has not been developed yet. Temporary API Piling begin*/
 /*****************************************************************************
- 函 数 名  : BSP_USB_RndisAppEventDispatch
- 功能描述  : 本接口用于通知APP 相应的USB插拔事件
- 输出参数  : usb事件。
- 返 回 值  :无
+ Function Name: BSP_USB_RndisAppEventDispatch
+ Function Description: This interface is used to notify the APP of the corresponding USB plug-in and unplugging events
+ Output parameters: usb event.
+ Return Value: None
 *****************************************************************************/
 extern void BSP_USB_RndisAppEventDispatch(unsigned ulStatus) ;
 #define DRV_RNDIS_APP_ENENT_DISPATCH(ulStatus)    BSP_USB_RndisAppEventDispatch(ulStatus)
 
 /************************************************************************
- * FUNCTION
- *       rndis_app_event_dispatch
- * DESCRIPTION
- *       闪电卡版本控制应用进行拨号或断开拨号连接
- * INPUTS
- *       进行拨号或断开拨号指示
- * OUTPUTS
- *       NONE
+ *FUNCTION
+ *rndis_app_event_dispatch
+ *DESCRIPTION
+ *Lightning card version control application for dialing or disconnecting dialing
+ *INPUTS
+ *Make dialing or disconnect dialing instructions
+ *OUTPUTS
+ *NONE
  *************************************************************************/
 extern VOID rndis_app_event_dispatch(unsigned int ulStatus);
 extern VOID DRV_AT_SETAPPDAILMODE(unsigned int ulStatus);
 
 
 /************************************************************************
- * FUNCTION
- *       PDP_ACT_DRV_CALLBACK
- * DESCRIPTION
- *       PDP激活后调用底软的回调函数，原本在闪电卡上用作加载符号表信息，现在打桩
- * INPUTS
- *       NONE
- * OUTPUTS
- *       NONE
+ *FUNCTION
+ *PDP_ACT_DRV_CALLBACK
+ *DESCRIPTION
+ *After PDP is activated, the soft callback function is called. It was originally used as the loading symbol table information on the lightning card, but now it is driven
+ *INPUTS
+ *NONE
+ *OUTPUTS
+ *NONE
  *************************************************************************/
 extern int PDP_ACT_DRV_CALLBACK(void);
 
@@ -4519,21 +4541,21 @@ typedef void(* USB_NET_DEV_SWITCH_GATEWAY)
 );
 
 /*****************************************************************************
- 函 数 名  : BSP_USB_NASSwitchGatewayRegExtFunc
- 功能描述  : 本接口用于NAS注册切换网关通知回调函数
- 输入参数  :回调接口。
- 输出参数  : 无。
- 返 回 值  : 0：成功
-                       非零:失败
+ Function Name: BSP_USB_NASSwitchGatewayRegExtFunc
+ Function description: This interface is used for NAS registration and switching gateway notification callback function
+ Input parameters: callback interface.
+ Output parameters: None.
+ Return Value: 0: Success
+                       Nonzero: Failure
 *****************************************************************************/
 extern int BSP_USB_NASSwitchGatewayRegFunc(USB_NET_DEV_SWITCH_GATEWAY switchGwMode) ;
 #define DRV_USB_NAS_SWITCH_GATEWAY_REGFUNC(switchGwMode)    BSP_USB_NASSwitchGatewayRegFunc(switchGwMode)
-/*闪电卡还未开发 先暂时API 打桩end*/
+/*Lightning card has not been developed yet. Temporary API piling end*/
 
 /*************************USB END*************************************/
 
 
-/*************************OM START**********************************/
+/*************************If Start ****************************/
 
 #define PS_L2_UL_TRACE           (0)
 #define PS_L2_DL_TRACE           (1)
@@ -4565,135 +4587,135 @@ typedef enum{
 }BSP_CHIP_TYPE_E;
 
 /******************************************************************************
-* Function     :   BSP_OM_RegRead
+*Function     :   BSP_OM_RegRead
 *
-* Description  :
+*Description  :
 *
-* Input        :
+*Input        :
 *
-* Output       :   无
+*Output       :   无
 *
-* return       :
+*return       :
 ******************************************************************************/
 BSP_S32 BSP_OM_RegRead(BSP_U32 u32RegAddr, ENADDRTYPE enAddrType, BSP_U32 *pu32Value);
 
 
 /******************************************************************************
-* Function     :   BSP_OM_RegWrite
+*Function     :   BSP_OM_RegWrite
 *
-* Description  :
+*Description  :
 *
-* Input        :
+*Input        :
 *
-* Output       :   无
+*Output       :   无
 *
-* return       :
+*return       :
 ******************************************************************************/
 BSP_S32 BSP_OM_RegWrite(BSP_U32 u32RegAddr, ENADDRTYPE enAddrType, BSP_U32 u32Value);
 
 /******************************************************************************
-* Function     :   BSP_OM_SoftReboot
+*Function     :   BSP_OM_SoftReboot
 *
-* Description  :
+*Description  :
 *
-* Input        :
+*Input        :
 *
-* Output       :   无
+*Output       :   无
 *
-* return       :
+*return       :
 ******************************************************************************/
 BSP_VOID BSP_OM_SoftReboot(void);
 
 /*****************************************************************************
-* 函 数 名  : BSP_OM_GetBoardType
+*Function Name: BSP_OM_GetBoardType
 *
-* 功能描述  : 获取单板类型
+*Function Description: Get the board type
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : BSP单板类型枚举
+*Return Value: BSP Board Type Enumeration
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 BOARD_TYPE_E BSP_OM_GetBoardType(BSP_VOID);
 
 /*****************************************************************************
-* 函 数 名  : BSP_GetHostCore
+*Function Name: BSP_GetHostCore
 *
-* 功能描述  : 查询当前CPU主从核类型
+*Function Description: Query the current CPU master-slave core type
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : CPU主从核类型
+*Return Value: CPU master-slave core type
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 BSP_CORE_TYPE_E BSP_GetHostCore(BSP_VOID);
 
 /*****************************************************************************
-* 函 数 名  : BSP_OM_GetChipType
+*Function Name: BSP_OM_GetChipType
 *
-* 功能描述  : 获取芯片类型
+*Function Description: Get the chip type
 *
-* 输入参数  : BSP_VOID
+*Input parameters: BSP_VOID
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : 芯片类型
-*             PV500_CHIP:PV500芯片
-*             V7R1_CHIP: V7R1芯片
+*Return Value: Chip Type
+*PV500_CHIP:PV500 chip
+*V7R1_CHIP: V7R1 chip
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 BSP_CHIP_TYPE_E BSP_OM_GetChipType(BSP_VOID);
 
 typedef struct tagBSP_OM_NET_S
 {
-    BSP_U32 u32NetRxStatOverFlow;       /* 接收FIFO溢出统计计数 */
-    BSP_U32 u32NetRxStatPktErr;         /* 接收总错包计数 */
-    BSP_U32 u32NetRxStatCrcErr;         /* 接收CRC错包计数 */
-    BSP_U32 u32NetRxStatLenErr;         /* 接收无效长度包计数 */
-    BSP_U32 u32NetRxNoBufInt;           /* 接收没有BUFFER中断计数 */
-    BSP_U32 u32NetRxStopInt;            /* 接收停止中断计数 */
-    BSP_U32 u32NetRxDescErr;            /* 接收描述符错误 */
+    BSP_U32 u32NetRxStatOverFlow;       /* Receive fifo overflow statistics count */
+    BSP_U32 u32NetRxStatPktErr;         /* Receive total error packet count */
+    BSP_U32 u32NetRxStatCrcErr;         /* Receive CRC error packet count */
+    BSP_U32 u32NetRxStatLenErr;         /* Receive invalid length packet count */
+    BSP_U32 u32NetRxNoBufInt;           /* Receive no buffer interrupt count */
+    BSP_U32 u32NetRxStopInt;            /* Receive stop interrupt count */
+    BSP_U32 u32NetRxDescErr;            /* Receive descriptor error */
 
-    BSP_U32 u32NetTxStatUnderFlow;      /* 发送FIFO下溢统计计数 */
-    BSP_U32 u32NetTxUnderFlowInt;       /* 发送FIFO下溢中断计数 */
-    BSP_U32 u32NetTxStopInt;            /* 发送停止中断计数 */
-    BSP_U32 u32NetTxDescErrPs;          /* 发送描述符错误(Ps) */
-    BSP_U32 u32NetTxDescErrOs;          /* 发送描述符错误(Os) */
-    BSP_U32 u32NetTxDescErrMsp;         /* 发送描述符错误(Msp) */
+    BSP_U32 u32NetTxStatUnderFlow;      /* Send fifo underflow count */
+    BSP_U32 u32NetTxUnderFlowInt;       /* Send fifo underflow interrupt count */
+    BSP_U32 u32NetTxStopInt;            /* Send stop interrupt count */
+    BSP_U32 u32NetTxDescErrPs;          /* Send descriptor error (ps) */
+    BSP_U32 u32NetTxDescErrOs;          /* Send descriptor error (os) */
+    BSP_U32 u32NetTxDescErrMsp;         /* Send descriptor error (msp) */
 
-    BSP_U32 u32NetFatalBusErrInt;      /* 总线错误*/
+    BSP_U32 u32NetFatalBusErrInt;      /* Bus Error*/
 }BSP_OM_NET_S;
 
 /******************************************************************************
-* Function     :   BSP_OM_NET
+*Function     :   BSP_OM_NET
 * 
-* Description  :   
+*Description  :   
 * 
-* Input        :  
+*Input        :  
 * 
-* Output       :   无
+*Output       :   无
 * 
-* return       :   
+*return       :   
 ******************************************************************************/
 BSP_VOID BSP_OM_NET(BSP_OM_NET_S *pstNetOm);
 
-/*************************OM END  **********************************/
+/*************************Although **********************************/
 
 /*************************MNTN START**********************************/
-/*VERSIONINFO_I数据结构中版本字符串最大有效字符长度*/
+/*Versioninfo i data structure maximum effective character length*/
 #define VER_MAX_LENGTH                  30
 
-/*memVersionCtrl接口操作类型*/
+/*Mem version ctrl interface operation type*/
 #define VERIONREADMODE                  0
 #define VERIONWRITEMODE                 1
 
@@ -4701,7 +4723,7 @@ BSP_VOID BSP_OM_NET(BSP_OM_NET_S *pstNetOm);
 #define OM_SAVE_EXCHFILE_END            1
 
 
-/*组件类型*/
+/*Component Type*/
 typedef enum
 {
     VER_BOOTLOAD = 0,
@@ -4727,7 +4749,7 @@ typedef enum
     VER_INFO_NUM =20
 }COMP_TYPE_I;
 
-/* 三色灯状态编号*/
+/* Three-color lamp status number*/
 enum
 {
     LED_LIGHT_SYSTEM_STARTUP,
@@ -4764,7 +4786,7 @@ enum SECURE_ENABLE_STATUS_I
     SECURE_ENABLE = 1
 };
 
-typedef enum                /* CACHE_TYPE */
+typedef enum                /* Cache type */
 {
     PS_OSAL_INSTRUCTION_CACHE ,
     PS_OSAL_DATA_CACHE
@@ -4774,17 +4796,17 @@ typedef int  (*OM_SAVE_FUNC)(int funcType, unsigned char *data, unsigned int* ul
 
 typedef struct
 {
-    unsigned char CompId;              /* 组件号：参见COMP_TYPE */
-    unsigned char CompVer[VER_MAX_LENGTH+1];         /* 最大版本长度 30 字符+ \0 */
+    unsigned char CompId;              /* Component number: see comp type */
+    unsigned char CompVer[VER_MAX_LENGTH+1];         /* Maximum version length 30 characters + \0 */
 }VERSIONINFO_I;
 
 typedef struct
 {
-    unsigned char enHSDSCHSupport;          /*硬件是否支持HSDPA*/
-    unsigned char ucHSDSCHPhyCategory;      /*硬件支持的最大HSDPA能力等级*/
-    unsigned char enEDCHSupport;            /*硬件是否支持HSUPA*/
-    unsigned char ucEDCHPhyCategory;        /*硬件支持的最大HSUPA能力等级*/
-    unsigned int  reserved;                 /*预留*/
+    unsigned char enHSDSCHSupport;          /*Does the hardware support hsdpa*/
+    unsigned char ucHSDSCHPhyCategory;      /*The maximum hsdpa capability level supported by hardware*/
+    unsigned char enEDCHSupport;            /*Does the hardware support hsupa*/
+    unsigned char ucEDCHPhyCategory;        /*The maximum hsupa capability level supported by hardware*/
+    unsigned int  reserved;                 /*Reservation*/
 }SUPPORT_MAX_HSPA_CAPA_STRU;
 
 /*****************************BSP_MspProcReg  begin******************************/
@@ -4803,7 +4825,7 @@ typedef enum tagMSP_PROC_ID_E
     MSP_PROC_REG_ID_MAX
 }MSP_PROC_ID_E;
 
-/*RF供电类型*/
+/*Rf power supply type*/
 typedef enum tagRF_VOLTAGE
 {
     RF_VOLTAGE_18V,                                                          
@@ -4814,76 +4836,76 @@ typedef enum tagRF_VOLTAGE
 
 typedef void (*BSP_MspProc)(void);
 /*****************************************************************************
-* 函 数 名  : DRV_MSP_PROC_REG
+*Function name: DRV_MSP_PROC_REG
 *
-* 功能描述  : DRV提供给OM的注册函数
+*Function description: Registration function provided by DRV to OM
 *
-* 输入参数  : MSP_PROC_ID_E eFuncID, BSP_MspProc pFunc
-* 输出参数  : NA
+*Input parameters: MSP_PROC_ID_E eFuncID, BSP_MspProc pFunc
+*Output parameters: NA
 *
-* 返 回 值  : NA
+*Return Value: NA
 *
-* 其它说明  : 可维可测接口函数
+*Other instructions: Reliable and measurable interface functions
 *
 *****************************************************************************/
 extern void DRV_MSP_PROC_REG(MSP_PROC_ID_E eFuncID, BSP_MspProc pFunc);
 
 /********************************************************************************************************
- 函 数 名  : BSP_FS_GetDskspc
- 功能描述  : 得到文件系统空间。
- 输入参数  : path：文件系统路径。
- 输出参数  : DskSpc：总空间。
-                           UsdSpc：用过空间。
-                           VldSpc：空闲空间。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_FS_GetDskspc
+ Function Description: Get file system space.
+ Enter parameters: path: file system path.
+ Output parameters: DskSpc: Total space.
+                           UsdSpc: Used space.
+                           VldSpc: Free space.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 ********************************************************************************************************/
 extern int BSP_FS_GetDskspc(const char *path,unsigned int *DskSpc,unsigned int  *UsdSpc,  unsigned int *VldSpc);
 #define DRV_FILE_GET_DISKSPACE(path,DskSpc,UsdSpc,VldSpc)    BSP_FS_GetDskspc(path,DskSpc,UsdSpc,VldSpc)
 
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_GetFlashSpec
- 功能描述  : Get flash infomation
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_MNTN_GetFlashSpec
+ Function description: Get flash information
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern int BSP_MNTN_GetFlashSpec(unsigned char * pFlashInfo, unsigned int ulLength);
 #define DRV_GET_FLASH_INFO(pFlashInfo, usLength)    BSP_MNTN_GetFlashSpec (pFlashInfo, usLength )
 
 
 /************************************************************************
- * FUNCTION
- *       max_freeblock_size_get
- * DESCRIPTION
- *       get memory max free block size
- * INPUTS
- *       无
- * OUTPUTS
- *       max free block size
+ *FUNCTION
+ *      max_freeblock_size_get
+ *DESCRIPTION
+ *      get memory max free block size
+ *INPUTS
+ *      无
+ *OUTPUTS
+ *      max free block size
  *************************************************************************/
 extern int DRV_GET_FREE_BLOCK_SIZE(void);
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_UartRecvCallbackRegister
- 功能描述  : 提供上层应用程序注册数据接收回调函数指针的API接口函数。
- 输入参数  : uPortNo：串口实例号。
-             pCallback：回调函数指针。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_UartRecvCallbackRegister
+ Function Description: Provides API interface function for upper-level applications to register data and receive callback function pointers.
+ Input parameters: uPortNo: serial port instance number.
+             pCallback: callback function pointer.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int  BSP_MNTN_UartRecvCallbackRegister(unsigned char  uPortNo, pUartRecv pCallback);
 #define DRV_UART_RCV_CALLBACK_REGI(uPortNo,pCallback)\
                 BSP_MNTN_UartRecvCallbackRegister(uPortNo,pCallback)
 
 /*************************************************
- 函 数 名   : BSP_MNTN_ProductTypeGet
- 功能描述   : 返回当前产品类型
- 输入参数   : 无
- 输出参数   : 无
- 返 回 值   :0:STICK
+ Function Name: BSP_MNTN_ProductTypeGet
+ Function Description: Return to the current product type
+ Input parameters: None
+ Output parameters: None
+ Return Value: 0:STICK
              1:MOD
              2:E5
              3:CPE
@@ -4893,27 +4915,27 @@ extern BSP_U32 BSP_MNTN_ProductTypeGet(void);
 
 
 /*************************************************
- 函 数 名   : DRV_HKADC_BAT_VOLT_GET
- 功能描述   : 返回当前电池电压值
- 输入参数   : pslData : 电池电压值
- 输出参数   : pslData : 电池电压值
- 返 回 值   :0:获取成功
-            -1:获取失败
+ Function Name: DRV_HKADC_BAT_VOLT_GET
+ Function Description: Return to the current battery voltage value
+ Input parameters: pslData: Battery voltage value
+ Output parameters: pslData: Battery voltage value
+ Return Value: 0: Acquisition successfully
+            -1: Failed to obtain
 *************************************************/
 extern BSP_S32 DRV_HKADC_BAT_VOLT_GET(BSP_S32 *ps32Data);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_HKADC_PaValueGet
+*Function Name: BSP_HKADC_PaValueGet
 *
-* 功能描述  :
+*Function description:
 *
-* 输入参数  :
-* 输出参数  : 无
+*Input parameters:
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 修改记录  : 2011-3-29 wuzechun creat
+*Modification record: 2011-3-29 wuzechun creat
 *
 *****************************************************************************/
 BSP_S32 BSP_HKADC_PaValueGet( BSP_U16 *pusValue );
@@ -4924,162 +4946,172 @@ BSP_S32 BSP_HKADC_PaValueGet( BSP_U16 *pusValue );
 
 typedef struct  tagUE_SW_BUILD_VER_INFO_STRU
 {
-    BSP_U16 ulVVerNo;        // V部分
-    BSP_U16 ulRVerNo;        // R部分
-    BSP_U16 ulCVerNo;        // C部分
-    BSP_U16 ulBVerNo;        // B部分
-    BSP_U16 ulSpcNo;         // SPC部分
-    BSP_U16 ulCustomVer;     // 客户需定制部分, 针对硬件接口低8bit PCB号,高8bitHW号
+    BSP_U16 ulVVerNo;        // Part V
+
+    BSP_U16 ulRVerNo;        // Part R
+
+    BSP_U16 ulCVerNo;        // Part C
+
+    BSP_U16 ulBVerNo;        // Part B
+
+    BSP_U16 ulSpcNo;         // Spc part
+
+    BSP_U16 ulCustomVer;     // Customers need to customize the part, for hardware interface, low 8bit PCB number, high 8bit HW number
+
     BSP_U32 ulProductNo;     // such as porting,CPE, ...
-    BSP_S8 acBuildDate[BUILD_DATE_LEN];  // build日期,
-    BSP_S8 acBuildTime[BUILD_TIME_LEN];  // build时间
-} UE_SW_BUILD_VER_INFO_STRU; // 内部版本
+
+    BSP_S8 acBuildDate[BUILD_DATE_LEN];  // Build date,
+
+    BSP_S8 acBuildTime[BUILD_TIME_LEN];  // Build time
+
+} UE_SW_BUILD_VER_INFO_STRU; // Build version
+
 
 
 typedef struct {
-    BSP_U32   bandGU;         	/*支持的GU频段*/
-    BSP_U32   bamdLTELow;         /*支持LTE频段，B1~B32*/
-    BSP_U32   bamdLTEHigh;        /*支持LTE频段，B33~B64*/
+    BSP_U32   bandGU;         	/*Supported gu frequency bands*/
+    BSP_U32   bamdLTELow;         /*Supports LTE frequency band, b1~b32*/
+    BSP_U32   bamdLTEHigh;        /*Support LTE frequency band, b33~b64*/
 }BAND_INFO_T;
 
 typedef struct {
-    BSP_U16  index;         /*硬件版本号数值(大版本号1+大版本号2)，区分不同产品*/
-    BSP_U16   hwIdSub;         /*硬件子版本号，区分产品的不同的版本*/
-    BSP_CHAR* name;           /*内部产品名*/
-    BSP_CHAR* namePlus;       /*内部产品名PLUS*/
-    BSP_CHAR* hwVer;          /*硬件版本名称*/
-    BSP_CHAR* dloadId;        /*升级中使用的名称*/
-    BSP_CHAR* productId;      /*外部产品名*/
-    BAND_INFO_T  band;            /*产品支持的频段*/
-    BAND_INFO_T  bandDiv;         /*产品支持的分集*/
-    BSP_CHAR reserve[4];      /*预留*/
+    BSP_U16  index;         /*Hardware version number value (large version number 1 + large version number 2), distinguishing between different products*/
+    BSP_U16   hwIdSub;         /*Hardware subversion number, distinguishing the different versions of the product*/
+    BSP_CHAR* name;           /*Internal product name*/
+    BSP_CHAR* namePlus;       /*Internal product name plus*/
+    BSP_CHAR* hwVer;          /*Hardware version name*/
+    BSP_CHAR* dloadId;        /*Name used in the upgrade*/
+    BSP_CHAR* productId;      /*External product name*/
+    BAND_INFO_T  band;            /*Frequency bands supported by the product*/
+    BAND_INFO_T  bandDiv;         /*Product Supported Collection*/
+    BSP_CHAR reserve[4];      /*Reservation*/
 }PRODUCT_INFO_T;
 
 /*****************************************************************************
-* 函 数 名  : BSP_HKADC_PaValueGet
+*Function Name: BSP_HKADC_PaValueGet
 *
-* 功能描述  :
+*Function description:
 *
-* 输入参数  :
-* 输出参数  : 无
+*Input parameters:
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 修改记录  : 2011-3-29 wuzechun creat
+*Modification record: 2011-3-29 wuzechun creat
 *
 *****************************************************************************/
 const UE_SW_BUILD_VER_INFO_STRU* BSP_GetBuildVersion(BSP_VOID);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_HwGetHwVersion
+*Function Name: BSP_HwGetHwVersion
 *
-* 功能描述  : 获取硬件版本名称
+*Function Description: Get the hardware version name
 *
-* 输入参数  : BSP_CHAR* pHwVersion,字符串指针，保证不小于32字节
-* 输出参数  : 无
+*Input parameters: BSP_CHAR*pHwVersion, string pointer, guaranteed to be no less than 32 bytes
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 修改记录  : 2011-3-29 wuzechun creat
+*Modification record: 2011-3-29 wuzechun creat
 *
 *****************************************************************************/
 BSP_S32 BSP_HwGetHwVersion (char* pFullHwVersion, BSP_U32 ulLength);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_GetSupportBands
+*Function Name: BSP_GetSupportBands
 *
-* 功能描述  : 获取支持的频段
+*Function Description: Get supported frequency bands
 *
-* 输入参数  : BAND_INFO_T *pBandInfo,频段信息结构体指针
-* 输出参数  :
+*Input parameters: BAND_INFO_T *pBandInfo, frequency band information structure pointer
+*Output parameters:
 *
- 返 回 值  : 0：正确，非0: 失败
+ Return Value: 0: Correct, non-0: Failed
 *
-* 其它说明  :
+*Other instructions:
 *
 *****************************************************************************/
 BSP_S32 BSP_GetSupportBands( BAND_INFO_T *pBandInfo);
 
 /*****************************************************************************
-* 函 数 名  : BSP_HwIsSupportWifi
+*Function Name: BSP_HwIsSupportWifi
 *
-* 功能描述  : 打印硬件版本信息
+*Function Description: Print hardware version information
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 BSP_BOOL BSP_HwIsSupportWifi(BSP_VOID);
 
 /*****************************************************************************
- 函 数 名  : hkadcBatADCRead
- 功能描述  : 获取电池电压采样值
- 输入参数  : 无
- 输出参数  : pTemp：        指向电池温度的指针。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: hkadcBatADCRead
+ Function Description: Obtain the battery voltage sampling value
+ Input parameters: None
+ Output parameters: pTemp: A pointer to the battery temperature.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern BSP_S32 DRV_GET_BATTERY_ADC(BSP_S32 * pslData);
 
 
 /*****************************************************************************
- 函 数 名  : BSP_PMU_LDOOFF
- 功能描述  : 本接口用于关闭某路LDO的电压输出。
- 输入参数  : ucLDO：指示某路LDO电压。取值范围为1～12。
- 输出参数  : 无。
- 返 回 值  : 无。
- 注意事项　：LDO6由硬件控制，软件不支持对LDO6的操作。如果对LDO1关闭，则系统会关机。
+ Function Name: BSP_PMU_LDOOFF
+ Function Description: This interface is used to turn off the voltage output of a certain LDO.
+ Input parameters: ucLDO: Indicates a certain LDO voltage. The value range is 1 to 12.
+ Output parameters: None.
+ Return Value: None.
+ Note: LDO6 is controlled by hardware, and the software does not support the operation of LDO6. If it is turned off for LDO1, the system will shut down.
 *****************************************************************************/
 extern void BSP_PMU_LDOOFF(BSP_U8 u8LDO);
 #define DRV_PM_LDO_OFF(u8LDO)                 BSP_PMU_LDOOFF(u8LDO)
 
 /*****************************************************************************
- 函 数 名  : BSP_PMU_LDOON
- 功能描述  : 本接口用于设置打开某路LDO的电压输出。
- 输入参数  : ucLDO：指示某路LDO电压。取值范围为2～12。
- 输出参数  : 无。
- 返 回 值  : 无。
- 注意事项　：不支持对LDO1，LDO6的操作。LDO1是在系统开机时自动打开，一旦关闭则整个系统会下电；LDO6是由硬件管脚控制。
+ Function Name: BSP_PMU_LDOON
+ Function Description: This interface is used to set the voltage output of a certain LDO.
+ Input parameters: ucLDO: Indicates a certain LDO voltage. The value range is 2 to 12.
+ Output parameters: None.
+ Return Value: None.
+ Note: Operations of LDO1 and LDO6 are not supported. LDO1 is automatically turned on when the system is powered on, and once it is turned off, the entire system will be powered off; LDO6 is controlled by hardware pins.
 *****************************************************************************/
 extern void BSP_PMU_LDOON(BSP_U8 u8LDO);
 #define DRV_PM_LDO_ON(u8LDO)                  BSP_PMU_LDOON(u8LDO)
 
 /************************************
-函 数 名  : BSP_PMU_AptEnable
-功能描述  : 使能PMU的APT功能
-输入参数  : 无
-输出参数  : 返回设置状态
-返 回 值  : BSP_OK，设置成功
-		其他值：设置失败
+Function Name: BSP_PMU_AptEnable
+Function Description: Enable the APT function of PMU
+Input parameters: None
+Output parameters: Return to setting status
+Return Value: BSP_OK, Set successfully
+		Other values: Setting failed
 **************************************/
 extern BSP_S32 BSP_PMU_AptEnable(BSP_VOID);
 #define DRV_PMU_APT_ENABLE()    BSP_PMU_AptEnable()
 
 /************************************
-函 数 名  : BSP_PMU_AptDisable
-功能描述  : 去使能PMU的APT功能
-输入参数  : 无
-输出参数  : 返回设置状态
-返 回 值  : BSP_OK，设置成功
-		其他值：设置失败
+Function Name: BSP_PMU_AptDisable
+Function description: De-enable the APT function of PMU
+Input parameters: None
+Output parameters: Return to setting status
+Return Value: BSP_OK, Set successfully
+		Other values: Setting failed
 **************************************/
 extern BSP_S32 BSP_PMU_AptDisable(BSP_VOID);
 #define DRV_PMU_APT_DISABLE()    BSP_PMU_AptDisable()
 
 /************************************
-函 数 名  : BSP_PMU_AptIsEnable
-功能描述  : 查询PMU的APT功能是否使能
-输入参数  : 无
-输出参数  : 返回设置状态
-返 回 值  : BSP_TURE，使能APT
-		    BSP_FALSE,未使能APT
+Function Name: BSP_PMU_AptIsEnable
+Function Description: Check whether the APT function of PMU is enabled
+Input parameters: None
+Output parameters: Return to setting status
+Return Value: BSP_TURE, enable APT
+		    BSP_FALSE, APT not enabled
 **************************************/
 extern BSP_BOOL  BSP_PMU_AptIsEnable(BSP_VOID);
 #define DRV_PMU_APT_ISENABLE()    BSP_PMU_AptIsEnable()
@@ -5087,80 +5119,80 @@ extern BSP_BOOL  BSP_PMU_AptIsEnable(BSP_VOID);
 extern BSP_U32 DRV_ADJUST_RF_VOLTAGE(RF_VOLTAGE_E enRfVol, BSP_U32 u32Voltage);
 
 /*****************************************************************************
- 函 数 名  : BSP_ONOFF_DrvPowerOff
- 功能描述  : 单板直接下电
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : 无
+ Function Name: BSP_ONOFF_DrvPowerOff
+ Function description: Power down directly on the board
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 extern void DRV_POWER_OFF(void);
 
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_GetGsmPATemperature
- 功能描述  : 获取GSM PA温度
- 输入参数  : Temprature
+ Function Name: BSP_MNTN_GetGsmPATemperature
+ Function Description: Obtain the GSM PA temperature
+ Input parameters: Temprature
              hkAdcTalble
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_GetGsmPATemperature(int *temperature, unsigned short *hkAdcTable);
 #define DRV_GET_PA_GTEMP(temperature, hkAdcTable)   \
                 BSP_MNTN_GetGsmPATemperature(temperature, hkAdcTable)
 
 /*****************************************************************************
- 函 数 名  : getWcdmaPATemperature
- 功能描述  : 获取WCDMA PA温度
- 输入参数  : Temprature
+ Function Name: getWcdmaPATemperature
+ Function Description: Obtain WCDMA PA temperature
+ Input parameters: Temprature
              hkAdcTalble
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_GetWcdmaPATemperature (int *temperature, unsigned short *hkAdcTable);
 #define  DRV_GET_PA_WTEMP(temperature, hkAdcTable)  \
               BSP_MNTN_GetWcdmaPATemperature(temperature, hkAdcTable)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_GetSIMTemperature
- 功能描述  : 获取SIM卡温度
- 输入参数  : pusHkAdcTable：电磁电压表
- 输出参数  : pTemp：        指向SIM卡温度的指针。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_GetSIMTemperature
+ Function Description: Get the SIM card temperature
+ Input parameters: pusHkAdcTable: electromagnetic voltage meter
+ Output parameters: pTemp: A pointer to the temperature of the SIM card.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_GetSIMTemperature(int *plTemp, unsigned short *pusHkAdcTable);
 #define DRV_GET_SIM_TEMP(plTemp, pusHkAdcTable)   \
                BSP_MNTN_GetSIMTemperature(plTemp, pusHkAdcTable)
 
 /*****************************************************************************
- 函 数 名  : void BSP_PWRCTRL_DfsCpuUp(void)
- 功能描述  : Set CPU freq to 450M
- 输入参数  : 
- 输出参数  : 
- 返 回 值  : 
+ Function Name: void BSP_PWRCTRL_DfsCpuUp(void)
+ Function description: Set CPU freq to 450M
+ Input parameters: 
+ Output parameters: 
+ Return Value: 
 *****************************************************************************/
 extern void BSP_PWRCTRL_DfsCpuUp(void);
 #define BSP_PWRCTRL_DFS_CPUUP() BSP_PWRCTRL_DfsCpuUp()
 
 /*****************************************************************************
- 函 数 名  : void BSP_PWRCTRL_DfsThrProOpen(void)/
+ Function Name: void BSP_PWRCTRL_DfsThrProOpen(void)/
  			 void BSP_PWRCTRL_DfsThrProClose(void)
- 功能描述  : open CPU freq to THREE PROFILES MODE
- 输入参数  : 
- 输出参数  : 
- 返 回 值  : 
+ Function description: open CPU freq to THREE PROFILES MODE
+ Input parameters: 
+ Output parameters: 
+ Return Value: 
 *****************************************************************************/
 
 extern void BSP_PWRCTRL_DfsThrProOpen(void);
 #define BSP_PWRCTRL_DFS_THRPRO_OPEN() BSP_PWRCTRL_DfsThrProOpen()
 /*****************************************************************************
- 函 数 名  : void BSP_PWRCTRL_DfsThrProClose(void)
- 功能描述  : CLOSE CPU freq to THREE PROFILES MODE
- 输入参数  : 
- 输出参数  : 
- 返 回 值  : 
+ Function Name: void BSP_PWRCTRL_DfsThrProClose(void)
+ Function description: CLOSE CPU freq to THREE PROFILES MODE
+ Input parameters: 
+ Output parameters: 
+ Return Value: 
 *****************************************************************************/
 extern void BSP_PWRCTRL_DfsThrProClose(void);
 #define BSP_PWRCTRL_DFS_THRPRO_CLOSE() BSP_PWRCTRL_DfsThrProClose()
@@ -5178,107 +5210,107 @@ extern int BSP_PWRCTRL_GetCpuFreq();
 
 
 /*****************************************************************************
- 函 数 名  : BSP_DFS_GetCurCpuLoad
- 功能描述  : 查询当前CPU
- 输入参数  : pu32AcpuLoad ACPUload指针
-             pu32CcpuLoad CCPUload指针
- 输出参数  : pu32AcpuLoad ACPUload指针
-             pu32CcpuLoad CCPUload指针
- 返 回 值  : 0:  操作成功；
-            -1：操作失败。
+ Function Name: BSP_DFS_GetCurCpuLoad
+ Function Description: Query the current CPU
+ Input parameters: pu32AcpuLoad ACPUload pointer
+             pu32CcpuLoad CCPUload pointer
+ Output parameters: pu32AcpuLoad ACPUload pointer
+             pu32CcpuLoad CCPUload pointer
+ Return Value: 0: The operation was successful;
+            -1: The operation failed.
 *****************************************************************************/
 extern BSP_U32 BSP_DFS_GetCurCpuLoad(BSP_U32 *pu32AcpuLoad,BSP_U32 *pu32CcpuLoad);
 #define DRV_GET_CUR_CPU_LOAD(pu32AcpuLoad,pu32CcpuLoad) BSP_DFS_GetCurCpuLoad(pu32AcpuLoad,pu32CcpuLoad)
 
 
 /*****************************************************************************
- 函 数 名  : BSP_GU_GetVerTime
- 功能描述  : 获取版本编译时间
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : 无
+ Function Name: BSP_GU_GetVerTime
+ Function Description: Get the version compilation time
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 extern char *BSP_GU_GetVerTime(void);
 #define DRV_GET_VERSION_TIME()    BSP_GU_GetVerTime()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_MemVersionCtrl
- 功能描述  : 组件版本读写接口。
- 输入参数  : pcData：当Mode为读的时候，为调用者待保存返回的组件版本信息的内存地址；
-                     当Mode为写的时候，为调用者准备写入的组件版本信息的地址。
-             ucLength：当Mode为读的时候，为调用者待保存返回的组件版本信息的内存大小；
-                       当Mode为写的时候，为调用者准备写入的组件版本信息的字符数（不包括'\0'）。
-             ucType：版本信息ID，
-                     0： BOOTLOAD；
-                     1： BOOTROM；
-                     2： NV；
-                     3： VXWORKS；
-                     4： DSP；
-                     5； CDROMISO；
-                     6： PHY；
-                     7： PS；
-                     8： COM；
-                     9： RF；
-                     10：SOC；
-                     11：HARDWARE；
-                     12：SOFTWARE；
-                     13：MEDIA；
-                     14：APP；
-                     15：INFO_NUM。
-             ucMode：0：读取指定ID的组件版本信息；1：写入指定ID的组件版本信息。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_MemVersionCtrl
+ Function description: Component version read and write interface.
+ Input parameters: pcData: When Mode is read, it is the memory address of the component version information returned by the caller to save;
+                     When Mode is written, prepare the address of the written component version information for the caller.
+             ucLength: When Mode is read, it is the memory size of the component version information returned by the caller to save;
+                       When Mode is written, the number of characters (excluding '\0') of the written component version information is prepared for the caller.
+             ucType: Version information ID,
+                     0: BOOTLOAD;
+                     1: BOOTROM;
+                     2: NV;
+                     3: VXWORKS;
+                     4: DSP;
+                     5; CDROMISO;
+                     6: PHY;
+                     7: PS;
+                     8: COM;
+                     9: RF;
+                     10: SOC;
+                     11: HARDWARE;
+                     12: SOFTWARE;
+                     13: MEDIA;
+                     14: APP;
+                     15: INFO_NUM.
+             ucMode: 0: Read component version information of the specified ID; 1: Write component version information of the specified ID.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_MemVersionCtrl(signed char *pcData, unsigned char ucLength, unsigned char ucType, unsigned char ucMode);
 #define DRV_MEM_VERCTRL(pcData,ucLength,ucType,ucMode)  \
                           BSP_MNTN_MemVersionCtrl(pcData,ucLength,ucType,ucMode)
 
 /********************************************************************************************************
- 函 数 名  : getHwVersionIndex
- 功能描述  : 获取由HKADC读取的硬件ID经过拼装后的硬件索引值
- 输入参数  : 无
- 输出参数  : 硬件ID的索引值
+ Function Name: getHwVersionIndex
+ Function description: Get the assembled hardware index value of the hardware ID read by HKADC
+ Input parameters: None
+ Output parameters: Index value of hardware ID
 
- 返 回 值  : 非-1:  操作成功；
-             -1：操作失败。
+ Return value: Non-1: The operation was successful;
+             -1: The operation failed.
 ********************************************************************************************************/
 extern int getHwVersionIndex(void);
 #define DRV_GET_HW_VERSION_INDEX()       getHwVersionIndex()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_GetFullHwVersion
- 功能描述  : 硬件完整版本读接口。
- 输入参数  : pFullHwVersion：为调用者待保存返回的硬件完整版本信息的内存首地址；
-             ulLength      ：为调用者待保存返回的硬件完整版本信息的内存大小；
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_GetFullHwVersion
+ Function description: Hardware full version reading interface.
+ Input parameters: pFullHwVersion: The memory address of the caller's memory full version information to be saved;
+             ulLength: The memory size of the complete hardware version information to be saved by the caller;
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_GetFullHwVersion(char * pFullHwVersion,unsigned int ulLength);
 #define  DRV_GET_FULL_HW_VER(pFullHwVersion,ulLength)  \
                BSP_MNTN_GetFullHwVersion(pFullHwVersion,ulLength)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_GetProductIdInter
- 功能描述  : 产品名称完整版本读接口。
- 输入参数  : pProductIdInter：为调用者待保存返回的产品名称完整版本的内存首地址；
-             ulLength       ：为调用者待保存返回的产品名称完整版本的内存大小；
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_GetProductIdInter
+ Function description: Product name full version reading interface.
+ Input parameters: pProductIdInter: The memory address of the full version of the product name to be saved by the caller;
+             ulLength: The memory size of the full version of the product name to be saved by the caller;
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_GetProductIdInter(char * pProductIdInter, unsigned int ulLength);
 #define  DRV_GET_PRODUCTID_INTER_VER(pProductIdInter,ulLength)  \
               BSP_MNTN_GetProductIdInter(pProductIdInter,ulLength)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_VersionQueryApi
- 功能描述  : 查询所有组件的版本号。
- 输入参数  : ppVersionInfo：待保存的版本信息地址。
- 输出参数  : ucLength：待返回的数据的字节数。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_VersionQueryApi
+ Function Description: Query the version number of all components.
+ Input parameters: ppVersionInfo: The version information address to be saved.
+ Output parameters: ucLength: The number of bytes of data to be returned.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_VersionQueryApi(void ** ppVersionInfo, unsigned int * ulLength);
 #define  DRV_VER_QUERY(ppVersionInfo,ulLength)  \
@@ -5288,23 +5320,23 @@ extern int BSP_MNTN_VersionQueryApi(void ** ppVersionInfo, unsigned int * ulLeng
 
 typedef enum DRV_SHUTDOWN_REASON_tag_s
 {
-    DRV_SHUTDOWN_LOW_BATTERY,           /* 电池电量低                 */
-    DRV_SHUTDOWN_BATTERY_ERROR,         /* 电池异常                   */
-    DRV_SHUTDOWN_POWER_KEY,             /* 长按 Power 键关机          */
-    DRV_SHUTDOWN_TEMPERATURE_PROTECT,   /* 过温保护关机               */
+    DRV_SHUTDOWN_LOW_BATTERY,           /* Low battery power                 */
+    DRV_SHUTDOWN_BATTERY_ERROR,         /* Battery abnormality                   */
+    DRV_SHUTDOWN_POWER_KEY,             /* Press and hold the Power key to turn off the machine          */
+    DRV_SHUTDOWN_TEMPERATURE_PROTECT,   /* Overtemperature protection shutdown               */
     DRV_SHUTDOWN_LOW_TEMP_PROTECT,
-    DRV_SHUTDOWN_RESET,                 /* 系统软复位                 */
-    DRV_SHUTDOWN_CHARGE_REMOVE,         /* 关机充电模式下，拔除充电器 */
-    DRV_SHUTDOWN_UPDATE,                /* 关机并进入升级模式         */
+    DRV_SHUTDOWN_RESET,                 /* System soft reset                 */
+    DRV_SHUTDOWN_CHARGE_REMOVE,         /* Unplug the charger in the power-off charging mode */
+    DRV_SHUTDOWN_UPDATE,                /* Shut down and enter upgrade mode         */
     DRV_SHUTDOWN_BUTT
 }DRV_SHUTDOWN_REASON_ENUM;
 
 /*****************************************************************************
- 函 数 名  : DRV_SHUT_DOWN
- 功能描述  : 单板关机
- 输入参数  : 无
- 输出参数  : eReason：        关机原因
- 返 回 值  : 无
+ Function Name: DRV_SHUT_DOWN
+ Function description: Board shutdown
+ Input parameters: None
+ Output parameters: eReason: shutdown reason
+ Return Value: None
 *****************************************************************************/
 void drvShutdown( DRV_SHUTDOWN_REASON_ENUM eReason );
 void DRV_SHUT_DOWN( DRV_SHUTDOWN_REASON_ENUM eReason );
@@ -5317,441 +5349,441 @@ typedef enum tagMNTN_FILE_TYPE_E
 }MNTN_FILE_TYPE_E;
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_ABBSelfCheck
- 功能描述  : 返回abb自检结果
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_ABBSelfCheck
+ Function description: Return the abb self-test result
+ Input parameters: None
+ Output parameters: None
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_ABBSelfCheck(void);
 #define DRV_ABB_SELFCHECK()    BSP_MNTN_ABBSelfCheck()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_PmuSelfCheck
- 功能描述  : PMU自检。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_PmuSelfCheck
+ Function description: PMU self-test.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_PmuSelfCheck(void);
 #define DRV_PMU_SELFCHECK()    BSP_MNTN_PmuSelfCheck()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_I2cSelfCheck
- 功能描述  : 返回I2c自检结果
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
- 注意事项　：该接口仅在PS的PC工程中使用，目前没有应用，暂保留。
+ Function Name: BSP_MNTN_I2cSelfCheck
+ Function description: Return I2c self-test result
+ Input parameters: None
+ Output parameters: None
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
+ Note: This interface is only used in PS PC projects and is not currently used and is reserved for the time being.
 *****************************************************************************/
 extern int BSP_MNTN_I2cSelfCheck(void);
 #define DRV_I2C_SELFCHECK()    BSP_MNTN_I2cSelfCheck()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_SpiSelfCheck
- 功能描述  : 返回spi自检结果
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
- 注意事项　：该接口仅在PS的PC工程中使用，目前没有应用，暂保留。
+ Function Name: BSP_MNTN_SpiSelfCheck
+ Function description: Return spi self-test results
+ Input parameters: None
+ Output parameters: None
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
+ Note: This interface is only used in PS PC projects and is not currently used and is reserved for the time being.
 *****************************************************************************/
 extern int BSP_MNTN_SpiSelfCheck(void);
 #define DRV_SPI_SELFCHECK()    BSP_MNTN_SpiSelfCheck()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_GetCodecFuncStatus
- 功能描述  : 获取CODEC功能状态
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : 1:  CODEC存在
-             0：CODEC 不存在
+ Function Name: BSP_MNTN_GetCodecFuncStatus
+ Function Description: Get CODEC function status
+ Input parameters: None
+ Output parameters: None
+ Return Value: 1: CODEC exists
+             0: CODEC does not exist
 *****************************************************************************/
 extern  int BSP_MNTN_GetCodecFuncStatus(void);
 #define DRV_GET_CODEC_FUNC_STATUS()    BSP_MNTN_GetCodecFuncStatus()
 
 /*****************************************************************************
- 函 数 名  : MNTN_RFGLockStateGet
- 功能描述  : 读取GSM RF锁定状态。
- 输入参数  : 无。
- 输出参数  : Status：存放锁定状态的输出值，
-                        0：TX或者RX被锁定。
-                        1：TX、RX都没有被锁定；
+ Function Name: MNTN_RFGLockStateGet
+ Function Description: Read the GSM RF locked state.
+ Input parameters: None.
+ Output parameters: Status: Stores the output value of the locked state.
+                        0: TX or RX is locked.
+                        1: TX and RX are not locked;
 
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_RFGLockStateGet(unsigned int *Status);
 #define DRV_GET_RF_GLOCKSTATE(Status)    BSP_MNTN_RFGLockStateGet(Status)
 
 /****************************************************************************
- 函 数 名  : BSP_MNTN_LedStateFuncReg
- 功能描述  : 本接口为提供给协议栈的钩子函数，用于获取协议栈的点灯状态。
- 输入参数  : 协议栈获取点灯状态函数的指针。
- 输出参数  : 无。
- 返 回 值  : 无。
- 注意事项  : 无。
+ Function Name: BSP_MNTN_LedStateFuncReg
+ Function Description: This interface is a hook function provided to the protocol stack, which is used to obtain the lighting status of the protocol stack.
+ Input parameters: The protocol stack obtains the pointer to the lighting state function.
+ Output parameters: None.
+ Return Value: None.
+ Notes: None.
 
 ******************************************************************************/
 extern void BSP_MNTN_LedStateFuncReg (pFUNCPTR p);
 #define DRV_LED_STATE_FUNREG(p)    BSP_MNTN_LedStateFuncReg(p)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_LedFlush
- 功能描述  : 三色灯设置。
- 输入参数  : status：三色灯的状态，见LED_STATUS_I
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_LedFlush
+ Function description: Tri-color light settings.
+ Input parameters: status: status of the three-color light, see LED_STATUS_I
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_LedFlush(unsigned long state);
 #define DRV_LED_FLUSH(state)    BSP_MNTN_LedFlush(state)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_LedControlAddressGet
- 功能描述  : 得到定制的点灯数据
- 输入参数  : 无
- 输出参数  : 无。
- 返 回 值  : 点灯控制数据的全局变量地址
+ Function Name: BSP_MNTN_LedControlAddressGet
+ Function description: Get customized lighting data
+ Input parameters: None
+ Output parameters: None.
+ Return Value: The global variable address of the lighting control data
 *****************************************************************************/
 extern unsigned int BSP_MNTN_LedControlAddressGet(void);
 #define DRV_LED_GET_ADDRESS()   BSP_MNTN_LedControlAddressGet()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_BootForceloadModeCheck
- 功能描述  : 强制加载模式查询。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 0：强制加载；
-             1：非强制加载。
+ Function Name: BSP_MNTN_BootForceloadModeCheck
+ Function Description: Force load mode query.
+ Input parameters: None.
+ Output parameters: None.
+ Return value: 0: Forced loading;
+             1: Non-force loading.
 *****************************************************************************/
 extern unsigned int BSP_MNTN_BootForceloadModeCheck(void);
 #define DRV_BOOT_FORCELOAD_MODE_CHECK()    BSP_MNTN_BootForceloadModeCheck()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_BootFlagConfig
- 功能描述  : 配置Bootline数据中的启动标志为快速自启动、倒计时7秒自启动或手动启动。
- 输入参数  : ulBootFlag：暂未定义。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_BootFlagConfig
+ Function Description: Configure the startup flags in the Bootline data to be fast self-start, countdown to 7 seconds self-start or manual start.
+ Input parameters: ulBootFlag: Not defined yet.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern  int BSP_MNTN_BootFlagConfig(unsigned int ulBootFlag);
 #define DRV_BOOTFLAG_CFG(ulBootFlag)    BSP_MNTN_BootFlagConfig(ulBootFlag)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_CheckArmTCM
- 功能描述  : TCM检测
- 输入参数  : 无。
- 输出参数  : 无。
- 返回值：   0xffff0000：检测成功，TCM正常
-            地址：检测出错的地址（0－0x5fff）
-            0xffffffff:检测失败
+ Function Name: BSP_MNTN_CheckArmTCM
+ Function description: TCM detection
+ Input parameters: None.
+ Output parameters: None.
+ Return value: 0xffff0000: The detection is successful, TCM is normal
+            Address: The address where the error was detected (0-0x5ffff)
+            0xffffffff: Detection failed
 
 *****************************************************************************/
 extern unsigned int BSP_MNTN_CheckArmTCM(void);
 #define DRV_CHECK_ARM_TCM()    BSP_MNTN_CheckArmTCM()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_ExchOMSaveRegister
- 功能描述  : 注册给底软的trace保存函数，用来在单板复位时，
-             保存当前的信令和日志信息。
- 输入参数  : funcType: 功能ID
-             pFunc:注册的回调函数
- 输出参数  : None
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
- 注意事项　：相同的funcType只能注册一个回调函数，重复注册会覆盖原来函数
+ Function Name: BSP_MNTN_ExchOMSaveRegister
+ Function description: Registered to the bottom soft trace save function, used to reset the board,
+             Save the current signaling and log information.
+ Input parameters: funcType: Function ID
+             pFunc:Registered callback function
+ Output parameters: None
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
+ Note: The same funcType can only register one callback function, and repeated registration will override the original function
 *****************************************************************************/
 extern int BSP_MNTN_ExchOMSaveRegister(int funcType, OM_SAVE_FUNC *pFunc);
 #define DRV_SAVE_REGISTER(funcType, pFunc)    BSP_MNTN_ExchOMSaveRegister(funcType, pFunc)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_ExchOMRegisterTdsPhy
- 功能描述  : TDS注册给底软的内存地址，用于死机时记录TDS物理层信息到死机BIN文件。初始化时调用
- 输入参数  : ulLength: 内存长度
-            tphyaddr: 起始地址
- 输出参数  : None
- 返 回 值  : 
- 注意事项　：
+ Function Name: BSP_MNTN_ExchOMRegisterTdsPhy
+ Function description: TDS is registered to the bottom soft memory address, which is used to record TDS physical layer information to the crash BIN file when the crash is frozen. Called during initialization
+ Input parameters: ulLength: Memory length
+            tphyaddr: Starting address
+ Output parameters: None
+ Return Value: 
+ Notes:
 *****************************************************************************/
 extern void BSP_MNTN_ExchOMRegisterTdsPhy(BSP_U32 ulLength,char * tphyaddr);
 
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_SystemError
- 功能描述  : 系统热启动。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_MNTN_SystemError
+ Function Description: The system is hot-started.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_MNTN_SystemError(int modId, int arg1, int arg2, char * arg3, int arg3Length);
 #define DRV_SYSTEM_ERROR(modId, arg1, arg2, arg3, arg3Length)\
                    BSP_MNTN_SystemError(modId, arg1, arg2, arg3, arg3Length)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_ExchMemMalloc
- 功能描述  : 与systemOsaError接口一起用来记录大块的复位信息。
-             目前最多支持128k.
- 输入参数  : ulSize - 内存大小
- 输出参数  : 无。
- 返 回 值  : 内存地址
+ Function Name: BSP_MNTN_ExchMemMalloc
+ Function Description: Together with the systemOsaError interface, it is used to record large blocks of reset information.
+             Currently, it supports up to 128k.
+ Input parameters: ulSize -Memory size
+ Output parameters: None.
+ Return Value: Memory Address
 *****************************************************************************/
 extern unsigned int BSP_MNTN_ExchMemMalloc(unsigned int ulSize);
 #define DRV_EXCH_MEM_MALLOC(ulSize)    BSP_MNTN_ExchMemMalloc(ulSize)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_OmExchFileSave
- 功能描述  : 用来记录ARM和DSP交互的异常文件
- 输入参数  :    address：buffer地址
-                length：存储长度
-                IsFileEnd：1表示文件的最后一块，0表示非最后一块
- 输出参数  : 无。
- 返 回 值  : 0 为OK。
+ Function Name: BSP_MNTN_OmExchFileSave
+ Function description: Used to record the exception file interaction between ARM and DSP
+ Input parameters: address: buffer address
+                length: storage length
+                IsFileEnd: 1 means the last piece of the file, 0 means the non-last piece
+ Output parameters: None.
+ Return Value: 0 is OK.
 *****************************************************************************/
 extern int BSP_MNTN_OmExchFileSave(void * address, unsigned long length,unsigned char IsFileEnd,unsigned char type);
 #define DRV_EXCH_FILE_SAVE(address, length, IsFileEnd, type) BSP_MNTN_OmExchFileSave(address, length, IsFileEnd, type)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_GetHwGpioInfo
- 功能描述  : Get flash infomation
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_MNTN_GetHwGpioInfo
+ Function description: Get flash information
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern int BSP_MNTN_GetHwGpioInfo(unsigned char *pGpioInfo, unsigned long usLength );
 #define DRV_GET_GPIO_INFO(pGpioInfo, usLength)    BSP_MNTN_GetHwGpioInfo(pGpioInfo, usLength )
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_Int4ToString
- 功能描述  : 将寄存器的值转换为ASCII字符
- 输入参数  : 寄存器的值，和转换字符的存储空间,最大空间不超过30byte
- 输出参数  : 转换字符
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_Int4ToString
+ Function Description: Convert the register value to ASCII characters
+ Input parameters: register value, and the storage space for converted characters, the maximum space shall not exceed 30byte
+ Output parameters: Convert characters
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_Int4ToString(unsigned int value, char * string);
 #define DRV_MEM_VERCONVERT(value,string)    BSP_MNTN_Int4ToString(value, string)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_HeapInfoGet
- 功能描述  : 获取单板侧的内存信息。
- 输入参数  : allocSize: 已经分配的堆内存大小，单位byte。
-             totalSize: 堆内存总尺寸，单位byte。
- 输出参数  : None
- 返 回 值  : 0: 操作成功；
-             -1：  操作失败。
+ Function Name: BSP_MNTN_HeapInfoGet
+ Function Description: Get memory information on the single board side.
+ Enter parameters: allocSize: The allocated heap memory size, unit byte.
+             totalSize: The total size of heap memory, unit byte.
+ Output parameters: None
+ Return Value: 0: The operation was successful;
+             -1: Operation failed.
 *****************************************************************************/
 extern int BSP_MNTN_HeapInfoGet(unsigned int *allocSize, unsigned int *totalSize);
 #define DRV_GET_HEAPINFO(allocSize, totalSize)    BSP_MNTN_HeapInfoGet(allocSize, totalSize)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_GetSupportBands
- 功能描述  : 从底软获得当前支持的Bands.
- 输入参数  : pusWBands - WCDMA的频段值
-             pusGBands - GSM的频段值
+ Function Name: BSP_MNTN_GetSupportBands
+ Function Description: Get current support from Soft.
+ Input parameters: pusWBands -WCDMA frequency band value
+             pusGBands -GSM's band value
 
- 输出参数  : pusWBands - WCDMA的频段值
-             pusGBands - GSM的频段值
+ Output parameters: pusWBands -WCDMA frequency band value
+             pusGBands -GSM's band value
 
- 返 回 值  : 0：正确，非0: 失败
-             通过Bit位来表示哪些频段支持。
+ Return Value: 0: Correct, non-0: Failed
+             Which frequency bands are supported by Bit bits.
 *****************************************************************************/
 extern int BSP_MNTN_GetSupportBands(unsigned short *pusWBands, unsigned short *pusGBands);
 #define DRV_GET_SUPPORT_BANDS(pusWBands, pusGBands)    BSP_MNTN_GetSupportBands(pusWBands, pusGBands)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_GetSupportDivBands
- 功能描述  : 从底软获得当前支持的分级频段
- 输入参数  : N/A
+ Function Name: BSP_MNTN_GetSupportDivBands
+ Function description: Obtain the currently supported hierarchical frequency band from the bottom soft
+ Input parameters: N/A
 
- 输出参数  : pDivBands - 返回当前单板所支持的分级频段，频段按bit
- 			      流方式排列(同W 和G的频段查询)
+ Output parameters: pDivBands -Return to the hierarchical frequency band supported by the current board, and the frequency band is bit
+ 			      Streaming arrangement (same as frequency band query of W and G)
 
- 返 回 值  : 0：正确，非0: 失败
+ Return Value: 0: Correct, non-0: Failed
 *****************************************************************************/
 extern int BSP_MNTN_GetSupportDivBands(unsigned short* pDivBands);
 #define DRV_GET_SUPPORT_DIVBANDS(pDivBands)    BSP_MNTN_GetSupportDivBands(pDivBands)
 
 /********************************************************************************************************
- 函 数 名  : BSP_MNTN_WriteSysBackupFile
- 功能描述  : 向FLASH备份ZSP、NV数据
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_MNTN_WriteSysBackupFile
+ Function description: Backup ZSP and NV data to FLASH
+ Input parameters: None
+ Output parameters: None
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 ********************************************************************************************************/
 extern int BSP_MNTN_WriteSysBackupFile(void);
 #define DRV_BACKUP_SYS_FILE()    BSP_MNTN_WriteSysBackupFile()
 
 /*****************************************************************************
- 函 数 名  : DRV_MNTN_GetExtAntenLockState
- 功能描述  : 获取有线与无线的连接状态
- 输入参数  : None
- 输出参数  : 0 - 无线连接
-             1 - 有线连接
- 返 回 值  : 0 - 成功
-             其它为失败
+ Function Name: DRV_MNTN_GetExtAntenLockState
+ Function Description: Get the connection status between wired and wireless
+ Input parameters: None
+ Output parameters: 0 -Wireless connection
+             1 -Wired connection
+ Return Value: 0 -Success
+             Others are failures
 
 *****************************************************************************/
 extern int DRV_MNTN_GetExtAntenLockState(unsigned int *Status);
 #define DRV_GET_ANTEN_LOCKSTATE(Status)    DRV_MNTN_GetExtAntenLockState(Status)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_ExtAntenIntInstall
- 功能描述  : 中断注册函数，用来获得当前的天线状态
- 输入参数  : routine   - 中断处理函数
-             para      - 保留字段
- 输出参数  : None
- 返 回 值  : void
+ Function Name: BSP_MNTN_ExtAntenIntInstall
+ Function description: interrupt registration function to obtain the current antenna state
+ Input parameters: routine -interrupt handling function
+             para -reserved fields
+ Output parameters: None
+ Return Value: void
 
 *****************************************************************************/
 extern void BSP_MNTN_ExtAntenIntInstall(void* routine, int para);
 #define DRV_ANTEN_INT_INSTALL(routine, para)    BSP_MNTN_ExtAntenIntInstall(routine, para)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_ExchHookFuncAdd
- 功能描述  : 任务切换及中断钩子注册
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : 无
+ Function Name: BSP_MNTN_ExchHookFuncAdd
+ Function description: Task switching and interrupt hook registration
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 extern void BSP_MNTN_ExchHookFuncAdd(void);
 #define DRV_EXCH_HOOK_FUNC_ADD()    BSP_MNTN_ExchHookFuncAdd()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_ExchHookFuncDelete
- 功能描述  : 任务切换及中断钩子注销
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : 无
+ Function Name: BSP_MNTN_ExchHookFuncDelete
+ Function description: Task switching and interrupt hook logout
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 extern void BSP_MNTN_ExchHookFuncDelete(BSP_CHAR* file, BSP_U32 line);
 #define DRV_EXCH_HOOK_FUNC_DELETE()    BSP_MNTN_ExchHookFuncDelete(__FILE__, __LINE__)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_ExcStackPeakRecord
- 功能描述  : 记录任务栈超标的任务信息.
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_MNTN_ExcStackPeakRecord
+ Function description: Record task information that exceeds the task stack.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_MNTN_ExcStackPeakRecord(void);
 #define DRV_STACK_HIGH_RECORD()    BSP_MNTN_ExcStackPeakRecord()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_SubIntHook
- 功能描述  : 二级中断服务钩子函数注册。可维可测相关
- 输入参数  : p_Func：钩子函数指针。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_MNTN_SubIntHook
+ Function description: Secondary interrupt service hook function registration. Related
+ Input parameters: p_Func: hook function pointer.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_MNTN_SubIntHook(pFUNCPTR p_Func);
 #define DRV_VICINT_HOOK_ADD(p_Func)    BSP_MNTN_SubIntHook(p_Func)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_SubIntHookDel
- 功能描述  : 二级中断服务钩子函数注销。可维可测相关
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_MNTN_SubIntHookDel
+ Function Description: Secondary interrupt service hook function logout. Related
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_MNTN_SubIntHookDel(void);
 #define DRV_VICINT_HOOK_DEL()    BSP_MNTN_SubIntHookDel()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_IntBreakInHook
- 功能描述  : 一级中断入口钩子函数注册。可维可测相关
- 输入参数  : p_Func :钩子函数。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_MNTN_IntBreakInHook
+ Function description: First-level interrupt entry hook function registration. Related
+ Input parameters: p_Func:hook function.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_MNTN_IntBreakInHook(pFUNCPTR p_Func);
 #define DRV_VICINT_IN_HOOK_ADD(p_Func)   BSP_MNTN_IntBreakInHook(p_Func)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_IntBreakInHookDel
- 功能描述  : 一级中断入口钩子函数注销。可维可测相关
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_MNTN_IntBreakInHookDel
+ Function description: First-level interrupt entry hook function logout. Related
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_MNTN_IntBreakInHookDel(void);
 #define DRV_VICINT_IN_HOOK_DEL()    BSP_MNTN_IntBreakInHookDel()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_IntBreakOutHook
- 功能描述  : 一级中断出口钩子函数注册。可维可测相关，V7先打桩
- 输入参数  : p_Func: 钩子函数。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_MNTN_IntBreakOutHook
+ Function description: First-level interrupt exit hook function registration. Related to maintaining and measuring, V7 drives piles first
+ Input parameters: p_Func: hook function.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_MNTN_IntBreakOutHook(pFUNCPTR p_Func);
 #define DRV_VICINT_OUT_HOOK_ADD(p_Func)    BSP_MNTN_IntBreakOutHook(p_Func)
 
 /*****************************************************************************
- 函 数 名  : vicIntBreakOutHookDel
- 功能描述  : 一级中断出口钩子函数注销。可维可测相关
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: vicIntBreakOutHookDel
+ Function Description: First-level interrupt exit hook function logout. Related
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_MNTN_IntBreakOutHookDel(void);
 #define DRV_VICINT_OUT_HOOK_DEL()    BSP_MNTN_IntBreakOutHookDel()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_IntLvlChgHook
- 功能描述  : 一级中断level change钩子函数注册。可维可测相关
- 输入参数  : p_Func: 钩子函数。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_MNTN_IntLvlChgHook
+ Function description: Level 1 interrupt level change hook function registration. Related
+ Input parameters: p_Func: hook function.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_MNTN_IntLvlChgHook(pFUNCPTR p_Func);
 #define DRV_VICINT_LVLCHG_HOOK_ADD(p_Func)    BSP_MNTN_IntLvlChgHook(p_Func)
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_IntLvlChgHookDel
- 功能描述  : 一级中断level change钩子函数注销。可维可测相关
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_MNTN_IntLvlChgHookDel
+ Function description: Level 1 interrupt level change hook function logout. Related
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_MNTN_IntLvlChgHookDel(void);
 #define DRV_VICINT_LVLCHG_HOOK_DEL()    BSP_MNTN_IntLvlChgHookDel()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_TFUPIfNeedNvBackup
- 功能描述  : 使用TF卡升级前通过该接口判断是否需要备份NV项.
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : 1:需要备份
-             0:无需备份
+ Function Name: BSP_MNTN_TFUPIfNvBackup
+ Function description: Before upgrading using the TF card, use this interface to determine whether you need to back up NV items.
+ Input parameters: None
+ Output parameters: None
+ Return Value: 1: Backup is required
+             0: No backup required
 *****************************************************************************/
 extern int BSP_MNTN_TFUPIfNeedNvBackup(void);
 #define DRV_TF_NVBACKUP_FLAG()    BSP_MNTN_TFUPIfNeedNvBackup()
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_GetSDDevName
- 功能描述  : 获取设备列表中的SD设备名
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : SD_DEV_TYPE_STR结构指针。
+ Function Name: BSP_MNTN_GetSDDevName
+ Function Description: Get the SD device name in the device list
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: SD_DEV_TYPE_STR structure pointer.
 *****************************************************************************/
 extern SD_DEV_TYPE_STR * BSP_MNTN_GetSDDevName(void);
 #define DRV_GET_SD_PATH()     BSP_MNTN_GetSDDevName()
 
 /*****************************************************************************
- 函 数 名  : BSP_PROD_GetRecoverNvInfo
- 功能描述  : 从底软获得当前需要覆盖的NV信息
- 输入参数  : N/A
+ Function Name: BSP_PROD_GetRecoverNvInfo
+ Function description: Obtain the NV information currently required to be covered from the bottom soft
+ Input parameters: N/A
 
- 输出参数  : ppNvInfo  - 指向NV信息结构体的数组
-             pulNvNum  - 数组个数
+ Output parameters: ppNvInfo -an array pointing to NV information structure
+             pulNvNum -Number of arrays
 
- 返 回 值  : 0：正确，非0: 失败
+ Return Value: 0: Correct, non-0: Failed
 *****************************************************************************/
 extern  int BSP_PROD_GetRecoverNvInfo(void **ppNvInfo, unsigned long *pulNvNum);
 #define  DRV_GET_RECOVER_NV_INFO(ppNvInfo, pulNvNum)  \
@@ -5759,12 +5791,12 @@ extern  int BSP_PROD_GetRecoverNvInfo(void **ppNvInfo, unsigned long *pulNvNum);
 
 
 /*****************************************************************************
- 函 数 名  : BSP_MNTN_GETSDSTATUS
- 功能描述  : 返回SD卡在位状态
- 输入参数  : 无。
- 输出参数  : 无。
- 返回值：   1在位
-            0不在位
+ Function Name: BSP_MNTN_GETSDSTATUS
+ Function Description: Return to the SD card in-location status
+ Input parameters: None.
+ Output parameters: None.
+ Return value: 1 in bit
+            0 is not in position
 
 *****************************************************************************/
 #if defined(BSP_CORE_MODEM) || defined(PRODUCT_CFG_CORE_TYPE_MODEM)
@@ -5776,16 +5808,16 @@ extern int BSP_SDMMC_GetSDStatus(void);
 #endif
 
 /*****************************************************************************
- 函 数 名  : SDIO_read_write_blkdata
- 功能描述  : SD卡读写接口
- 输入参数  :    nCardNo     SD卡号
-                dwBlkNo     块数
-                nBlkCount   读写大小
-                pbDataBuff  读写缓冲区
-                nFlags      读/写
- 输出参数  : 无。
- 返回值：   0:  读写成功
-            非0:错误码
+ Function Name: SDIO_read_write_blkdata
+ Function description: SD card read and write interface
+ Input parameters: nCardNo SD card number
+                dwBlkNo Block Number
+                nBlkCount read and write size
+                pbDataBuff read and write buffer
+                nFlags Read/write
+ Output parameters: None.
+ Return value: 0: Read and write successfully
+            Non-0: Error code
 *****************************************************************************/
 extern int BSP_MNTN_SDRWBlkData(int nCardNo,unsigned int dwBlkNo,
                    unsigned int nBlkCount, unsigned char *pbDataBuff,int nFlags);
@@ -5793,15 +5825,15 @@ extern int BSP_MNTN_SDRWBlkData(int nCardNo,unsigned int dwBlkNo,
              BSP_MNTN_SDRWBlkData(nCardNo,dwBlkNo,nBlkCount,pbDataBuff, nFlags)
 
 
-/***********************************内存拷贝优化*****************************************/
+/***********************************Memory copy optimization*********************************************/
 /*****************************************************************************
- 函 数 名  : __rt_memcpy
- 功能描述  : 汇编版本的memcpy函数
- 输入参数  : Dest :目的地址
-             Src :源地址
-             Count:拷贝数据的大小
- 输出参数  : 无。
- 返 回 值  : 目的地址。
+ Function Name: __rt_memcpy
+ Function description: Assembly version of memcpy function
+ Input parameters: Dest: Destination address
+             Src: Source address
+             Count: The size of the copy data
+ Output parameters: None.
+ Return Value: Destination address.
 *****************************************************************************/
 #if defined(BSP_CORE_MODEM) || defined(PRODUCT_CFG_CORE_TYPE_MODEM)
 extern void * __rt_memcpy(void * Dest, const void * Src, unsigned long Count);
@@ -5812,89 +5844,89 @@ extern void * __rt_memcpy(void * Dest, const void * Src, unsigned long Count);
 
 
 
-/************************************其余宏定义为空的函数******************************************/
+/************************************The remaining macros are defined as empty functions************************************************/
 /*****************************************************************************
- 函 数 名  : UsbStatusCallbackRegister
- 功能描述  : 记录pCallBack至全局变量中。SD卡功耗相关接口，V7先打桩
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: UsbStatusCallbackRegister
+ Function Description: Record pCallBack into global variables. SD card power consumption-related interface, V7 drives piles first
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
  /*extern int  UsbStatusCallbackRegister(pUsbState pCallBack);*/
 #define DRV_USB_STATUS_CALLBACK_REGI(pCallBack)              DRV_OK
 
 /*****************************************************************************
- 函 数 名  : CicomClkEnable
- 功能描述  : This routine enable CICOM IP clock gating.低功耗相关，V7打桩
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : None
+ Function Name: CicomClkEnable
+ Function description: This routine enable CICOM IP clock gating. Low power consumption related, V7 pile driving
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 /*extern void CicomClkEnable(void);*/
 #define DRV_CICOM_CLK_ENABLE()
 
 /*****************************************************************************
- 函 数 名  : CicomClkDisable
- 功能描述  : This routine disable CICOM IP clock gating.低功耗相关，V7打桩
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : None
+ Function Name: CicomClkDisable
+ Function description: This routine disable CICOM IP clock gating. Low power consumption related, V7 pile driving
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 /*extern void CicomClkDisable(void);*/
 #define DRV_CICOM_CLK_DISABLE()
 
 /*****************************************************************************
- 函 数 名  : HdlcClkEnable
- 功能描述  : This routine enable HDLC IP clock gating.低功耗相关，V7打桩
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : None
+ Function Name: HdlcClkEnable
+ Function description: This routine enable HDLC IP clock gating. Low power consumption related, V7 pile driving
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 /*extern void HdlcClkEnable(void);*/
 #define DRV_HDLC_CLK_ENABLE()
 
 /*****************************************************************************
- 函 数 名  : HdlcClkDisable
- 功能描述  : This routine disable HDLC IP clock gating.低功耗相关，V7打桩
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : None
+ Function Name: HdlcClkDisable
+ Function description: This routine disable HDLC IP clock gating. Low power consumption related, V7 pile driving
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 /*extern void HdlcClkDisable(void);*/
 #define DRV_HDLC_CLK_DISABLE()
 
 /*****************************************************************************
- 函 数 名  : DRV_MEM_READ
- 功能描述  : 按32位宽度查询内存，输出4字节数据。可维可测，V7先打桩
- 输入参数  : ulAddress：查询地址空间地址，地址需在内存范围内，否则返回-1。
- 输出参数  : pulData：指向查询内容的指针。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: DRV_MEM_READ
+ Function description: Query memory at a 32-bit width and output 4 bytes of data. Maintainable and measurable, V7 drives piles first
+ Input parameters: ulAddress: Query the address space address, the address must be within the memory range, otherwise -1 will be returned.
+ Output parameters: pulData: Pointer to the query content.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int DRV_MEM_READ(unsigned int ulAddress, unsigned int* pulData);
 
 /*****************************************************************************
- 函 数 名  : DrvLogInstall
- 功能描述  : 打印函数注册。可维可测，V7先打桩
- 输入参数  : fptr 注册的函数指针
- 输出参数  : None
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: DrvLogInstall
+ Function Description: Print function registration. Maintainable and measurable, V7 drives piles first
+ Input parameters: fptr registered function pointer
+ Output parameters: None
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 /*extern int DrvLogInstall(PVOIDFUNC fptr, PVOIDFUNC fptr1, PVOIDFUNC fptr2, PVOIDFUNC fptr3, PVOIDFUNC fptr4);*/
 #define DRV_LOG_INSTALL(fptr, fptr1, fptr2, fptr3, fptr4)     DRV_OK
 
 /*****************************************************************************
-* 函 数 名  : BSP_MNTN_GetBattState
+*Function Name: BSP_MNTN_GetBattState
 *
-* 功能描述  : 获取电池在位状态
+*Function Description: Get the battery in place
 *
-* 输入参数  : 无
-* 输出参数  : 无
+*Input parameters: None
+*Output parameters: None
 *
-* 返 回 值  : 成功：0，1，2
-              失败：负数
+*Return Value: Success: 0, 1, 2
+              Failed: Negative
 *
 *
 *****************************************************************************/
@@ -5902,11 +5934,11 @@ extern BSP_S32 BSP_MNTN_GetBattState(void);
 #define DRV_MNTN_GET_BATT_STATE() BSP_MNTN_GetBattState()
 
 /*****************************************************************************
- 函 数 名  : pwrctrl_wpa_pwr_up
- 功能描述  : RF下电
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : None
+ Function name: pwrctrl_wpa_pwr_up
+ Function description: RF power down
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 extern void pwrctrl_wpa_pwr_up(void);
 #define DRV_WPA_POWERUP()
@@ -5926,11 +5958,11 @@ extern unsigned long free_mem_size_get(void);
 #define FREE_MEM_SIZE_GET() free_mem_size_get()
 
 /*****************************************************************************
- 函 数 名  : BSP_DMR_ATAnalyze
- 功能描述  : 供NAS查询动态内存占用信息，通过AT命令查询
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 成功0，失败-1
+ Function Name: BSP_DMR_ATAnalyze
+ Function description: NAS query dynamic memory usage information and query through AT command
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: 0 for success, -1 for failure
 *****************************************************************************/
 extern int BSP_DMR_ATANALYZE(void * pstMem,unsigned int uiSize, unsigned int * puiModIdSum);
 
@@ -5954,23 +5986,23 @@ typedef struct
     pULULFUNCPTR pDfsReleaseFunc;
 }DPM_SLEEP_CALLBACK_STRU;
 
-/*wangwei dfs*/
+/*Wang Wei's way*/
 typedef  enum
 {
     PWRCTRL_DFS_USB = 0,
     PWRCTRL_DFS_SD  = 1,
     PWRCTRL_DFS_PS1 = 2,
-    PWRCTRL_DFS_HIFI = 3,  /*hifi*/
+    PWRCTRL_DFS_HIFI = 3,  /*Hifi*/
     PWRCTRL_DFS_BUTT
 } PWC_DFS_ID_E;
 
 typedef enum
 {
-    DFS_PROFILE_0 = 0,            /*频率级别1*/
-    DFS_PROFILE_1 = 1,            /*频率级别2*/
-    DFS_PROFILE_2 = 2,            /*频率级别3*/
-    DFS_PROFILE_3 = 3,            /*频率级别4*/
-    DFS_PROFILE_4 = 4,            /*频率级别5*/
+    DFS_PROFILE_0 = 0,            /*Frequency level 1*/
+    DFS_PROFILE_1 = 1,            /*Frequency level 2*/
+    DFS_PROFILE_2 = 2,            /*Frequency level 3*/
+    DFS_PROFILE_3 = 3,            /*Frequency level 4*/
+    DFS_PROFILE_4 = 4,            /*Frequency level 5*/
     DFS_PROFILE_5 = 5,
     DFS_PROFILE_6 = 6,
     DFS_PROFILE_7 = 7,
@@ -6000,7 +6032,7 @@ typedef enum tagPWC_COMM_MODULE_E
     PWC_COMM_MODULE_BUTT
 }PWC_COMM_MODULE_E;
 
-/* 睡眠投票ID */
+/* Sleep voting id */
 typedef enum tagPWC_CLIENT_ID_E
 {
     PWRCTRL_SLEEP_SCI       = 0x100,
@@ -6024,7 +6056,7 @@ typedef enum tagPWC_CLIENT_ID_E
     PWRCTRL_SLEEP_ACPU      = 0x111,
     PWRCTRL_SLEEP_HSIC      = 0x112,
 
-    PWRCTRL_LIGHTSLEEP_WIFI = 0x113, /* HSIC不能掉电 */
+    PWRCTRL_LIGHTSLEEP_WIFI = 0x113, /* Hsic can't lose power */
     PWRCTRL_SLEEP_WIFI      = 0x114,
     PWRCTRL_SLEEP_USB       = 0x115,
     PWRCTRL_SLEEP_LCD       = 0x116,
@@ -6057,7 +6089,7 @@ typedef enum tagPWC_TEMP_PROTECT_E
     PWC_TEMP_SIM_CARD,
     PWC_TEMP_DCXO,
     /* BEGIN PN:N/A,Added by c00191475, 2013/01/08*/
-    PWC_TEMP_SURFACE, /*Surface 枚举量定义*/
+    PWC_TEMP_SURFACE, /*Surface enumeration definition*/
     /* END   PN:N/A,Added by c00191475, 2013/01/08*/
     PWC_TEMP_BUTT
 }PWC_TEMP_PROTECT_E;
@@ -6080,7 +6112,7 @@ typedef enum tagPWRCTRL_MODULE_E
     PWRCTRL_MODU_SDCC,
     PWRCTRL_MODU_USBHSIC,
     PWRCTRL_MODU_SOCP,
-    PWRCTRL_MODU_GMAC,          /* 0xa */
+    PWRCTRL_MODU_GMAC,          /* 0 */
     PWRCTRL_MODU_SCI0,
     PWRCTRL_MODU_SCI1,
     PWRCTRL_MODU_UICC,
@@ -6117,236 +6149,236 @@ typedef enum tagPWRCTRL_MODULE_E
     PWRCTRL_MODU_SSI3,
     PWRCTRL_MODU_SPI0,
     PWRCTRL_MODU_MST,
-    PWRCTRL_MODU_ALL,   /* 代表所有的模块 */
-    PWRCTRL_MODU_MAX    /* 边界值 */
+    PWRCTRL_MODU_ALL,   /* Represents all modules */
+    PWRCTRL_MODU_MAX    /* Boundary value */
 }PWRCTRL_MODULE_E;
 /************************************************************************
- * FUNCTION
- *      PWRCTRL_BSP_GuDsp_StatusInfo
- * DESCRIPTION
- *        用于查询GUDSP_ZSPcore复位、解复位时间和次数
- * INPUTS
- *        GuZspAddr :GU_ZSP保存复位、解复位信息的指针地址
- * OUTPUTS
-           BSP_ERROR:指针非法。
+ *FUNCTION
+ *PWRCTRL_BSP_GuDsp_StatusInfo
+ *DESCRIPTION
+ *Used to query GUDSP_ZSPcore reset, dereset time and number of times
+ *INPUTS
+ *GuZspAddr: GU_ZSP pointer address for saving reset and dereset information
+ *OUTPUTS
+           BSP_ERROR: The pointer is illegal.
  *************************************************************************/
  BSP_U32 PWRCTRL_BSP_GuDsp_StatusInfo(BSP_U32 *GuZspAddr);
 
 /************************************************************************
- * FUNCTION
- *      PWRCTRL_BSP_RTT_StatusInfo
- * DESCRIPTION
- *        BBP 状态查询
- * INPUTS
- *       NONE
- * OUTPUTS
-          BSP_BBP_ERROR: 不能访问
-          BSP_BBP_OK:可以访问
+ *FUNCTION
+ *PWRCTRL_BSP_RTT_StatusInfo
+ *DESCRIPTION
+ *BBP status query
+ *INPUTS
+ *NONE
+ *OUTPUTS
+          BSP_BBP_ERROR: Not accessible
+          BSP_BBP_OK: accessible
  *************************************************************************/
 BSP_U32  PWRCTRL_BSP_RTT_StatusInfo (BSP_VOID);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_PWRCTRL_TimerClose
+*Function Name: BSP_PWRCTRL_TimerClose
 *
-* 功能描述  : SOC外设时钟关闭接口
+*Function description: SOC peripheral clock shutdown interface
 *
-* 输入参数  : 
-* 输出参数  : 
-* 返 回 值   :
+*Input parameters: 
+*Output parameters: 
+*Return value:
 *
-* 修改记录  : 
+*Modify record: 
 
 *****************************************************************************/
 BSP_S32 BSP_PWRCTRL_TimerClose(PWRCTRL_MODULE_E enModu);
 
 /*****************************************************************************
-* 函 数 名  : BSP_PWRCTRL_TimerOpen
+*Function Name: BSP_PWRCTRL_TimerOpen
 *
-* 功能描述  : SOC外设时钟使能接口
+*Function description: SOC peripheral clock enable interface
 *
-* 输入参数  : 
-* 输出参数  : 
-* 返 回 值   :
+*Input parameters: 
+*Output parameters: 
+*Return value:
 *
-* 修改记录  : 
+*Modify record: 
 
 *****************************************************************************/
 BSP_S32 BSP_PWRCTRL_TimerOpen(PWRCTRL_MODULE_E enModu);
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_DEEPSLEEP_FOREVER
- 功能描述  : AARM CARM 下电接口
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : None
+ Function Name: DRV_PWRCTRL_DEEPSLEEP_FOREVER
+ Function description: AARM CARM power down interface
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 
 *****************************************************************************/
 extern void DRV_PWRCTRL_DEEPSLEEP_FOREVER(void );
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_SLEEP_CALLBACK_REG
- 功能描述  : 注册PWC函数给底软使用
- 输入参数  : 待注册的函数
- 输出参数  : None
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: DRV_PWRCTRL_SLEEP_CALLBACK_REG
+ Function description: Register PWC function for soft use
+ Input parameters: Function to be registered
+ Output parameters: None
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int DRV_PWRCTRL_SLEEP_CALLBACK_REG(PWC_SLEEP_CALLBACK_STRU pCallback);
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_GET_TEMP
- 功能描述  : 获取OLED、电池、GPA、WPA、SIM卡、DCXO的温度。
- 输入参数  : enModule:PWC_TEMP_PROTECT_E
-             hkAdcTable:电压温度换算表
- 输出参数  : pslData:存储的电压转换为的温度值
- 返 回 值  : HKADC_OK/HKADC_ERROR 。
+ Function Name: DRV_PWRCTRL_GET_TEMP
+ Function Description: Get the temperature of OLED, battery, GPA, WPA, SIM card, DCXO.
+ Input parameters: enModule:PWC_TEMP_PROTECT_E
+             hkAdcTable:Voltage Temperature Conversion Table
+ Output parameters: pslData: The temperature value converted to the stored voltage
+ Return Value: HKADC_OK/HKADC_ERROR.
 *****************************************************************************/
-/*V3R2 CS f00164371，这个接口暂时不隔离，因为SFT平台是返回0，实际回片需要实现，
-需要使用CS_SFT宏进行区分，但是不同组件的CS_SFT宏不一定统一，所以不能直接屏蔽掉，
-采用在接口代码内部进行隔离*/
+/*V3R2 CS f00164371, this interface is not isolated for the time being, because the SFT platform returns 0, and the actual return of the film needs to be implemented.
+CS_SFT macros need to be used to distinguish them, but the CS_SFT macros of different components are not necessarily unified, so they cannot be blocked directly.
+采用在Internal isolation of interface code*/
 extern BSP_S32 DRV_PWRCTRL_GET_TEMP(PWC_TEMP_PROTECT_E enModule, BSP_U16 *hkAdcTable,BSP_S32 *pslData);
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_AHB_BAK_ADDR_ALLOC
- 功能描述  : arm上下电功能，需要备份ahb数据，该接口申请数据保存地址和长度
- 输入参数  : length     保存申请空间大小的指针
- 输出参数  : 无
- 返 回 值  : 申请空间的地址 。
+ Function Name: DRV_PWRCTRL_AHB_BAK_ADDR_ALLOC
+ Function description: The arm power-up and down function requires backup of AHB data. This interface applies for data storage address and length
+ Input parameters: length Pointer to save the size of the application space
+ Output parameters: None
+ Return Value: The address of the application space.
 *****************************************************************************/
-/*V3R2 CS f00164371，这个接口暂时不隔离*/
+/*V3R2 CS f00164371, this interface is not isolated for the time being*/
 extern void * DRV_PWRCTRL_AHB_BAK_ADDR_ALLOC(unsigned int * length);
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_GetCcpuLoadCB
- 功能描述  : arm 提供给TTF的回调函数
- 输入参数  : pFunc:TTF函数指针
- 输出参数  : 无
- 返 回 值  : 申请空间的地址 。
+ Function Name: DRV_PWRCTRL_GetCcpuLoadCB
+ Function description: arm The callback function provided to TTF
+ Input parameters: pFunc:TTF function pointer
+ Output parameters: None
+ Return Value: The address of the application space.
 *****************************************************************************/
 extern void DRV_PWRCTRL_GetCcpuLoadCB(PWRCTRLFUNCPTR pFunc );
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_GetCpuLoad
- 功能描述  : arm cpu占有率查询函数
- 输入参数  : 无
- 输出参数  : ulAcpuLoad:Acpu占有率地址.
-             ulCcpuLoad:Ccpu占有率地址.
- 返 回 值  : 0/1 。
+ Function Name: DRV_PWRCTRL_GetCpuLoad
+ Function description: arm cpu occupancy query function
+ Input parameters: None
+ Output parameters: ulAcpuLoad:Acpu occupancy address.
+             ulCcpuLoad:Ccpu occupancy address.
+ Return value: 0/1.
 *****************************************************************************/
 extern unsigned int DRV_PWRCTRL_GetCpuLoad(unsigned int *ulAcpuLoad,unsigned int *ulCcpuLoad);
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_PWRUP
- 功能描述  : W模、G模、L模下PA、RF、BBP、DSP、ABB、HIFI的上电控制。
- 输入参数  : enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
+ Function Name: DRV_PWRCTRL_PWRUP
+ Function description: Power-on control of PA, RF, BBP, DSP, ABB, and HIFI under W mode, G mode, and L mode.
+ Input parameters: enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
              enCommModule:PWC_COMM_MODULE_PA/PWC_COMM_MODULE_RF/PWC_COMM_MODULE_BBP/PWC_COMM_MODULE_DSP/PWC_COMM_MODULE_ABB,
- 输出参数  : None
- 返 回 值  : PWC_PARA_INVALID/PWC_SUCCESS
+ Output parameters: None
+ Return Value: PWC_PARA_INVALID/PWC_SUCCESS
 *****************************************************************************/
-/*V3R2 CS f00164371，这个接口暂时不隔离，因为HIFI加载需要，在函数内部进行了隔离*/
+/*V3R2 CS f00164371, this interface is not isolated for the time being, because HIFI loading requires it, it is isolated inside the function.*/
 extern BSP_U32 DRV_PWRCTRL_PWRUP (PWC_COMM_MODE_E enCommMode, PWC_COMM_MODULE_E enCommModule);
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_PWRDOWN
- 功能描述  : W模、G模、L模下PA、RF、BBP、DSP、ABB、HIFI的下电控制。
- 输入参数  : enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
+ Function Name: DRV_PWRCTRL_PWRDOWN
+ Function description: Power-down control of PA, RF, BBP, DSP, ABB, and HIFI under W mode, G mode, L mode.
+ Input parameters: enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
              enCommModule:PWC_COMM_MODULE_PA/PWC_COMM_MODULE_RF/PWC_COMM_MODULE_BBP/PWC_COMM_MODULE_DSP/PWC_COMM_MODULE_ABB,
- 输出参数  : None
- 返 回 值  : PWC_PARA_INVALID/PWC_SUCCESS
+ Output parameters: None
+ Return Value: PWC_PARA_INVALID/PWC_SUCCESS
 *****************************************************************************/
-/*V3R2 CS f00164371，这个接口暂时不隔离，因为HIFI加载需要，在函数内部进行了隔离*/
+/*V3R2 CS f00164371, this interface is not isolated for the time being, because HIFI loading requires it, it is isolated inside the function.*/
 extern BSP_U32 DRV_PWRCTRL_PWRDOWN (PWC_COMM_MODE_E enCommMode, PWC_COMM_MODULE_E enCommModule);
 
 /*****************************************************************************
- 函 数 名  : BSP_PWRCTRL_PwrStatusGet
- 功能描述  : W模、G模、L模下PA、RF、BBP、DSP、ABB的上下电状态查询。
- 输入参数  : enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
+ Function Name: BSP_PWRCTRL_PwrStatusGet
+ Function description: Up-down power status query for PA, RF, BBP, DSP, and ABB under W mode, G mode, and L mode.
+ Input parameters: enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
              enCommModule:PWC_COMM_MODULE_PA/PWC_COMM_MODULE_RF/PWC_COMM_MODULE_BBP/PWC_COMM_MODULE_DSP/PWC_COMM_MODULE_ABB,
- 输出参数  : None
- 返 回 值  : PWRCTRL_GET_SUCCESS/PWRCTRL_GET_PARAINVALID/PWRCTRL_ONORLOCK/PWRCTRL_OFFORUNLOCK
+ Output parameters: None
+ Return Value: PWRCTRL_GET_SUCCESS/PWRCTRL_GET_PARAINVALID/PWRCTRL_ONORLOCK/PWRCTRL_OFFORUNLOCK
 *****************************************************************************/
 extern  BSP_U32 DRV_PWRCTRL_PWRSTATUSGET(PWC_COMM_MODE_E enCommMode, PWC_COMM_MODULE_E enCommModule);
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_PLL_ENABLE
- 功能描述  : W模、G模、L模下PA、DSP、ABB的PLL使能。
- 输入参数  : enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
+ Function Name: DRV_PWRCTRL_PLL_ENABLE
+ Function description: PLL enables PA, DSP, and ABB in W mode, G mode, and L mode.
+ Input parameters: enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
              enCommModule:PWC_COMM_MODULE_PA/PWC_COMM_MODULE_DSP/PWC_COMM_MODULE_ABB,
- 输出参数  : None
- 返 回 值  : PWC_PARA_INVALID/PWC_SUCCESS
+ Output parameters: None
+ Return Value: PWC_PARA_INVALID/PWC_SUCCESS
 *****************************************************************************/
 extern BSP_U32 DRV_PWRCTRL_PLL_ENABLE (PWC_COMM_MODE_E enCommMode, PWC_COMM_MODULE_E enCommModule);
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_PLL_DISABLE
- 功能描述  : W模、G模、L模下PA、DSP、ABB的PLL去使能。
- 输入参数  : enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
+ Function Name: DRV_PWRCTRL_PLL_DISABLE
+ Function description: PLL of PA, DSP, and ABB under W mode, G mode, and L mode is enabled.
+ Input parameters: enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
              enCommModule:PWC_COMM_MODULE_PA/PWC_COMM_MODULE_DSP/PWC_COMM_MODULE_ABB,
- 输出参数  : None
- 返 回 值  : PWC_PARA_INVALID/PWC_SUCCESS
+ Output parameters: None
+ Return Value: PWC_PARA_INVALID/PWC_SUCCESS
 *****************************************************************************/
 extern BSP_U32 DRV_PWRCTRL_PLL_DISABLE (PWC_COMM_MODE_E enCommMode, PWC_COMM_MODULE_E enCommModule);
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_DSP_RESET
- 功能描述  : L模下DSP复位接口。
- 输入参数  : 
- 输出参数  : None
- 返 回 值  : 
+ Function Name: DRV_PWRCTRL_DSP_RESET
+ Function description: DSP reset interface in L-mode.
+ Input parameters: 
+ Output parameters: None
+ Return Value: 
 *****************************************************************************/
 extern BSP_VOID DRV_PWRCTRL_DSP_RESET();
 
 /*****************************************************************************
- 函 数 名  : BSP_PWRCTRL_PllStatusGet
- 功能描述  : W模、G模、L模下PA、DSP、ABB的PLL状态查询。
- 输入参数  : enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
+ Function Name: BSP_PWRCTRL_PllStatusGet
+ Function description: PLL status query of PA, DSP, and ABB under W mode, G mode, and L mode.
+ Input parameters: enCommMode: PWC_COMM_MODE_WCDMA/PWC_COMM_MODE_GSM/PWC_COMM_MODE_LTE,
              enCommModule:PWC_COMM_MODULE_PA/PWC_COMM_MODULE_DSP/PWC_COMM_MODULE_ABB,
- 输出参数  : None
- 返 回 值  : PWRCTRL_GET_SUCCESS/PWRCTRL_GET_PARAINVALID/PWRCTRL_ONORLOCK/PWRCTRL_OFFORUNLOCK
+ Output parameters: None
+ Return Value: PWRCTRL_GET_SUCCESS/PWRCTRL_GET_PARAINVALID/PWRCTRL_ONORLOCK/PWRCTRL_OFFORUNLOCK
 *****************************************************************************/
 extern BSP_U32 DRV_PWRCTRL_PllStatusGet (PWC_COMM_MODE_E enCommMode, PWC_COMM_MODULE_E enCommModule);
 
 /************************************************************************
- * FUNCTION
- *       BSP_PWRCTRL_ZspSleepFlagStore
- * DESCRIPTION
- *       ZSP睡眠标志位保存接口
- * INPUTS
+ *FUNCTION
+ *BSP_PWRCTRL_ZspSleepFlagStore
+ *DESCRIPTION
+ *ZSP sleep flag save interface
+ *INPUTS
  *       
- * OUTPUTS
- *       NONE
+ *OUTPUTS
+ *NONE
  *************************************************************************/
 extern BSP_VOID DRV_ZSP_SLEEP_FALG_STORE(BSP_VOID);
 
 /************************************************************************
- * FUNCTION
- *       BSP_PWRCTRL_ZspSleepFlagRead
- * DESCRIPTION
- *       ZSP睡眠标志位读取接口
- * INPUTS
+ *FUNCTION
+ *BSP_PWRCTRL_ZspSleepFlagRead
+ *DESCRIPTION
+ *ZSP sleep flag read interface
+ *INPUTS
  *       
- * OUTPUTS
- *       NONE
+ *OUTPUTS
+ *NONE
  *************************************************************************/
 extern BSP_U32 DRV_ZSP_SLEEP_FALG_READ(BSP_VOID);
 
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_SLEEPVOTE_LOCK
- 功能描述  : 外设禁止睡眠投票接口。
- 输入参数  : enClientId:PWC_CLIENT_ID_E
- 输出参数  : None
- 返 回 值  : PWC_PARA_INVALID/PWC_SUCCESS
+ Function Name: DRV_PWRCTRL_SLEEPVOTE_LOCK
+ Function description: The peripheral prohibits sleep voting interface.
+ Input parameters: enClientId:PWC_CLIENT_ID_E
+ Output parameters: None
+ Return Value: PWC_PARA_INVALID/PWC_SUCCESS
 *****************************************************************************/
 extern BSP_U32 DRV_PWRCTRL_SLEEPVOTE_LOCK(PWC_CLIENT_ID_E enClientId);
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_SLEEPVOTE_UNLOCK
- 功能描述  : 外设允许睡眠投票接口。
- 输入参数  : enClientId:PWC_CLIENT_ID_E
- 输出参数  : None
- 返 回 值  : PWC_PARA_INVALID/PWC_SUCCESS
+ Function Name: DRV_PWRCTRL_SLEEPVOTE_UNLOCK
+ Function Description: Peripheral allows sleep voting interface.
+ Input parameters: enClientId:PWC_CLIENT_ID_E
+ Output parameters: None
+ Return Value: PWC_PARA_INVALID/PWC_SUCCESS
 *****************************************************************************/
 extern BSP_U32 DRV_PWRCTRL_SLEEPVOTE_UNLOCK(PWC_CLIENT_ID_E enClientId);
 
@@ -6382,30 +6414,30 @@ Others:
 extern int DRV_PWRCTRL_SLEEP_IN_CB(PWC_DS_SOCP_CB_STRU stFunc);
 
 /*****************************************************************************
- 函 数 名  : BSP_PWRCTRL_UsbLowPowerEnter
- 功能描述  : USB进入低功耗接口
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : None
+ Function Name: BSP_PWRCTRL_UsbLowPowerEnter
+ Function description: USB enters the low-power interface
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 extern void DRV_PWRCTRL_USB_LOWPOWER_ENTER(void);
 
 /*****************************************************************************
- 函 数 名  : DRV_PWRCTRL_USB_LOWPOWER_EXIT
- 功能描述  : USB退出低功耗接口
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : None
+ Function Name: DRV_PWRCTRL_USB_LOWPOWER_EXIT
+ Function Description: USB exits the low-power interface
+ Input parameters: None
+ Output parameters: None
+ Return Value: None
 *****************************************************************************/
 extern void DRV_PWRCTRL_USB_LOWPOWER_EXIT(void);
 
 
 /*****************************************************************************
- 函 数 名  : BSP_32K_GetTick
- 功能描述  : 32K时钟对应Tick查询接口
- 输入参数  : None
- 输出参数  : None
- 返 回 值  : 32K时钟对应Tick值
+ Function Name: BSP_32K_GetTick
+ Function description: 32K clock corresponds to Tick query interface
+ Input parameters: None
+ Output parameters: None
+ Return Value: 32K clock corresponding to Tick value
 *****************************************************************************/
 extern BSP_U32 BSP_32K_GetTick( BSP_VOID );
 
@@ -6426,31 +6458,31 @@ extern BSP_VOID BSP_PWC_SocpVoteRegister(FUNCPTR routine);
 extern BSP_VOID BSP_PWC_SocpRestoreRegister(FUNCPTR routine);
 
 /*****************************************************************************
- Function   : BSP_PWC_SetTimer4WakeSrc
- Description: 设置timer4作为唤醒源
- Input      : 
- Return     : void
- Other      : 
+ Function: BSP_PWC_SetTimer4WakeSrc
+ Description: Set timer4 as wakeup source
+ Input: 
+ Return : void
+ Other: 
 *****************************************************************************/
 extern VOID BSP_PWC_SetTimer4WakeSrc(VOID);
 
 /*****************************************************************************
- Function   : BSP_PWC_DelTimer4WakeSrc
- Description: 设置timer4不作为唤醒源 
- Input      :  
+ Function: BSP_PWC_DelTimer4WakeSrc
+ Description: Setting timer4 is not used as a wake-up source 
+ Input:  
             : 
- Return     : void
- Other      : 
+ Return : void
+ Other: 
 *****************************************************************************/
 extern VOID BSP_PWC_DelTimer4WakeSrc(VOID);
 
 
 /*****************************************************************************
- 函 数 名  : BSP_PWRCTRL_StandbyStateCcpu/BSP_PWRCTRL_StandbyStateAcpu
- 功能描述  : AT^PSTANDBY
- 输入参数  :
- 输出参数  :
- 返回值：
+ Function Name: BSP_PWRCTRL_StandbyStateCcpu/BSP_PWRCTRL_StandbyStateAcpu
+ Function description: AT^PSTANDBY
+ Input parameters:
+ Output parameters:
+ Return value:
 *****************************************************************************/
 extern unsigned int BSP_PWRCTRL_StandbyStateAcpu(unsigned int ulStandbyTime, unsigned int ulSwitchTime);
 extern unsigned int BSP_PWRCTRL_StandbyStateCcpu(unsigned int ulStandbyTime, unsigned int ulSwitchTime);
@@ -6464,12 +6496,12 @@ extern unsigned int BSP_PWRCTRL_StandbyStateCcpu(unsigned int ulStandbyTime, uns
 /*************************ABB START***********************************/
 
 /*****************************************************************************
- 函 数 名  : BSP_ABB_RegGet
- 功能描述  : 获取ABB寄存器值
- 输入参数  : usInstruction: 待读寄存器地址
-             uspData: 存放寄存器值
- 输出参数  :
- 返 回 值  :
+ Function Name: BSP_ABB_RegGet
+ Function Description: Get the ABB register value
+ Input parameters: usInstruction: Register address to be read
+             uspData: Store register value
+ Output parameters:
+ Return Value:
 *****************************************************************************/
 extern int BSP_ABB_RegGet(unsigned char usInstruction, unsigned char *uspData);
 #define DRV_ABB_REG_VALUE_GET(usInstruction,uspData)    BSP_ABB_RegGet (usInstruction,uspData)
@@ -6478,207 +6510,207 @@ extern int BSP_ABB_RegGet(unsigned char usInstruction, unsigned char *uspData);
 
 /*************************SYSCTRL START*******************************/
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_GuDspCountInfo
- 功能描述  : 本接口实现ZSP模块的解复位动作，包括zsp BRG、总线
- 输入参数  : *GuDspAddr 用于保存计数信息
- 输出参数  : 无。
- 返 回 值  : BSP_ERROR:地址非法
-                       BSP_OK:地址合法
-         徐经翠x00221564  2012.11.20
+ Function Name: BSP_GUSYS_GuDspCountInfo
+ Function description: This interface implements the dereset operation of ZSP module, including zsp BRG and bus
+ Input parameters: *GuDspAddr is used to save counting information
+ Output parameters: None.
+ Return Value: BSP_ERROR: The address is illegal
+                       BSP_OK: The address is legal
+         Xu Jingcui x00221564 2012.11.20
 *****************************************************************************/
 extern unsigned int BSP_GUSYS_GuDspCountInfo(unsigned int *GuDspAddr);
 #define DRV_DSP_RESET_GET_INFO(GuDspAddr)    BSP_GUSYS_GuDspCountInfo (GuDspAddr)
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_DspReset
- 功能描述  : 本接口实现ZSP模块的复位动作，包括zsp core、总线和外设。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_GUSYS_DspReset
+ Function description: This interface implements reset operations of ZSP module, including zsp core, bus and peripherals.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_GUSYS_DspReset(void);
 #define DRV_DSP_ZONE_RESET()    BSP_GUSYS_DspReset()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_DspResetCancel
- 功能描述  : 本接口实现ZSP模块的解复位动作，包括zsp core、总线和外设。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_GUSYS_DspResetCancel
+ Function description: This interface implements the dereset operation of the ZSP module, including zsp core, bus and peripherals.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_GUSYS_DspResetCancel(void);
 #define DRV_DSP_ZONE_RESET_CANCEL()    BSP_GUSYS_DspResetCancel()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_ABBGSMRxCtrl
- 功能描述  : 本接口实现ABB GSM接收控制。
- 输入参数  : ucStatus：0：关闭；1：打开。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_GUSYS_ABBGSMRxCtrl
+ Function Description: This interface implements ABB GSM reception control.
+ Input parameters: ucStatus: 0: Close; 1: Open.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern unsigned int BSP_GUSYS_ABBGSMRxCtrl(unsigned char ucStatus);
 #define DRV_ABB_GRX_CTRL(ucStatus)    BSP_GUSYS_ABBGSMRxCtrl(ucStatus)
 
 /*****************************************************************************
- 函 数 名  : ABBWCDMARxCtrl
- 功能描述  : 本接口实现ABB WCDMA接收控制。
- 输入参数  : ucStatus：0：关闭；1：打开。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: ABBWCDMARxCtrl
+ Function Description: This interface implements ABB WCDMA reception control.
+ Input parameters: ucStatus: 0: Close; 1: Open.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern unsigned int BSP_GUSYS_ABBWCDMARxCtrl(unsigned char ucStatus);
 #define DRV_ABB_WRX_CTRL(ucStatus)    BSP_GUSYS_ABBWCDMARxCtrl(ucStatus)
 
 /*****************************************************************************
- 函 数 名  : ABBTxCtrl
- 功能描述  : 本接口实现ABB 发送控制。
- 输入参数  : ucStatus：0：关闭；1：打开。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
- 注意事项  ：ABB发送控制不区分W/G模式。
+ Function Name: ABBTxCtrl
+ Function Description: This interface implements ABB transmission control.
+ Input parameters: ucStatus: 0: Close; 1: Open.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
+ Note: ABB sending control does not distinguish between W/G modes.
 *****************************************************************************/
 extern int BSP_GUSYS_ABBTxCtrl(unsigned char ucStatus);
 #define DRV_ABB_TX_CTRL(ucStatus)    BSP_GUSYS_ABBTxCtrl(ucStatus)
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_WcdmaBbpPllEnable
- 功能描述  : 本接口实现使能WCDMA BBP PLL。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_GUSYS_WcdmaBbpPllEnable
+ Function Description: This interface implements the WCDMA BBP PLL to enable.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_GUSYS_WcdmaBbpPllEnable(void);
 #define DRV_WBBP_PLL_ENABLE()    BSP_GUSYS_WcdmaBbpPllEnable()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_WcdmaBbpPllDisable
- 功能描述  : 本接口实现关闭WCDMA BBP PLL。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_GUSYS_WcdmaBbpPllDisable
+ Function Description: This interface implements the shutdown of WCDMA BBP PLL.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_GUSYS_WcdmaBbpPllDisable(void);
 #define DRV_WBBP_PLL_DSABLE()    BSP_GUSYS_WcdmaBbpPllDisable()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_GsmBbpPllEnable
- 功能描述  : 本接口实现使能GSM BBP PLL。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_GUSYS_GsmBbpPllEnable
+ Function Description: This interface implements the enablement of GSM BBP PLL.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_GUSYS_GsmBbpPllEnable(void);
 #define DRV_GBBP_PLL_ENABLE()    BSP_GUSYS_GsmBbpPllEnable()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_GsmBbpPllDisable
- 功能描述  : 本接口实现关闭GSM BBP PLL。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_GUSYS_GsmBbpPllDisable
+ Function Description: This interface implements the shutdown of GSM BBP PLL.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_GUSYS_GsmBbpPllDisable(void);
 #define DRV_GBBP_PLL_DISABLE()    BSP_GUSYS_GsmBbpPllDisable()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_RFLdoOn
- 功能描述  : 本接口实现WCDMA和GSM RF LDO上电。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_GUSYS_RFLdoOn
+ Function description: This interface implements WCDMA and GSM RF LDO power-up.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_GUSYS_RFLdoOn(void);
 #define DRV_RF_LDOUP()    BSP_GUSYS_RFLdoOn()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_RFLdoDown
- 功能描述  : 本接口实现WCDMA和GSM RF LDO下电。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_GUSYS_RFLdoDown
+ Function description: This interface implements power-down of WCDMA and GSM RF LDO.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_GUSYS_RFLdoDown(void);
 #define DRV_RF_LDODOWN()    BSP_GUSYS_RFLdoDown()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_WcdmaPllStatusGet
- 功能描述  : 读取WCDMA BBP PLL稳定状态。
- 输入参数  : 无。
- 输出参数  :无。
- 返 回 值  :
-                     0：稳定
-                     1：未稳定
+ Function Name: BSP_GUSYS_WcdmaPllStatusGet
+ Function Description: Read the stable state of WCDMA BBP PLL.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value:
+                     0: Stable
+                     1: Not stable
 *****************************************************************************/
 extern unsigned long BSP_GUSYS_WcdmaPllStatusGet(void);
 #define DRV_GET_WCDMA_PLL_STATUS()    BSP_GUSYS_WcdmaPllStatusGet()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_GsmPllStatusGet
- 功能描述  : 读取GSM BBP PLL稳定状态。
- 输入参数  : 无。
- 输出参数  :无。
- 返 回 值  :
-                     0：稳定
-                     1：未稳定
+ Function Name: BSP_GUSYS_GsmPllStatusGet
+ Function Description: Read the stable state of GSM BBP PLL.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value:
+                     0: Stable
+                     1: Not stable
 *****************************************************************************/
 extern unsigned long BSP_GUSYS_GsmPllStatusGet(void);
 #define DRV_GET_GSM_PLL_STATUS()    BSP_GUSYS_GsmPllStatusGet()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_DspPllStatusGet
- 功能描述  : 读取DSP PLL稳定状态。
- 输入参数  : 无。
- 输出参数  :无。
- 返 回 值  :
-                     0：稳定
-                     1：未稳定
+ Function Name: BSP_GUSYS_DspPllStatusGet
+ Function Description: Read the DSP PLL stable state.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value:
+                     0: Stable
+                     1: Not stable
 *****************************************************************************/
 extern unsigned long BSP_GUSYS_DspPllStatusGet(void);
 #define DRV_GET_DSP_PLL_STATUS()    BSP_GUSYS_DspPllStatusGet()
 
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_ArmPllStatusGet
- 功能描述  : 读取ARM PLL稳定状态。
- 输入参数  : 无。
- 输出参数  :无。
- 返 回 值  :
-                     0：稳定
-                     1：未稳定
+ Function Name: BSP_GUSYS_ArmPllStatusGet
+ Function Description: Read the stable state of the ARM PLL.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value:
+                     0: Stable
+                     1: Not stable
 *****************************************************************************/
 extern unsigned int BSP_GUSYS_ArmPllStatusGet(void);
 #define DRV_GET_ARM_PLL_STATUS()    BSP_GUSYS_ArmPllStatusGet()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_BBPAutoAdjust
- 功能描述  : 初始化ABB的自校准使能
- 输入参数  : uiSysMode：0：WCDMA模式；1：GSM模式。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_GUSYS_BBPAutoAdjust
+ Function Description: Initialize the self-calibration enable of ABB
+ Input parameters: uiSysMode: 0: WCDMA mode; 1: GSM mode.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_GUSYS_BBPAutoAdjust(unsigned char ucAdjustMode);
 #define DRV_BBP_AUTO_ADJUST(ucAdjustMode)    BSP_GUSYS_BBPAutoAdjust(ucAdjustMode)
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_DspPllEnable
- 功能描述  : 打开DSP PLL
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_GUSYS_DspPllEnable
+ Function Description: Open DSP PLL
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_GUSYS_DspPllEnable(void);
 #define DRV_DSP_PLL_ENABLE()    BSP_GUSYS_DspPllEnable()
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_DspPllDisable
- 功能描述  : 关闭DSP PLL
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 无。
+ Function Name: BSP_GUSYS_DspPllDisable
+ Function Description: Turn off DSP PLL
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_GUSYS_DspPllDisable(void);
 #define DRV_DSP_PLL_DISABLE()    BSP_GUSYS_DspPllDisable()
@@ -6690,58 +6722,58 @@ extern void BSP_GUSYS_DspPllDisable(void);
 #define TDS_MODE        3
 
 /*****************************************************************************
- 函 数 名  : BSP_GUSYS_ModeSwitchs
- 功能描述  : 本接口实现WCDMA/GSM系统模式切换。
- 输入参数  : uiSysMode：0：切换到WCDMA模式；1：切换到GSM模式。
- 输出参数  : 无。
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Function Name: BSP_GUSYS_ModeSwitchs
+ Function description: This interface implements WCDMA/GSM system mode switching.
+ Input parameters: uiSysMode: 0: Switch to WCDMA mode; 1: Switch to GSM mode.
+ Output parameters: None.
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 *****************************************************************************/
 extern int BSP_GUSYS_ModeSwitch(unsigned int uiSysMode);
 #define DRV_SYSMODE_SWITCH(uiSysMode)    BSP_GUSYS_ModeSwitch(uiSysMode)
 
 /*************************SYSCTRL START*******************************/
 
-/*************************GUDSP加载 START*****************************/
+/*************************GUDSP Loading START***************************/
 
 /*****************************************************************************
- 函 数 名  : BSP_GUDSP_LayerInfoGet
- 功能描述  : 获取物理层加载信息。
- 输入参数  : 无。
- 输出参数  : pulAddr：存放物理层加载信息的缓存。
- 返 回 值  : 无。
+ Function Name: BSP_GUDSP_LayerInfoGet
+ Function description: Get physical layer loading information.
+ Input parameters: None.
+ Output parameters: pulAddr: cache for storing the physical layer loading information.
+ Return Value: None.
 *****************************************************************************/
 extern void BSP_GUDSP_LayerInfoGet(unsigned long* pulAddr, unsigned long* pulLength);
 #define DRV_PHY_SLOAD_INFO_GET(pulAddr,pulLength)    BSP_GUDSP_LayerInfoGet(pulAddr,pulLength)
 
 /*****************************************************************************
- 函 数 名  : BSP_GUDSP_CommonInfoGet
- 功能描述  : 获取物理层BSS COMMON段信息。
- 输入参数  : 无。
- 输出参数  : pulAddr：存放物理层加载信息的缓存。
- 返 回 值  : 0:成功，-1:失败。
+ Function Name: BSP_GUDSP_CommonInfoGet
+ Function description: Obtain the physical layer BSS COMMON segment information.
+ Input parameters: None.
+ Output parameters: pulAddr: cache for storing the physical layer loading information.
+ Return Value: 0: Success, -1: Failed.
 *****************************************************************************/
 extern int BSP_GUDSP_CommonInfoGet(unsigned long* pulAddr, unsigned long* pulLength);
 #define DRV_DSP_COMMON_INFO_GET(pulAddr,pulLength)    BSP_GUDSP_CommonInfoGet(pulAddr,pulLength)
 
 /*****************************************************************************
- 函 数 名  : BSP_GUDSP_Load
- 功能描述  : 完成GU ZSP加载功能：将ZSP静态段从DDR加载到ZSP TCM。
- 输入参数  : 无。
- 输出参数  : 无。
- 返 回 值  : 0:成功，-1:失败。
+ Function Name: BSP_GUDSP_Load
+ Function Description: Complete the GU ZSP loading function: Load the ZSP static segment from DDR to ZSP TCM.
+ Input parameters: None.
+ Output parameters: None.
+ Return Value: 0: Success, -1: Failed.
 *****************************************************************************/
 extern int BSP_GUDSP_Load(void);
 #define DRV_GUDSP_LOAD()    BSP_GUDSP_Load()
 
-/*************************GUDSP加载 END*******************************/
+/*************************GUDSP Loading END************************************/
 
 /*************************EDMA START**********************************/
 
 #if defined(BSP_CORE_MODEM) || defined(PRODUCT_CFG_CORE_TYPE_MODEM)
 typedef void (*channel_isr)(BSP_U32 channel_arg, BSP_U32 int_status);
 
-/*定义外设请求号*/
+/*Define peripheral request number*/
 typedef enum _BALONG_DMA_REQ
 {
     EDMA_DWSSI0_RX = 0,
@@ -6767,66 +6799,66 @@ typedef enum _BALONG_DMA_REQ
     EDMA_MMC0,     /*20*/
     EDMA_MMC1,
     EDMA_MMC2,
-    EDMA_MEMORY,    /*memory to memory ,虚拟外设请求线*/
-    EDMA_REQ_MAX    /*如果设备请求不小于此值，则为非法请求*/
+    EDMA_MEMORY,    /*memory to memory, virtual peripheral request line*/
+    EDMA_REQ_MAX    /*If the device request is not less than this value, it is an illegal request*/
 } BALONG_DMA_REQ;
 
-/* 函数void (*channel_isr)(BSP_U32 channel_arg, BSP_U32 int_status)的参数int_status、
-    函数int balong_dma_channel_init (BALONG_DMA_REQ req,  channel_isr pFunc,
-                     UINT32 channel_arg, UINT32 int_flag)的参数int_flag
-    为以下几种中断类型，可组合       */
-#define BALONG_DMA_INT_DONE           1          /*DMA传输完成中断*/
-#define BALONG_DMA_INT_LLT_DONE       2          /*链式DMA节点传输完成中断*/
-#define BALONG_DMA_INT_CONFIG_ERR     4          /*DMA配置错误导致的中断*/
-#define BALONG_DMA_INT_TRANSFER_ERR   8          /*DMA传输错误导致的中断*/
-#define BALONG_DMA_INT_READ_ERR       16         /*DMA链表读错误导致的中断*/
+/* The parameter int_status of function void (*channel_isr)(BSP_U32 channel_arg, BSP_U32 int_status) is int_status,
+    function int balong_dma_channel_init (BALONG_DMA_REQ req, channel_isr pFunc,
+                     UINT32 channel_arg, UINT32 int_flag) parameter int_flag
+    为以下Several interrupt types, can be combined */
+#define BALONG_DMA_INT_DONE           1          /*Dma transmission completion interrupt*/
+#define BALONG_DMA_INT_LLT_DONE       2          /*Chain DMA node transmission complete interrupt*/
+#define BALONG_DMA_INT_CONFIG_ERR     4          /*Interrupts caused by Dma configuration errors*/
+#define BALONG_DMA_INT_TRANSFER_ERR   8          /*Interrupt caused by Dma transmission error*/
+#define BALONG_DMA_INT_READ_ERR       16         /*Interrupts caused by Dma linked list read error*/
 
-/* EDMAC传输方向定义*/
+/* Edmac transmission direction definition*/
 #define BALONG_DMA_P2M      1
 #define BALONG_DMA_M2P      2
 #define BALONG_DMA_M2M      3
 
-/* EDMAC流控制与传输类型*/
+/* Edmac flow control and transmission types*/
 typedef enum tagEDMA_TRANS_TYPE
 {
-    MEM_MEM_DMA = 0x00,    /* 内存到内存，DMA流控*/
-    MEM_PRF_DMA = 0x01,        /* 内存与外设，DMA流控*/
-    MEM_PRF_PRF = 0x10        /* 内存与外设，外设流控*/
+    MEM_MEM_DMA = 0x00,    /* Memory to memory, dma flow control*/
+    MEM_PRF_DMA = 0x01,        /* Memory and peripherals, dma flow control*/
+    MEM_PRF_PRF = 0x10        /* Memory and peripherals, peripheral flow control*/
 } EDMA_TRANS_TYPE;
 
-/* 通道状态 */
+/* Channel status */
 
-#define   EDMA_CHN_FREE          1   /* 通道空闲 */
-#define   EDMA_CHN_BUSY          0   /* 通道忙 */
-
-
-/* EDMA传输位宽，源、目的地址约束为一致的值 */
-#define   EDMA_TRANS_WIDTH_8       0x0   /* 8bit位宽*/
-#define   EDMA_TRANS_WIDTH_16      0x1   /* 16bit位宽*/
-#define   EDMA_TRANS_WIDTH_32      0x2   /* 32bit位宽*/
-#define   EDMA_TRANS_WIDTH_64      0x3   /* 64bit位宽*/
-
-/*  EDMA burst length, 取值范围0~15，表示的burst长度为1~16*/
-#define   EDMA_BUR_LEN_1    0x0    /* burst长度，即一次传输的个数为1个*/
-#define   EDMA_BUR_LEN_2    0x1    /* burst长度，即一次传输的个数为2个*/
-#define   EDMA_BUR_LEN_3    0x2   /* burst长度，即一次传输的个数为3个*/
-#define   EDMA_BUR_LEN_4    0x3   /* burst长度，即一次传输的个数为4个*/
-#define   EDMA_BUR_LEN_5    0x4   /* burst长度，即一次传输的个数为5个*/
-#define   EDMA_BUR_LEN_6    0x5   /* burst长度，即一次传输的个数为6个*/
-#define   EDMA_BUR_LEN_7    0x6   /* burst长度，即一次传输的个数为7个*/
-#define   EDMA_BUR_LEN_8    0x7   /* burst长度，即一次传输的个数为8个*/
-#define   EDMA_BUR_LEN_9    0x8   /* burst长度，即一次传输的个数为9个*/
-#define   EDMA_BUR_LEN_10   0x9   /* burst长度，即一次传输的个数为10个*/
-#define   EDMA_BUR_LEN_11   0xa   /* burst长度，即一次传输的个数为11个*/
-#define   EDMA_BUR_LEN_12   0xb   /* burst长度，即一次传输的个数为12个*/
-#define   EDMA_BUR_LEN_13   0xc   /* burst长度，即一次传输的个数为13个*/
-#define   EDMA_BUR_LEN_14   0xd   /* burst长度，即一次传输的个数为14个*/
-#define   EDMA_BUR_LEN_15   0xe   /* burst长度，即一次传输的个数为15个*/
-#define   EDMA_BUR_LEN_16   0xf   /* burst长度，即一次传输的个数为16个*/
+#define   EDMA_CHN_FREE          1   /* Idle channel */
+#define   EDMA_CHN_BUSY          0   /* Busy channel */
 
 
-/* EDMA 对应的具体位，供EDMA  寄存器配置宏
-       EDMAC_BASIC_CONFIG、BALONG_DMA_SET_LLI、BALONG_DMA_SET_CONFIG 使用*/
+/* Edma transmission bit width, source and destination addresses are constrained to the same value */
+#define   EDMA_TRANS_WIDTH_8       0x0   /* 8 bit width*/
+#define   EDMA_TRANS_WIDTH_16      0x1   /* 16 bit width*/
+#define   EDMA_TRANS_WIDTH_32      0x2   /* 32bit bit width*/
+#define   EDMA_TRANS_WIDTH_64      0x3   /* 64bit bit width*/
+
+/*  EDMA burst length, the value range is 0~15, and the burn length represented is 1~16*/
+#define   EDMA_BUR_LEN_1    0x0    /* Burst length, that is, the number of transmissions is 1*/
+#define   EDMA_BUR_LEN_2    0x1    /* Burst length, that is, the number of transmissions is 2*/
+#define   EDMA_BUR_LEN_3    0x2   /* Burst length, that is, the number of transmissions is 3*/
+#define   EDMA_BUR_LEN_4    0x3   /* Burst length, that is, the number of transmissions is 4*/
+#define   EDMA_BUR_LEN_5    0x4   /* Burst length, that is, the number of transmissions is 5*/
+#define   EDMA_BUR_LEN_6    0x5   /* Burst length, that is, the number of transmissions is 6*/
+#define   EDMA_BUR_LEN_7    0x6   /* Burst length, that is, the number of transmissions is 7*/
+#define   EDMA_BUR_LEN_8    0x7   /* Burst length, that is, the number of transmissions is 8*/
+#define   EDMA_BUR_LEN_9    0x8   /* Burst length, that is, the number of transmissions is 9*/
+#define   EDMA_BUR_LEN_10   0x9   /* Burst length, that is, the number of transmissions is 10*/
+#define   EDMA_BUR_LEN_11   0xa   /* Burst length, that is, the number of transmissions is 11*/
+#define   EDMA_BUR_LEN_12   0xb   /* Burst length, that is, the number of transmissions is 12*/
+#define   EDMA_BUR_LEN_13   0xc   /* Burst length, that is, the number of transmissions is 13*/
+#define   EDMA_BUR_LEN_14   0xd   /* Burst length, that is, the number of transmissions is 14*/
+#define   EDMA_BUR_LEN_15   0xe   /* Burst length, that is, the number of transmissions is 15*/
+#define   EDMA_BUR_LEN_16   0xf   /* Burst length, that is, the number of transmissions is 16*/
+
+
+/* The specific bits corresponding to EDMA are used for EDMA register configuration macros
+       EDMAC_BASIC_CONFIG, BALONG_DMA_SET_LLI, BALONG_DMA_SET_CONFIG Usage*/
 #define EDMAC_TRANSFER_CONFIG_SOUR_INC      (0X80000000)
 #define EDMAC_TRANSFER_CONFIG_DEST_INC      (0X40000000)
 
@@ -6850,16 +6882,16 @@ typedef enum tagEDMA_TRANS_TYPE
 
 #define EDMAC_NEXT_LLI_ENABLE       0x2           /* Bit 1 */
 
-/*链式传输时的节点信息*/
+/*Node information during chain transmission*/
 typedef struct _BALONG_DMA_CB
 {
-    volatile BSP_U32 lli;     /*指向下个LLI*/
+    volatile BSP_U32 lli;     /*Point to the next lli*/
     volatile BSP_U32 bindx;
     volatile BSP_U32 cindx;
     volatile BSP_U32 cnt1;
-    volatile BSP_U32 cnt0;   /*块传输或者LLI传输的每个节点数据长度 <= 65535字节*/
-    volatile BSP_U32 src_addr; /*物理地址*/
-    volatile BSP_U32 des_addr; /*物理地址*/
+    volatile BSP_U32 cnt0;   /*Data length per node for block transmission or LLI transmission <= 65535 bytes*/
+    volatile BSP_U32 src_addr; /*Physical address*/
+    volatile BSP_U32 des_addr; /*Physical address*/
     volatile BSP_U32 config;
 } BALONG_DMA_CB;
 
@@ -6871,7 +6903,7 @@ typedef struct _BALONG_DMA_CB
                ( EDMAC_TRANSFER_CONFIG_SOUR_BURST_LENGTH(burst_len) | EDMAC_TRANSFER_CONFIG_DEST_BURST_LENGTH(burst_len) \
                | EDMAC_TRANSFER_CONFIG_SOUR_WIDTH(burst_width) | EDMAC_TRANSFER_CONFIG_DEST_WIDTH(burst_width) )
 
-/*addr:物理地址*/
+/*Addr: Physical address*/
 #define BALONG_DMA_SET_LLI(addr, last)   ((last)?0:(EDMAC_MAKE_LLI_ADDR(addr) | EDMAC_NEXT_LLI_ENABLE))
 
 #define BALONG_DMA_SET_CONFIG(req, direction, burst_width, burst_len) \
@@ -6880,10 +6912,10 @@ typedef struct _BALONG_DMA_CB
                  | ((direction == BALONG_DMA_M2M)?M2M_CONFIG:((direction == BALONG_DMA_P2M)?P2M_CONFIG:M2P_CONFIG)))
 
 /**************************************************************************
-  宏定义
+  Macro definition
 **************************************************************************/
 
-/*错误码定义*/
+/*Error code definition*/
 #define DMAC_SUCCESS                       BSP_OK
 #define DMA_FAIL                          BSP_ERROR
 
@@ -6906,146 +6938,146 @@ typedef struct _BALONG_DMA_CB
 
 
 /*******************************************************************************
-  函数名:      BSP_S32 balong_dma_init(void)
-  功能描述:    DMA初始化程序，挂接中断
-  输入参数:    无
-  输出参数:    无
-  返回值:      0
+  Function name: BSP_S32 balong_dma_init(void)
+  Function description: DMA initialization program, hook interrupt
+  Input parameters: None
+  Output parameters: None
+  Return value: 0
 *******************************************************************************/
 extern BSP_S32 balong_dma_init(void);
 
 /*******************************************************************************
-  函数名:       int balong_dma_current_transfer_address(UINT32 channel_id)
-  函数描述:     获得某通道当前传输的内存地址
-  输入参数:     channel_id : 通道ID，调用balong_dma_channel_init函数的返回值
-  输出参数:     无
-  返回值:       成功：通道当前传输的内存地址
-                失败：负数
+  Function name: int balong_dma_current_transfer_address(UINT32 channel_id)
+  Function description: Obtain the memory address currently transmitted by a certain channel
+  Input parameters: channel_id: channel ID, call the return value of balong_dma_channel_init function
+  Output parameters: None
+  Return value: Success: The memory address currently transmitted by the channel
+                Failed: Negative
 *******************************************************************************/
 extern int balong_dma_current_transfer_address(BSP_U32 channel_id);
 #define DRV_EDMA_CURR_TRANS_ADDR(channel_id)  balong_dma_current_transfer_address(channel_id)
 
 /*******************************************************************************
-  函数名:       int balong_dma_channel_stop(UINT32 channel_id)
-  函数描述:     停止指定的DMA通道
-  输入参数:     channel_id : 通道ID，调用balong_dma_channel_init函数的返回值
-  输出参数:     无
-  返回值:       成功：通道当前传输的内存地址
-                失败：负数
+  Function name: int balong_dma_channel_stop(UINT32 channel_id)
+  Function Description: Stop the specified DMA channel
+  Input parameters: channel_id: channel ID, call the return value of balong_dma_channel_init function
+  Output parameters: None
+  Return value: Success: The memory address currently transmitted by the channel
+                Failed: Negative
 *******************************************************************************/
 extern BSP_S32 balong_dma_channel_stop(BSP_U32 channel_id);
 #define DRV_EDMA_CHANNEL_STOP(channel_id)  balong_dma_channel_stop(channel_id)
 
 
 /*******************************************************************************
-  函数名:      BALONG_DMA_CB *balong_dma_channel_get_lli_addr(UINT32 channel_id)
-  函数描述:    获取指定DMA通道的链表控制块的起始地址
-  输入参数:    channel_id：通道ID,调用balong_dma_channel_init函数的返回值
-  输出参数:    无
-  返回值:      成功：0
-               失败：负数
+  Function name: BALONG_DMA_CB *balong_dma_channel_get_lli_addr(UINT32 channel_id)
+  Function description: Get the starting address of the linked list control block of the specified DMA channel
+  Input parameters: channel_id: channel ID, call balong_dma_channel_init function return value
+  Output parameters: None
+  Return value: Success: 0
+               Failed: Negative
 *******************************************************************************/
 extern BALONG_DMA_CB *balong_dma_channel_get_lli_addr (BSP_U32 channel_id);
 #define DRV_EDMA_CHAN_GET_LLI_ADDR(channel_id)  balong_dma_channel_get_lli_addr(channel_id)
 
 
 /******************************************************************************
-  函数名:      int balong_dma_channel_init (BALONG_DMA_REQ req,
+  Function name: int balong_dma_channel_init (BALONG_DMA_REQ req,
                   channel_isr pFunc, UINT32 channel_arg, UINT32 int_flag)
-  函数描述:    根据外设号分配通道，注册通道中断回调函数、初始化传输完成信号量、
-               将外设号写入config寄存器
-  输入参数:    req : 外设请求号
-               pFunc : 上层模块注册的DMA通道中断处理函数，NULL时表明不注册
-               channel_arg : pFunc的入参1，
-                             pFunc为NULL，不需要设置这个参数
-               int_flag : pFunc的入参2, 产生的中断类型，取值范围为
-                        BALONG_DMA_INT_DONE、BALONG_DMA_INT_LLT_DONE、
-                      ALONG_DMA_INT_CONFIG_ERR、BALONG_DMA_INT_TRANSFER_ERR、
-                        BALONG_DMA_INT_READ_ERR之一，或者组合。
-                        pFunc为NULL，不需要设置这个参数
-  输出参数:    无
-  返回值:      成功：通道号
-               失败：负数
+  Function description: Assign channels according to peripheral number, register channel interrupt callback function, initialize transmission completion semaphore,
+               Write peripheral number to config register
+  Input parameters: req: peripheral request number
+               pFunc: DMA channel interrupt handling function registered by the upper layer module, NULL indicates that it is not registered
+               channel_arg: pFunc entry parameter 1,
+                             pFunc is NULL, this parameter is not required to be set
+               int_flag: The entry parameter 2 of pFunc, the interrupt type generated, the value range is
+                        BALONG_DMA_INT_DONE, BALONG_DMA_INT_LLT_DONE,
+                       ?BALONG_DMA_INT_CONFIG_ERR, BALONG_DMA_INT_TRANSFER_ERR,
+                        One of BALONG_DMA_INT_READ_ERR, or a combination.
+                        pFunc is NULL, this parameter is not required to be set
+  Output parameters: None
+  Return value: Success: Channel number
+               Failed: Negative
 *******************************************************************************/
 extern BSP_S32 balong_dma_channel_init (BALONG_DMA_REQ req, channel_isr pFunc, BSP_U32 channel_arg, BSP_U32 int_flag);
 #define DRV_EDMA_CHANNEL_INIT(req, pFunc,channel_arg,int_flag) balong_dma_channel_init(req, pFunc,channel_arg,int_flag)
 
 /*******************************************************************************
-  函数名:      int balong_dma_channel_set_config (UINT32 channel_id,
+  Function name: int balong_dma_channel_set_config (UINT32 channel_id,
                        UINT32 direction, UINT32 burst_width, UINT32 burst_len)
-  函数描述:    非链式DMA传输时，调用本函数配置通道参数
-               链式DMA传输时，不需要使用本函数。
-  输入参数:    channel_id : 通道ID，调用balong_dma_channel_init函数的返回值
-               direction : DMA传输方向, 取值为BALONG_DMA_P2M、BALONG_DMA_M2P、
-                           BALONG_DMA_M2M之一
-               burst_width：取值为0、1、2、3，表示的burst位宽为8、16、32、64bit
-               burst_len：取值范围0~15，表示的burst长度为1~16
-  输出参数:    无
-  返回值:      成功：0
-               失败：负数
+  Function description: During non-chain DMA transmission, call this function to configure channel parameters
+               This function is not required when transmitting chain DMA.
+  Input parameters: channel_id: channel ID, call the return value of balong_dma_channel_init function
+               direction: DMA transmission direction, the values ??are BALONG_DMA_P2M, BALONG_DMA_M2P,
+                           BALONG_DMA_M2M one
+               burst_width: Take the values ??of 0, 1, 2, and 3, and the burst bit width represented is 8, 16, 32, and 64bit
+               burst_len: The value range is 0~15, and the burn length is 1~16
+  Output parameters: None
+  Return value: Success: 0
+               Failed: Negative
 *******************************************************************************/
 extern BSP_S32 balong_dma_channel_set_config (BSP_U32 channel_id, BSP_U32 direction,BSP_U32 burst_width, BSP_U32 burst_len);
 #define DRV_EDMA_CHANNEL_CONFIG(channel_id, direction,burst_width,burst_len)  balong_dma_channel_set_config(channel_id, direction,burst_width,burst_len)
 
 /*******************************************************************************
-  函数名:      int balong_dma_channel_start (UINT32 channel_id, UINT32 src_addr,
+  Function name: int balong_dma_channel_start (UINT32 channel_id, UINT32 src_addr,
                        UINT32 des_addr, UINT32 len)
-  函数描述:    启动一次同步DMA传输, DMA传输完成后，才返回
-               使用本函数时，不需要注册中断处理函数
-  输入参数:    channel_id：通道ID,调用balong_dma_channel_init函数的返回值
-               src_addr：数据传输源地址，必须是物理地址
-               des_addr：数据传输目的地址，必须是物理地址
-               len：数据传输长度，单位：字节；一次传输数据的最大长度是65535字节
-  输出参数:    无
-  返回值:      成功：0
-               失败：负数
+  Function description: Start a synchronous DMA transmission, and return only after the DMA transmission is completed.
+               When using this function, no interrupt handling function is required
+  Input parameters: channel_id: channel ID, call balong_dma_channel_init function return value
+               src_addr: The data transmission source address, must be a physical address
+               des_addr: The destination address of the data transmission must be a physical address
+               len: data transmission length, unit: bytes; the maximum length of data transmitted at one time is 65535 bytes
+  Output parameters: None
+  Return value: Success: 0
+               Failed: Negative
 *******************************************************************************/
 extern BSP_S32 balong_dma_channel_start (BSP_U32 channel_id, BSP_U32 src_addr, BSP_U32 des_addr, BSP_U32 len);
 #define DRV_EDMA_CHANNEL_START(channel_id,src_addr,des_addr,len)  balong_dma_channel_start(channel_id,src_addr,des_addr,len)
 
 
 /*******************************************************************************
-  函数名:      int balong_dma_channel_async_start (UINT32 channel_id,
+  Function name: int balong_dma_channel_async_start (UINT32 channel_id,
                 unsigned int src_addr, unsigned int des_addr, unsigned int len)
-  函数描述:    启动一次异步DMA传输。启动DMA传输后，就返回。不等待DMA传输完成。
-               使用本函数时，注册中断处理函数，中断处理函数中处理DMA
-传输完成事件
-               或者，不注册中断处理函数，使用balong_dma_channel_is_idle函数查询
-               DMA传输是否完成
-  输入参数:    channel_id：通道ID,调用balong_dma_channel_init函数的返回值
-               src_addr：数据传输源地址，必须是物理地址
-               des_addr：数据传输目的地址，必须是物理地址
-               len：数据传输长度，单位：字节；一次传输数据的最大长度是65535字节
-  输出参数:    无
-  返回值:      成功：0
-               失败：负数
+  Function Description: Start an asynchronous DMA transmission. After starting DMA transmission, return. Don't wait for the DMA transmission to complete.
+               When using this function, register the interrupt processing function and handle the DMA in the interrupt processing function
+Transmission completion event
+               Alternatively, do not register the interrupt handling function and use the balong_dma_channel_is_idle function to query
+               Is DMA transmission completed?
+  Input parameters: channel_id: channel ID, call balong_dma_channel_init function return value
+               src_addr: The data transmission source address, must be a physical address
+               des_addr: The destination address of the data transmission must be a physical address
+               len: data transmission length, unit: bytes; the maximum length of data transmitted at one time is 65535 bytes
+  Output parameters: None
+  Return value: Success: 0
+               Failed: Negative
 *******************************************************************************/
 extern BSP_S32 balong_dma_channel_async_start (BSP_U32 channel_id, BSP_U32 src_addr, BSP_U32 des_addr, BSP_U32 len);
 #define DRV_EDMA_CHANNEL_ASYNC_START(channel_id,src_addr,des_addr,len) balong_dma_channel_async_start(channel_id,src_addr,des_addr,len)
 
 
 /*******************************************************************************
-  函数名:      int balong_dma_channel_lli_start (UINT32 channel_id)
-  函数描述:    启动链式DMA传输。在链式DMA的所有节点传输都全部完成后才返回。
-               链式DMA的每个节点的数据最大传输长度为65535字节。
-               注意：调用此函数前，必须设置好链表控制块。
-  输入参数:    channel_id：通道ID,调用balong_dma_channel_init函数的返回值
-  输出参数:    无
-  返回值:      成功：0
-               失败：负数
+  Function name: int balong_dma_channel_lli_start (UINT32 channel_id)
+  Function Description: Start chain DMA transmission. Return only after all node transmissions of chain DMA are completed.
+               The maximum data transmission length of each node of a chain DMA is 65535 bytes.
+               Note: Before calling this function, you must set up the linked list control block.
+  Input parameters: channel_id: channel ID, call balong_dma_channel_init function return value
+  Output parameters: None
+  Return value: Success: 0
+               Failed: Negative
 *******************************************************************************/
 extern BSP_S32 balong_dma_channel_lli_start (BSP_U32 channel_id);
 #define DRV_EDMA_CHANNEL_lli_START(channel_id)   balong_dma_channel_lli_start(channel_id)
 
 /*******************************************************************************
-  函数名:      int balong_dma_channel_lli_start (UINT32 channel_id)
-  函数描述:    启动链式DMA传输，然后立即返回，不等待DMA传输完成。
-               链式DMA的每个节点的数据最大传输长度为65535字节。
-               注意：调用此函数前，必须设置好链表控制块。
-  输入参数:    channel_id：通道ID,调用balong_dma_channel_init函数的返回值
-  输出参数:    无
-  返回值:      成功：0
-               失败：负数
+  Function name: int balong_dma_channel_lli_start (UINT32 channel_id)
+  Function Description: Start chain DMA transmission and return immediately without waiting for DMA transmission to complete.
+               The maximum data transmission length of each node of a chain DMA is 65535 bytes.
+               Note: Before calling this function, you must set up the linked list control block.
+  Input parameters: channel_id: channel ID, call balong_dma_channel_init function return value
+  Output parameters: None
+  Return value: Success: 0
+               Failed: Negative
 *******************************************************************************/
 extern BSP_S32 balong_dma_channel_lli_async_start (BSP_U32 channel_id);
 #define DRV_EDMA_CHANNEL_lli_ASYNC_START(channel_id)   balong_dma_channel_lli_async_start(channel_id)
@@ -7053,13 +7085,13 @@ extern BSP_S32 balong_dma_channel_lli_async_start (BSP_U32 channel_id);
 
 /******************************************************************************
 *
-  函数名:       int balong_dma_channel_is_idle (UINT32 channel_id)
-  函数描述:     查询DMA通道是否空闲
-  输入参数:     channel_id : 通道ID，调用balong_dma_channel_init函数的返回值
-  输出参数:     无
-  返回值:       0 : 通道忙碌
-                1 : 通道空闲
-                负数 : 失败
+  Function name: int balong_dma_channel_is_idle (UINT32 channel_id)
+  Function description: Query whether the DMA channel is idle
+  Input parameters: channel_id: channel ID, call the return value of balong_dma_channel_init function
+  Output parameters: None
+  Return value: 0: Channel is busy
+                1: The channel is idle
+                Negative number: Failed
 *******************************************************************************/
 extern BSP_S32 balong_dma_channel_is_idle (BSP_U32 channel_id);
 #define DRV_EDMA_CHANNEL_IS_IDLE(chanel_id) balong_dma_channel_is_idle(chanel_id)
@@ -7070,97 +7102,97 @@ extern BSP_S32 balong_dma_channel_is_idle (BSP_U32 channel_id);
 /*************************SEC START***********************************/
 
 /*************************************************
- 函 数 名       : DRV_SECURE_SUPPORT
- 功能描述   : 当前版本是否支持安全启动
- 输入参数   : unsigned char *pData
- 输出参数   : unsigned char *pData
- 返 回 值      : OK/ERROR
+ Function Name: DRV_SECURE_SUPPORT
+ Function Description: Whether the current version supports secure booting
+ Input parameters: unsigned char *pData
+ Output parameters: unsigned char *pData
+ Return Value: OK/ERROR
 *************************************************/
 extern BSP_S32 DRV_SECURE_SUPPORT(BSP_U8 *pu8Data);
 
 /*************************************************
- 函 数 名       : DRV_SECURE_ALREADY_USE
- 功能描述   : 查询当前版本是否已经启用安全启动
- 输入参数   : unsigned char *pData
- 输出参数   : unsigned char *pData
- 返 回 值      : OK/ERROR
+ Function Name: DRV_SECURE_ALREADY_USE
+ Function Description: Query whether the current version has enabled secure boot
+ Input parameters: unsigned char *pData
+ Output parameters: unsigned char *pData
+ Return Value: OK/ERROR
 *************************************************/
 extern BSP_S32 DRV_SECURE_ALREADY_USE(BSP_U8 *pu8Data);
 
 /*************************************************
- 函 数 名       : DRV_START_SECURE
- 功能描述   : 启用安全启动
- 输入参数   :
- 输出参数   :
- 返 回 值      : OK/ERROR
+ Function Name: DRV_START_SECURE
+ Function Description: Enable Safe Boot
+ Input parameters:
+ Output parameters:
+ Return Value: OK/ERROR
 *************************************************/
 extern BSP_S32 DRV_START_SECURE(void);
 
 
 /*************************************************
- 函 数 名       : DRV_SEC_CHECK
- 功能描述   : 安全镜像判断
- 输入参数   :
- 输出参数   :
- 返 回 值      : 0:不是安全镜像
-                           1:是安全镜像
-                           其他:错误
- 调用函数   :
- 被调函数   :
+ Function Name: DRV_SEC_CHECK
+ Function description: Security mirror judgment
+ Input parameters:
+ Output parameters:
+ Return Value: 0: Not a secure image
+                           1: It is a security mirror
+                           Others: Error
+ Calling the function:
+ Called function:
 
- 修改历史   :
-    日    期       : 2011年03月07日
-   修改内容 : 新生成函数
+ Modify history:
+    Date: March 7, 2011
+   Modify content: New generated function
 
 *************************************************/
 extern BSP_U32 DRV_SEC_CHECK(void);
 
 /*************************SEC END*************************************/
 
-/*************************MD5相关 START*******************************/
+/*************************MD5 related START*********************************/
 
 /*****************************************************************************
- 函 数 名  : VerifySIMLock
- 功能描述  : 判断当前解锁码是否正确 .
- 输入参数  : imei       - 单板IMEI号
-             unlockcode - 解锁码
- 输出参数  : 无。
- 返 回 值  : 1：   解锁成功
-             0:    解锁失败
+ Function Name: VerifySIMLock
+ Function Description: Determine whether the current unlock code is correct.
+ Input parameters: imei -IMEI number of single board
+             unlockcode -Unlock code
+ Output parameters: None.
+ Return Value: 1: Unlocked successfully
+             0: Unlock failed
 *****************************************************************************/
 extern int VerifySIMLock(char* UnlockCode, char* Key);
 #define DRV_CARDLOCK_MD5_VERIFY(unlockcode, imei)  VerifySIMLock(unlockcode, imei)
 
 /*******************************************************
-  函数名称：GetAuthVer
-  调用关系：Produce Tool
-  输入：
-  返回值：
-    描述：SIMLock manager模块版本号
-    类型：整型值
-    如果为1，表示采用早期的版本进行密码获取。即1.0版本。
-                    如果为2，则表示2.0版本，采取本次优化之后的版本获取密码。
-                    其他为保留值。
- 修改历史      :
-  1.日    期   : 2011年4月23日
-    修改内容   : SIMLock合入
+  Function name: GetAuthVer
+  Call relationship: Produce Tool
+  enter:
+  Return value:
+    Description: SIMLock manager module version number
+    Type: integer value
+    If 1, it means that the password is obtained using an earlier version. That is, version 1.0.
+                    If it is 2, it means version 2.0, and the version after this optimization is adopted to obtain the password.
+                    Others are reserved values.
+ Modify history:
+  1. Date: April 23, 2011
+    Modified content: SIMLock merge
 
 ********************************************************/
 extern int GetAuthVer(void);
 #define DRV_GET_AUTH_VER()  GetAuthVer()
 
-/*************************MD5相关 END*********************************/
+/*************************MD5 related END******************************************/
 
 /*************************SYNC START**********************************/
 
 /**************************************************************************
-  错误码定义
+  Error code definition
 **************************************************************************/
 #define BSP_ERR_SYNC_BASE                (BSP_S32)(0x80000000 | (BSP_DEF_ERR(BSP_MODU_SYNC, 0)))
 #define BSP_ERR_SYNC_TIMEOUT             (BSP_ERR_SYNC_BASE + 0x0)
 
 /**************************************************************************
-  结构定义
+  Structural definition
 **************************************************************************/
 typedef enum tagSYNC_MODULE_E
 {
@@ -7184,7 +7216,7 @@ typedef enum tagSYNC_MODULE_E
 }SYNC_MODULE_E;
 
 /**************************************************************************
-  函数声明
+  Function declaration
 **************************************************************************/
 BSP_S32 BSP_SYNC_Lock(SYNC_MODULE_E u32Module, BSP_U32 *pState, BSP_U32 u32TimeOut);
 BSP_S32 BSP_SYNC_UnLock(SYNC_MODULE_E u32Module, BSP_U32 u32State);
@@ -7193,17 +7225,17 @@ BSP_S32 BSP_SYNC_Give(SYNC_MODULE_E u32Module);
 
 /*************************SYNC END************************************/
 
-/*************************CHG模块START********************************/
+/*******************************Chg module start**********************************/
 
 /*****************************************************************************
- 函 数 名  : BSP_CHG_GetCbcState
- 功能描述  : 返回电池状态和电量
- 输入参数  :pusBcs 0:电池在供电 1:与电池连接电池未供电 2:没有与电池连接
-                          pucBcl  0:电量不足或没有与电池连接
- 输出参数  : pusBcs 0:电池在供电 1:与电池连接电池未供电 2:没有与电池连接
-                          pucBcl  0:电量不足或没有与电池连接
- 返回值：   0 操作成功
-                         -1操作失败
+ Function Name: BSP_CHG_GetCbcState
+ Function Description: Return to battery status and power
+ Input parameters:pusBcs 0: Battery is being powered 1: Connected with the battery Battery is not powered 2: Not connected with the battery
+                          pucBcl 0: Insufficient power or not connected to the battery
+ Output parameters: pusBcs 0: Battery is being powered 1: Connected with the battery Battery is not powered 2: Not connected with the battery
+                          pucBcl 0: Insufficient power or not connected to the battery
+ Return value: 0 Operation successful
+                         -1 Operation failed
 
 *****************************************************************************/
 extern int BSP_CHG_GetCbcState(unsigned char *pusBcs,unsigned char *pucBcl);
@@ -7212,21 +7244,21 @@ extern int DRV_CHG_GET_CBC_STATE(unsigned char *pusBcs,unsigned char *pucBcl);
 typedef enum CHARGING_STATE_ENUM_tag
 {
         CHARGING_INIT = -1,
-        NO_CHARGING_UP = 0,  /*开机未充电*/
-        CHARGING_UP ,              /*开机正充电*/
-        NO_CHARGING_DOWN ,  /*关机未充电*/
-        CHARGING_DOWN         /*关机未充电*/
+        NO_CHARGING_UP = 0,  /*Powered on and not charged*/
+        CHARGING_UP ,              /*Turn on and charge*/
+        NO_CHARGING_DOWN ,  /*Shut down and not charged*/
+        CHARGING_DOWN         /*Shut down and not charged*/
 }CHARGING_STATE_ENUM;
 
 typedef enum BATT_LEVEL_ENUM_tag
 {
         BATT_INIT = -2,
-        BATT_LOW_POWER =-1,    /*电池低电*/
-        BATT_LEVEL_0,                 /*0格电池电量*/
-        BATT_LEVEL_1,                  /*1格电池电量*/
-        BATT_LEVEL_2,                   /*2格电池电量*/
-        BATT_LEVEL_3,                    /*3格电池电量*/
-        BATT_LEVEL_4,                    /*4格电池电量*/
+        BATT_LOW_POWER =-1,    /*Low battery*/
+        BATT_LEVEL_0,                 /*0 grid battery capacity*/
+        BATT_LEVEL_1,                  /*1-grid battery capacity*/
+        BATT_LEVEL_2,                   /*2-grid battery capacity*/
+        BATT_LEVEL_3,                    /*3-grid battery capacity*/
+        BATT_LEVEL_4,                    /*4-grid battery capacity*/
         BATT_LEVEL_MAX
 }BATT_LEVEL_ENUM;
 
@@ -7237,134 +7269,134 @@ typedef struct BATT_STATE_tag
 }BATT_STATE_T;
 
 
-/*AT 命令枚举类型*/
+/*AT command enumeration type*/
 typedef enum
 {
-    CHG_AT_BATTERY_CHECK,        /* Battery校准*/
-    CHG_AT_BATTERY_LEVEL,        /* Battery电量 */
-    CHG_AT_BATTERY_ADC,          /* Battery Temperature保护*/
+    CHG_AT_BATTERY_CHECK,        /* Battery calibration*/
+    CHG_AT_BATTERY_LEVEL,        /* Battery battery */
+    CHG_AT_BATTERY_ADC,          /* Battery Temperature Protection*/
     CHG_AT_BATTERY_INVALID
 } ENUM_CHG_ATCM_TYPE;
 
 typedef enum ENUM_POWER_ON_MODE_tag
 {
-    POWER_ON_INVALID = 0,          	/* 无效开机模式*/
-    POWER_ON_NORMAL,       	 	/* 正常开机模式*/
-    POWER_ON_CHARGING,       	/* 关机充电模式*/
+    POWER_ON_INVALID = 0,          	/* Invalid boot mode*/
+    POWER_ON_NORMAL,       	 	/* Normal boot mode*/
+    POWER_ON_CHARGING,       	/* Shut down charging mode*/
     POWER_ON_MAX
 } ENUM_POWER_ON_MODE;
 /*****************************************************************************
- 函 数 名  : BSP_CHG_GetBatteryState
- 功能描述  :获取底层电池状态信息
- 输入参数  :battery_state 电量信息
- 输出参数  :battery_state 电量信息
- 返回值：   0 操作成功
-                         -1操作失败
+ Function Name: BSP_CHG_GetBatteryState
+ Function description: Obtain the underlying battery status information
+ Input parameters:battery_state battery information
+ Output parameters:battery_state battery information
+ Return value: 0 Operation successful
+                         -1 Operation failed
 
 *****************************************************************************/
 extern int BSP_CHG_GetBatteryState(BATT_STATE_T *battery_state);
 extern int DRV_CHG_GET_BATTERY_STATE(BATT_STATE_T *battery_state);
 
 /*****************************************************************************
- 函 数 名  : BSP_CHG_ChargingStatus
- 功能描述  :查询目前是否正在充电中
- 输入参数  :无
- 输出参数  :无
- 返回值：   0 未充电
-                          1 充电中
+ Function Name: BSP_CHG_ChargingStatus
+ Function Description: Check whether it is currently charging
+ Input parameters: None
+ Output parameters: None
+ Return value: 0 Not charged
+                          1 Charging
 *****************************************************************************/
 extern int BSP_CHG_ChargingStatus(void);
 extern int DRV_CHG_GET_CHARGING_STATUS(void);
 
 /*****************************************************************************
- 函 数 名  : BSP_CHG_StateSet
- 功能描述  :使能或者禁止充电
- 输入参数  :ulState      0:禁止充电
- 						1:使能充电
- 输出参数  :无
- 返回值：    无
+ Function Name: BSP_CHG_StateSet
+ Function Description: Enable or disable charging
+ Input parameters: ulState 0: Charging is prohibited
+ 						1: Enable charging
+ Output parameters: None
+ Return value: None
 *****************************************************************************/
 extern void DRV_CHG_STATE_SET(unsigned long ulState);
 
 /*****************************************************************************
- 函 数 名  : BSP_CHG_StateGet
- 功能描述  :查询
- 输入参数  :
- 输出参数  :无
- 返回值：    无
+ Function Name: BSP_CHG_StateGet
+ Function description: Query
+ Input parameters:
+ Output parameters: None
+ Return value: None
 *****************************************************************************/
 extern BSP_S32 BSP_CHG_StateGet(void);
 #define DRV_CHG_STATE_GET()    BSP_CHG_StateGet()
 
 /*****************************************************************************
- 函 数 名  : BSP_CHG_Sply
- 功能描述  :查询
- 输入参数  :
- 输出参数  :无
- 返回值：    无
+ Function Name: BSP_CHG_Sply
+ Function description: Query
+ Input parameters:
+ Output parameters: None
+ Return value: None
 *****************************************************************************/
 extern BSP_S32 BSP_CHG_Sply(void);
 #define DRV_CHG_BATT_SPLY()    BSP_CHG_Sply()
 
 
-/* 	AT读接口*/
+/* 	At read interface*/
 extern BSP_S32 BSP_TBAT_Read(ENUM_CHG_ATCM_TYPE atID, void *pItem);
 extern BSP_S32 BSP_TBAT_Write(ENUM_CHG_ATCM_TYPE atID, void *pItem);
 
 /**********************************************************************
-函 数 名      : BSP_TBAT_CHRStGet
-功能描述  :  TBAT AT^TCHRENABLE?是否需要补电
+Function Name: BSP_TBAT_CHRStGet
+Function description: TBAT AT^TCHRENABLE? Is it necessary to recharge the power
 
-输入参数  : 无
-输出参数  : 无
-返 回 值      : 1:需要补电
-			      0:不需要补电
-注意事项  : 无
+Input parameters: None
+Output parameters: None
+Return Value: 1: Need to recharge
+			      0: No need to recharge
+Notes: None
 ***********************************************************************/
 extern BSP_S32 BSP_TBAT_CHRStGet(void);
 
 /**********************************************************************
-函 数 名      : BSP_TBAT_CHRSuply
-功能描述  :  TBAT AT^TCHRENABLE=4补电实现
-            			需要提供补电成功LCD显示图样
-输入参数  : 无
-输出参数  : 无
-返 回 值      :
-注意事项  : 无
+Function Name: BSP_TBAT_CHRSuply
+Function description: TBAT AT^TCHRENABLE=4 recharge power implementation
+            			Recharge the power supply and LCD display pattern is required
+Input parameters: None
+Output parameters: None
+Return Value:
+Notes: None
 ***********************************************************************/
 extern BSP_S32 BSP_TBAT_CHRSply(void);
 
 /**********************************************************************
-函 数 名      : BSP_ONOFF_StartupModeGet
-功能描述  :  A核判断开关机模式
+Function Name: BSP_ONOFF_StartupModeGet
+Function description: A core judges the switch mode
             			
-输入参数  : 无
-输出参数  : 无
-返 回 值      :
-注意事项  : 无
+Input parameters: None
+Output parameters: None
+Return Value:
+Notes: None
 ***********************************************************************/
 ENUM_POWER_ON_MODE BSP_ONOFF_StartupModeGet( void );
 /*****************************************************************************
-* 函 数 名  : BSP_PMU_BattCali
+*Function Name: BSP_PMU_BattCali
 *
-* 功能描述  : 电池校准前减小单板电流接口，给AT调用 
+*Function description: Reduce the single-board current interface before battery calibration, call the AT 
 *
-* 输入参数  : 
-* 输出参数  : 
+*Input parameters: 
+*Output parameters: 
 *
-* 返 回 值  : 
+*Return value: 
 *
-* 其它说明  : 
+*Other instructions: 
 *
 *****************************************************************************/
 extern void BSP_PMU_BattCali(void);
 
 
-/*************************CHG模块 END*********************************/
+/*************************CHG Module END****************************************/
 
 /*************************ICC BEGIN***********************************/
 /**************************************************************************
-  宏定义
+  Macro definition
 **************************************************************************/
 #define ICC_CHAN_NUM_MAX            (32)
 
@@ -7379,7 +7411,7 @@ extern void BSP_PMU_BattCali(void);
 #define ICC_CHAN_FIFO_SIZE3         (4096)
 
 /**************************************************************************
-  结构定义
+  Structural definition
 **************************************************************************/
 typedef enum tagICC_CHAN_STATE_E
 {
@@ -7427,7 +7459,7 @@ typedef struct tagICC_CHAN_ATTR_S{
 }ICC_CHAN_ATTR_S;
 
 /**************************************************************************
-  函数声明
+  Function declaration
 **************************************************************************/
 BSP_S32 BSP_ICC_Open(BSP_U32 u32ChanId, ICC_CHAN_ATTR_S *pChanAttr);
 BSP_S32 BSP_ICC_Close(BSP_U32 u32ChanId);
@@ -7437,7 +7469,7 @@ BSP_S32 BSP_ICC_Ioctl(BSP_U32 u32ChanId, BSP_U32 cmd, BSP_VOID *param);
 BSP_U32 BSP_ICC_CanSleep(BSP_U32 u32Flag);
 
 /**************************************************************************
-  错误码定义
+  Error code definition
 **************************************************************************/
 #define BSP_ERR_ICC_BASE                (BSP_S32)(0x80000000 | (BSP_DEF_ERR(BSP_MODU_ICC, 0)))
 #define BSP_ERR_ICC_NOT_INIT            (BSP_ERR_ICC_BASE + 0x1)
@@ -7463,7 +7495,7 @@ BSP_U32 BSP_ICC_CanSleep(BSP_U32 u32Flag);
 
 
 /*************************IFC START*************************************/
-/* 模块ID枚举*/
+/* Module id enumeration*/
 typedef enum tagIFC_MODULE_E
 {
     IFC_MODULE_BSP=  0,
@@ -7475,55 +7507,55 @@ typedef enum tagIFC_MODULE_E
 } IFC_MODULE_E;
 
 
-/* IFC回调函数结构*/
-/* pMsgBody:该函数ID对应函数的参数,前四字节需保证为moduleId*/
-/* u32Len:pMsgBody长度*/
+/* Ifc callback function structure*/
+/* P msg body: The parameter corresponding to the function id of this function, the first four bytes must be guaranteed to be module id*/
+/* U32 len:p msg body length*/
 typedef BSP_S32 (*BSP_IFC_REG_FUNC)(BSP_VOID *pMsgBody,BSP_U32 u32Len);
 
 /*****************************************************************************
-* 函 数 名  : BSP_IFC_RegFunc
+*Function Name: BSP_IFC_RegFunc
 *
-* 功能描述  : 注册IFC回调函数接口
+*Function description: Register the IFC callback function interface
 *
-* 输入参数  : IFC_MODULE_E enModuleId    模块ID
-*             BSP_IFC_REG_FUNC pFunc     回调函数指针
-* 输出参数  : 无
+*Input parameters: IFC_MODULE_E enModuleId Module ID
+*BSP_IFC_REG_FUNC pFunc callback function pointer
+*Output parameters: None
 *
-* 返 回 值  : BSP_SUCCESS
-*             BSP_ERR_MODULE_NOT_INITED
-*             BSP_ERR_INVALID_PARA
+*Return Value: BSP_SUCCESS
+*BSP_ERR_MODULE_NOT_INITED
+*BSP_ERR_INVALID_PARA
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 BSP_U32 BSP_IFC_RegFunc(IFC_MODULE_E enModuleId, BSP_IFC_REG_FUNC pFunc);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_IFC_Send
+*Function Name: BSP_IFC_Send
 *
-* 功能描述  : IFC发送消息接口
+*Function description: IFC message sending interface
 *
-* 输入参数  : BSP_VOID * pMspBody           发送消息内容
-*             BSP_U32 u32Len               pMspBody的长度
-* 输出参数  : 无
+*Input parameters: BSP_VOID *pMspBody Send message content
+*Length of BSP_U32 u32Len pMspBody
+*Output parameters: None
 *
-* 返 回 值  : BSP_SUCCESS
-*             BSP_ERR_MODULE_NOT_INITED
-*             BSP_ERR_INVALID_PARA
-*             BSP_ERR_IFC_SEND_FAIL
+*Return Value: BSP_SUCCESS
+*BSP_ERR_MODULE_NOT_INITED
+*BSP_ERR_INVALID_PARA
+*BSP_ERR_IFC_SEND_FAIL
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 BSP_U32 BSP_IFC_Send(BSP_VOID * pMspBody, BSP_U32 u32Len);
 
 /*************************IFC END*************************************/
 
-/*************************Build优化 START*****************************/
-/*************************内存分配 START******************************/
+/*************************Build Optimization START******************************/
+/*************************Memory allocation START******************************/
 
-/* DDR中各个内存段的类型 */
+/* Types of each memory segment in Ddr */
 typedef enum tagBSP_DDR_SECT_TYPE_E
 {
     BSP_DDR_SECT_TYPE_TTF = 0x0,
@@ -7544,7 +7576,7 @@ typedef enum tagBSP_DDR_SECT_TYPE_E
 }BSP_DDR_SECT_TYPE_E;
 
 
-/* AXI中各个内存段的类型 */
+/* Types of each memory segment in Axi */
 typedef enum tagBSP_AXI_SECT_TYPE_E
 {
     BSP_AXI_SECT_TYPE_ACORE_DEEPSLEEP = 0x0,
@@ -7568,7 +7600,7 @@ typedef enum tagBSP_AXI_SECT_TYPE_E
 }BSP_AXI_SECT_TYPE_E;
 
 
-/* 内存段属性 */
+/* Memory segment properties */
 typedef enum tagBSP_DDR_SECT_ATTR_E
 {
     BSP_DDR_SECT_ATTR_CACHEABLE = 0x0,
@@ -7577,7 +7609,7 @@ typedef enum tagBSP_DDR_SECT_ATTR_E
 }BSP_DDR_SECT_ATTR_E;
 
 
-/* 定义虚实地址是否相同的枚举 */
+/* Enumeration that defines whether the virtual and real addresses are the same */
 typedef enum tagBSP_DDR_SECT_PVADDR_E
 {
     BSP_DDR_SECT_PVADDR_EQU = 0x0,
@@ -7586,7 +7618,7 @@ typedef enum tagBSP_DDR_SECT_PVADDR_E
 }BSP_DDR_SECT_PVADDR_E;
 
 
-/* DDR内存段的查询结构 */
+/* Query structure of Ddr memory segment */
 typedef struct tagBSP_DDR_SECT_QUERY
 {
     BSP_DDR_SECT_TYPE_E     enSectType;
@@ -7596,7 +7628,7 @@ typedef struct tagBSP_DDR_SECT_QUERY
 }BSP_DDR_SECT_QUERY;
 
 
-/* DDR内存段的详细信息 */
+/* Details of Ddr memory segment */
 typedef struct tagBSP_DDR_SECT_INFO
 {
     BSP_DDR_SECT_TYPE_E    enSectType;
@@ -7607,7 +7639,7 @@ typedef struct tagBSP_DDR_SECT_INFO
 }BSP_DDR_SECT_INFO;
 
 
-/* AXI内存段的详细信息 */
+/* Details of Axi memory segments */
 typedef struct tagBSP_AXI_SECT_INFO
 {
     BSP_AXI_SECT_TYPE_E    enSectType;
@@ -7617,30 +7649,30 @@ typedef struct tagBSP_AXI_SECT_INFO
 }BSP_AXI_SECT_INFO;
 
 /*****************************************************************************
- 函 数 名  : BSP_DDR_GetSectInfo
- 功能描述  : DDR内存段查询接口
- 输入参数  : pstSectQuery: 需要查询的内存段类型、属性
- 输出参数  : pstSectInfo:  查询到的内存段信息
- 返回值    ：BSP_OK/BSP_ERROR
+ Function Name: BSP_DDR_GetSectInfo
+ Function description: DDR memory segment query interface
+ Input parameters: pstSectQuery: The memory segment type and attribute that need to be queried
+ Output parameters: pstSectInfo: The query memory segment information
+ Return value: BSP_OK/BSP_ERROR
 *****************************************************************************/
 BSP_S32 BSP_DDR_GetSectInfo(BSP_DDR_SECT_QUERY *pstSectQuery, BSP_DDR_SECT_INFO *pstSectInfo);
 #define DRV_GET_FIX_DDR_ADDR(pstSectQuery, pstSectInfo) BSP_DDR_GetSectInfo(pstSectQuery, pstSectInfo)
 
 /*****************************************************************************
- 函 数 名  : BSP_AXI_GetSectInfo
- 功能描述  : AXI内存段查询接口
- 输入参数  : enSectType: 需要查询的内存段类型
- 输出参数  : pstSectInfo:  查询到的内存段信息
- 返回值    ：BSP_OK/BSP_ERROR
+ Function Name: BSP_AXI_GetSectInfo
+ Function description: AXI memory segment query interface
+ Input parameters: enSectType: The memory segment type that needs to be queried
+ Output parameters: pstSectInfo: The query memory segment information
+ Return value: BSP_OK/BSP_ERROR
 *****************************************************************************/
 BSP_S32 BSP_AXI_GetSectInfo(BSP_AXI_SECT_TYPE_E enSectType, BSP_AXI_SECT_INFO *pstSectInfo);
 #define DRV_GET_FIX_AXI_ADDR(enSectType, pstSectInfo) BSP_AXI_GetSectInfo(enSectType, pstSectInfo)
 
-/*************************内存分配 END********************************/
+/*************************Memory allocation END************************************/
 
-/*************************IP基地址、中断号查询 START******************/
+/**********************************IP base address and interrupt number query START*******************/
 
-/* 定义所有需要查询的IP类型 */
+/* Define all ip types that need to be queried */
 typedef enum tagBSP_IP_TYPE_E
 {
     BSP_IP_TYPE_SOCP = 0x0,
@@ -7663,17 +7695,17 @@ typedef enum tagBSP_IP_TYPE_E
 }BSP_IP_TYPE_E;
 
 /*****************************************************************************
- 函 数 名  : BSP_GetIPBaseAddr
- 功能描述  : IP基地址查询
- 输入参数  : enIPType: 需要查询的IP类型
- 输出参数  : 无
- 返回值    ：查询到的IP基地址
+ Function Name: BSP_GetIPBaseAddr
+ Function description: IP base address query
+ Input parameters: enIPType: The IP type to be queried
+ Output parameters: None
+ Return value: The query IP base address
 *****************************************************************************/
 BSP_U32 BSP_GetIPBaseAddr(BSP_IP_TYPE_E enIPType);
 #define DRV_GET_IP_BASE_ADDR(enIPType)  BSP_GetIPBaseAddr(enIPType)
 
 
-/* 需要查询的中断类型 */
+/* The interrupt type that needs to be queried */
 typedef enum tagBSP_INT_TYPE_E
 {
     BSP_INT_TYPE_RTC = 0,
@@ -7688,36 +7720,36 @@ typedef enum tagBSP_INT_TYPE_E
     BSP_INT_TYPE_CICOM1,
     BSP_INT_TYPE_HDLC,
     BSP_INT_TYPE_BBPMASTER,
-    BSP_INT_TYPE_GBBP,          /*G_BBP_INT_LEVEL*/
-    BSP_INT_TYPE_GBBP_AWAKE,    /*G_BBP_AWAKE_INT_LEVEL*/
-    BSP_INT_TYPE_WBBP_0MS,      /*W_BBP_0MS_INT_LEVEL*/
-    BSP_INT_TYPE_WBBP_AWAKE,    /*W_BBP_AWAKE_INT_LEVEL*/
-    BSP_INT_TYPE_WBBP_SWITCH,   /*W_BBP_CLOCK_SWITCH_INT_LEVEL*/
-    BSP_INT_TYPE_INT_OSRTC,     /*RTC_DUAL_TIMER_INT_LEVEL*/
-    BSP_INT_TYPE_INT_SIMI,      /*SOC_SMIM_INT_LEVEL*/
-    BSP_INT_TYPE_INT_ZSP_DOG,   /*ZSP_WDG_INT_LEVEL*/
-    BSP_INT_TYPE_INT_HIFI_DOG,  /*HIFI_WDG_INT_LEVEL*/
+    BSP_INT_TYPE_GBBP,          /*G bbp int level*/
+    BSP_INT_TYPE_GBBP_AWAKE,    /*G bbp awake int level*/
+    BSP_INT_TYPE_WBBP_0MS,      /*W bbp 0 ms int level*/
+    BSP_INT_TYPE_WBBP_AWAKE,    /*W bbp awake int level*/
+    BSP_INT_TYPE_WBBP_SWITCH,   /*W bbp clock switch int level*/
+    BSP_INT_TYPE_INT_OSRTC,     /*Rtc dual timer int level*/
+    BSP_INT_TYPE_INT_SIMI,      /*Soc smim int level*/
+    BSP_INT_TYPE_INT_ZSP_DOG,   /*Zsp wdg int level*/
+    BSP_INT_TYPE_INT_HIFI_DOG,  /*Hifi wdg int level*/
     BSP_INT_TYPE_INT_DRX_TIMER, /**/
     BSP_INT_TYPE_BUTTOM
 }BSP_INT_TYPE_E;
 
 
 /*****************************************************************************
- 函 数 名  : BSP_GetIntNO
- 功能描述  : 中断号查询
- 输入参数  : enIntType: 需要查询的中断类型
- 输出参数  : 无
- 返回值    ：查询到的中断号
+ Function Name: BSP_GetIntNO
+ Function description: Interrupt number query
+ Input parameters: enIntType: The interrupt type that needs to be queried
+ Output parameters: None
+ Return value: the query interrupt number
 *****************************************************************************/
 BSP_S32 BSP_GetIntNO(BSP_INT_TYPE_E enIntType);
 #define DRV_GET_INT_NO(enIntType)    BSP_GetIntNO(enIntType)
 
 
-/*************************IP基地址、中断号查询 END********************/
+/**********************************IP base address, interrupt number query END*************************/
 
-/*************************查询模块是否支持 START**********************/
+/*************************************************Check whether the module supports START*******************/
 
-/* 当前版本是否支持某个模块 */
+/* Does the current version support a module? */
 typedef enum tagBSP_MODULE_SUPPORT_E
 {
     BSP_MODULE_SUPPORT     = 0,
@@ -7725,7 +7757,7 @@ typedef enum tagBSP_MODULE_SUPPORT_E
     BSP_MODULE_SUPPORT_BUTTOM
 }BSP_MODULE_SUPPORT_E;
 
-/* 查询的模块类型 */
+/* The type of module to query */
 typedef enum tagBSP_MODULE_TYPE_E
 {
     BSP_MODULE_TYPE_SD = 0x0,
@@ -7740,11 +7772,11 @@ typedef enum tagBSP_MODULE_TYPE_E
 }BSP_MODULE_TYPE_E;
 
 /*****************************************************************************
- 函 数 名  : BSP_CheckModuleSupport
- 功能描述  : 查询模块是否支持
- 输入参数  : enModuleType: 需要查询的模块类型
- 输出参数  : 无
- 返回值    ：BSP_MODULE_SUPPORT或BSP_MODULE_UNSUPPORT
+ Function Name: BSP_CheckModuleSupport
+ Function Description: Query whether the module supports it
+ Input parameters: enModuleType: The module type that needs to be queried
+ Output parameters: None
+ Return value: BSP_MODULE_SUPPORT or BSP_MODULE_UNSUPPORT
 *****************************************************************************/
 BSP_MODULE_SUPPORT_E BSP_CheckModuleSupport(BSP_MODULE_TYPE_E enModuleType);
 
@@ -7761,431 +7793,431 @@ BSP_MODULE_SUPPORT_E BSP_CheckModuleSupport(BSP_MODULE_TYPE_E enModuleType);
 #define DRV_GET_HSIC_SUPPORT()      BSP_CheckModuleSupport(BSP_MODULE_TYPE_HSIC)
 
 #define DRV_GET_LOCAL_FLASH_SUPPORT()      BSP_CheckModuleSupport(BSP_MODULE_TYPE_LOCALFLASH)
-/*************************查询模块是否支持 END************************/
+/********************************************************/
 
-/*************************虚实地址转换 START**************************/
+/*************************Virtual and real address translation START******************************/
 
 /*****************************************************************************
- 函 数 名  : DRV_DDR_VIRT_TO_PHY
- 功能描述  : DDR内存虚地址往实地址转换
- 输入参数  : ulVAddr；虚地址
- 输出参数  : 无
- 返回值    ：实地址
+ Function Name: DRV_DDR_VIRT_TO_PHY
+ Function description: DDR memory virtual address to real address conversion
+ Input parameters: ulVAddr; virtual address
+ Output parameters: None
+ Return value: real address
 *****************************************************************************/
 unsigned int DRV_DDR_VIRT_TO_PHY(unsigned int ulVAddr);
 
 /*****************************************************************************
- 函 数 名  : DRV_DDR_PHY_TO_VIRT
- 功能描述  : DDR内存虚地址往实地址转换
- 输入参数  : ulPAddr；实地址
- 输出参数  : 无
- 返回值    ：虚地址
+ Function Name: DRV_DDR_PHY_TO_VIRT
+ Function description: DDR memory virtual address to real address conversion
+ Input parameters: ulPAddr; real address
+ Output parameters: None
+ Return value: virtual address
 *****************************************************************************/
 unsigned int DRV_DDR_PHY_TO_VIRT(unsigned int ulPAddr);
 
 /*****************************************************************************
- 函 数 名  : TTF_VIRT_TO_PHY
- 功能描述  : TTF内存虚地址往实地址转换
- 输入参数  : ulVAddr；虚地址
- 输出参数  : 无
- 返回值    ：实地址
+ Function Name: TTF_VIRT_TO_PHY
+ Function description: Transform TTF memory virtual address to real address
+ Input parameters: ulVAddr; virtual address
+ Output parameters: None
+ Return value: real address
 *****************************************************************************/
 extern unsigned int TTF_VIRT_TO_PHY(unsigned int ulVAddr);
 
 /*****************************************************************************
- 函 数 名  : TTF_PHY_TO_VIRT
- 功能描述  : TTF内存虚地址往实地址转换
- 输入参数  : ulPAddr；实地址
- 输出参数  : 无
- 返回值    ：虚地址
+ Function Name: TTF_PHY_TO_VIRT
+ Function description: Transform TTF memory virtual address to real address
+ Input parameters: ulPAddr; real address
+ Output parameters: None
+ Return value: virtual address
 *****************************************************************************/
 extern unsigned int TTF_PHY_TO_VIRT(unsigned int ulPAddr);
 
 /*****************************************************************************
- 函 数 名  : IPF_VIRT_TO_PHY
- 功能描述  : IPF寄存器虚地址往实地址转换
- 输入参数  : ulVAddr；虚地址
- 输出参数  : 无
- 返回值    ：实地址
+ Function Name: IPF_VIRT_TO_PHY
+ Function description: Convert the virtual address of the IPF register to the real address
+ Input parameters: ulVAddr; virtual address
+ Output parameters: None
+ Return value: real address
 *****************************************************************************/
 extern unsigned int IPF_VIRT_TO_PHY(unsigned int ulVAddr);
 
 /*****************************************************************************
- 函 数 名  : IPF_PHY_TO_VIRT
- 功能描述  : IPF寄存器虚地址往实地址转换
- 输入参数  : ulPAddr；实地址
- 输出参数  : 无
- 返回值    ：虚地址
+ Function Name: IPF_PHY_TO_VIRT
+ Function description: Convert the virtual address of the IPF register to the real address
+ Input parameters: ulPAddr; real address
+ Output parameters: None
+ Return value: virtual address
 *****************************************************************************/
 extern unsigned int IPF_PHY_TO_VIRT(unsigned int ulPAddr);
 
-/*************************虚实地址转换 END****************************/
+/*************************Virtual and real address translation END************************************/
 
-/*************************OAM组件新增接口 START***********************/
+/***********************************New interface for OAM components START*******************/
 
 /*****************************************************************************
- 函 数 名  : BSP_GUDSP_ShareAddrGet
- 功能描述  : 获取物理层共享地址段的信息。
- 输入参数  : 无。
- 输出参数  : pulAddr：存放物理层共享地址段信息的缓存。
- 返 回 值  : 无。
+ Function Name: BSP_GUDSP_ShareAddrGet
+ Function description: Get information about the physical layer shared address segment.
+ Input parameters: None.
+ Output parameters: pulAddr: The cache of the shared address segment information of the physical layer.
+ Return Value: None.
 *****************************************************************************/
 extern int BSP_GUDSP_ShareAddrGet(unsigned int * pulAddrInTcm, unsigned int * pulAddrInDdr, unsigned int * pulLength);
 #define DRV_DSP_SHARE_ADDR_GET(pulAddrInTcm,pulAddrInDdr,pulLength)    BSP_GUDSP_ShareAddrGet(pulAddrInTcm,pulAddrInDdr,pulLength)
 
 /*****************************************************************************
- 函 数 名  : BSP_UpateDSPShareInfo
- 功能描述  : 更新物理层BSS COMMON段信息。
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 0:成功，-1:失败。
+ Function Name: BSP_UpateDSPShareInfo
+ Function Description: Update the physical layer BSS COMMON segment information.
+ Input parameters: None.
+ Output parameters: None
+ Return Value: 0: Success, -1: Failed.
 *****************************************************************************/
 extern int BSP_GUDSP_UpateShareInfo(void);
 #define DRV_BSP_UPDATE_DSP_SHAREINFO()  BSP_GUDSP_UpateShareInfo()
 
-/* 下行业务数据DMA搬移完成中断,此中断只对应Modem核*/
+/* DMA migration of downlink service data is completed, and this interrupt only corresponds to the modem core*/
 typedef BSP_VOID (*BSPBBPIntDlTbFunc)(BSP_VOID);
-/* BBP子帧中断处理函数,此中断只对应Modem核*/
+/* Bbp subframe interrupt processing function, this interrupt only corresponds to the modem kernel*/
 typedef BSP_VOID (*BSPBBPIntTimerFunc)(BSP_VOID);
 
 /*****************************************************************************
-* 函 数 名  : BSP_BBPIntTimerRegCb
+*Function Name: BSP_BBPIntTimerRegCb
 *
-* 功能描述  : 被PS调用，用来向底软注册1ms定时中断的回调
+*Function description: Called by PS, used to register a callback with a 1ms timed interrupt to the bottom soft
 *
-* 输入参数  : 
-* 输出参数  :无
+*Input parameters: 
+*Output parameters: None
 *
-* 返 回 值  : VOID
+*Return Value: VOID
 *
-* 修改记录  : 2011年3月7日  wangjing  creat
+*Modified record: March 7, 2011 wangjing creat
 *****************************************************************************/
 extern BSP_VOID BSP_BBPIntTimerRegCb(BSPBBPIntTimerFunc pFunc);
 
 /*****************************************************************************
-* 函 数 名  : BSP_BBPIntTimerClear
+*Function Name: BSP_BBPIntTimerClear
 *
-* 功能描述  : 被PS调用，用来清除1ms定时中断
+*Function description: Called by PS, used to clear 1ms timing interrupt
 *
-* 输入参数  : 无
-* 输出参数  :无
+*Input parameters: None
+*Output parameters: None
 *
-* 返 回 值  : VOID
+*Return Value: VOID
 *
-* 修改记录  : 2011年5月31日  wangjing  creat
+*Modified record: May 31, 2011 wangjing creat
 *****************************************************************************/
 extern BSP_VOID BSP_BBPIntTimerClear(void);
 
 /*****************************************************************************
-* 函 数 名  : BSP_BBPIntTimerEnable
+*Function Name: BSP_BBPIntTimerEnable
 *
-* 功能描述  : 被PS调用，用来打开1ms定时中断
+*Function description: Called by PS, used to turn on 1ms timing interrupt
 *
-* 输入参数  : 无
-* 输出参数  :无
+*Input parameters: None
+*Output parameters: None
 *
-* 返 回 值  : VOID
+*Return Value: VOID
 *
-* 修改记录  : 2011年3月7日  wangjing  creat
+*Modified record: March 7, 2011 wangjing creat
 *****************************************************************************/
 extern BSP_S32 BSP_BBPIntTimerEnable(void);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_BBPIntTimerDisable
+*Function Name: BSP_BBPIntTimerDisable
 *
-* 功能描述  : 被PS调用，用来关闭1ms定时中断
+*Function description: Called by PS, used to close 1ms timing interrupt
 *
-* 输入参数  : 无
-* 输出参数  :无
+*Input parameters: None
+*Output parameters: None
 *
-* 返 回 值  : VOID
+*Return Value: VOID
 *
-* 修改记录  : 2011年3月7日  wangjing  creat
+*Modified record: March 7, 2011 wangjing creat
 *****************************************************************************/
 extern BSP_VOID BSP_BBPIntTimerDisable(void);
 
 /*****************************************************************************
-* 函 数 名  : BSP_BBPGetCurTime
+*Function Name: BSP_BBPGetCurTime
 *
-* 功能描述  : 被PS调用，用来获取系统精确时间
+*Function description: Called by PS to obtain the precise system time
 *
-* 输入参数  : 无
-* 输出参数  : BSP_U32 u32CurTime:当前时刻
+*Input parameters: None
+*Output parameters: BSP_U32 u32CurTime: Current time
 *
-* 返 回 值  : BSP_OK : 获取成功
-*                        BSP_ERR_INVALID_PARA  :获取失败
+*Return Value: BSP_OK: Acquisition successfully
+*BSP_ERR_INVALID_PARA: Failed to obtain
 *
-* 修改记录  : 2011年3月7日  wangjing  creat
+*Modified record: March 7, 2011 wangjing creat
 *****************************************************************************/
 extern BSP_U32 BSP_BBPGetCurTime(BSP_U64 *pCurTime);
 
 /*****************************************************************************
-* 函 数 名  : BSP_BBPIntDlTbRegCb
+*Function Name: BSP_BBPIntDlTbRegCb
 *
-* 功能描述  : 被PS调用，用来向底软注册下行数据DMA搬移完成中断的回调
+*Function description: Called by PS, used to register downlink data to the bottom soft soft register to complete the callback of interruption
 *
-* 输入参数  : 
-* 输出参数  :无
+*Input parameters: 
+*Output parameters: None
 *
-* 返 回 值  : VOID
+*Return Value: VOID
 *
-* 修改记录  : 2011年3月7日  wangjing  creat
+*Modified record: March 7, 2011 wangjing creat
 *****************************************************************************/
 extern BSP_VOID BSP_BBPIntDlTbRegCb(BSPBBPIntDlTbFunc pFunc);
 
 /*****************************************************************************
-* 函 数 名  : BSP_GetSysFrame
+*Function Name: BSP_GetSysFrame
 *
-* 功能描述  : get system frame num 
+*Function description: get system frame num 
 *
-* 输入参数  : 无
-* 输出参数  :
+*Input parameters: None
+*Output parameters:
 *
-* 返 回 值  : frame num/0xffff
+*Return Value: frame num/0xffff
 *
-* 修改记录  : 2012年4月18日  wangjing  creat
+*Modified record: April 18, 2012 wangjing creat
 *****************************************************************************/
 extern BSP_U32 BSP_GetSysFrame(BSP_VOID);
 
 /*****************************************************************************
-* 函 数 名  : BSP_GetSysSubFrame
+*Function Name: BSP_GetSysSubFrame
 *
-* 功能描述  : get sub system frame num 
+*Function description: get sub system frame num 
 *
-* 输入参数  : 无
-* 输出参数  :
+*Input parameters: None
+*Output parameters:
 *
-* 返 回 值  : frame num/0xffff
+*Return Value: frame num/0xffff
 *
-* 修改记录  : 2012年4月18日  wangjing  creat
+*Modified record: April 18, 2012 wangjing creat
 *****************************************************************************/
 extern BSP_U32 BSP_GetSysSubFrame(BSP_VOID);
 
 /*****************************************************************************
- 函 数 名  : BSP_GetSliceValue
- 功能描述  : 获取Slice定时器的值。
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 定时器的值。
+ Function Name: BSP_GetSliceValue
+ Function Description: Get the value of the Slice timer.
+ Input parameters: None.
+ Output parameters: None
+ Return Value: The value of the timer.
 *****************************************************************************/
 extern unsigned int BSP_GetSliceValue(BSP_VOID);
 #define DRV_GET_SLICE()   BSP_GetSliceValue()
 
 /*****************************************************************************
- 函 数 名  : BSP_StartHardTimer
- 功能描述  : 启动一个定时器的值。
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 定时器的值。
+ Function Name: BSP_StartHardTimer
+ Function Description: The value of a timer is started.
+ Input parameters: None.
+ Output parameters: None
+ Return Value: The value of the timer.
 *****************************************************************************/
 extern BSP_VOID BSP_StartHardTimer( BSP_U32 value );
 #define DRV_STATR_HARD_TIMER(value)   BSP_StartHardTimer(value)
 
 /*****************************************************************************
- 函 数 名  : BSP_StartHardTimer
- 功能描述  : 启动一个定时器的值。
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 定时器的值。
+ Function Name: BSP_StartHardTimer
+ Function Description: The value of a timer is started.
+ Input parameters: None.
+ Output parameters: None
+ Return Value: The value of the timer.
 *****************************************************************************/
 extern BSP_VOID BSP_StopHardTimer(BSP_VOID);
 #define DRV_STOP_HARD_TIMER()   BSP_StopHardTimer()
 
 /*****************************************************************************
- 函 数 名  : BSP_GetHardTimerCurTime
- 功能描述  : 获取一个定时器的剩余值。
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 定时器的剩余值。
+ Function Name: BSP_GetHardTimerCurTime
+ Function Description: Gets the remaining value of a timer.
+ Input parameters: None.
+ Output parameters: None
+ Return Value: The remaining value of the timer.
 *****************************************************************************/
 extern BSP_U32 BSP_GetHardTimerCurTime(BSP_VOID);
 #define DRV_GET_TIMER_CUR_TIME()   BSP_GetHardTimerCurTime()
 
 /*****************************************************************************
- 函 数 名  : BSP_ClearTimerINT
- 功能描述  : 清除一个定时器的中断
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 定时器的剩余值。
+ Function Name: BSP_ClearTimerINT
+ Function Description: Clear interrupt from a timer
+ Input parameters: None.
+ Output parameters: None
+ Return Value: The remaining value of the timer.
 *****************************************************************************/
 extern BSP_VOID BSP_ClearTimerINT(BSP_VOID);
 #define DRV_CLEAR_TIMER_INT()   BSP_ClearTimerINT()
 
 /*****************************************************************************
- 函 数 名  : BSP_StartHardTimer
- 功能描述  : 启动一个定时器的值。
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 定时器的值。
+ Function Name: BSP_StartHardTimer
+ Function Description: The value of a timer is started.
+ Input parameters: None.
+ Output parameters: None
+ Return Value: The value of the timer.
 *****************************************************************************/
 extern BSP_VOID BSP_StartDrxTimer( BSP_U32 value );
 #define DRV_STATR_DRX_TIMER(value)   BSP_StartDrxTimer(value)
 
 /*****************************************************************************
- 函 数 名  : BSP_StartHardTimer
- 功能描述  : 启动一个定时器的值。
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 定时器的值。
+ Function Name: BSP_StartHardTimer
+ Function Description: The value of a timer is started.
+ Input parameters: None.
+ Output parameters: None
+ Return Value: The value of the timer.
 *****************************************************************************/
 extern BSP_VOID BSP_StopDrxTimer(BSP_VOID);
 #define DRV_STOP_DRX_TIMER()   BSP_StopDrxTimer()
 
 /*****************************************************************************
- 函 数 名  : BSP_GetHardTimerCurTime
- 功能描述  : 获取一个定时器的剩余值。
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 定时器的剩余值。
+ Function Name: BSP_GetHardTimerCurTime
+ Function Description: Gets the remaining value of a timer.
+ Input parameters: None.
+ Output parameters: None
+ Return Value: The remaining value of the timer.
 *****************************************************************************/
 extern BSP_U32 BSP_GetDrxTimerCurTime(BSP_VOID);
 #define DRV_GET_DRX_TIMER_CUR_TIME()   BSP_GetDrxTimerCurTime()
 
 /*****************************************************************************
- 函 数 名  : BSP_ClearTimerINT
- 功能描述  : 清除一个定时器的中断
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 定时器的剩余值。
+ Function Name: BSP_ClearTimerINT
+ Function Description: Clear interrupt from a timer
+ Input parameters: None.
+ Output parameters: None
+ Return Value: The remaining value of the timer.
 *****************************************************************************/
 extern BSP_VOID BSP_ClearDrxTimerINT(BSP_VOID);
 #define DRV_CLEAR_DRX_TIMER_INT()   BSP_ClearDrxTimerINT()
 
 /*****************************************************************************
-* 函 数 名  : BSP_PWC_SetDrxTimerWakeSrc
-* 功能描述  : 设置DRX timer 作为唤醒源
-* 输入参数  : 
-* 输出参数  : 
-* 返 回 值   :
-* 修改记录  : 
+*Function Name: BSP_PWC_SetDrxTimerWakeSrc
+*Function Description: Set DRX timer as wakeup source
+*Input parameters: 
+*Output parameters: 
+*Return value:
+*Modify record: 
 *****************************************************************************/
 extern BSP_VOID BSP_PWC_SetDrxTimerWakeSrc(VOID);
 #define DRV_SET_DRX_TIMER_WAKE_SRC() BSP_PWC_SetDrxTimerWakeSrc()
 /*****************************************************************************
-* 函 数 名  : BSP_PWC_DelDrxTimerWakeSrc
-* 功能描述  : 设置DRX timer 不作为唤醒源
-* 输入参数  : 
-* 输出参数  : 
-* 返 回 值  :
-* 修改记录  : 
+*Function Name: BSP_PWC_DelDrxTimerWakeSrc
+*Function Description: Setting DRX timer is not used as a wake-up source
+*Input parameters: 
+*Output parameters: 
+*Return value:
+*Modify record: 
 *****************************************************************************/
 extern BSP_VOID BSP_PWC_DelDrxTimerWakeSrc(VOID);
 #define DRV_DEL_DRX_TIMER_WAKE_SRC() BSP_PWC_DelDrxTimerWakeSrc()
-/**************DRX对齐 Timer20***************/
+/**************DRX Alignment Timer20******************/
 
 /*****************************************************************************
- 函 数 名  : BSP_ClearZSPWatchDogInt
- 功能描述  : 清除一个ZSP WatchDog的中断
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 中断是否需要处理
+ Function Name: BSP_ClearZSPWatchDogInt
+ Function Description: Clear interrupts from a ZSP WatchDog
+ Input parameters: None.
+ Output parameters: None
+ Return Value: Whether the interrupt needs to be processed
 *****************************************************************************/
 extern BSP_BOOL BSP_ClearZSPWatchDogInt(BSP_VOID);
 #define DRV_CLEAR_ZSPDOG_INT()   BSP_ClearZSPWatchDogInt()
 
 /*****************************************************************************
- 函 数 名  : BSP_ClearHIFIWatchDogInt
- 功能描述  : 清除一个HIFI WatchDog的中断
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 中断是否需要处理
+ Function Name: BSP_ClearHIFIWatchDogInt
+ Function Description: Clear an interrupt from a HIFI WatchDog
+ Input parameters: None.
+ Output parameters: None
+ Return Value: Whether the interrupt needs to be processed
 *****************************************************************************/
 extern BSP_BOOL BSP_ClearHIFIWatchDogInt(BSP_VOID);
 #define DRV_CLEAR_HIFIDOG_INT()   BSP_ClearHIFIWatchDogInt()
 
 /*****************************************************************************
- 函 数 名  : BSP_ZspWatchDogIntEnalbe
- 功能描述  : 使能一个ZSP WatchDog的中断
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 中断是否需要处理
+ Function Name: BSP_ZspWatchDogIntEnalbe
+ Function Description: Enable interrupts of a ZSP WatchDog
+ Input parameters: None.
+ Output parameters: None
+ Return Value: Whether the interrupt needs to be processed
 *****************************************************************************/
 extern BSP_VOID BSP_ZSPWatchDogIntEnalbe(int level);
 #define DRV_ZSPDOG_INT_ENABLE(level) BSP_ZSPWatchDogIntEnalbe(level)
 
 /*****************************************************************************
- 函 数 名  : BSP_ZspWatchDogIntEnalbe
- 功能描述  : 使能一个ZSP WatchDog的中断
- 输入参数  : 无。
- 输出参数  : 无
- 返 回 值  : 中断是否需要处理
+ Function Name: BSP_ZspWatchDogIntEnalbe
+ Function Description: Enable interrupts of a ZSP WatchDog
+ Input parameters: None.
+ Output parameters: None
+ Return Value: Whether the interrupt needs to be processed
 *****************************************************************************/
 extern BSP_VOID BSP_HIFIWatchDogIntEnalbe(int level);
 #define DRV_HIFIDOG_INT_ENABLE(level) BSP_HIFIWatchDogIntEnalbe(level)
 
 /*****************************************************************************
- 函 数 名  : BSP_SendNMIInterrupt
- 功能描述  : 发送 NMI 的中断
- 输入参数  : NMI中断的bit位
- 输出参数  : 无
- 返 回 值  : 中断是否需要处理
+ Function Name: BSP_SendNMIInterrupt
+ Function Description: Send an interrupt to NMI
+ Input parameters: bit bit of NMI interrupt
+ Output parameters: None
+ Return Value: Whether the interrupt needs to be processed
 *****************************************************************************/
 extern BSP_VOID BSP_SendNMIInterrupt(unsigned int SocBitNO, unsigned int ZspBitNO);
 #define DRV_SEND_NMI_INT(SocBitNO,ZspBitNO) BSP_SendNMIInterrupt(SocBitNO,ZspBitNO)
 
 /*****************************************************************************
- 函 数 名  : BSP_InitPlatformVerInfo
- 功能描述  : 初始化芯片的版本号
- 输入参数  : 无
- 输出参数  : none
- 返 回 值  : void
+ Function Name: BSP_InitPlatformVerInfo
+ Function description: Initialize the version number of the chip
+ Input parameters: None
+ Output parameters: none
+ Return Value: void
 *****************************************************************************/
 extern BSP_VOID BSP_InitPlatformVerInfo(BSP_VOID);
 #define DRV_INIT_PLATFORM_VER() BSP_InitPlatformVerInfo()
 
 /******************************************************************************
-*  Function:  DRV_START_MODEGET
-*  Description:
-*  History:
+* Function:  DRV_START_MODEGET
+* Description:
+* History:
 ********************************************************************************/
 extern BSP_S32  DRV_START_MODEGET(void);
 
 /*****************************************************************************
- 函 数 名  : BSP_GetPlatformInfo
- 功能描述  : 获取芯片的版本号
- 输入参数  : 无
- 输出参数  : u32PlatformInfo:芯片的版本号
- 返 回 值  : void
+ Function Name: BSP_GetPlatformInfo
+ Function description: Get the version number of the chip
+ Input parameters: None
+ Output parameters: u32PlatformInfo: chip version number
+ Return Value: void
 *****************************************************************************/
 extern BSP_VOID BSP_GetPlatformInfo(unsigned long *u32PlatformInfo);
 #define DRV_GET_PLATFORM_INFO(u32PlatformInfo) BSP_GetPlatformInfo(u32PlatformInfo)
 
-/*产线版本写SDT信息的文件系统的分区名*/
+/*The partition name of the file system that writes SDT information in the production line version*/
 #define MANUFACTURE_ROOT_PATH "/manufacture"
 
 /*****************************************************************************
- 函 数 名  : drvOnLineUpdateResult
- 功能描述  : WebUI模块函数注册。
- 输入参数  : 无
- 输出参数  : 无。
- 返 回 值  : 无
- 注意事项  ：
+ Function Name: drvOnLineUpdateResult
+ Function description: WebUI module function registration.
+ Input parameters: None
+ Output parameters: None.
+ Return Value: None
+ Notes:
 *****************************************************************************/
 extern void drvOnLineUpdateResult(void);
 #define DRV_ONLINE_UPDATE_RESULT()    drvOnLineUpdateResult()
 
 /******************************************************************************
 *
-  函数名:       BSP_S32 nand_get_bad_block (BSP_U32 *len, BSP_U32 **ppBadBlock)
-  函数描述:     查询整个NAND的所有FLASH 坏块
-  输入参数:     无
-  输出参数:     pNum       : 返回坏块个数
-                ppBadBlock ：数组指针，返回所有坏块的index索引
-  返回值:       0    : 查询成功
-                负数 : 查询失败
+  Function name: BSP_S32 nand_get_bad_block (BSP_U32 *len, BSP_U32 **ppBadBlock)
+  Function Description: Query all FLASH bad blocks of the entire NAND
+  Input parameters: None
+  Output parameters: pNum: Returns the number of bad blocks
+                ppBadBlock: array pointer, return index index of all bad blocks
+  Return value: 0: Query successful
+                Negative number: query failed
 *******************************************************************************/
 extern BSP_S32 nand_get_bad_block(BSP_U32 *pNum, BSP_U32 **ppBadBlock);
 #define NAND_GET_BAD_BLOCK(pNum, ppBadBlock) nand_get_bad_block(pNum, ppBadBlock)
 
 /******************************************************************************
 *
-  函数名:       BSP_VOID  nand_free_bad_block_mem(BSP_U32* pBadBlock)
-  函数描述:     通过nand_get_bad_block接口申请的坏块内存由底软申请，由协议栈调用
-                该接口释放。
-  输入参数:     pBadBlock
-  输出参数:     无
-  返回值:       BSP_VOID
+  Function name: BSP_VOID nand_free_bad_block_mem(BSP_U32*pBadBlock)
+  Function description: The bad block memory applied through the nand_get_bad_block interface is applied by the bottom soft and is called by the protocol stack.
+                This interface is released.
+  Input parameters: pBadBlock
+  Output parameters: None
+  Return value: BSP_VOID
 *******************************************************************************/
 extern BSP_VOID  nand_free_bad_block_mem(BSP_U32* pBadBlock);
 #define NAND_FREE_BAD_BLOCK_MEM(pBadBlock)  nand_free_bad_block_mem(pBadBlock)
@@ -8195,76 +8227,76 @@ extern BSP_VOID  nand_free_bad_block_mem(BSP_U32* pBadBlock);
 
 typedef struct
 {
-    BSP_U32           MufId;                                         /* 厂商ID */
-    BSP_U8      aucMufName[NAND_MFU_NAME_MAX_LEN];             /* 厂商名称字符串 */
-    BSP_U32           DevId;                                         /* 设备ID */
-    BSP_U8      aucDevSpec[NAND_DEV_SPEC_MAX_LEN];             /* 设备规格字符串 */
+    BSP_U32           MufId;                                         /* Manufacturer ID */
+    BSP_U8      aucMufName[NAND_MFU_NAME_MAX_LEN];             /* Manufacturer name string */
+    BSP_U32           DevId;                                         /* Device ID */
+    BSP_U8      aucDevSpec[NAND_DEV_SPEC_MAX_LEN];             /* Device specification string */
 }NAND_DEV_INFO_S;
 
 /******************************************************************************
 *
-  函数名:       BSP_S32 nand_get_dev_info (NAND_DEV_INFO_S *pNandDevInfo)
-  函数描述:     查询NAND设备相关信息：包括厂商ID、厂商名称、设备ID、设备规格
-  输入参数:     无
-  输出参数:     pNandDevInfo    存储NAND设备相关信息的结构体
-  返回值:       0    : 查询成功
-                负数 : 查询失败
+  Function name: BSP_S32 nand_get_dev_info (NAND_DEV_INFO_S *pNandDevInfo)
+  Function description: Query NAND device related information: including manufacturer ID, manufacturer name, device ID, device specifications
+  Input parameters: None
+  Output parameters: pNandDevInfo Structure for storing NAND device related information
+  Return value: 0: Query successful
+                Negative number: query failed
 *******************************************************************************/
 extern BSP_S32 nand_get_dev_info(NAND_DEV_INFO_S *pNandDevInfo);
 #define NAND_GET_DEV_INFO(pNandDevInfo) nand_get_dev_info(pNandDevInfo)
 
 
 /******************************************************************************
-* Function     :   BSP_NANDF_Read
+*Function: BSP_NANDF_Read
 *
-* Description  :   读取Nand Flash中指定地址和长度内容到指定空间中
+*Description: Read the specified address and length content in Nand Flash into the specified space
 *
-* Input        :   u32FlashAddr  读取数据的源地址
-*              :   u32NumByte    读取数据长度，单位为字节
+*Input: u32FlashAddr The source address of the data to be read
+*: u32NumByte Read data length, unit in bytes
 *
-* Output       :   pRamAddr      读取的数据存放的地址
+*Output: pRamAddr The address of the data read
 *
-* return       :   读操作成功与否
+*return: Whether the read operation is successful or not
 ******************************************************************************/
 BSP_S32 BSP_NANDF_Read(BSP_VOID* pRamAddr, BSP_U32 u32FlashAddr, BSP_U32 u32NumByte);
 
 /******************************************************************************
-* Function     :   BSP_NANDF_Write
+*Function : BSP_NANDF_Write
 *
-* Description  :   将指定地址和长度内容到写到指定FLASH地址中
+*Description: Write the specified address and length content to the specified FLASH address
 *
-* Input        :   pRamAddr     写操作源地址
-*              :   u32NumByte   数据长度，单位为字节
+*Input: pRamAddr Write operation source address
+*: u32NumByte Data length, unit in bytes
 *
-* Output       :   u32FlashAddr 写操作目的地址
+*Output: u32FlashAddr write operation destination address
 *
-* return       :   写操作成功与否
+*return: Whether the write operation is successful or not
 ******************************************************************************/
 BSP_S32 BSP_NANDF_Write(BSP_U32 u32FlashAddr, BSP_VOID *pRamAddr,  BSP_U32 u32NumByte);
 
 /******************************************************************************
-* Function     :   BSP_NANDF_Erase
+*Function : BSP_NANDF_Erase
 *
-* Description  :   擦除指定Flash地址所在块
+*Description: Erase the block where the specified Flash address is located
 *
-* Input        :   u32address   要擦除块的ID
+*Input: u32address The ID of the block to be erased
 *
-* Output       :   无
+*Output: None
 *
-* return       :   擦除操作成功与否
+*return: Whether the erase operation is successful or not
 ******************************************************************************/
 BSP_S32 BSP_NANDF_Erase(BSP_U32 u32BlockID);
 
 BSP_U32 nand_isbad(BSP_U32 blockID, BSP_U32 *flag);
 
 /********************************************************************************************************
- 函 数 名  : USB_otg_switch_signal_set
- 功能描述  : 用于BALONG和K3对接时USB通道切换GPIO引脚控制
- 输入参数  : 组号、引脚号和值
- 输出参数  : 无
+ Function Name: USB_otg_switch_signal_set
+ Function Description: Used for USB channel switching GPIO pin control when BALONG and K3 docking
+ Input parameters: group number, pin number and value
+ Output parameters: None
 
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 ********************************************************************************************************/
 extern int USB_otg_switch_signal_set(UINT8 ucGroup, UINT8 ucPin, UINT8 ucValue);
 #define DRV_GPIO_SET(group, pin, value) USB_otg_switch_signal_set(group, pin, value)
@@ -8274,13 +8306,13 @@ extern int USB_otg_switch_signal_set(UINT8 ucGroup, UINT8 ucPin, UINT8 ucValue);
 #define DRV_GPIO_LOW            0
 
 /********************************************************************************************************
- 函 数 名  : USB_otg_switch_set
- 功能描述  : 用于BALONG和K3对接时MODEM侧开启或关闭USB PHY
- 输入参数  : 开启或关闭
- 输出参数  : 无
+ Function Name: USB_otg_switch_set
+ Function description: Used to turn on or off the USB PHY on the MODEM side when connecting BALONG and K3
+ Input parameters: On or Off
+ Output parameters: None
 
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 ********************************************************************************************************/
 extern int USB_otg_switch_set(UINT8 ucValue);
 #define DRV_USB_PHY_SWITCH_SET(value) USB_otg_switch_set(value)
@@ -8292,20 +8324,20 @@ extern int USB_otg_switch_set(UINT8 ucValue);
 #define USB_SWITCH_OFF      0
 
 /********************************************************************************************************
- 函 数 名  : USB_otg_switch_get
- 功能描述  : 用于BALONG和K3对接时MODEM侧USB PHY状态查询
- 输入参数  : 无
- 输出参数  : 返回USB PHY开启状态
+ Function Name: USB_otg_switch_get
+ Function description: Used for MODEM side USB PHY status query when BALONG and K3 docking
+ Input parameters: None
+ Output parameters: Return to USB PHY enabled status
 
- 返 回 值  : 0:  操作成功；
-             -1：操作失败。
+ Return Value: 0: The operation was successful;
+             -1: The operation failed.
 ********************************************************************************************************/
 extern int USB_otg_switch_get(UINT8 *pucValue);
 #define DRV_USB_PHY_SWITCH_GET(value) USB_otg_switch_get(value)
 
-/*************************OAM组件新增接口 END*************************/
+/*************************New interface for OAM components END***************************/
 
-/************************ Build优化 END*******************************/
+/************************ Build Optimization END*************************************/
 
 enum GPIO_OPRT_ENUM
 {
@@ -8315,7 +8347,7 @@ enum GPIO_OPRT_ENUM
 };
 
 
-/* IOCTL CMD 定义 */
+/* IOCTL CMD Definition */
 #define ACM_IOCTL_SET_WRITE_CB      0x7F001000
 #define ACM_IOCTL_SET_READ_CB       0x7F001001
 #define ACM_IOCTL_SET_EVT_CB        0x7F001002
@@ -8330,13 +8362,13 @@ enum GPIO_OPRT_ENUM
 #define ACM_IOCTL_IS_IMPORT_DONE    0x7F001020
 #define ACM_IOCTL_WRITE_DO_COPY     0x7F001021
 
-/* Modem 控制命令码 */
+/* Modem control command code */
 #define ACM_MODEM_IOCTL_SET_MSC_READ_CB 0x7F001030
 #define ACM_MODEM_IOCTL_MSC_WRITE_CMD   0x7F001031
 #define ACM_MODEM_IOCTL_SET_REL_IND_CB  0x7F001032
 #define ACM_IOCTL_FLOW_CONTROL  		0x7F001035
 
-/* UDI IOCTL 命令ID */
+/* UDI IOCTL Command ID */
 #define UDI_ACM_IOCTL_SET_READ_CB           ACM_IOCTL_SET_READ_CB
 #define UDI_ACM_IOCTL_GET_READ_BUFFER_CB    ACM_IOCTL_GET_RD_BUFF
 #define UDI_ACM_IOCTL_RETUR_BUFFER_CB       ACM_IOCTL_RETURN_BUFF
@@ -8356,7 +8388,7 @@ enum GPIO_OPRT_ENUM
 #define UDI_UART_IOCTL_GET_READ_BUFFER_CB    UART_IOCTL_GET_RD_BUFF
 #define UDI_UART_IOCTL_RETUR_BUFFER_CB       UART_IOCTL_RETURN_BUFF
 
-/* 异步数据收发结构 */
+/* Asynchronous data transmission and reception structure */
 typedef struct tagACM_WR_ASYNC_INFO
 {
     char* pBuffer;
@@ -8364,11 +8396,11 @@ typedef struct tagACM_WR_ASYNC_INFO
     void* pDrvPriv;
 }ACM_WR_ASYNC_INFO;
 
-/* ACM设备事件类型 */
+/* Acm device event type */
 typedef enum tagACM_EVT_E
 {
-    ACM_EVT_DEV_SUSPEND = 0,        /* 设备不可以进行读写(主要用于事件回调函数的状态) */
-    ACM_EVT_DEV_READY = 1,          /* 设备可以进行读写(主要用于事件回调函数的状态) */
+    ACM_EVT_DEV_SUSPEND = 0,        /* The device cannot read and write (mainly used for the state of event callback function) */
+    ACM_EVT_DEV_READY = 1,          /* The device can read and write (mainly used for the state of event callback function) */
     ACM_EVT_DEV_BOTTOM
 }ACM_EVT_E;
 
@@ -8378,7 +8410,7 @@ typedef enum tagACM_IOCTL_FLOW_CONTROL_E
     ACM_IOCTL_FLOW_CONTROL_ENABLE      /* stop receiving data from ACM port */
 }ACM_IOCTL_FLOW_CONTROL_E;
 
-/* 读buffer信息 */
+/* Read the buffer information */
 typedef struct tagACM_READ_BUFF_INFO
 {
     unsigned int u32BuffSize;
@@ -8389,95 +8421,95 @@ typedef struct tagACM_READ_BUFF_INFO
 
 typedef struct tagNCM_PKT_S
 {
-    BSP_U8 *pBuffer;       /* buffer指针*/
-    BSP_U32  u32BufLen;      /* buffer长度 */
+    BSP_U8 *pBuffer;       /* Buffer pointer*/
+    BSP_U32  u32BufLen;      /* Buffer length */
 }NCM_PKT_S;
 
-/* NCM设备类型枚举*/
+/* Ncm device type enumeration*/
 typedef enum tagNCM_DEV_TYPE_E
 {
-    NCM_DEV_DATA_TYPE,      /* 数据通道类型，PS使用*/
-    NCM_DEV_CTRL_TYPE       /* 控制通道，MSP传输AT命令使用*/
+    NCM_DEV_DATA_TYPE,      /* Data channel type, ps use*/
+    NCM_DEV_CTRL_TYPE       /* Control channel, use msp transmission at command*/
 }NCM_DEV_TYPE_E;
 
-/* 上行线路收包函数指针 */
+/* Uplink package function pointer */
 typedef BSP_VOID (*USBUpLinkRxFunc)(UDI_HANDLE handle, BSP_VOID * pPktNode);
 
-/* 包封装释放函数指针 */
+/* Package package release function pointer */
 typedef BSP_VOID (*USBFreePktEncap)(BSP_VOID *PktEncap);
 
-/* USB IOCTL枚举 */
+/* USB IOCTL Enumeration */
 typedef enum tagNCM_IOCTL_CMD_TYPE_E
 {
-    NCM_IOCTL_NETWORK_CONNECTION_NOTIF,      /* 0x0,NCM网络是否连接上*/
-    NCM_IOCTL_CONNECTION_SPEED_CHANGE_NOTIF, /* 0x1,NCM设备协商的网卡速度*/
-    NCM_IOCTL_SET_PKT_ENCAP_INFO,            /* 0x2,设置包封装格式*/
-    NCM_IOCTL_REG_UPLINK_RX_FUNC,            /* 0x3,注册上行收包回调函数*/
-    NCM_IOCTL_REG_FREE_PKT_FUNC,             /* 0x4,注册释放包封装回调函数*/
-    NCM_IOCTL_FREE_BUFF,                     /* 0x5,释放底软buffer*/
-    NCM_IOCTL_GET_USED_MAX_BUFF_NUM,         /* 0x6,获取上层可以最多占用的ncm buffer个数*/
-    NCM_IOCTL_GET_DEFAULT_TX_MIN_NUM,        /* 0x7,获取默认发包个数阈值，超过该阈值会启动一次NCM传输*/
-    NCM_IOCTL_GET_DEFAULT_TX_TIMEOUT,        /* 0x8,获取默认发包超时时间，超过该时间会启动一次NCM传输*/
-    NCM_IOCTL_GET_DEFAULT_TX_MAX_SIZE,       /* 0x9,获取默认发包字节阈值，超过该阈值会启动一次NCM传输*/
-    NCM_IOCTL_SET_TX_MIN_NUM,                /* 0xa,设置发包个数阈值，超过该阈值会启动一次NCM传输*/
-    NCM_IOCTL_SET_TX_TIMEOUT,                /* 0xb,设置发包超时时间，超过该时间会启动一次NCM传输*/
-    NCM_IOCTL_SET_TX_MAX_SIZE,               /* 0xc,该命令字不再使用。设置发包字节阈值，超过该阈值会启动一次NCM传输*/
-    NCM_IOCTL_GET_RX_BUF_SIZE,               /* 0xd,获取收包buffer大小*/
-    NCM_IOCTL_FLOW_CTRL_NOTIF,               /* 0xe,流控控制开关*/
-    NCM_IOCTL_REG_AT_PROCESS_FUNC,           /* 0xf,注册AT命令处理回调函数*/
-    NCM_IOCTL_AT_RESPONSE,                   /* 0x10,AT命令回应*/
-    NCM_IOCTL_REG_CONNECT_STUS_CHG_FUNC,     /* 0x11,注册网卡状态改变通知回调函数*/
-    NCM_IOCTL_SET_PKT_STATICS,               /* 0x12,配置统计信息*/
+    NCM_IOCTL_NETWORK_CONNECTION_NOTIF,      /* 0x0, is the ncm network connected?*/
+    NCM_IOCTL_CONNECTION_SPEED_CHANGE_NOTIF, /* 0x1,ncm device negotiated network card speed*/
+    NCM_IOCTL_SET_PKT_ENCAP_INFO,            /* 0x2, set the package format*/
+    NCM_IOCTL_REG_UPLINK_RX_FUNC,            /* 0x3, register uplink package callback function*/
+    NCM_IOCTL_REG_FREE_PKT_FUNC,             /* 0x4, register the package callback function for release package*/
+    NCM_IOCTL_FREE_BUFF,                     /* 0x5, release the bottom soft buffer*/
+    NCM_IOCTL_GET_USED_MAX_BUFF_NUM,         /* 0x6, get the maximum number of ncm buffers that the upper layer can occupy*/
+    NCM_IOCTL_GET_DEFAULT_TX_MIN_NUM,        /* 0x7, get the default number of packets. If the threshold exceeds this threshold, an ncm transmission will be started.*/
+    NCM_IOCTL_GET_DEFAULT_TX_TIMEOUT,        /* 0x8, get the default packet timeout time, after which time, ncm transmission will be started*/
+    NCM_IOCTL_GET_DEFAULT_TX_MAX_SIZE,       /* 0x9, get the default packet byte threshold. If this threshold exceeds it, an ncm transmission will be started.*/
+    NCM_IOCTL_SET_TX_MIN_NUM,                /* 0xa, set the threshold for the number of packets. If this threshold exceeds it, an ncm transmission will be started.*/
+    NCM_IOCTL_SET_TX_TIMEOUT,                /* 0xb, set the packet timeout time, after which the ncm transmission will be started*/
+    NCM_IOCTL_SET_TX_MAX_SIZE,               /* 0xc, the command word is no longer used. Set the packet byte threshold, exceeding this threshold will start an ncm transmission*/
+    NCM_IOCTL_GET_RX_BUF_SIZE,               /* 0xd, get the size of the packetized buffer*/
+    NCM_IOCTL_FLOW_CTRL_NOTIF,               /* 0xe, flow control switch*/
+    NCM_IOCTL_REG_AT_PROCESS_FUNC,           /* 0xf, register the at command to handle the callback function*/
+    NCM_IOCTL_AT_RESPONSE,                   /* 0x10, at command response*/
+    NCM_IOCTL_REG_CONNECT_STUS_CHG_FUNC,     /* 0x11, the notification callback function for the registration network card status change*/
+    NCM_IOCTL_SET_PKT_STATICS,               /* 0x12, configuration statistics*/
        【BSP 新需求 USB NCM】PS需要底软提供NCM流控状态查询接口*/
-    NCM_IOCTL_GET_FLOWCTRL_STATUS,           /* 0x13 查询NCM流控状态*/
+    NCM_IOCTL_GET_FLOWCTRL_STATUS,           /* 0x13 Query NCM flow control status*/
     /* END:   Modified by liumengcun, 2011-4-21 */
 
        PS和MSP新需求，提供查询当前发包门限个数接口和NCM 挂起时回调函数增加NCM 设备ID参数*/
-    NCM_IOCTL_GET_CUR_TX_MIN_NUM,              /* 0x14 获取当前发包个数阈值*/
-    NCM_IOCTL_GET_CUR_TX_TIMEOUT,               /* 0x15 获取当前发包超时时间*/
-    NCM_IOCTL_IPV6_DNS_NOTIF,              /*0x16 IPV6 DNS主动上报*/
+    NCM_IOCTL_GET_CUR_TX_MIN_NUM,              /* 0x14 Get the current number of packets*/
+    NCM_IOCTL_GET_CUR_TX_TIMEOUT,               /* 0x15 Get the current packet timeout time*/
+    NCM_IOCTL_IPV6_DNS_NOTIF,              /*0x16 IPV6 DNS active reporting*/
     /* END:   Modified by liumengcun, 2011-6-23 */
-    /* BEGIN: Modified by liumengcun, 2011-7-20 支持IPV6 DNS配置*/
-    NCM_IOCTL_SET_IPV6_DNS,                     /* 0x16 配置IPV6 DNS*/
+    /* BEGIN: Modified by liumengcun, 2011-7-20 Support IPV6 DNS configuration*/
+    NCM_IOCTL_SET_IPV6_DNS,                     /* 0x16 Configure IPV6 DNS*/
     /* END:   Modified by liumengcun, 2011-7-20 */
-    /* BEGIN: Modified by liumengcun, 2011-8-10 MSP新需求*/
-    NCM_IOCTL_CLEAR_IPV6_DNS,                     /* 0x17 清除IPV6 DNS在板端的缓存,param在此命令字没有意义，不填空指针即可*/
-    NCM_IOCTL_GET_NCM_STATUS,                     /* 0x18 获取NCM网卡状态 enable:TRUE(1);disable:FALSE(0) */
+    /* BEGIN: Modified by liumengcun, 2011-8-10 New MSP requirements*/
+    NCM_IOCTL_CLEAR_IPV6_DNS,                     /* 0x17 Clear IPV6 DNS cache on the board, param's command word has no meaning, just don't fill in the blank pointer*/
+    NCM_IOCTL_GET_NCM_STATUS,                     /* 0x18 Get the NCM network card status enable:TRUE(1);disable:FALSE(0) */
     /* END:   Modified by liumengcun, 2011-8-10 */
 
     NCM_IOCTL_SET_ACCUMULATION_TIME,
 
-    /* BEGIN: Modified by baoxianchun, 2012-5-17 GU PS 新需求*/
-	NCM_IOCTL_SET_RX_MIN_NUM,		/*配置收包个数阈值*/
-	NCM_IOCTL_SET_RX_TIMEOUT,			/*配置收包超时时间*/
-    /* END: Modified by baoxianchun, 2012-5-17 GU PS 新需求*/
+    /* BEGIN: Modified by baoxianchun, 2012-5-17 GU PS New Requirements*/
+	NCM_IOCTL_SET_RX_MIN_NUM,		/*Configure the threshold for receiving packages*/
+	NCM_IOCTL_SET_RX_TIMEOUT,			/*Configure the timeout of the packet collection*/
+    /* END: Modified by baoxianchun, 2012-5-17 GU PS New Requirements*/
 
-    NCM_IOCTL_REG_NDIS_RESP_STATUS_FUNC,   /* NDIS通道AT命令状态处理回调函数 */
+    NCM_IOCTL_REG_NDIS_RESP_STATUS_FUNC,   /* Ndis channel at command status processing callback function */
 }NCM_IOCTL_CMD_TYPE_E;
 
-/* NCM连接状态枚举,NCM_IOCTL_NETWORK_CONNECTION_NOTIF命令字对应参数枚举*/
+/* Ncm connection status enumeration, ncm ioctl network connection notif command word corresponding parameter enumeration*/
 typedef enum tagNCM_IOCTL_CONNECTION_STATUS_E
 {
-    NCM_IOCTL_CONNECTION_LINKDOWN,      /* NCM网络断开连接*/
-    NCM_IOCTL_CONNECTION_LINKUP         /* NCM网络连接*/
+    NCM_IOCTL_CONNECTION_LINKDOWN,      /* Ncm network disconnection*/
+    NCM_IOCTL_CONNECTION_LINKUP         /* Ncm network connection*/
 }NCM_IOCTL_CONNECTION_STATUS_E;
 
-/* NCM连接速度结构,NCM_IOCTL_CONNECTION_SPEED_CHANGE_NOTIF命令字对应参数结构体*/
+/* Ncm connection speed structure, ncm ioctl connection speed change notif command word corresponding parameter structure*/
 typedef struct tagNCM_IOCTL_CONNECTION_SPEED_S
 {
     BSP_U32 u32DownBitRate;
     BSP_U32 u32UpBitRate;
 }NCM_IOCTL_CONNECTION_SPEED_S;
 
-/* 包封装结构体,NCM_IOCTL_SET_PKT_ENCAP_INFO命令字对应参数结构体*/
+/* Package encapsulation structure, ncm ioctl set pkt encap info command word corresponding parameter structure*/
 typedef struct tagNCM_PKT_ENCAP_INFO_S
 {
-    BSP_S32 s32BufOft;      /* buf偏移量 */
-    BSP_S32 s32LenOft;      /* len偏移量 */
-    BSP_S32 s32NextOft;     /* next偏移量 */
+    BSP_S32 s32BufOft;      /* Buf offset */
+    BSP_S32 s32LenOft;      /* Len offset */
+    BSP_S32 s32NextOft;     /* Next Offset */
 }NCM_PKT_ENCAP_INFO_S;
 
-/* AT命令回复数据指针及长度 NCM_IOCTL_AT_RESPONSE*/
+/* AT command reply data pointer and length NCM_IOCTL_AT_RESPONSE*/
 typedef struct tagNCM_AT_RSP_S
 {
     BSP_U8* pu8AtAnswer;
@@ -8489,146 +8521,146 @@ typedef struct tagNCM_IPV6_DNS_NTF_S
     BSP_U32 u32Length;
 } NCM_AT_IPV6_DNS_NTF_S;
 
-/* AT命令接收函数指针，该函数为同步接口，对应NCM_IOCTL_REG_AT_PROCESS_FUNC命令字*/
+/* The At command receives a function pointer, which is a synchronous interface, corresponding to the ncm ioctl reg at process func command word*/
 typedef BSP_VOID (*USBNdisAtRecvFunc)(BSP_U8 * pu8Buf, BSP_U32 u32Len);
 
-/* NCM流控开关枚举,NCM_IOCTL_NETWORK_CONNECTION_NOTIF命令字对应参数枚举*/
+/* Ncm flow control switch enumeration, ncm ioctl network connection notif command word corresponding parameter enumeration*/
 typedef enum tagNCM_IOCTL_FLOW_CTRL_E
 {
-    NCM_IOCTL_FLOW_CTRL_ENABLE,      /* 打开流控*/
-    NCM_IOCTL_FLOW_CTRL_DISABLE      /* 关闭流控*/
+    NCM_IOCTL_FLOW_CTRL_ENABLE,      /* Turn on flow control*/
+    NCM_IOCTL_FLOW_CTRL_DISABLE      /* Turn off flow control*/
 }NCM_IOCTL_FLOW_CTRL_E;
 
-/* NCM网卡状态改变通知枚举,NCM_IOCTL_REG_CONNECT_STUS_CHG_FUNC命令字对应参数枚举*/
+/* Ncm network card status change notification enumeration, ncm ioctl reg connect stus chg func command word corresponding parameter enumeration*/
 typedef enum tagNCM_IOCTL_CONNECT_STUS_E
 {
-    NCM_IOCTL_STUS_CONNECT,      /* 建链*/
-    NCM_IOCTL_STUS_BREAK         /* 网卡断开,断链*/
+    NCM_IOCTL_STUS_CONNECT,      /* Building a chain*/
+    NCM_IOCTL_STUS_BREAK         /* The network card is disconnected, the link is broken*/
 }NCM_IOCTL_CONNECT_STUS_E;
 
-/* 网卡状态切换通知函数，对应NCM_IOCTL_REG_CONNECT_STUS_CHG_FUNC命令字*/
+/* Network card status switching notification function, corresponding to ncm ioctl reg connect stus chg func command word*/
 typedef BSP_VOID (*USBNdisStusChgFunc)(NCM_IOCTL_CONNECT_STUS_E enStatus, BSP_VOID * pBuffer);
 
-/* NDIS通道AT命令状态处理回调函数 */
+/* Ndis channel at command status processing callback function */
 typedef BSP_VOID (*USBNdisRespStatusCB)(BSP_VOID *pBuffer, BSP_U32 status);
 
-/*  下传上传、下载包的各种统计信息，
-    不发送给PC，被动等待PC的读取,NCM_IOCTL_SET_PKT_STATICS命令字对应参数结构*/
+/*  Download various statistical information of uploading and downloading packages,
+    不发送For PC, passively wait for PC to read, NCM_IOCTL_SET_PKT_STATICS command word corresponding parameter structure*/
 typedef struct tagNCM_IOCTL_PKT_STATISTICS_S
 {
-    BSP_U32     u32TxOKCount;         /*发送包数*/
-    BSP_U32     u32RxOKCount;         /*接收包数*/
-    BSP_U32     u32TxErrCount;        /*发送错误*/
-    BSP_U32     u32RxErrCount;        /*接收错误*/
-    BSP_U32     u32TxOverFlowCount;   /*发送溢出丢包*/
-    BSP_U32     u32RxOverFlowCount;   /*接收溢出丢包*/
-    BSP_U32     u32CurrentTx;         /*发送速率*/
-    BSP_U32     u32CurrentRx;         /*接收速率*/
+    BSP_U32     u32TxOKCount;         /*Number of packets sent*/
+    BSP_U32     u32RxOKCount;         /*Number of packets received*/
+    BSP_U32     u32TxErrCount;        /*Send error*/
+    BSP_U32     u32RxErrCount;        /*Receive error*/
+    BSP_U32     u32TxOverFlowCount;   /*Send overflow and lost packets*/
+    BSP_U32     u32RxOverFlowCount;   /*Receive overflow and lost packets*/
+    BSP_U32     u32CurrentTx;         /*Send rate*/
+    BSP_U32     u32CurrentRx;         /*Receive rate*/
 } NCM_IOCTL_PKT_STATISTICS_S;
 
-/* BEGIN: Modified by liumengcun, 2011-7-20 IPV6 DNS配置结构,NCM_IOCTL_SET_IPV6_DNS对应参数结构*/
+/* BEGIN: Modified by liumengcun, 2011-7-20 IPV6 DNS configuration structure, NCM_IOCTL_SET_IPV6_DNS corresponding parameter structure*/
 #define BSP_NCM_IPV6_DNS_LEN     32
- typedef struct tagNCM_IPV6DNS_S  /* 0x16 配置IPV6 DNS*/
+ typedef struct tagNCM_IPV6DNS_S  /* 0x16 Configure IPV6 DNS*/
  {
-     BSP_U8 * pu8Ipv6DnsInfo;/* 32字节，低16字节表示primaryDNS；高16字节表示SecondaryDNS。*/
+     BSP_U8 * pu8Ipv6DnsInfo;/* 32 bytes, the lower 16 bytes represent primary dns; the higher 16 bytes represent secondary dns.*/
      BSP_U32 u32Length;
  } NCM_IPV6DNS_S;
 /* END:   Modified by liumengcun, 2011-7-20 */
 typedef struct tagNCM_PKT_INFO_S
 {
-    BSP_U32 u32PsRcvPktNum;              /* 收包送到PS的包个数*/
-    BSP_U32 u32RcvUnusedNum;             /* 收包不符合PS要求丢弃包个数*/
-    BSP_U32 u32NcmSendPktNum;            /* 发包个数*/
+    BSP_U32 u32PsRcvPktNum;              /* Number of packages received and delivered to PS*/
+    BSP_U32 u32RcvUnusedNum;             /* The number of packets dropped if the packet is not in compliance with the requirements of PS*/
+    BSP_U32 u32NcmSendPktNum;            /* Number of packages*/
 }NCM_PKT_INFO_S;
 
 
 /*************************TIMER BEGIN*****************************/
 
 /*****************************************************************************
-* 函 数 名  : BSP_USRCLK_Connect
+*函 数 名  : BSP_USRCLK_Connect
 *
-* 功能描述  : This routine specifies the interrupt service routine to be called
-*             at each clock interrupt.  It does not enable usr clock interrupts.
+*功能描述  : This routine specifies the interrupt service routine to be called
+*            at each clock interrupt.  It does not enable usr clock interrupts.
 *
-* 输入参数  : FUNCPTR routine   routine to be called at each clock interrupt
+*输入参数  : FUNCPTR routine   routine to be called at each clock interrupt
               BSP_S32 arg           argument with which to call routine
               BSP_S32 s32UsrClkid      which user clock the interrup routine belongs to
-* 输出参数  : 无
-* 返 回 值  : OK, or ERROR if the routine cannot be connected to the interrupt.
+*输出参数  : 无
+*返 回 值  : OK, or ERROR if the routine cannot be connected to the interrupt.
 *
-* 修改记录  : 2009年1月20日   liumengcun  creat
+*Modified record: January 20, 2009 liumengcun creat
 *****************************************************************************/
 extern BSP_S32  BSP_USRCLK_Connect(FUNCPTR routine, BSP_S32 arg, BSP_S32 s32UsrClkid);
 
 /*****************************************************************************
-* 函 数 名  : BSP_USRCLK_Disable
+*Function Name: BSP_USRCLK_Disable
 *
-* 功能描述  : This routine disables user clock interrupts.
+*Function description: This routine disables user clock interrupts.
 *
-* 输入参数  : BSP_S32 s32UsrClkid  which user clock the interrup routine belongs to
-* 输出参数  : 无
-* 返 回 值  : OK, or ERROR
+*Input parameters: BSP_S32 s32UsrClkid which user clock the interrup routine belongs to
+*Output parameters: None
+*Return Value: OK, or ERROR
 *
-* 修改记录  : 2009年1月20日   liumengcun  creat
+*Modified record: January 20, 2009 liumengcun creat
 *****************************************************************************/
 extern BSP_S32   BSP_USRCLK_Disable (BSP_S32 s32UsrClkid);
 
 /*****************************************************************************
-* 函 数 名  : BSP_USRCLK_Enable
+*Function Name: BSP_USRCLK_Enable
 *
-* 功能描述  : This routine enables user clock interrupts.
+*Function description: This routine enables user clock interrupts.
 *
-* 输入参数  : BSP_S32 s32UsrClkid  which user clock the interrup routine belongs to
-* 输出参数  : 无
-* 返 回 值  : OK, or ERROR
+*Input parameters: BSP_S32 s32UsrClkid which user clock the interrup routine belongs to
+*Output parameters: None
+*Return Value: OK, or ERROR
 *
-* 修改记录  : 2009年1月20日   liumengcun  creat
+*Modified record: January 20, 2009 liumengcun creat
 *****************************************************************************/
 extern BSP_S32    BSP_USRCLK_Enable (BSP_S32 s32UsrClkid);
 
 /*****************************************************************************
-* 函 数 名  : BSP_USRCLK_RateSet
+*Function Name: BSP_USRCLK_RateSet
 *
-* 功能描述  : This routine sets the interrupt rate of the usr clock.
+*Function description: This routine sets the interrupt rate of the usr clock.
 *
-* 输入参数  : BSP_S32 ticksPerSecond   number of clock interrupts per second
-              BSP_S32 s32UsrClkid         which user clock the interrup routine belongs to
-* 输出参数  : 无
-* 返 回 值  : OK, or ERROR if the tick rate is invalid or the timer cannot be set.
+*Input parameters: BSP_S32 ticksPerSecond number of clock interrupts per second
+              BSP_S32 s32UsrClkid which user clock the interrup routine belongs to
+*Output parameters: None
+*Return Value: OK, or ERROR if the tick rate is invalid or the timer cannot be set.
 *
-* 修改记录  : 2009年1月20日   liumengcun  creat
+*Modified record: January 20, 2009 liumengcun creat
 *****************************************************************************/
 extern BSP_S32  BSP_USRCLK_RateSet(BSP_S32 ticksPerSecond, BSP_S32 s32UsrClkid);
 
 /*****************************************************************************
- 函 数 名  : DRV_AXI_VIRT_TO_PHY
- 功能描述  : AXI内虚地址往实地址转换
- 输入参数  : ulVAddr；虚地址
- 输出参数  : 无
- 返回值    ：虚地址
+ Function Name: DRV_AXI_VIRT_TO_PHY
+ Function description: Transform virtual address in AXI to real address
+ Input parameters: ulVAddr; virtual address
+ Output parameters: None
+ Return value: virtual address
 *****************************************************************************/
 extern unsigned int DRV_AXI_VIRT_TO_PHY(unsigned int ulVAddr);
 
 /*****************************************************************************
- 函 数 名  : DRV_AXI_PHY_TO_VIRT
- 功能描述  : AXI内实地址往虚地址转换
- 输入参数  : ulVAddr；实地址
- 输出参数  : 无
- 返回值    ：虚地址
+ Function Name: DRV_AXI_PHY_TO_VIRT
+ Function description: Transform real address to virtual address in AXI
+ Input parameters: ulVAddr; real address
+ Output parameters: None
+ Return value: virtual address
 *****************************************************************************/
 extern unsigned int DRV_AXI_PHY_TO_VIRT(unsigned int ulPAddr);
 
 /*****************************************************************************
-* 函 数 名  : BSP_IPM_FreeBspBuf
+*Function Name: BSP_IPM_FreeBspBuf
 *
-* 功能描述  : 释放内存接口
+*Function description: Release the memory interface
 *
-* 输入参数  : BSP_U8 *pBuf 需要释放的指针
+*Input parameters: BSP_U8 *pBuf Pointers that need to be released
 *
-* 输出参数  : 无
-* 返 回 值  : 无
+*Output parameters: None
+*Return Value: None
 *
-* 修改记录  :2011年1月27日   鲁婷  创建
+*Modification record: January 27, 2011 Lu Ting Created
 *****************************************************************************/
 BSP_VOID BSP_IPM_FreeBspBuf(BSP_U8 *pBuf);
 
@@ -8658,70 +8690,70 @@ typedef enum
 
 
 /*****************************************************************************
-* 函 数 名  : create_crypto_key
+*Function name: create_crypto_key
 *
-* 功能描述  : 使用输入的数据和HUK，生成密钥。
-*当前支持MD5、和SHA-1算法。生成密钥的方法：把HUK和输入
-*的数据连接起来作为MD5或SHA-1算法的输入，计算其HASH值
+*Function Description: Use the input data and HUK to generate a key.
+*Currently supports MD5, and SHA-1 algorithms. How to generate a key: put HUK and input
+*data are connected as input to the MD5 or SHA-1 algorithm to calculate its HASH value
 *
-* 输入参数  : data：输入参数。存放用于生成密钥的数据。
-*                           len：输入参数。存放输入数据长度(字节)
-*                           algorithm：输入参数。用于产生密钥的算法。
-*                           key：输出参数。存放生成的密钥。
-*            注意：其长度必须不小于16字节。因为密钥为16字节。
-*                           klen：输入输出参数。作为输入参数，存放key的
-*            缓冲区的长度。作为输出参数，存放生成的密钥的长度。(字节)
-* 输出参数  : 
+*Input parameters: data: Input parameters. Stores the data used to generate the key.
+*len: Enter parameters. Store input data length (bytes)
+*algorithm: Enter parameters. An algorithm for generating a key.
+*key: Output parameter. Stores the generated key.
+*Note: Its length must be no less than 16 bytes. Because the key is 16 bytes.
+*klen: Input and output parameters. As input parameters, the key
+*The length of the buffer. As an output parameter, the length of the generated key is stored. (byte)
+*Output parameters: 
 *
-* 返 回 值  :  BSP_OK--加密成功;BSP_ERROR--加密失败
+*Return Value: BSP_OK-encryption was successful; BSP_ERROR-encryption failed
 *
-* 其它说明  :内存由调用者申请
+*Other instructions: Memory is requested by the caller
 *
 *****************************************************************************/
 int create_crypto_key(char *data, int len, CREATE_CRYPTO_KEY_ALGORITHM algorithm, char *key, int *klen);
 #define CREATE_CRYPTO_KEY(data,len,algorithm,key,klen)  create_crypto_key(data,len,algorithm,key,klen)
 
 /*****************************************************************************
-* 函 数 名  : crypto_hash
+*Function name: crypto_hash
 *
-* 功能描述  : 计算输入的数据的HASH值。
-*                           当前支持MD5、和SHA-1算法。输出HASH值长度是16字节
+*Function Description: Calculate the HASH value of the input data.
+*Currently supports MD5, SHA-1 algorithms. The output HASH length is 16 bytes
 *
-* 输入参数  : data：输入参数。存放用于需要计算HASH值的数据。
-*                           len：输入参数。存放输入数据长度(字节)
-*                           algorithm：输入参数。HASH算法。
-*                           hash：输出参数。存放生成的HASH值。
-*                           hlen：输入输出参数。作为输入参数，存放HASH值的缓冲区的长度。(字节)
-*                           作为输出参数，存放生成的HASH值的长度。
-* 输出参数  : 
+*Input parameters: data: Input parameters. Stores data for calculating HASH values.
+*len: Enter parameters. Store input data length (bytes)
+*algorithm: Enter parameters. HASH algorithm.
+*hash: output parameters. Stores the generated HASH value.
+*hlen: Input and output parameters. As an input parameter, the length of the buffer where the HASH value is stored. (byte)
+*As an output parameter, store the length of the generated HASH value.
+*Output parameters: 
 *
-* 返 回 值  : BSP_OK--加密成功;BSP_ERROR--加密失败
+*Return Value: BSP_OK-encryption was successful; BSP_ERROR-encryption failed
 *
-* 其它说明  : 内存由调用者申请
+*Other instructions: Memory is requested by the caller
 *
 *****************************************************************************/
 int crypto_hash(char *data, int len, CRYPTO_HASH_ALGORITHM algorithm, char *hash, int *hlen);
 #define CRYPTO_HASH(data,len,algorithm,hash,hlen)  crypto_hash(data,len,algorithm,hash,hlen)
 
 /*****************************************************************************
-* 函 数 名  : crypto_encrypt
+*Function name: crypto_encrypt
 *
-* 功能描述  : 使用指定的密钥和指定的算法对输入的数据加密，输出加密后的数据。
-                             当前支持AES-ECB算法。
+*Function Description: Encrypt the input data using the specified key and the specified algorithm, and output the encrypted data.
+                             Currently supports AES-ECB algorithm.
 *
-* 输入参数  : data：输入参数。存放需要加密的数据。
-*                           len：输入参数。存放输入数据长度(字节)
-*                           algorithm：输入参数。HASH算法。
-*                           key：输入参数。存放加密密钥。
-*                           klen：输入参数。key的长度。(字节)
-*                           cipher_data：输出参数。存放加密后的数据。
-*                           cipher_len：输入输出参数。作为输入参数，存放密文的缓冲区的长度。(字节)
-*               作为输出参数，存放生成的密文的长度。
-* 输出参数  : 
+*Input parameters: data: Input parameters. Stores data that needs to be encrypted.
+*len: Enter parameters. Store input data length (bytes)
+*algorithm: Enter parameters. HASH algorithm.
+*key: Enter parameters. Store the encryption key.
+*klen: Enter parameters. The length of the key. (byte)
+*cipher_data: Output parameter. Store encrypted data.
+*cipher_len: Input and output parameters. As input parameters, the length of the buffer where the cipher text is stored. (byte)
+*As an output parameter, the length of the generated ciphertext is stored.
+*Output parameters: 
 *
-* 返 回 值  :  BSP_OK--加密成功;BSP_ERROR--加密失败
+*Return Value: BSP_OK-encryption was successful; BSP_ERROR-encryption failed
 *
-* 其它说明  : 内存由调用者申请
+*Other instructions: Memory is requested by the caller
 *
 *****************************************************************************/
 int crypto_encrypt (char *data, int len, CRYPTO_ENCRYPT_ALGORITHM algorithm, char *key, int klen, char *cipher_data, int *cipher_len);
@@ -8729,28 +8761,28 @@ int crypto_encrypt (char *data, int len, CRYPTO_ENCRYPT_ALGORITHM algorithm, cha
 crypto_encrypt(data,len,algorithm,key,klen,cipher_data,cipher_len)
 
 /*****************************************************************************
-* 函 数 名  : crypto_decrypt
+*Function name: crypto_decrypt
 *
-* 功能描述  : 使用指定的密钥和指定的算法对输入的数据解密，输出解密后的数据。
-*             当前支持AES-ECB算法。
+*Function Description: Use the specified key and the specified algorithm to decrypt the input data and output the decrypted data.
+*Currently supports AES-ECB algorithm.
 *
-* 输入参数  : 
-*             cipher_data: 待密的数据的存放buffer。
-*             cipher_len:  待解密的数据的实际长度。(byte)
-*             algorithm:   所用解密算法，暂只提供AES-ECB。
-*             key:         密钥buffer。
-*             klen:        密钥buffer长度。(byte)
-*             len:  解密后的数据的存放buffer的buffer size。(byte)(没有检查)
+*Input parameters: 
+*cipher_data: The buffer of data to be stored.
+*cipher_len: The actual length of the data to be decrypted. (byte)
+*algorithm: The decryption algorithm used is only available for AES-ECB.
+*key: key buffer.
+*klen: key buffer length. (byte)
+*len: The buffer size of the decrypted data storage buffer. (byte)(No checking)
 *
-* 输出参数  : 
-*             data:        解密后的数据。
-*             len:         解密后的数据长度。(byte)
+*Output parameters: 
+*data: Decrypted data.
+*len: The length of the decrypted data. (byte)
 *
-* 返 回 值  : BSP_OK:      解密成功。
-*             BSP_ERROR:   解密失败。
+*Return Value: BSP_OK: Decrypted successfully.
+*BSP_ERROR: Decryption failed.
 *
-* 其它说明  : len为输入/输出参数，传入的len变量所用内存必须可写回。
-*             所以避免直接传入类似sizeof()的函数调用结果。
+*Other description: len is an input/output parameter, and the memory used by the passed len variable must be writeable.
+*So avoid passing function call results like sizeof() directly.
 *
 *****************************************************************************/
 extern int crypto_decrypt (char *cipher_data,int cipher_len,CRYPTO_ENCRYPT_ALGORITHM algorithm, char *key, int klen, char *data, int *len);
@@ -8759,22 +8791,22 @@ crypto_decrypt(cipher_data,cipher_len,algorithm, key, klen, data, len)
 
 
 /*****************************************************************************
-* 函 数 名  : crypto_rsa_encrypt
+*Function name: crypto_rsa_encrypt
 *
-* 功能描述  : 使用保存在NV中的改制用RSA公钥（读取时需要同样进行签名验证）
-*           对输入的数据加密，输出加密后的数据。
-* 输入参数  : data：输入参数。存放需要加密的数据。
-*                           len：输入参数。存放输入数据长度(字节)
-*                           rsa_key:RSA公钥
-*                           rsa_len:RSA公钥长度(字节)
-*                           cipher_data：输出参数。存放加密后的数据。
-*                           cipher_len：输入输出参数。作为输入参数，存放密文的缓冲区的长度。(字节)
-*               作为输出参数，存放生成的密文的长度。
-* 输出参数  : 
+*Function description: Use the remodeled RSA public key saved in NV (the same signature verification is required when reading)
+*Encrypt the input data and output the encrypted data.
+*Input parameters: data: Input parameters. Stores data that needs to be encrypted.
+*len: Enter parameters. Store input data length (bytes)
+*rsa_key:RSA public key
+*rsa_len: RSA public key length (bytes)
+*cipher_data: Output parameter. Store encrypted data.
+*cipher_len: Input and output parameters. As input parameters, the length of the buffer where the cipher text is stored. (byte)
+*As an output parameter, the length of the generated ciphertext is stored.
+*Output parameters: 
 *
-* 返 回 值  :  BSP_OK--加密成功;BSP_ERROR--加密失败
+*Return Value: BSP_OK-encryption was successful; BSP_ERROR-encryption failed
 *
-* 其它说明  : 内存由调用者申请
+*Other instructions: Memory is requested by the caller
 *
 *****************************************************************************/
 int crypto_rsa_encrypt (char *data, int len, char *rsa_key, int rsa_klen, char *cipher_data, int *cipher_len);
@@ -8782,22 +8814,22 @@ int crypto_rsa_encrypt (char *data, int len, char *rsa_key, int rsa_klen, char *
 crypto_rsa_encrypt(data,len,rsa_key,rsa_klen,cipher_data,cihper_len)
 
 /*****************************************************************************
-* 函 数 名  : crypto_rsa_decrypt
+*Function name: crypto_rsa_decrypt
 *
-* 功能描述  : 使用保存在NV中的改制用RSA公钥，对输入的数据解密
-*               输出解密后的数据。
-* 输入参数  : cipher_data：输入参数。存放加密数据。
-*                           cipher_len：输入参数。存放密文的缓冲区的长度。(字节)
-*                           rsa_key:RSA公钥
-*                           rsa_len:RSA公钥长度(字节)
-*                           data：输出参数。存放需解密后的数据。
-*                           len：输入输出参数。作为输入参数，存放解密后的缓冲区的长度(字节)
-*               作为输出参数，存放生成的明文的长度
-* 输出参数  : 
+*Function Description: Decrypt the input data using the remodeled RSA public key saved in NV
+*Output decrypted data.
+*Input parameters: cipher_data: Input parameters. Store encrypted data.
+*cipher_len: Enter parameters. The length of the buffer where the cipher text is stored. (byte)
+*rsa_key:RSA public key
+*rsa_len: RSA public key length (bytes)
+*data: Output parameters. Store the data that needs to be decrypted.
+*len: Input and output parameters. As input parameters, the length of the decrypted buffer (bytes) is stored as a input parameter.
+*As output parameter, store the length of the generated plaintext
+*Output parameters: 
 *
-* 返 回 值  :  BSP_OK--解密成功;BSP_ERROR--解密失败
+*Return value: BSP_OK--Decryption was successful; BSP_ERROR-Decryption failed
 *
-* 其它说明  : 内存由调用者申请
+*Other instructions: Memory is requested by the caller
 *
 *****************************************************************************/
 int crypto_rsa_decrypt (char *cipher_data, int cipher_len, char *rsa_key, int rsa_klen, char *data, int *len);
@@ -8805,51 +8837,51 @@ int crypto_rsa_decrypt (char *cipher_data, int cipher_len, char *rsa_key, int rs
 crypto_rsa_decrypt(cipher_data,cihper_len,rsa_key,rsa_klen,data,len)
 
 /*****************************************************************************
-* 函 数 名  : crypto_rand
+*Function name: crypto_rand
 *
-* 功能描述  : 随机数生成接口
-* 输入参数  : rand_data:随机数存放buffer
-*                           len:期望得到的随机数字节数
+*Function description: Random number generation interface
+*Input parameters: rand_data: Random number storage buffer
+*len: The expected number of random number bytes
 *
-* 输出参数  : 
+*Output parameters: 
 *
-* 返 回 值  :  BSP_OK--获取随机数成功;BSP_ERROR--获取失败
+*Return value: BSP_OK--Get random number successfully; BSP_ERROR-Get failed
 *
-* 其它说明  : 内存由调用者申请
+*Other instructions: Memory is requested by the caller
 *
 *****************************************************************************/
 int crypto_rand (char *rand_data, int len);
 #define CRYPTO_RAND(rand_data,len)  crypto_rand(rand_data,len)
 
 /*************************************************
- 函 数 名       : efuseWriteHUK
- 功能描述   : HUK写efuse接口
- 输入参数   : pBuf:烧写内容;len:烧写长度(字节)
- 输出参数   : 
- 返 回 值      : OK/ERROR
- 调用函数   :
- 被调函数   :
+ Function Name: efuseWriteHUK
+ Function description: HUK writes efuse interface
+ Input parameters: pBuf: write content; len: write length (bytes)
+ Output parameters: 
+ Return Value: OK/ERROR
+ Calling the function:
+ Called function:
 
- 修改历史   :
-    日    期       : 2012年3月27日
-   修改内容 : 新生成函数
+ Modify history:
+    Date: March 27, 2012
+   Modify content: New generated function
 
 *************************************************/
 int efuseWriteHUK(char *pBuf,unsigned int len);
 #define EFUSE_WRITE_HUK(pBuf,len) efuseWriteHUK(pBuf,len)
 
 /*************************************************
- 函 数 名   : CheckHukIsValid
- 功能描述   : 判断HUK是否有效，若为全0则无效，非全0则有效
- 输入参数   : 无
- 输出参数   :
- 返 回 值   : BSP_FALSE:HUK无效；BSP_TRUE:HUK有效
- 调用函数   :
- 被调函数   :
+ Function Name: CheckHukIsValid
+ Function description: Determine whether HUK is valid. If it is 0, it is invalid. If it is not 0, it is valid.
+ Input parameters: None
+ Output parameters:
+ Return Value: BSP_FALSE:HUK is invalid; BSP_TRUE:HUK is valid
+ Calling the function:
+ Called function:
 
- 修改历史   :
-   日    期 : 2012年3月27日
-   修改内容 : 新生成函数
+ Modify history:
+   Date: March 27, 2012
+   Modify content: New generated function
 
 *************************************************/
 int CheckHukIsValid(void);
@@ -8906,151 +8938,151 @@ typedef enum tagTDS_IPC_INT_CORE_E
 
 
 /*****************************************************************************
- * 函 数 名  : BSP_TDS_GetDynTableAddr
+ *Function Name: BSP_TDS_GetDynTableAddr
  *
- * 功能描述  : TDS 获取动态加载表首地址
+ *Function description: TDS Get the home address of the dynamic load table
  *
- * 输入参数  : 无
- * 输出参数  : 无
+ *Input parameters: None
+ *Output parameters: None
  *
- * 返 回 值  : Addr:动态表首地址(DDR) / NULL: Fail
+ *Return Value: Addr: Dynamic table home address (DDR) /NULL: Fail
  *
- * 修改记录  :
+ *Modify record:
  *****************************************************************************/
 BSP_U32 BSP_TDS_GetDynTableAddr(BSP_VOID);
 
 /*****************************************************************************
- * 函 数 名  : BSP_TDS_TF_IntConnect
+ *Function Name: BSP_TDS_TF_IntConnect
  *
- * 功能描述  : TDS 帧中断挂接函数
+ *Function description: TDS frame interrupt hook function
  *
- * 输入参数  : routine:   挂接函数指针
- *             parameter: 参数
- * 输出参数  : 无
+ *Input parameters: routine: hook function pointer
+ *parameter: parameter
+ *Output parameters: None
  *
- * 返 回 值  : OK&ERROR
+ *Return Value: OK&ERROR
  *
- * 修改记录  :
+ *Modify record:
  *****************************************************************************/
 BSP_S32 BSP_TDS_TF_IntConnect(VOIDFUNCPTR routine, BSP_U32 parameter);
 
 /*****************************************************************************
- * 函 数 名  : BSP_TDS_TF_IntEnable
+ *Function Name: BSP_TDS_TF_IntEnable
  *
- * 功能描述  : TDS 帧中断使能
+ *Function Description: TDS frame interrupt enabled
  *
- * 输入参数  : 无
- * 输出参数  : 无
+ *Input parameters: None
+ *Output parameters: None
  *
- * 返 回 值  : OK&ERROR
+ *Return Value: OK&ERROR
  *
- * 修改记录  :
+ *Modify record:
  *****************************************************************************/
 BSP_S32 BSP_TDS_TF_IntEnable(BSP_VOID);
 
 /*****************************************************************************
- * 函 数 名  : BSP_TDS_TF_IntDisable
+ *Function Name: BSP_TDS_TF_IntDisable
  *
- * 功能描述  : TDS 帧中断去使能
+ *Function Description: TDS frame interrupt de-enabled
  *
- * 输入参数  : 无
- * 输出参数  : 无
+ *Input parameters: None
+ *Output parameters: None
  *
- * 返 回 值  : OK&ERROR
+ *Return Value: OK&ERROR
  *
- * 修改记录  :
+ *Modify record:
  *****************************************************************************/
 BSP_S32 BSP_TDS_TF_IntDisable(BSP_VOID);
 
 /*****************************************************************************
- * 函 数 名  : BSP_RunTdsDsp
+ *Function name: BSP_RunTdsDsDs
  *
- * 功能描述  : 加载 ZSP (当前读取的路径为: "/yaffs0/tds_zsp.bin")
+ *Function description: Load ZSP (the current path read is: "/yaffs0/tds_zsp.bin")
  *
- * 输入参数  : 无
- * 输出参数  : 无
+ *Input parameters: None
+ *Output parameters: None
  *
- * 返 回 值  : OK&ERROR
+ *Return Value: OK&ERROR
  *
- * 修改记录  :
+ *Modify record:
  *****************************************************************************/
 BSP_VOID ZSP_Init(BSP_VOID);
 
 
 /*****************************************************************************
- * 函 数 名  : BSP_RunTdsDsp
+ *Function name: BSP_RunTdsDsDs
  *
- * 功能描述  : 加载 ZSP (当前读取的路径为: "/yaffs0/tds_zsp.bin")
+ *Function description: Load ZSP (the current path read is: "/yaffs0/tds_zsp.bin")
  *
- * 输入参数  : 无
- * 输出参数  : 无
+ *Input parameters: None
+ *Output parameters: None
  *
- * 返 回 值  : OK&ERROR
+ *Return Value: OK&ERROR
  *
- * 修改记录  :
+ *Modify record:
  *****************************************************************************/
 BSP_S32 BSP_RunTdsDsp(BSP_VOID);
 
 /*****************************************************************************
- * 函 数 名  : BSP_TDS_IPC_IntConnect
+ *Function Name: BSP_TDS_IPC_IntConnect
  *
- * 功能描述  : 注册TDS MailBox中断
+ *Function Description: Register TDS MailBox interrupt
  *
- * 输入参数  :
-               BSP_U32 ulLvl :     不需要使用(为保持接口形式一致)
-               VOIDFUNCPTR routine 中断服务程序
- *             BSP_U32 parameter      中断服务程序参数
- * 输出参数  : 无
+ *Input parameters:
+               BSP_U32 ulLvl: No need to use (to keep the interface form consistent)
+               VOIDFUNCPTR routine interrupt service program
+ *BSP_U32 parameter interrupt service program parameters
+ *Output parameters: None
  *
- * 返 回 值  : OK&ERROR
+ *Return Value: OK&ERROR
  *
- * 修改记录  :
+ *Modify record:
  *****************************************************************************/
 BSP_S32 BSP_TDS_IPC_IntConnect  (IPC_INT_LEV_E ulLvl,VOIDFUNCPTR routine, BSP_U32 parameter);
 
 /*****************************************************************************
-* 函 数 名  : BSP_IPC_IntSend
+*Function Name: BSP_IPC_IntSend
 *
-* 功能描述  : 发送中断
+*Function Description: Send Interrupt
 *
-* 输入参数  :
-                IPC_INT_CORE_E enDstore 不需要使用(为保持接口形式一致)
-                BSP_U32 u32Msg 要发送的消息
-* 输出参数  : 无
+*Input parameters:
+                IPC_INT_CORE_E enDstore does not need to be used (to keep the interface form consistent)
+                BSP_U32 u32Msg Message to be sent
+*Output parameters: None
 *
-* 返 回 值  : OK&ERROR
+*Return Value: OK&ERROR
 *
-* 修改记录  :
+*Modify record:
 *****************************************************************************/
 BSP_S32 BSP_TDS_IPC_IntSend(TDS_IPC_INT_CORE_E enDstCore, BSP_U32 u32Msg);
 
 /*****************************************************************************
-* 函 数 名  : BSP_TDS_IPC_IntEnable
+*Function Name: BSP_TDS_IPC_IntEnable
 *
-* 功能描述  : 使能MailBox中断
+*Function Description: Enable MailBox interrupt
 *
-* 输入参数  :
-                BSP_U32 ulLvl 不需要使用(为保持接口形式一致)
-* 输出参数  : 无
+*Input parameters:
+                BSP_U32 ulLvl does not need to be used (to keep the interface form consistent)
+*Output parameters: None
 *
-* 返 回 值  : OK&ERROR
+*Return Value: OK&ERROR
 *
-* 修改记录  :
+*Modify record:
 *****************************************************************************/
 BSP_S32 BSP_TDS_IPC_IntEnable(IPC_INT_LEV_E ulLvl);
 
 /*****************************************************************************
- * 函 数 名  : BSP_TDS_IPC_IntDisable
+ *Function Name: BSP_TDS_IPC_IntDisable
  *
- * 功能描述  : 去使能MailBox中断
+ *Function Description: Deactivate MailBox interrupt
  *
- * 输入参数  :
-                BSP_U32 ulLvl 不需要使用(为保持接口形式一致)
- * 输出参数  : 无
+ *Input parameters:
+                BSP_U32 ulLvl does not need to be used (to keep the interface form consistent)
+ *Output parameters: None
  *
- * 返 回 值  : OK&ERROR
+ *Return Value: OK&ERROR
  *
- * 修改记录  :
+ *Modify record:
  *****************************************************************************/
 BSP_S32 BSP_TDS_IPC_IntDisable (IPC_INT_LEV_E ulLvl);
 
@@ -9062,44 +9094,44 @@ BSP_S32 BSP_TDS_IPC_IntDisable (IPC_INT_LEV_E ulLvl);
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_LDSP_EDMA_MemRestore
+*Function Name: BSP_LDSP_EDMA_MemRestore
 *
-* 功能描述  : Restore LDSP mem
+*Function description: Restore LDSP mem
 *
-* 输入参数  : 
-* 输出参数  : 
-* 返 回 值   :
+*Input parameters: 
+*Output parameters: 
+*Return value:
 *
-* 修改记录  : 
+*Modify record: 
 
 *****************************************************************************/
 BSP_S32 BSP_LDSP_EDMA_MemRestore();
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_LDSP_EDMA_MemStore
+*Function Name: BSP_LDSP_EDMA_MemStore
 *
-* 功能描述  : Store LDSP mem
+*Function Description: Store LDSP mem
 *
-* 输入参数  : 
-* 输出参数  : 
-* 返 回 值  :
+*Input parameters: 
+*Output parameters: 
+*Return value:
 *
-* 修改记录  : 
+*Modify record: 
 
 *****************************************************************************/
 BSP_S32 BSP_LDSP_EDMA_MemStore();
 
 /*****************************************************************************
-* 函 数 名  : BSP_LDSP_GetEdmaTaskState
+*Function Name: BSP_LDSP_GetEdmaTaskState
 *
-* 功能描述  : 查询LDSP备份TCM所用的edma通道时否空闲
+*Function Description: Check whether the edma channel used by LDSP to backup TCM is idle
 *
-* 输入参数  : 
-* 输出参数  : 
-* 返 回 值  :
+*Input parameters: 
+*Output parameters: 
+*Return value:
 *
-* 修改记录  : 
+*Modify record: 
 
 *****************************************************************************/
 BSP_VOID BSP_LDSP_GetEdmaTaskState();
@@ -9108,38 +9140,38 @@ BSP_VOID BSP_GetEdmaTaskState();
 
 
 /*****************************************************************************
-* 函 数 名  : DRV_Get_DspPsAddr
-* 功能描述  : 返回在AXI中为DSP_PS分配的4字节空间首地址
-* 输入参数  : 无
-* 输出参数  : 无
-* 返 回 值  : MEMORY_AXI_DSP_PS_ADDR
-* 其它说明  : 无
+*Function Name: DRV_Get_DspPsAddr
+*Function description: Returns the 4-byte space first address allocated for DSP_PS in AXI
+*Input parameters: None
+*Output parameters: None
+*Return Value: MEMORY_AXI_DSP_PS_ADDR
+*Other Instructions: None
 *****************************************************************************/
 BSP_U32 DRV_Get_DspPsAddr();
 
 
 /*****************************************************************************
-* 函 数 名  : DRV_Get_DspMspAddr
-* 功能描述  : 返回在AXI中为DSP_MSP分配的4字节空间首地址
-* 输入参数  : 无
-* 输出参数  : 无
-* 返 回 值  : MEMORY_AXI_DSP_MSP_ADDR
-* 其它说明  : 无
+*Function Name: DRV_Get_DspMspAddr
+*Function description: Returns the 4-byte space first address allocated for DSP_MSP in AXI
+*Input parameters: None
+*Output parameters: None
+*Return Value: MEMORY_AXI_DSP_MSP_ADDR
+*Other Instructions: None
 *****************************************************************************/
 BSP_U32 DRV_Get_DspMspAddr();
 
 
 /*******************************************************************************
-  Function:     BSP_Modem_OS_Status_Swtich
-  Description:  指示 Modem Ready 或者 非Ready状态
+  Function: BSP_Modem_OS_Status_Swtich
+  Description: Indicates Modem Ready or non-Ready status
 
-  Input:        int enable
-                非0:设置Modem处于Ready状态 
-                0:设置Modem处于非Ready状态
+  Input: int enable
+                Non-0: Set Modem in Ready state 
+                0: Set Modem to be in a non-Ready state
 
   Output:
-  Return:       0:    操作成功
-                -1:   操作失败
+  Return: 0: Operation is successful
+                -1: Operation failed
 *******************************************************************************/
 extern int BSP_Modem_OS_Status_Switch(int enable);
 #define DRV_OS_STATUS_SWITCH(enable) BSP_Modem_OS_Status_Switch(enable)

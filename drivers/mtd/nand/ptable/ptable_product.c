@@ -1,28 +1,28 @@
 /*******************************************************************************
-* Copyright (C), 2008-2011, HUAWEI Tech. Co., Ltd.
+*Copyright (C), 2008-2011, HUAWEI Tech. Co., Ltd.
 *
-* Module name: Boot Loader
+*Module name: Boot Loader
 *
-* Version: v1.0
+*Version: v1.0
 *
-* Filename:    parttable.c
-* Description:  Balong plantform boot loadr partition image(s) loading function
+*Filename:    parttable.c
+*Description:  Balong plantform boot loadr partition image(s) loading function
 *
-* Function List:
+*Function List:
 *
-* History:
+*History:
 1.date:2011-11-19
  question number:
  modify reasion:         create
 *******************************************************************************/
 /******************************************************************************
-*    Copyright (c) 2009-2011 by  Hisilicon Tech. Co., Ltd.
-*    All rights reserved.
+*   Copyright (c) 2009-2011 by  Hisilicon Tech. Co., Ltd.
+*   All rights reserved.
 * ***
 *
 ******************************************************************************/
-/*******************************问题单修改记录********************************
-日期            问题单号            修改人          修改内容
+/*******************************************************
+Date Question order number Modifier Modify content
 ******************************************************************************/
 
 #ifdef __cplusplus
@@ -32,16 +32,16 @@ extern "C"
 
 #include "ptable_def.h"
 
-/*----------------------- |  0 byte
+/*-----------------------|  0 byte
  |"pTableHead"            | 
- *----------------------- | 16 byte (partition head flag string)
+ *-----------------------| 16 byte (partition head flag string)
  | the property of table  |
- *----------------------- | 20 byte (partition head flag string)
+ *-----------------------| 20 byte (partition head flag string)
  |"V3R2_FPGA" (example.)  |
- *----------------------- | 48 byte (partition table version name)
+ *-----------------------| 48 byte (partition table version name)
  | <partition info>       |
  |  (size 32byte)         |
- *----------------------- | 96 byte 
+ *-----------------------| 96 byte 
  | < partition info >     |
  |  (size 32byte)         |
  |------------------------| 144 byte
@@ -58,14 +58,14 @@ extern "C"
 /*table head begin*/
 char ptable_head[PTABLE_HEAD_STR_SIZE] = {PTABLE_HEAD_STR};
 
-/*预留分区表总属性标识位空间*/
+/*Reserve the total attribute identification bit space of the partition table*/
 int  ptable_property[PTABLE_HEAD_PROPERTY_SIZE/sizeof(int)] = {0x80000000}; 
 
-/*定义bootrom版本号*/
+/*Define bootrom version number*/
 /*bootrom history list*/
 /*
-2012.03.27  ver: 01.00     create  
-2012.04.27  ver: 01.02     升级特性功能扩张合入
+2012.03.27 ver: 01.00 create  
+2012.04.27 ver: 01.02 Upgrade feature expansion combined
 */
 char ptable_bootrom_version[PTABLE_BOOTROM_VER_SIZE] = {PTABLE_BOOTROM_VER_STR}; 
 
@@ -108,7 +108,7 @@ char ptable_name[PTABLE_NAME_SIZE ] = {PTABLE_VER_STR};
 
 #define HW_TERMINEL_FLASH_ISO_LEN 0x25E0000 
 
-/* bootload */
+/* Bootload */
 #define HW_TERMINEL_PTABLE_BOOTLOADER_START          0x0
 #define HW_TERMINEL_PTABLE_BOOTLOADER_LEN            (HW_TERMINEL_FLASH_BOOTLOADER_LEN)
 #define HW_TERMINEL_PTABLE_BOOTLOADER_END            (HW_TERMINEL_PTABLE_BOOTLOADER_START + HW_TERMINEL_PTABLE_BOOTLOADER_LEN)
@@ -118,7 +118,7 @@ char ptable_name[PTABLE_NAME_SIZE ] = {PTABLE_VER_STR};
 #define HW_TERMINEL_PTABLE_NV_LTE_LEN                (HW_TERMINEL_FLASH_NV_LTE_LEN)
 #define HW_TERMINEL_PTABLE_NV_LTE_END                (HW_TERMINEL_PTABLE_NV_LTE_START + HW_TERMINEL_PTABLE_NV_LTE_LEN)
     
-/* NV GU */
+/* NV Gu */
 #define HW_TERMINEL_PTABLE_NV_GU_START               HW_TERMINEL_PTABLE_NV_LTE_END
 #define HW_TERMINEL_PTABLE_NV_GU_LEN                 (HW_TERMINEL_FLASH_NV_GU_LEN)
 #define HW_TERMINEL_PTABLE_NV_GU_END                 (HW_TERMINEL_PTABLE_NV_GU_START + HW_TERMINEL_PTABLE_NV_GU_LEN)
@@ -173,7 +173,7 @@ char ptable_name[PTABLE_NAME_SIZE ] = {PTABLE_VER_STR};
 #define HW_TERMINEL_PTABLE_YAFFS_APP_LEN            (HW_TERMINEL_FLASH_YAFFS_APP_LEN)
 #define HW_TERMINEL_PTABLE_YAFFS_APP_END            (HW_TERMINEL_PTABLE_YAFFS_APP_START+HW_TERMINEL_PTABLE_YAFFS_APP_LEN)
 
-/* YAFFS WEBUI */
+/* Yaffs whispering */
 #define HW_TERMINEL_PTABLE_YAFFS_WEBUI_START          HW_TERMINEL_PTABLE_YAFFS_APP_END
 #define HW_TERMINEL_PTABLE_YAFFS_WEBUI_LEN            (HW_TERMINEL_FLASH_YAFFS_WEBUI_LEN)
 #define HW_TERMINEL_PTABLE_YAFFS_WEBUI_END            (HW_TERMINEL_PTABLE_YAFFS_WEBUI_START+HW_TERMINEL_PTABLE_YAFFS_WEBUI_LEN)
@@ -183,7 +183,7 @@ char ptable_name[PTABLE_NAME_SIZE ] = {PTABLE_VER_STR};
 #define HW_TERMINEL_PTABLE_YAFFS_OEM_LEN             (HW_TERMINEL_FLASH_YAFFS_OEM_LEN)
 #define HW_TERMINEL_PTABLE_YAFFS_OEM_END             (HW_TERMINEL_PTABLE_YAFFS_OEM_START+HW_TERMINEL_PTABLE_YAFFS_OEM_LEN)
 
-/* logo */
+/* Logo */
 #define HW_TERMINEL_PTABLE_LOGO_START                HW_TERMINEL_PTABLE_YAFFS_OEM_END
 #define HW_TERMINEL_PTABLE_LOGO_LEN                  (HW_TERMINEL_FLASH_LOGO_LEN)
 #define HW_TERMINEL_PTABLE_LOGO_END                  (HW_TERMINEL_PTABLE_LOGO_START + HW_TERMINEL_PTABLE_LOGO_LEN)
@@ -191,7 +191,7 @@ char ptable_name[PTABLE_NAME_SIZE ] = {PTABLE_VER_STR};
 
 #define HW_TERMINEL_PTABLE_ANDROID_FASTBOOT_LOADSIZE_LEN (PRODUCT_CFG_FLASH_ANDROID_FASTBOOT_LOADSIZE_LEN)
 
-/* ISO  */
+/* Iso  */
 #define HW_TERMINEL_PTABLE_ISO_START               HW_TERMINEL_PTABLE_LOGO_END
 #define HW_TERMINEL_PTABLE_ISO_LEN                  HW_TERMINEL_FLASH_ISO_LEN
 #define HW_TERMINEL_PTABLE_ISO_END                  (HW_TERMINEL_PTABLE_ISO_START + HW_TERMINEL_PTABLE_ISO_LEN)
@@ -203,7 +203,7 @@ char ptable_name[PTABLE_NAME_SIZE ] = {PTABLE_VER_STR};
 /*table partition begin*/
 struct ST_PART_TBL ptable_product[PTABLE_PARTITION_MAX] =
 {
-    /*name*/        /*offset*/      /*loadsize*/    /*capacity*/   /*loadaddr*/   /*entry*/     /*type*/            /*property*/
+    /*name*/       /*offset*/     /*loadsize*/   /*capacity*/  /*loadaddr*/  /*entry*/    /*type*/           /*property*/
     {"BootLoad"     ,HW_TERMINEL_PTABLE_BOOTLOADER_START    ,0x00000000   ,HW_TERMINEL_PTABLE_BOOTLOADER_LEN,   PTABLE_BOOTLOADER_ENTRY,  PTABLE_BOOTLOADER_ENTRY   ,IMAGE_BOOTLOAD  ,DATA_NORMAL                       ,   0},
     {"NvBackLTE"    ,HW_TERMINEL_PTABLE_NV_LTE_START   ,0x00000000  ,HW_TERMINEL_PTABLE_NV_LTE_LEN,   0x00000000,  0x00000000   ,IMAGE_NVBACKLTE ,DATA_NORMAL | PTABLE_PROTECTED    ,   0},
     {"NvBackGU"     ,HW_TERMINEL_PTABLE_NV_GU_START   ,0x00000000   ,HW_TERMINEL_PTABLE_NV_GU_LEN,   0x00000000,  0x00000000   ,IMAGE_NVBACKGU  ,DATA_NORMAL | PTABLE_PROTECTED    ,   0},
@@ -227,7 +227,7 @@ struct ST_PART_TBL ptable_product[PTABLE_PARTITION_MAX] =
 
 struct ST_PART_TBL ptable_product[PTABLE_PARTITION_MAX] =
 {
-    /*name*/        /*offset*/      /*loadsize*/    /*capacity*/   /*loadaddr*/   /*entry*/     /*type*/            /*property*/
+    /*name*/       /*offset*/     /*loadsize*/   /*capacity*/  /*loadaddr*/  /*entry*/    /*type*/           /*property*/
     {"BootLoad"     ,HW_TERMINEL_PTABLE_BOOTLOADER_START    ,0x00000000   ,HW_TERMINEL_PTABLE_BOOTLOADER_LEN,   PTABLE_BOOTLOADER_ENTRY,  PTABLE_BOOTLOADER_ENTRY   ,IMAGE_BOOTLOAD  ,DATA_NORMAL                       ,   0},
     {"NvBackLTE"    ,HW_TERMINEL_PTABLE_NV_LTE_START   ,0x00000000  ,HW_TERMINEL_PTABLE_NV_LTE_LEN,   0x00000000,  0x00000000   ,IMAGE_NVBACKLTE ,DATA_NORMAL | PTABLE_PROTECTED    ,   0},
     {"NvBackGU"     ,HW_TERMINEL_PTABLE_NV_GU_START   ,0x00000000   ,HW_TERMINEL_PTABLE_NV_GU_LEN,   0x00000000,  0x00000000   ,IMAGE_NVBACKGU  ,DATA_NORMAL | PTABLE_PROTECTED    ,   0},
@@ -248,11 +248,11 @@ struct ST_PART_TBL ptable_product[PTABLE_PARTITION_MAX] =
     {PTABLE_END_STR ,0x00000000   ,0x00000000   ,0x00000000,   0x00000000,  0x00000000   ,IMAGE_PART_TOP  ,DATA_YAFFS                        ,   0}
 };
 #endif
-#else /*FEATURE_HUAWEI_E5_FLASH_PTABLE*/
+#else /*Feature huawei e5 flash ptable*/
 /*table partition begin*/
 struct ST_PART_TBL ptable_product[PTABLE_PARTITION_MAX] =
 {
-    /*name*/        /*offset*/      /*loadsize*/    /*capacity*/   /*loadaddr*/   /*entry*/     /*type*/            /*property*/
+    /*name*/       /*offset*/     /*loadsize*/   /*capacity*/  /*loadaddr*/  /*entry*/    /*type*/           /*property*/
     {"BootLoad"     ,PTABLE_BOOTLOADER_START    ,0x00000000   ,PTABLE_BOOTLOADER_LEN,   PTABLE_BOOTLOADER_ENTRY,  PTABLE_BOOTLOADER_ENTRY   ,IMAGE_BOOTLOAD  ,DATA_NORMAL                       ,   0},
     {"NvBackLTE"    ,PTABLE_NV_LTE_START   ,0x00000000  ,PTABLE_NV_LTE_LEN,   0x00000000,  0x00000000   ,IMAGE_NVBACKLTE ,DATA_NORMAL | PTABLE_PROTECTED    ,   0},
     {"NvBackGU"     ,PTABLE_NV_GU_START   ,0x00000000   ,PTABLE_NV_GU_LEN,   0x00000000,  0x00000000   ,IMAGE_NVBACKGU  ,DATA_NORMAL | PTABLE_PROTECTED    ,   0},
@@ -272,6 +272,7 @@ struct ST_PART_TBL ptable_product[PTABLE_PARTITION_MAX] =
     {"/yaffs6"      ,PTABLE_YAFFS_WEBUI_START   ,0x00000000   ,PTABLE_YAFFS_WEBUI_LEN,   0x00000000,  0x00000000   ,IMAGE_YAFFS6    ,DATA_YAFFS | MOUNT_BOOTROM | PTABLE_MOUNT_MTD     ,   0},
 #else
     //{"/yaffs6"      ,PTABLE_YAFFS_WEBUI_START   ,0x00000000   ,PTABLE_YAFFS_WEBUI_LEN,   0x00000000,  0x00000000   ,IMAGE_YAFFS6    ,DATA_YAFFS | PTABLE_MOUNT_MTD     ,   0},
+
 #endif
     {"/yaffs5"      ,PTABLE_YAFFS_ONLINE_START   ,0x00000000   ,PTABLE_YAFFS_ONLINE_LEN,   0x00000000,  0x00000000   ,IMAGE_YAFFS5    ,DATA_YAFFS | MOUNT_BOOTROM | PTABLE_MOUNT_MTD      ,   0},
     {"cdromiso"    ,PTABLE_ISO_START   ,0x00000000   ,PTABLE_ISO_LEN,   0x00000000,  0x00000000   ,IMAGE_CDROMISO    ,DATA_NORMAL | PTABLE_MOUNT_MTD       ,   0},
@@ -279,7 +280,7 @@ struct ST_PART_TBL ptable_product[PTABLE_PARTITION_MAX] =
 	{"/yaffs6"      ,PTABLE_YAFFS_WEBUI_START   ,0x00000000     ,PTABLE_YAFFS_WEBUI_LEN, 0x00000000,  0x00000000, IMAGE_YAFFS6,  DATA_YAFFS | MOUNT_BOOTROM | PTABLE_MOUNT_MTD, 0},
     {PTABLE_END_STR ,0x00000000   ,0x00000000   ,0x00000000,   0x00000000,  0x00000000   ,IMAGE_PART_TOP  ,DATA_YAFFS                        ,   0}
 };
-#endif /*FEATURE_HUAWEI_E5_FLASH_PTABLE*/
+#endif /*Feature huawei e5 flash ptable*/
 char ptable_tail[PTABLE_TAIL_SIZE] = {PTABLE_TAIL_STR};
 
 int ptable_size(void)

@@ -1,29 +1,21 @@
 /*******************************************************************************
-* Copyright (C), 2008-2011, HUAWEI Tech. Co., Ltd.
+*Copyright (C), 2008-2011, HUAWEI Tech. Co., Ltd.
 *
-* Module name: flash partition table
+*Module name: flash partition table
 *
-* Version: v1.0
+*Version: v1.0
 *
-* Filename:    ptable_bootload.c
-* Description:  Balong plantform boot loadr partition image(s) loading function
+*Filename:    ptable_bootload.c
+*Description:  Balong plantform boot loadr partition image(s) loading function
 *
-* Function List:
+*Function List:
 *
-* History:
+*History:
 1.date:2011-11-19
  question number:
  modify reasion:         create
 *******************************************************************************/
-/******************************************************************************
-*    Copyright (c) 2009-2011 by  Hisilicon Tech. Co., Ltd.
-*    All rights reserved.
-* ***
-*
-******************************************************************************/
-/*******************************问题单修改记录********************************
-日期            问题单号            修改人          修改内容
-******************************************************************************/
+
 
 #ifdef __cplusplus
 extern "C"
@@ -75,19 +67,19 @@ extern BSP_VOID secSetUsbLoad (BSP_VOID);
 
 u32 empty_data = 0xffffffff;
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_load_image() - external API:  
+ *FUNC NAME:  
+ *ptable_load_image() -external API:  
  *                           
  * PARAMETER: 
  * @name          -[input] indicate witch parititon to quary.            
- * @flash_addr    -[input] flash start address to read data          
- * @ram_addr      -[input] ram start address to write data 
- * @read_size     -[input] size to load          
+ *@flash_addr    -[input] flash start address to read data          
+ *@ram_addr      -[input] ram start address to write data 
+ *@read_size     -[input] size to load          
  *
  * DESCRIPTION:
- *     load image data from flash to ram         
+ *    load image data from flash to ram         
  *
- * CALL FUNC:
+ *CALL FUNC:
  * 
  *****************************************************************************************/
 u32 ptable_load_image(struct ST_PART_TBL *part)
@@ -112,13 +104,13 @@ u32 ptable_load_image(struct ST_PART_TBL *part)
         return NAND_ERROR;
     }
 
-    /* BootRom 的镜像需要解压，单独处理 */
+    /* BootRom's image needs to be decompressed and processed separately */
     if (IMAGE_BOOTROM == type_id)
     {
-        /* 读取Head，获取镜像长度 */
+        /* Read the head and get the mirror length */
         if (NAND_OK == nand_read((FSZ)flash_addr, (u32)ram_addr, sizeof(IMAGE_HEAD_S), NULL))
         {
-            /* 尝试解压 */
+            /* Try to decompress */
             BSPLOGSTR("try inflate.\r\n");
 
             pimage_head = (IMAGE_HEAD_S *)ram_addr;
@@ -138,7 +130,7 @@ u32 ptable_load_image(struct ST_PART_TBL *part)
                 BSPLOGSTR("\r\nreturn value: ");
                 BSPLOGU32(ret);
 
-                /* 解压过程未出错则返回，否则自动转入正常读取 */
+                /* If there is no error in the decompression process, it will be returned, otherwise it will automatically be transferred to normal reading. */
                 if (!ret)
                 {
                     BSPLOGSTR("\r\ninflate success! ");
@@ -153,7 +145,7 @@ u32 ptable_load_image(struct ST_PART_TBL *part)
                 else
                 {
                     BSPLOGSTR("\r\nFail to inflate, turn to normal read...");
-                    /* 这里不需要返回，自动转入正常读取 */
+                    /* There is no need to return here, it will automatically transfer to normal reading. */
                 }
             }
             else
@@ -165,7 +157,7 @@ u32 ptable_load_image(struct ST_PART_TBL *part)
     }
 
 
-    /* 读取未压缩的镜像 */
+    /* Read uncompressed images */
     if(NAND_OK == nand_read((FSZ)flash_addr, (u32)ram_addr, (u32)read_size, NULL))
     {
         BSPLOGSTR("OK.\r\n");
@@ -191,16 +183,16 @@ u32 ptable_load_image(struct ST_PART_TBL *part)
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_load_bootrom() - external API:  
+ *FUNC NAME:  
+ *ptable_load_bootrom() -external API:  
  *                           
  * PARAMETER: 
- * @boot_flag   -[output] store bootrom entry address.                
+ *@boot_flag   -[output] store bootrom entry address.                
  *
  * DESCRIPTION:
- *     load image data from flash to ram , when boot mode is download mode(bootrom only)     
+ *    load image data from flash to ram , when boot mode is download mode(bootrom only)     
  *
- * CALL FUNC:
+ *CALL FUNC:
  *****************************************************************************************/
 u32 ptable_load_bootrom(u32 boot_flag)
 {
@@ -209,7 +201,7 @@ u32 ptable_load_bootrom(u32 boot_flag)
 
     part = (struct ST_PART_TBL *)ptable_get_ram_data();
 
-    /*找到最新的bootrom分区*/
+    /*Find the latest bootrom partition*/
     part = ptable_find_by_type((u32)IMAGE_BOOTROM, part);
 
 TRY_PART:
@@ -253,20 +245,20 @@ TRY_PART:
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_load_kernel() - external API:  
+ *FUNC NAME:  
+ *ptable_load_kernel() -external API:  
  *                           
  * PARAMETER: 
- * @fastboot_entry   -[output] store A core fastboot entry address.                
+ *@fastboot_entry   -[output] store A core fastboot entry address.                
  *
  * RETURN:
  * 
- *  VxWorks entry address
+ * VxWorks entry address
  *
  * DESCRIPTION:
- *     load image data from flash to ram ,when boot mode is normal boot (C core + A core)        
+ *    load image data from flash to ram ,when boot mode is normal boot (C core + A core)        
  *
- * CALL FUNC:
+ *CALL FUNC:
  *****************************************************************************************/
 u32 ptable_load_kernel(u32 * fastboot_entry)
 {
@@ -324,19 +316,19 @@ EXIT:
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_boot_flag() - external API:  
+ *FUNC NAME:  
+ *ptable_boot_flag() -external API:  
  *                           
  * PARAMETER: 
- * @is_warn_start   -[input] tell it is warn start or cold start                
+ *@is_warn_start   -[input] tell it is warn start or cold start                
  *
  * RETURN:
- *     system start type
+ *    system start type
  *
  * DESCRIPTION:
- *     get system  start type by board start type and softload flag    
+ *    get system  start type by board start type and softload flag    
  *
- * CALL FUNC:
+ *CALL FUNC:
  *****************************************************************************************/
 u32 ptable_boot_flag(u32 is_warm_start)
 {
@@ -349,7 +341,7 @@ u32 ptable_boot_flag(u32 is_warm_start)
         return soft_load_magic;
     }
 
-    if(is_warm_start) /* 热启动 */
+    if(is_warm_start) /* Hot start */
     {
         /* warm start count +1 */
         pstVersionInfo->u32WdgRstCnt++;
@@ -359,7 +351,7 @@ u32 ptable_boot_flag(u32 is_warm_start)
         {
             BSPLOGSTR("ERROR:too many fails ,VXWORKS region is damaged, switch to BOOTROM.\r\n");
             pstVersionInfo->u32WdgRstCnt = 1;
-            setSoftLoad(BSP_TRUE);  /* 保证如果此次起不来，能再次进入BOOTROM */
+            setSoftLoad(BSP_TRUE);  /* Guaranteed that if you can't get up this time, you can enter bootrom again */
 
             startUpExcHandler(EXCEPTION_HANDLE_TYPE_REBOOT);
         }
@@ -370,23 +362,23 @@ u32 ptable_boot_flag(u32 is_warm_start)
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_activate_fastboot() - external API:  
+ *FUNC NAME:  
+ *ptable_activate_fastboot() -external API:  
  *                           
  * PARAMETER: 
- * @fast_boot_start_addr   -[input] A core fastboot entry address.                
+ *@fast_boot_start_addr   -[input] A core fastboot entry address.                
  *
  * RETURN:
- *    none
+ *   none
  *
  * DESCRIPTION:
- *     load image data from flash to ram ,when boot mode is normal boot (C core + A core)        
+ *    load image data from flash to ram ,when boot mode is normal boot (C core + A core)        
  *
- * CALL FUNC:
+ *CALL FUNC:
  *****************************************************************************************/
 void ptable_activate_fastboot(u32 fast_boot_start_addr)
 {
-    /* 设置从核启动地址*/
+    /* Set the start address from the kernel*/
 	BSPLOGSTR("activate_fastboot...0x");
     BSPLOGU32((int)fast_boot_start_addr);
 	BSPLOGSTR("\r\n");
@@ -401,19 +393,19 @@ void ptable_activate_fastboot(u32 fast_boot_start_addr)
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_activate_fastboot() - external API:  
+ *FUNC NAME:  
+ *ptable_activate_fastboot() -external API:  
  *                           
  * PARAMETER: 
- * @entry   -[input] C-core entry             
+ *@entry   -[input] C-core entry             
  *
  * RETURN:
- *    none
+ *   none
  *
  * DESCRIPTION:
- *     goto vxworks kernel       
+ *    goto vxworks kernel       
  *
- * CALL FUNC:
+ *CALL FUNC:
  *****************************************************************************************/
 void ptable_start_vxworks(funcptr entry)
 {    
@@ -425,19 +417,19 @@ void ptable_start_vxworks(funcptr entry)
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_activate_fastboot() - external API:  
+ *FUNC NAME:  
+ *ptable_activate_fastboot() -external API:  
  *                           
  * PARAMETER: 
- * @entry   -[input] C-core entry             
+ *@entry   -[input] C-core entry             
  *
  * RETURN:
- *    none
+ *   none
  *
  * DESCRIPTION:
- *     goto vxworks kernel       
+ *    goto vxworks kernel       
  *
- * CALL FUNC:
+ *CALL FUNC:
  *****************************************************************************************/
 void ptable_start_flag(u32* boot_flag)
 {    
@@ -489,19 +481,19 @@ void ptable_start_flag(u32* boot_flag)
 }
 
 /******************************************************************************************
- * FUNC NAME:  
- * ptable_bootload() - external API:  
+ *FUNC NAME:  
+ *ptable_bootload() -external API:  
  *                           
  * PARAMETER: 
- * @entry   -[input] C-core entry             
+ *@entry   -[input] C-core entry             
  *
  * RETURN:
- *    none
+ *   none
  *
  * DESCRIPTION:
- *     goto vxworks kernel       
+ *    goto vxworks kernel       
  *
- * CALL FUNC:
+ *CALL FUNC:
  *****************************************************************************************/
 void ptable_bootload(preprocess_func startup_preprocess)
 {
@@ -525,7 +517,7 @@ void ptable_bootload(preprocess_func startup_preprocess)
             #else        
             /*load (bootrom A or B)*/
             c_core_entry = ptable_load_bootrom(boot_flag);
-            /* 如果BootRom不存在，则进入usb自举 */
+            /* If boot rom does not exist, enter usb bootstrap */
             if(0 == c_core_entry)
             {
                 secSetUsbLoad();
@@ -540,7 +532,7 @@ void ptable_bootload(preprocess_func startup_preprocess)
     {
         /*load (bootrom A or B)*/
         c_core_entry = ptable_load_bootrom(boot_flag);
-        /* 如果BootRom不存在，则进入usb自举 */
+        /* If boot rom does not exist, enter usb bootstrap */
         if(0 == c_core_entry)
         {
             secSetUsbLoad();
@@ -564,7 +556,7 @@ void ptable_bootload(preprocess_func startup_preprocess)
             startup_preprocess();
         }
         
-        /* EM定制点灯需求，SBM后期需要想法隔开 */
+        /* Em custom lighting needs, sbm needs to be separated later */
 		#if (FEATURE_E5 == FEATURE_ON)
         BOOT_led_task_end();            /*END power_led flash mode*/
 		#endif

@@ -1,26 +1,26 @@
 /*******************************************************************************
-* Copyright (C), 2008-2011, HUAWEI Tech. Co., Ltd.
+*Copyright (C), 2008-2011, HUAWEI Tech. Co., Ltd.
 *
-* Module name: Hisilicon Nand Flash Controller Dirver
+*Module name: Hisilicon Nand Flash Controller Dirver
 *
-* Description: the Hisilicon Nand Flash Controller physical and logical driver
+*Description: the Hisilicon Nand Flash Controller physical and logical driver
 *
-* Version: v1.0
+*Version: v1.0
 *
-* Filename:    nandc_port.c
-* Description: nand controller operations in dependence on  hardware
+*Filename:    nandc_port.c
+*Description: nand controller operations in dependence on  hardware
 *
-* Function List:
+*Function List:
 *
-* History:
-* 1.date:2011-07-27
-* question number:
-* modify reasion:         create
+*History:
+*1.date:2011-07-27
+*question number:
+*modify reasion:         create
 *******************************************************************************/
 /******************************************************************************
-*    Copyright (c) 2009-2011 by  Hisilicon Tech. Co., Ltd.
+*   Copyright (c) 2009-2011 by  Hisilicon Tech. Co., Ltd.
 *    
-*    All rights reserved.
+*   All rights reserved.
 *
 ******************************************************************************/
 #ifdef __cplusplus
@@ -38,30 +38,31 @@ extern "C"
 #ifdef __FASTBOOT__
 #if 0 /*fast boot overlap 128K*/
 static int block_buffer[(NANDC_MAX_BLOCK_MASK + 1)/4];
+
 #else
 static int block_buffer[1];
 #endif
 #endif
 
 /********************************************************************************************
- * FUNC NAME:  
- * nandc_get_block_buf() - get the ram buffer.
+ *FUNC NAME:  
+ *nandc_get_block_buf() -get the ram buffer.
  *
  * PARAMETER:
- * @size - [input]the size of buffer to be requested.
+ *@size -[input]the size of buffer to be requested.
  *
  * DESCRIPTION:
- * This function requests ram buffer through different interface according to differernt platform.
- * the platform as follow:
- * WIN32           Window platform :just for inspection of C source codes syntax 
- * __KERNEL__      Linux platform : target kernel nand driver code for Linux OS.
- * __VXWORKS__     Vxworks platform : target nand driver code for Vxworks OS.
- * __FASTBOOT__    Android platform : target nand driver code for Android fastboot.
- * __BOOTLOADER__  Vxworks platform : target nand driver code for bootloader of Vxworks OS.
- * __RVDS__        Realview and Trace 32 :nand driver code for download tools.
+ *This function requests ram buffer through different interface according to differernt platform.
+ *the platform as follow:
+ *WIN32           Window platform :just for inspection of C source codes syntax 
+ *__KERNEL__      Linux platform : target kernel nand driver code for Linux OS.
+ *__VXWORKS__     Vxworks platform : target nand driver code for Vxworks OS.
+ *__FASTBOOT__    Android platform : target nand driver code for Android fastboot.
+ *__BOOTLOADER__  Vxworks platform : target nand driver code for bootloader of Vxworks OS.
+ *__RVDS__        Realview and Trace 32 :nand driver code for download tools.
  * 
- * CALL FUNC:
- * nandc_nand_mass_write() -
+ *CALL FUNC:
+ *nandc_nand_mass_write() -
  * 
  ********************************************************************************************/
 void* nandc_get_block_buf(u32 size)
@@ -100,25 +101,25 @@ void* nandc_get_block_buf(u32 size)
 }
 
 /*********************************************************************************************
- * FUNC NAME:  
- * nandc_give_block_buf() - release the ram buffer.
+ *FUNC NAME:  
+ *nandc_give_block_buf() -release the ram buffer.
  *
  * PARAMETER:
- * @p - [input] the ram buffer pointer.
+ * @p -[input] the ram buffer pointer.
  *
  * DESCRIPTION:
- * This function releases ram buffer through different interface according to differernt platform.
- * the platform as follow:
- * WIN32           Window platform :just for inspection of C source codes syntax 
- * __KERNEL__      Linux platform : target kernel nand driver code for Linux OS.
- * __VXWORKS__     Vxworks platform : target nand driver code for Vxworks OS.
- * __FASTBOOT__    Android platform : target nand driver code for Android fastboot.
- * __BOOTLOADER__  Vxworks platform : target nand driver code for bootloader of Vxworks OS.
- * __RVDS__        Realview and Trace 32 :nand driver code for download tools.
+ *This function releases ram buffer through different interface according to differernt platform.
+ *the platform as follow:
+ *WIN32           Window platform :just for inspection of C source codes syntax 
+ *__KERNEL__      Linux platform : target kernel nand driver code for Linux OS.
+ *__VXWORKS__     Vxworks platform : target nand driver code for Vxworks OS.
+ *__FASTBOOT__    Android platform : target nand driver code for Android fastboot.
+ *__BOOTLOADER__  Vxworks platform : target nand driver code for bootloader of Vxworks OS.
+ *__RVDS__        Realview and Trace 32 :nand driver code for download tools.
  * 
  * 
- * CALL FUNC:
- * nandc_nand_mass_write() - 
+ *CALL FUNC:
+ *nandc_nand_mass_write() - 
  * 
  ********************************************************************************************/
 void nandc_give_block_buf(void * p)
@@ -163,17 +164,17 @@ static int nandc_pool[NANDC_POOL_SIZE/4] = {0};
 static u32   poolcur = NANDC_NULL; 
 static u32   poolend = NANDC_NULL; 
 /*******************************************************************
- * FUNC NAME:  
- * nandc_minit() - initalize memory poll address.
+ *FUNC NAME:  
+ *nandc_minit() -initalize memory poll address.
  *
  * PARAMETER:
- * none
+ *none
  *
  * DESCRIPTION:
- * This function is called only when NANDC_USE_MEMPOOL is select.
+ *This function is called only when NANDC_USE_MEMPOOL is select.
  * 
- * CALL FUNC:
- * nand_init_clear() -
+ *CALL FUNC:
+ *nand_init_clear() -
  * 
  ******************************************************************/
 void nandc_minit(void)
@@ -183,17 +184,17 @@ void nandc_minit(void)
 }
 
 /***************************************************************************
- * FUNC NAME:  
- * nandc_malloc() - malloc memory space from static array.
+ *FUNC NAME:  
+ *nandc_malloc() -malloc memory space from static array.
  *
  * PARAMETER:
- * @size - [input] the size of requested memory space.
+ *@size -[input] the size of requested memory space.
  *
  * DESCRIPTION:
- * This function is called only when NANDC_USE_MEMPOOL is select.
+ *This function is called only when NANDC_USE_MEMPOOL is select.
  * 
- * CALL FUNC:
- * himalloc () - malloc function for __BOOTLOADER__,__RVDS__,__FASTBOOT__.
+ *CALL FUNC:
+ *himalloc () -malloc function for __BOOTLOADER__,__RVDS__,__FASTBOOT__.
  * 
  ***************************************************************************/
 void* nandc_malloc(u32 size)
@@ -232,17 +233,17 @@ void* nandc_malloc(u32 size)
 }
 
 /*********************************************************************************
- * FUNC NAME:  
- * nandc_free() -  free memory space which is malloced by static array.
+ *FUNC NAME:  
+ *nandc_free() - free memory space which is malloced by static array.
  *
  * PARAMETER:
- * @p - [input] the ram buffer pointer.
+ * @p -[input] the ram buffer pointer.
  *
  * DESCRIPTION:
- * This function is called only when NANDC_USE_MEMPOOL is select.
+ *This function is called only when NANDC_USE_MEMPOOL is select.
  * 
- * CALL FUNC:
- * hifree () - memory free function for __BOOTLOADER__,__RVDS__,__FASTBOOT__.
+ *CALL FUNC:
+ *hifree () -memory free function for __BOOTLOADER__,__RVDS__,__FASTBOOT__.
  * 
  ********************************************************************************/
 void nandc_free(void* p)
@@ -251,22 +252,22 @@ void nandc_free(void* p)
     NANDC_TRACE(NFCDBGLVL(ERRO),("error: nandc_free chould never be called!\n"));
 }
 
-#endif /*NANDC_USE_MEMPOOL*/
+#endif /*Nandc use mempool*/
 
 
 #if NANDC_COMPILER(NANDC_MULTITASK)
 /******************************************************************************
- * FUNC NAME:  
- * nandc_mutex_create() - create semaphore for platform which has multi task.
+ *FUNC NAME:  
+ *nandc_mutex_create() -create semaphore for platform which has multi task.
  *
  * PARAMETER:
- * @sem - [input] semaphore structure pointer.
+ *@sem -[input] semaphore structure pointer.
  *
  * DESCRIPTION:
- * This function creates semaphore for platform select NANDC_MULTITASK.
+ *This function creates semaphore for platform select NANDC_MULTITASK.
  * 
- * CALL FUNC:
- * nand_init () - which is only for Vxworks platform.
+ *CALL FUNC:
+ *nand_init () -which is only for Vxworks platform.
  * 
  *****************************************************************************/
 u32 nandc_mutex_create(void** sem)
@@ -282,17 +283,17 @@ ERRO:
 }
 
 /*****************************************************************************
- * FUNC NAME:  
- * nandc_mutex_lock() -  lock mutex semaphor 
+ *FUNC NAME:  
+ *nandc_mutex_lock() - lock mutex semaphor 
  *
  * PARAMETER:
- * @sem - [input] semaphore structure pointer.
+ *@sem -[input] semaphore structure pointer.
  *
  * DESCRIPTION:
- * This function locks mutex semaphor for platform select NANDC_MULTITASK.
+ *This function locks mutex semaphor for platform select NANDC_MULTITASK.
  * 
- * CALL FUNC:
- * handle->sem_lock () - nand_init() in the file :nandc_balong.c .
+ *CALL FUNC:
+ *handle->sem_lock () -nand_init() in the file :nandc_balong.c .
  * 
  *******************************************************************************/
 u32 nandc_mutex_lock(void* sem)
@@ -308,17 +309,17 @@ u32 nandc_mutex_lock(void* sem)
 }
 
 /********************************************************************************
- * FUNC NAME:  
- * nandc_mutex_unlock() - unlock mutex semaphor 
+ *FUNC NAME:  
+ *nandc_mutex_unlock() -unlock mutex semaphor 
  *
  * PARAMETER:
- * @sem - [input] semaphore structure pointer.
+ *@sem -[input] semaphore structure pointer.
  *
  * DESCRIPTION:
- * This function unlocks mutex semaphor for platform select NANDC_MULTITASK.
+ *This function unlocks mutex semaphor for platform select NANDC_MULTITASK.
  * 
- * CALL FUNC:
- * handle->sem_unlock () - nand_init() in the file :nandc_balong.c .
+ *CALL FUNC:
+ *handle->sem_unlock () -nand_init() in the file :nandc_balong.c .
  * 
  *********************************************************************************/
 u32 nandc_mutex_unlock(void* sem)
@@ -333,17 +334,17 @@ u32 nandc_mutex_unlock(void* sem)
 }
 
 /**********************************************************************************
- * FUNC NAME:  
- * nandc_mutex_delete() - delete semaphore for platform which has multi task.
+ *FUNC NAME:  
+ *nandc_mutex_delete() -delete semaphore for platform which has multi task.
  *
  * PARAMETER:
- * @sem - [input] semaphore structure pointer.
+ *@sem -[input] semaphore structure pointer.
  *
  * DESCRIPTION:
- * This function deletes semaphore for platform select NANDC_MULTITASK.
+ *This function deletes semaphore for platform select NANDC_MULTITASK.
  * 
- * CALL FUNC:
- * nand_init () - which is only for Vxworks platform.
+ *CALL FUNC:
+ *nand_init () -which is only for Vxworks platform.
  * 
  ***********************************************************************************/
 u32 nandc_mutex_delete(void* sem)
@@ -351,23 +352,23 @@ u32 nandc_mutex_delete(void* sem)
     return semDelete(sem);/*lint !e732*/
 }
 
-#endif /*NANDC_COMPILER(NANDC_MULTITASK)*/
+#endif /*Nandc compiler(nandc multitask)*/
 
 
 #if NANDC_COMPILER(NANDC_DUALCORE)
 #ifdef NANDC_USE_IPC
 /************************************************************************************
- * FUNC NAME:  
- * nandc_ipc_create() - delete semaphore for platform which has multi task.
+ *FUNC NAME:  
+ *nandc_ipc_create() -delete semaphore for platform which has multi task.
  *
  * PARAMETER:
- * none 
+ *none 
  *
  * DESCRIPTION:
  *
  * 
- * CALL FUNC:
- * nand_init () - which is only for Vxworks platform.
+ *CALL FUNC:
+ *nand_init () -which is only for Vxworks platform.
  * 
  ***********************************************************************************/
 u32 nandc_ipc_create(void)
@@ -382,17 +383,17 @@ u32 nandc_ipc_create(void)
 }
 
 /**************************************
- * FUNC NAME:  
- * nandc_ipc_delete() - 
+ *FUNC NAME:  
+ *nandc_ipc_delete() - 
  *
  * PARAMETER:
- * none
+ *none
  *
  * DESCRIPTION:
  *
  * 
- * CALL FUNC:
- * () -
+ *CALL FUNC:
+ *() -
  * 
  *************************************/
 u32 nandc_ipc_delete(void)
@@ -407,22 +408,23 @@ u32 nandc_ipc_delete(void)
 }
 
 /**************************************
- * FUNC NAME:  
- * nandc_ipc_wait() - 
+ *FUNC NAME:  
+ *nandc_ipc_wait() - 
  *
  * PARAMETER:
- * @overtime- [input] 
+ *@overtime-[input] 
  *
  * DESCRIPTION:
  *
  * 
- * CALL FUNC:
- * () -
+ *CALL FUNC:
+ *() -
  * 
  *************************************/
 u32 nandc_ipc_wait(u32 overtime)
 {
     //NANDC_TRACE(NFCDBGLVL(NORMAL), ("nandc_ipc_wait in!(%s)\n",taskName(taskIdSelf())));
+
 
     if(NANDC_OK !=  BSP_IPC_SemTake(IPC_SEM_NAND, (s32)overtime))
     {
@@ -431,30 +433,33 @@ u32 nandc_ipc_wait(u32 overtime)
     }
     //NANDC_TRACE(NFCDBGLVL(NORMAL), ("nandc_ipc_wait out!(%s)\n",taskName(taskIdSelf())));
 
+
     return NANDC_OK;
 }
 
 /**************************************
- * FUNC NAME:  
- * nandc_ipc_post() - 
+ *FUNC NAME:  
+ *nandc_ipc_post() - 
  *
  * PARAMETER:
- * none 
+ *none 
  *
  * DESCRIPTION:
  *
  * 
- * CALL FUNC:
- * () -
+ *CALL FUNC:
+ *() -
  * 
  *************************************/
 void nandc_ipc_post(void)
 {
     //NANDC_TRACE(NFCDBGLVL(NORMAL), ("nandc_ipc_post in!(%s)\n",taskName(taskIdSelf())));
 
+
     BSP_IPC_SemGive(IPC_SEM_NAND);
     
     //NANDC_TRACE(NFCDBGLVL(NORMAL), ("nandc_ipc_post out!(%s)\n",taskName(taskIdSelf())));
+
 
     return ;
 }
@@ -464,17 +469,17 @@ extern BSP_U32 spinLockAmpTake(BSP_U32 *pSpinLock);
 extern BSP_VOID spinLockAmpGive(BSP_U32 *pSpinLock);
 
 /*****************************************************************************
-* 函 数 名  : NANDF_SpinLock
+*Function Name: NANDF_SpinLock
 *
-* 功能描述  : NANDFLASH 双核互斥自旋锁
+*Function description: NANDFLASH Dual-core Mutexual Spin Lock
 *
-* 输入参数  : 
-* 输出参数  : 
+*Input parameters: 
+*Output parameters: 
 *
-* 返 回 值  : 1:take 超时
-*             0:take 成功
+*Return Value: 1:take Timeout
+*0:take success
 *
-* 其它说明  : 
+*Other instructions: 
 *
 *****************************************************************************/
 u32 NANDF_SpinLock()
@@ -504,16 +509,16 @@ u32 NANDF_SpinLock()
 }
 
 /*****************************************************************************
-* 函 数 名  : NANDF_SpinUnLock
+*Function Name: NANDF_SpinUnLock
 *
-* 功能描述  : NANDFLASH 双核互斥解锁
+*Function description: NANDFLASH dual-core mutual exclusion unlock
 *
-* 输入参数  : 
-* 输出参数  : 
+*Input parameters: 
+*Output parameters: 
 *
-* 返 回 值  : 
+*Return value: 
 *
-* 其它说明  : 
+*Other instructions: 
 *
 *****************************************************************************/
 BSP_VOID NANDF_SpinUnLock()
@@ -541,6 +546,7 @@ u32 nandc_ipc_wait(u32 overtime)
 {
     //NANDC_TRACE(NFCDBGLVL(NORMAL), ("NANDF_SpinLock in!(%s)\n",taskName(taskIdSelf())));
 
+
     if(NANDC_OK !=  NANDF_SpinLock())
     {
         NANDC_TRACE(NFCDBGLVL(ERRO), ("NANDF_SpinLock return error!\n"));
@@ -548,6 +554,7 @@ u32 nandc_ipc_wait(u32 overtime)
         return NANDC_ERROR;
     }
     //NANDC_TRACE(NFCDBGLVL(NORMAL), ("NANDF_SpinLock out!(%s)\n",taskName(taskIdSelf())));
+
 
     return NANDC_OK;
 }
@@ -557,16 +564,19 @@ void nandc_ipc_post(void)
 {
     //NANDC_TRACE(NFCDBGLVL(NORMAL), ("NANDF_SpinUnLock in!(%s)\n",taskName(taskIdSelf())));
 
+
     NANDF_SpinUnLock();
     
     //NANDC_TRACE(NFCDBGLVL(NORMAL), ("NANDF_SpinUnLock out!(%s)\n",taskName(taskIdSelf())));
 
+
     return ;
-}
+}
 
-#endif /*NANDC_USE_IPC*/
 
-#endif /*NANDC_COMPILER(NANDC_DUALCORE)*/
+#endif /*Nandc use ipc*/
+
+#endif /*Nandc compiler(nandc dualcore)*/
 
 #ifdef __cplusplus
 }

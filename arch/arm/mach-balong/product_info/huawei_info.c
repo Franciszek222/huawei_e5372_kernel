@@ -1,17 +1,17 @@
 /*************************************************************************
-*   版权所有(C) 1987-2004, 深圳华为技术有限公司.
+*Copyright (C) 1987-2004, Shenzhen Huawei Technologies Co., Ltd.
 *
-*   文 件 名 :  huawei_info.c
+*File name: huawei_info.c
 *
-*   作    者 :  吴择淳
+*Author: Wu Zechun
 *
-*   描    述 :  硬件版本信息
+*Description: Hardware version information
 *
-*   修改记录 :  2011年11月12日  v1.00  吴择淳  创建
+*Modification record: November 12, 2011 v1.00 Wu Zechun Created
 *
 *************************************************************************/
-/**********************问题单修改记录**********************************************************
- * 日    期              修改人                     问题单号                   修改内容
+/*******************************************************************************************************************************************
+ *Date Modifier Question order number Modify content
  ********************************************************************************************/
 
 #include <linux/kernel.h>
@@ -27,30 +27,30 @@
 #include "ptable_def.h"
 
 /*--------------------------------------------------------------*
-* 宏定义                                                       *
+*Macro definition *
 *--------------------------------------------------------------*/
 
-PRODUCT_INFO_T g_huaweiProductInfo = { 0 };                        /*全局变量，保存产品信息*/
+PRODUCT_INFO_T g_huaweiProductInfo = { 0 };                        /*Global variables, save product information*/
 
 const PRODUCT_INFO_T huaweiProduct[] =
 {
-	/*产品项说明，变量意义依次如下*/
-	/*硬件版本号数值(大版本号1+大版本号2,区分不同产品)，子版本号,
-	 * 内部产品名，内部产品名PLUS，硬件版本名，升级中使用的名称，外部产品名，
-	 * 产品支持的频段，
-	 * 产品支持的分集(暂未使用),
-	 * 保留字段
+	/*Product item description, variable meanings are as follows*/
+	/*Hardware version number value (large version number 1 + large version number 2, distinguishing different products), sub-version number,
+	 *Internal product name, internal product name PLUS, hardware version name, name used in the upgrade, external product name,
+	 *The frequency bands supported by the product,
+	 *Product supported diversity (not used yet),
+	 *Reserved fields
 	 */
 
-	/*1.测试板*/
+	/*1. Test board*/
 	{ HW_VER_PRODUCT_UDP,					     0, \
 	    "UDP", "\0", "UDP", "MPWUDP", "UDP", \
 	    { RF_BAND_ALL,						 RF_BAND_ALL, RF_BAND_ALL }, \
 	    { 0 }, \
 	    { 0 } },
 #if (defined(CHIP_BB_6920CS) && ((FEATURE_EPAD == FEATURE_ON) || (FEATURE_PHONE == FEATURE_ON)))
-	/*为EPAD临时修改，后续需要根据实际的需要进行修改，
-	 * 同时硬件版本号需要在DrvInterface.h中用宏定义*/
+	/*It is temporary modification for EPAD, and subsequent modifications need to be made according to actual needs.
+	 * 同When the hardware version number needs to be defined in DrvInterface.h with macro*/
 
 	{ HW_VER_PRODUCT_S10_TEMP,				     0, \
 	    "S10-Temp", "\0", "SH2101UM", "H69DUSAVA", "S10", \
@@ -86,11 +86,11 @@ const PRODUCT_INFO_T huaweiProduct[] =
 	    { 0 }, \
 	    { 0 } },
 
-	/*为EPAD临时修改，后续需要根据实际的需要进行修改，
-	 * 同时硬件版本号需要在DrvInterface.h中用宏定义*/
+	/*It is temporary modification for EPAD, and subsequent modifications need to be made according to actual needs.
+	 * 同When the hardware version number needs to be defined in DrvInterface.h with macro*/
 #endif
 #if defined(CHIP_BB_6920ES)
-	/* 2.数据卡 */
+	/* 2. Data card */
 	{ HW_VER_PRODUCT_E392S_U,				     0, \
 	    "E392s", "\0", "CH1E392DM", "CH1E392DM", "E392", \
 	    {
@@ -111,9 +111,9 @@ const PRODUCT_INFO_T huaweiProduct[] =
 	    { 0 }, \
 	    { 0 } },
 
-	/* E3276s-200待实现*/
+	/* E3276s 200 to be implemented*/
 
-	/* 3.E5 */
+	/* A. */
 	{ HW_VER_PRODUCT_E5_SBM,				     0, \
 	    "E5776s", "\0", "CL1E5776SF", "CL1E5776SF", "102HW", \
 	    {
@@ -133,7 +133,7 @@ const PRODUCT_INFO_T huaweiProduct[] =
 	    { 0 }, \
 	    { 0 } },
 #else
-	/* 2.数据卡 */
+	/* 2. Data card */
 	{ HW_VER_PRODUCT_E392S_U,				     0, \
 	    "E392s", "\0", "CH1E392DM", "B710S0", "E392", \
 	    {
@@ -154,9 +154,9 @@ const PRODUCT_INFO_T huaweiProduct[] =
 	    { 0 }, \
 	    { 0 } },
 
-	/* E3276s-200待实现*/
+	/* E3276s 200 to be implemented*/
 
-	/* 3.E5 */
+	/* A. */
 	{ HW_VER_PRODUCT_E5_SBM,				     0, \
 	    "E5776s", "\0", "CL1E5776SF", "B710D0", "102HW", \
 	    {
@@ -198,7 +198,7 @@ const PRODUCT_INFO_T huaweiProduct[] =
 	    { 0 }, \
 	    { 0 } },
 	/* Added for E5371_DCM */
-	/* E5371产品名称由 E5371S-7修改为HW-02E */
+	/* E5371 product name changed from E5371S-7 to HW-02E */
 	{ HW_VER_PRODUCT_E5371_DCM,				     0, \
 	    "HW-02E", "\0", "CL1E5371SM", "B710D0", "HW-02E", \
 	    {
@@ -288,7 +288,7 @@ const PRODUCT_INFO_T huaweiProduct[] =
 	    { 0 } },
 #endif
 
-/* 其他板适配 */
+/* Other boards adapted */
 	{ HW_VER_PRODUCT_PV500,					     0, \
 	    "PV500", "\0", "PV500", "PV500", "PV500", \
 	    { RF_BAND_ALL,						 RF_BAND_ALL, RF_BAND_ALL }, \
@@ -309,34 +309,17 @@ const PRODUCT_INFO_T huaweiProduct[] =
 	    { 0 } }
 };
 
-/*--------------------------------------------------------------*
-* 外部函数原型说明                                             *
-*--------------------------------------------------------------*/
-
-/*--------------------------------------------------------------*
-* 内部函数原型说明                                             *
-*--------------------------------------------------------------*/
-
-
-/*--------------------------------------------------------------*
-* 外部变量引用                                                 *
-*--------------------------------------------------------------*/
-
-/*--------------------------------------------------------------*
-* 全局变量申明                                                 *
-*--------------------------------------------------------------*/
-
 /*****************************************************************************
-* 函 数 名  : BSP_Flashless_HwGetVerMain
+*Function Name: BSP_Flashless_HwGetVerMain
 *
-* 功能描述  : Flashless产品形态中获取单板版本号(大版本号1+大版本号2)
+*Function description: Get the single board version number in the Flashless product form (large version number 1 + large version number 2)
 *
-* 输入参数  :
-* 输出参数  :
+*Input parameters:
+*Output parameters:
 *
-* 返 回 值  : 返回单板的版本号
+*Return Value: Return the version number of the board
 *
-* 其它说明  :
+*Other instructions:
 *
 *****************************************************************************/
 BSP_U32 BSP_Flashless_HwGetVerMain()
@@ -350,6 +333,7 @@ BSP_U32 BSP_Flashless_HwGetVerMain()
 			return ram_ptable->offset;
 		}
 		//printk("Ptable name is %s, HwVersion is %x\n", ram_ptable->name, ram_ptable->offset);
+
 		ram_ptable++;
 	}
 
@@ -359,16 +343,16 @@ BSP_U32 BSP_Flashless_HwGetVerMain()
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_ProductInfoInit
+*Function Name: BSP_ProductInfoInit
 *
-* 功能描述  : 根据硬件版本号初始化产品信息
+*Function description: Initialize product information according to hardware version number
 *
-* 输入参数  :
-* 输出参数  :
+*Input parameters:
+*Output parameters:
 *
-* 返 回 值  :
+*Return value:
 *
-* 其它说明  :
+*Other instructions:
 *
 *****************************************************************************/
 BSP_S32 BSP_ProductInfoInit(BSP_VOID)
@@ -378,12 +362,13 @@ BSP_S32 BSP_ProductInfoInit(BSP_VOID)
 	BSP_U8 u16IdSub;
 	BSP_U32 i;
 
-	/*清除局部结构变量的内存，即初始化为全0*/
+	/*Clear the memory of local structure variables, that is, initialize to all 0*/
 	memset((void *)(&g_huaweiProductInfo), 0, sizeof(PRODUCT_INFO_T));
 
-	/* 默认配置 */
+	/* Default configuration */
 	//g_huaweiProductInfo.index = HW_VER_INVALID;
 	//g_huaweiProductInfo.hwIdSub = 0xFF;
+
 	g_huaweiProductInfo.name = "PRODUCT_NAME";
 	g_huaweiProductInfo.namePlus = "PRODUCT_NAME_PLUS";
 	g_huaweiProductInfo.hwVer = "HW_VER";
@@ -398,7 +383,7 @@ BSP_S32 BSP_ProductInfoInit(BSP_VOID)
 	u16IdSub = u32HwId & 0xFFFF;
 	if ((HW_VER_INVALID == u16IdMain) || (0x0000 == u16IdMain)) {
 		printk("%s: Flashless get wrong hardware version, use hkadc hardware version.\n", __FUNCTION__);
-		/* VxWorks直接从BootLoader保存的AXI Mem中获取 */
+		/* VxWorks is obtained directly from AXI Mem saved by BootLoader */
 		u32HwId = *(BSP_U32 *)MEMORY_AXI_HW_ID_ADDR;
 		u16IdMain = (u32HwId >> 16) & 0xFFFF;
 		u16IdSub = u32HwId & 0xFFFF;
@@ -407,13 +392,13 @@ BSP_S32 BSP_ProductInfoInit(BSP_VOID)
 		printk("%s: Flashless get right hardware version.\n", __FUNCTION__);
 	}
 #else
-	/* VxWorks直接从BootLoader保存的AXI Mem中获取 */
+	/* VxWorks is obtained directly from AXI Mem saved by BootLoader */
 	u32HwId = *(BSP_U32 *)MEMORY_AXI_HW_ID_ADDR;
 	u16IdMain = (u32HwId >> 16) & 0xFFFF;
 	u16IdSub = u32HwId & 0xFFFF;
 #endif
 
-	/* 查表初始化产品信息 */
+	/* Check the table to initialize product information */
 	for (i = 0; i < ARRAY_SIZE(huaweiProduct); i++) {
 		if (huaweiProduct[i].index == u16IdMain) {
 			g_huaweiProductInfo = huaweiProduct[i];
@@ -422,7 +407,7 @@ BSP_S32 BSP_ProductInfoInit(BSP_VOID)
 		}
 	}
 
-	/* 未查找到，返回失败 */
+	/* Not found, return failed */
 	if (i == ARRAY_SIZE(huaweiProduct)) {
 		printk("%s: product info is not defined, pls check huaweiProduct!\n", __FUNCTION__);
 		return BSP_ERROR;
@@ -435,54 +420,54 @@ BSP_S32 BSP_ProductInfoInit(BSP_VOID)
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_HwGetVerMain
+*Function Name: BSP_HwGetVerMain
 *
-* 功能描述  : 获取单板版本号(大版本号1+大版本号2)
+*Function description: Obtain the single board version number (large version number 1 + large version number 2)
 *
-* 输入参数  :
-* 输出参数  :
+*Input parameters:
+*Output parameters:
 *
-* 返 回 值  :
+*Return value:
 *
-* 其它说明  :
+*Other instructions:
 *
 *****************************************************************************/
 BSP_U16 BSP_HwGetVerMain(BSP_VOID)
 {
-	/* VxWorks直接从BootLoader保存的AXI Mem中获取 */
+	/* VxWorks is obtained directly from AXI Mem saved by BootLoader */
 	return ((*(BSP_U32 *)MEMORY_AXI_HW_ID_ADDR) >> 16) & 0xFFFF;
 }
 
 /*****************************************************************************
-* 函 数 名  : BSP_HwGetVerSub
+*Function Name: BSP_HwGetVerSub
 *
-* 功能描述  : 获取单板的子版本号,对应GPIO4/5
+*Function description: Get the subversion number of the board, corresponding to GPIO4/5
 *
-* 输入参数  :
-* 输出参数  :
+*Input parameters:
+*Output parameters:
 *
-* 返 回 值  :
+*Return value:
 *
-* 其它说明  :
+*Other instructions:
 *
 *****************************************************************************/
 BSP_U16 BSP_HwGetVerSub(BSP_VOID)
 {
-	/* VxWorks直接从BootLoader保存的AXI Mem中获取 */
+	/* VxWorks is obtained directly from AXI Mem saved by BootLoader */
 	return (*(BSP_U32 *)MEMORY_AXI_HW_ID_ADDR) & 0xFFFF;
 }
 
 /*****************************************************************************
-* 函 数 名  : BSP_HwGetHwVersion
+*Function Name: BSP_HwGetHwVersion
 *
-* 功能描述  : 获取硬件版本名称
+*Function Description: Get the hardware version name
 *
-* 输入参数  : BSP_CHAR* pHwVersion,字符串指针，保证不小于32字节
-* 输出参数  : 无
+*Input parameters: BSP_CHAR*pHwVersion, string pointer, guaranteed to be no less than 32 bytes
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 修改记录  : 2011-3-29 wuzechun creat
+*Modification record: 2011-3-29 wuzechun creat
 *
 *****************************************************************************/
 BSP_S32 BSP_HwGetHwVersion(char *pFullHwVersion, BSP_U32 ulLength)
@@ -490,7 +475,7 @@ BSP_S32 BSP_HwGetHwVersion(char *pFullHwVersion, BSP_U32 ulLength)
 	unsigned char hwVerLit = 0;
 	unsigned int len = 0;
 
-	/*单板为硬核，软核，或者UDP*/
+	/*The board is hard core, soft core, or udp*/
 	if ((HW_VER_INVALID == g_huaweiProductInfo.index) || (NULL == pFullHwVersion))
 		return BSP_ERROR;
 
@@ -510,23 +495,23 @@ BSP_S32 BSP_HwGetHwVersion(char *pFullHwVersion, BSP_U32 ulLength)
 }
 
 /*****************************************************************************
-* 函 数 名  : BSP_HwGetPCBVersion
+*Function Name: BSP_HwGetPCBVersion
 *
-* 功能描述  : 获取PCB版本名称
+*Function Description: Get the PCB version name
 *
-* 输入参数  : BSP_CHAR* pFullPcbVersion,字符串指针，保证不小于32字节
-* 输出参数  : 无
+*Input parameters: BSP_CHAR*pFullPcbVersion, string pointer, guaranteed to be no less than 32 bytes
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 修改记录  : 2012-3-16 wzs creat
+*Modification record: 2012-3-16 wzs creat
 *
 *****************************************************************************/
 BSP_S32 BSP_HwGetPCBVersion(char *pFullPcbVersion, BSP_U32 ulLength)
 {
 	unsigned int len = 0;
 
-	/*单板为硬核，软核，或者UDP*/
+	/*The board is hard core, soft core, or udp*/
 	if ((HW_VER_INVALID == g_huaweiProductInfo.index) || (NULL == pFullPcbVersion))
 		return BSP_ERROR;
 
@@ -543,17 +528,17 @@ BSP_S32 BSP_HwGetPCBVersion(char *pFullPcbVersion, BSP_U32 ulLength)
 
 
 /*****************************************************************************
-* 函 数 名  : BSP_GetProductName
+*Function Name: BSP_GetProductName
 *
-* 功能描述  : 获取产品名称
+*Function Description: Get the product name
 *
-* 输入参数  : char* pProductName,字符串指针，保证不小于32字节
-*                             BSP_U32 ulLength,缓冲区长度
-* 输出参数  : 无
+*Input parameters: char*pProductName, string pointer, guaranteed to be no less than 32 bytes
+*BSP_U32 ulLength, buffer length
+*Output parameters: None
 *
-*  返 回 值  : 0：正确，非0: 失败
+*Return Value: 0: Correct, non-0: Failed
 *
-* 修改记录  : 2011-3-30 wuzechun creat
+*Modification record: 2011-3-30 wuzechun creat
 *
 *****************************************************************************/
 BSP_S32 BSP_GetProductName(char *pProductName, unsigned int ulLength)
@@ -577,16 +562,16 @@ BSP_S32 BSP_GetProductName(char *pProductName, unsigned int ulLength)
 }
 
 /*****************************************************************************
-* 函 数 名  : BSP_GetProductDloadName
+*Function Name: BSP_GetProductDloadName
 *
-* 功能描述  : 获取产品下载版本名称，一键升级据此判断是否允许升级
+*Function description: Get the product download version name, and use one-click upgrade to determine whether the upgrade is allowed.
 *
-* 输入参数  : 无
-* 输出参数  : 无
+*Input parameters: None
+*Output parameters: None
 *
-* 返 回 值  : 产品下载版本名称字符串指针
+*Return Value: Product Download Version Name String Pointer
 *
-* 修改记录  : 2011-3-30 wuzechun creat
+*Modification record: 2011-3-30 wuzechun creat
 *
 *****************************************************************************/
 BSP_S32 BSP_GetProductDloadName(char *pProductDloadName, unsigned int ulLength)
@@ -609,17 +594,17 @@ BSP_S32 BSP_GetProductDloadName(char *pProductDloadName, unsigned int ulLength)
 }
 
 /*****************************************************************************
-* 函 数 名  : BSP_GetProductInnerName
+*Function Name: BSP_GetProductInnerName
 *
-* 功能描述  : 获取内部产品名称
+*Function Description: Get the internal product name
 *
-* 输入参数  : char* pProductIdInter,字符串指针
-*                             BSP_U32 ulLength,缓冲区长度
-* 输出参数  : 无
+*Input parameters: char*pProductIdInter, string pointer
+*BSP_U32 ulLength, buffer length
+*Output parameters: None
 *
-*  返 回 值  : 0：正确，非0: 失败
+*Return Value: 0: Correct, non-0: Failed
 *
-* 修改记录  : 2011-3-29 wuzechun creat
+*Modification record: 2011-3-29 wuzechun creat
 *
 *****************************************************************************/
 BSP_S32 BSP_GetProductInnerName(char *pProductIdInter, unsigned int ulLength)
@@ -642,16 +627,16 @@ BSP_S32 BSP_GetProductInnerName(char *pProductIdInter, unsigned int ulLength)
 }
 
 /*****************************************************************************
-* 函 数 名  : BSP_GetSupportBands
+*Function Name: BSP_GetSupportBands
 *
-* 功能描述  : 获取支持的频段
+*Function Description: Get supported frequency bands
 *
-* 输入参数  : BAND_INFO_T *pBandInfo,频段信息结构体指针
-* 输出参数  :
+*Input parameters: BAND_INFO_T *pBandInfo, frequency band information structure pointer
+*Output parameters:
 *
-* 返 回 值  :
+*Return value:
 *
-* 其它说明  :
+*Other instructions:
 *
 *****************************************************************************/
 BSP_S32 BSP_GetSupportBands(BAND_INFO_T *pBandInfo)
@@ -664,18 +649,18 @@ BSP_S32 BSP_GetSupportBands(BAND_INFO_T *pBandInfo)
 	return BSP_OK;
 }
 /*****************************************************************************
-* 函 数 名  : BSP_GetSupportBandsForGu
+*Function Name: BSP_GetSupportBandsForGu
 *
-* 功能描述  : 获取GU模支持的频段
+*Function description: Obtain the frequency band supported by GU mode
 *
-* 输入参数  : pusWBands - WCDMA的频段值
-*            pusGBands - GSM的频段值
+*Input parameters: pusWBands -WCDMA frequency band value
+*pusGBands -GSM's band value
 *
-*  输出参数  : pusWBands - WCDMA的频段值
-*            pusGBands - GSM的频段值
+*Output parameters: pusWBands -WCDMA frequency band value
+*pusGBands -GSM's band value
 *
-*  返 回 值  : 0：正确，非0: 失败
-*            通过Bit位来表示哪些频段支持。
+*Return Value: 0: Correct, non-0: Failed
+*Bit bits to indicate which bands are supported.
 *
 *****************************************************************************/
 int BSP_GetSupportBandsForGu(unsigned short *pusWBands, unsigned short *pusGBands)
@@ -691,22 +676,22 @@ int BSP_GetSupportBandsForGu(unsigned short *pusWBands, unsigned short *pusGBand
 }
 
 /*****************************************************************************
-* 函 数 名  : BSP_HwIsSupportWifi
+*Function Name: BSP_HwIsSupportWifi
 *
-* 功能描述  : 打印硬件版本信息
+*Function Description: Print hardware version information
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 BSP_BOOL BSP_HwIsSupportWifi(BSP_VOID)
 {
-	/* E5支持wifi，UDP默认也支持wifi ,后期新增支持wifi单板这里需要适配*/
+	/* E5 supports wifi, UDP also supports wifi by default. It is added to support wifi boards in the later stage.*/
 #if (FEATURE_E5 == FEATURE_ON) || #defined(FEATURE_BOARD_STUB_BJ_UDP)
 	return BSP_TRUE;
 #else
@@ -715,17 +700,17 @@ BSP_BOOL BSP_HwIsSupportWifi(BSP_VOID)
 }
 
 /*****************************************************************************
-* 函 数 名  : BSP_PrintHwVersion
+*Function Name: BSP_PrintHwVersion
 *
-* 功能描述  : 打印硬件版本信息
+*Function Description: Print hardware version information
 *
-* 输入参数  : 无
+*Input parameters: None
 *
-* 输出参数  : 无
+*Output parameters: None
 *
-* 返 回 值  : 无
+*Return Value: None
 *
-* 其它说明  : 无
+*Other Instructions: None
 *
 *****************************************************************************/
 BSP_S32 BSP_PrintHwVersion(BSP_VOID)
